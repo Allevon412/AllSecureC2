@@ -3,6 +3,5 @@
 #include <wincrypt.h>
 
 
-PCCERT_CONTEXT LoadCertificateFromResource(HMODULE hModule, LPCWSTR ResourceName);
-HCRYPTKEY LoadPrivateKeyFromResource(HMODULE hModule, LPCWSTR resourceName);
-CHAR* ConvertPEMToBinaryKey(CHAR* pem, DWORD pemSize);
+PCCERT_CONTEXT LoadCertificateFromResource(HMODULE hModule, int ResourceNum);
+BYTE* LoadPrivateKeyFromResource(HMODULE hModule, int ResourceNum);

