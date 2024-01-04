@@ -1,0 +1,8 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  HttpRequest.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\HttpRequest.c(38,3): warning C4047: 'return': 'HANDLE' differs in levels of indirection from 'int'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\HttpRequest.c(41,81): warning C4090: 'function': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\HttpRequest.c(46,3): warning C4047: 'return': 'HANDLE' differs in levels of indirection from 'int'
+  Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
