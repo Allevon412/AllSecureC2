@@ -18,7 +18,7 @@ type (
 )
 
 type (
-	HTTPServer struct {
+	ListeningServer struct {
 		Config HTTPServerConfig
 
 		GinEngine *gin.Engine

