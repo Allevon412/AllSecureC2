@@ -17,7 +17,7 @@ var config Config.AllSecureConfig
 // TODO: create a cleanup cobra command.
 var initializeCmd = &cobra.Command{
 	Use:   "initialize",
-	Short: "Initializes the AllSecure Database and default properties",
+	Short: "Initializes the AllSecure database and default properties",
 	Long: `This command initializes the default properties and database of AllSecure
 Here is the default usage, this command does not currently have an option for a config file. For example:
 
