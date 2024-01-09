@@ -8,7 +8,7 @@ import (
 type (
 	HTTPServerConfig struct {
 		Name         string
-		KillData     int64
+		KillDate     int64
 		WorkingHours string
 		Method       string
 		Port         string
