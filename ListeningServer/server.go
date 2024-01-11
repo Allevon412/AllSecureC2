@@ -205,3 +205,5 @@ func (handler *ListeningServer) Start() {
 	}
 
 }
+
+//TODO: Create communication encryption / decryption library.

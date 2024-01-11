@@ -4,49 +4,36 @@ import (
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/EndPoints"
 	"github.com/gin-gonic/gin"
-	"io"
 	"log"
-	"strings"
+	"net/http"
 )
 
+var DatabasePath string
+
 func AuthenticateUser(ctx *gin.Context) {
-	var (
-		username string
-		password string
-	)
+	var TempUser Common.User
 
-	content, err := io.ReadAll(ctx.Request.Body)
+	err := ctx.BindJSON(&TempUser)
 	if err != nil {
-		log.Println("[error] attempting to read post body.")
-	}
-	defer ctx.Request.Body.Close()
-
-	parts := strings.Split(string(content), "&")
-
-	for _, part := range parts {
-		parts2 := strings.Split(part, "=")
-		for j, part2 := range parts2 {
-			switch part2 {
-			case "username":
-				username = parts2[j+1]
-			case "password":
-				password = parts2[j+1]
-			default:
-				continue
-			}
-		}
-	}
-
-	if EndPoints.AuthenticateUser(username, password) {
-		ctx.Status(200)
+		log.Println("[error] attempting to read post body.", err)
+		ctx.Status(http.StatusBadRequest)
 		return
 	}
-	ctx.Status(500)
+
+	var success bool
+	log.Println("[debug] ", TempUser)
+	success, err = EndPoints.AuthenticateUser(TempUser.Username, TempUser.Password, DatabasePath)
+	if success {
+		ctx.Status(http.StatusOK)
+		return
+	}
+	ctx.Status(http.StatusUnauthorized)
 	return
 }
 
 func (t *TS) AddAuthenticateUserEndpoint() bool {
 
+	DatabasePath = t.Server.FI.DataBasePath
 	AuthUser := &Common.Endpoint{
 		Endpoint: "AuthenticateUser",
 		Function: AuthenticateUser,

@@ -4,7 +4,10 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -13,14 +16,18 @@ import (
 var teamserverCmd = &cobra.Command{
 	Use:   "teamserver",
 	Short: "Starts the teamserver",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long:  `This command will start the teamserver for AllSecure, this must be started first for the client to have connectivity`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("teamserver called")
+		path, err := os.Getwd()
+		if err != nil {
+			log.Fatalln("[error] attempting to get current working directory", err)
+		}
+		parts := strings.Split(path, "AllSecure")
+		cmd2 := exec.Command(parts[0] + "\\AllSecure\\TeamServer\\TeamServer.exe")
+		err = cmd2.Run()
+		if err != nil {
+			log.Fatalln("[error] attempting to run the teamserver", err)
+		}
 	},
 }
 

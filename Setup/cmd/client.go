@@ -1,27 +1,34 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"log"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 // clientCmd represents the client command
 var clientCmd = &cobra.Command{
 	Use:   "client",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "This command starts the AllSecure client application",
+	Long: `This command will start the AllSecure client application
+The client will use HTTPS endpoints to authenticate to the framework & perform tasks.
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("client called")
+		path, err := os.Getwd()
+		if err != nil {
+			log.Fatalln("[error] attempting to get current working directory", err)
+		}
+		parts := strings.Split(path, "AllSecure")
+		cmd2 := exec.Command(parts[0] + "\\AllSecure\\Client\\Client.exe")
+		err = cmd2.Run()
+		if err != nil {
+			log.Fatalln("[error] attempting to run the client app", err)
+		}
 	},
 }
 

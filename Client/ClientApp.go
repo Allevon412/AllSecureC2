@@ -1,7 +1,10 @@
 package main
 
 import (
-	"database/sql"
+	"Client/Common"
+	"bytes"
+	"crypto/tls"
+	"encoding/json"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -9,8 +12,8 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	_ "github.com/mattn/go-sqlite3"
-	"golang.org/x/crypto/bcrypt"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -19,12 +22,6 @@ type FileInfo struct {
 	DataBasePath   string
 	ConfigFilePath string
 	ProjectDir     string
-}
-
-type User struct {
-	ID       int
-	Username string
-	Password string
 }
 
 func (FI *FileInfo) FillInfoStruct() {
@@ -55,49 +52,45 @@ func (FI *FileInfo) FillInfoStruct() {
 	}
 }
 
-func (FI *FileInfo) AuthenticateUser(username string, password string) (bool, error) {
+func AuthenticateUser(username, password, server string) (bool, error) {
+
 	var (
-		db       *sql.DB
-		err      error
-		UserRow  *sql.Rows
-		TempUser User
+		User      Common.User
+		Jdata     []byte
+		err       error
+		resp      *http.Response
+		transport http.Transport
+		client    http.Client
 	)
-	db, err = sql.Open("sqlite3", FI.DataBasePath)
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport = &transport
+
+	User.Username = username
+	User.Password = password
+
+	Jdata, err = json.Marshal(User)
 	if err != nil {
-		log.Fatalln("[error] Failed to open database", err)
+		log.Println("[error] attempting to marshal json data", err)
+		return false, err
+	}
+	endpoint := "https://" + server + "/AuthenticateUser"
+
+	resp, err = client.Post(endpoint, "application/json", bytes.NewBuffer(Jdata))
+	if err != nil {
+		log.Println("[error] attmepting post request", err)
 		return false, err
 	}
 
-	if err != nil {
-		log.Fatalln("[error] hashing password", err)
-		return false, err
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Println("[error] invalid credentials please try again")
+		return false, nil
 	}
 
-	GetUserQuery := `
-SELECT id, username, password FROM users WHERE username = ?;
-`
-	UserRow, err = db.Query(GetUserQuery, username)
-
-	if err != nil {
-		log.Fatalln("[error] attempting query", err)
-		return false, err
-	}
-	defer UserRow.Close()
-
-	UserRow.Next()
-	err = UserRow.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Password)
-	if err != nil {
-		return false, err
-	}
-
-	err = bcrypt.CompareHashAndPassword([]byte(TempUser.Password), []byte(password))
-	if err == nil {
-		return true, nil
-	}
-	return false, nil
+	return true, nil
 }
 
-// TODO: create remote host form.
 // AuthenticationForm is used to create the initial form users of the application will authenticate with.
 func (FI *FileInfo) AuthenticationForm() {
 
@@ -127,8 +120,15 @@ func (FI *FileInfo) AuthenticationForm() {
 		},
 		//when submit button is pressed this is what executes
 		OnSubmit: func() { // optional, handle form submission
+			var success bool
+			var err error
 
-			success, err := FI.AuthenticateUser(UsernameField.Text, PasswordField.Text)
+			//check if our server field is the default setting if so use it.
+			if ServerField.Text == "" {
+				success, err = AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.PlaceHolder)
+			} else {
+				success, err = AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.Text)
+			}
 			if err != nil {
 				log.Println("[error] Invalid Credentials, please try again", err)
 			}
@@ -149,6 +149,13 @@ func (FI *FileInfo) AuthenticationForm() {
 		SubmitText: "Authenticate",
 		CancelText: "Exit AllSecure",
 	}
+
+	//set ICON
+	r, err := fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
+	if err != nil {
+		log.Println("[error] unable to load server ico file", err)
+	}
+	myWindow.SetIcon(r)
 
 	//setting background image
 	BgImage := canvas.NewImageFromFile(FI.ProjectDir + "\\Assets\\ChipImage.png")
@@ -175,4 +182,3 @@ func main() {
 }
 
 //TODO: create the main menu after authentication.
-//TODO: create team server capability to authetnicate remote clients

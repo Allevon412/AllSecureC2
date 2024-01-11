@@ -8,6 +8,12 @@ import (
 )
 
 type (
+	DBUser struct {
+		ID       int
+		Username string
+		Password string
+	}
+
 	HTTPServerConfig struct {
 		Name         string
 		KillDate     int64
