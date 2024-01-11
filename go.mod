@@ -2,7 +2,10 @@ module AllSecure
 
 go 1.20
 
-require github.com/gin-gonic/gin v1.9.1
+require (
+	github.com/gin-gonic/gin v1.9.1
+	github.com/gorilla/websocket v1.5.1
+)
 
 require (
 	github.com/bytedance/sonic v1.10.2 // indirect

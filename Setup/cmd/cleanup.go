@@ -27,7 +27,7 @@ func (FI *FileInfo) FillInfoStruct() {
 	)
 	WorkDir, err = os.Getwd()
 	parts := strings.Split(WorkDir, "AllSecure")
-	content, err = os.ReadFile(parts[0] + "AllSecure\\Config\\AllSecure.Config")
+	content, err = os.ReadFile(parts[0] + "AllSecure\\Server\\AllSecure.Server")
 	if err != nil {
 		log.Fatalln("[error] Error opening file", err)
 	}
@@ -86,10 +86,7 @@ var cleanupCmd = &cobra.Command{
 	Long: `This command is intended to help you automate the destruction of AllSecure data
 This could be helpful if there are any issues with your C2 or un-forseen usecases. Then initialize can be used
 for resetting the framework.
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var FI FileInfo
 		FI.FillInfoStruct()

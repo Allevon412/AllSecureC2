@@ -49,11 +49,11 @@ func (config *AllSecureConfig) CreateConfigDir() {
 	)
 
 	//check if configuration folder exists if not create it.
-	if !CheckIfFileExists(config.ProjectDir + "\\Config") {
-		err = os.Mkdir(config.ProjectDir+"\\Config", 0777)
-		config.ConfigDir = config.ProjectDir + "\\Config"
+	if !CheckIfFileExists(config.ProjectDir + "\\Server") {
+		err = os.Mkdir(config.ProjectDir+"\\Server", 0777)
+		config.ConfigDir = config.ProjectDir + "\\Server"
 		if err != nil {
-			log.Fatalln("[!] Error Creating Config directory", err)
+			log.Fatalln("[!] Error Creating Server directory", err)
 		}
 	}
 
@@ -66,15 +66,15 @@ func (config *AllSecureConfig) CreateConfigFile() (*os.File, error) {
 	)
 	config.CreateConfigDir()
 	// check if the config file exists. if not create it. if it does open a pointer to it.
-	if !CheckIfFileExists(config.ConfigDir + "\\AllSecure.Config") {
-		fp, err = os.Create(config.ConfigDir + "\\AllSecure.Config")
+	if !CheckIfFileExists(config.ConfigDir + "\\AllSecure.Server") {
+		fp, err = os.Create(config.ConfigDir + "\\AllSecure.Server")
 		if err != nil {
 			log.Fatalln("[!] Error Creating AllSecureConfig File", err)
 		}
-		config.ConfigFulLPath = config.ConfigDir + "\\AllSecure.Config"
+		config.ConfigFulLPath = config.ConfigDir + "\\AllSecure.Server"
 		return fp, err
 	} else {
-		return os.Open(config.ProjectDir + "\\Config" + "\\AllSecure.Config")
+		return os.Open(config.ProjectDir + "\\Server" + "\\AllSecure.Server")
 	}
 
 }

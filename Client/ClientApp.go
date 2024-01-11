@@ -55,7 +55,6 @@ func (FI *FileInfo) FillInfoStruct() {
 	}
 }
 
-// TODO: Make Authentication Function
 func (FI *FileInfo) AuthenticateUser(username string, password string) (bool, error) {
 	var (
 		db       *sql.DB
@@ -78,14 +77,16 @@ func (FI *FileInfo) AuthenticateUser(username string, password string) (bool, er
 SELECT id, username, password FROM users WHERE username = ?;
 `
 	UserRow, err = db.Query(GetUserQuery, username)
+
 	if err != nil {
 		log.Fatalln("[error] attempting query", err)
 		return false, err
 	}
+	defer UserRow.Close()
+
 	UserRow.Next()
 	err = UserRow.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Password)
 	if err != nil {
-		log.Fatalln("[error] attempting to read query data to user struct", err)
 		return false, err
 	}
 
@@ -96,6 +97,7 @@ SELECT id, username, password FROM users WHERE username = ?;
 	return false, nil
 }
 
+// TODO: create remote host form.
 // AuthenticationForm is used to create the initial form users of the application will authenticate with.
 func (FI *FileInfo) AuthenticationForm() {
 
@@ -112,12 +114,15 @@ func (FI *FileInfo) AuthenticationForm() {
 	FailedAuthField := widget.NewLabel("Credentials Invalid, Please Try Again")
 	FailedAuthField.TextStyle = fyne.TextStyle{Bold: true}
 	FailedAuthField.Hidden = true
+	ServerField := widget.NewEntry()
+	ServerField.PlaceHolder = "127.0.0.1:31337"
 
 	//create form
 	form := &widget.Form{
 		Items: []*widget.FormItem{ // we can specify items in the constructor
 			{Text: "Username: ", Widget: UsernameField},
 			{Text: "Password: ", Widget: PasswordField},
+			{Text: "Server: ", Widget: ServerField},
 			{Widget: FailedAuthField},
 		},
 		//when submit button is pressed this is what executes
@@ -125,9 +130,8 @@ func (FI *FileInfo) AuthenticationForm() {
 
 			success, err := FI.AuthenticateUser(UsernameField.Text, PasswordField.Text)
 			if err != nil {
-				log.Fatalln("[error] Error authenticating user", err)
+				log.Println("[error] Invalid Credentials, please try again", err)
 			}
-
 			switch success {
 			case true:
 				myWindow.Close()
@@ -169,3 +173,6 @@ func main() {
 	FI.AuthenticationForm()
 	//boarder()
 }
+
+//TODO: create the main menu after authentication.
+//TODO: create team server capability to authetnicate remote clients

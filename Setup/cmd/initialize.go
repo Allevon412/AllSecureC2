@@ -14,7 +14,6 @@ var config Config.AllSecureConfig
 
 // initializeCmd represents the initialize command
 // TODO: create usage of this command to parse a config file.
-// TODO: create a cleanup cobra command.
 var initializeCmd = &cobra.Command{
 	Use:   "initialize",
 	Short: "Initializes the AllSecure database and default properties",
@@ -34,7 +33,7 @@ The username will be AllSecure the password will be AllSecure123`,
 		config.InitDatabase()
 		fmt.Println("[+] Database Initialized and initial AllSecure user created!")
 		config.WriteDefaultConfig()
-		fmt.Println("[+] Config File Created with default values!")
+		fmt.Println("[+] Server File Created with default values!")
 	},
 }
 
