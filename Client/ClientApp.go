@@ -2,9 +2,6 @@ package main
 
 import (
 	"Client/Common"
-	"bytes"
-	"crypto/tls"
-	"encoding/json"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -13,7 +10,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 )
@@ -52,48 +48,8 @@ func (FI *FileInfo) FillInfoStruct() {
 	}
 }
 
-func AuthenticateUser(username, password, server string) (bool, error) {
-
-	var (
-		User      Common.User
-		Jdata     []byte
-		err       error
-		resp      *http.Response
-		transport http.Transport
-		client    http.Client
-	)
-	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	client.Transport = &transport
-
-	User.Username = username
-	User.Password = password
-
-	Jdata, err = json.Marshal(User)
-	if err != nil {
-		log.Println("[error] attempting to marshal json data", err)
-		return false, err
-	}
-	endpoint := "https://" + server + "/AuthenticateUser"
-
-	resp, err = client.Post(endpoint, "application/json", bytes.NewBuffer(Jdata))
-	if err != nil {
-		log.Println("[error] attmepting post request", err)
-		return false, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		log.Println("[error] invalid credentials please try again")
-		return false, nil
-	}
-
-	return true, nil
-}
-
 // AuthenticationForm is used to create the initial form users of the application will authenticate with.
 func (FI *FileInfo) AuthenticationForm() {
-
 	//create new app
 	myApp := app.New()
 	//create window from app & set title
@@ -101,14 +57,25 @@ func (FI *FileInfo) AuthenticationForm() {
 
 	//create username entry field
 	UsernameField := widget.NewEntry()
+	UsernameField.PlaceHolder = "Allevon412"
 	//create password entry field
 	PasswordField := widget.NewPasswordEntry()
-	//no auth
+	PasswordField.PlaceHolder = "Password123"
+	//create server entry field
+	ServerField := widget.NewEntry()
+	ServerField.PlaceHolder = "127.0.0.1:31337"
+
+	//set ICON
+	r, err := fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
+	if err != nil {
+		log.Println("[error] unable to load server ico file", err)
+	}
+	myWindow.SetIcon(r)
+
+	//failed to auth
 	FailedAuthField := widget.NewLabel("Credentials Invalid, Please Try Again")
 	FailedAuthField.TextStyle = fyne.TextStyle{Bold: true}
 	FailedAuthField.Hidden = true
-	ServerField := widget.NewEntry()
-	ServerField.PlaceHolder = "127.0.0.1:31337"
 
 	//create form
 	form := &widget.Form{
@@ -125,16 +92,23 @@ func (FI *FileInfo) AuthenticationForm() {
 
 			//check if our server field is the default setting if so use it.
 			if ServerField.Text == "" {
-				success, err = AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.PlaceHolder)
+				success, err = Common.AuthenticateUser(UsernameField.PlaceHolder, PasswordField.PlaceHolder, ServerField.PlaceHolder)
 			} else {
-				success, err = AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.Text)
+				success, err = Common.AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.Text)
 			}
 			if err != nil {
 				log.Println("[error] Invalid Credentials, please try again", err)
 			}
 			switch success {
 			case true:
-				myWindow.Close()
+				if ServerField.Text == "" {
+					MainMenu(UsernameField.PlaceHolder, myApp, r)
+					myWindow.Close()
+				} else {
+					MainMenu(UsernameField.Text, myApp, r)
+					myWindow.Close()
+				}
+
 			case false:
 				FailedAuthField.Hidden = false
 			}
@@ -150,13 +124,6 @@ func (FI *FileInfo) AuthenticationForm() {
 		CancelText: "Exit AllSecure",
 	}
 
-	//set ICON
-	r, err := fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
-	if err != nil {
-		log.Println("[error] unable to load server ico file", err)
-	}
-	myWindow.SetIcon(r)
-
 	//setting background image
 	BgImage := canvas.NewImageFromFile(FI.ProjectDir + "\\Assets\\ChipImage.png")
 	//attempting to fill background with image.
@@ -170,6 +137,9 @@ func (FI *FileInfo) AuthenticationForm() {
 	//myWindow.Resize(fyne.NewSize(500, 500))
 	//setting window content
 	myWindow.SetContent(BgContainer)
+
+	myApp.Settings().SetTheme(&Common.AllSecureTheme{})
+
 	//running window content
 	myWindow.ShowAndRun()
 }
