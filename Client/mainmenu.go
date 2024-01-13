@@ -1,10 +1,10 @@
 package main
 
 import (
+	"Client/Common"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"time"
 )
@@ -15,27 +15,37 @@ func testfunc() {
 
 func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource) {
 
+	//Create new window
 	myWindow := OldWindow.NewWindow("TabContainer Widget")
 
+	//Create new teams chat
 	TeamsChatLog := widget.NewMultiLineEntry()
 	TeamsChatLog.Disable()
+	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
+	OnEnterKeyPress := func(EnteredText string) {
+		prevtext := TeamsChatLog.Text
+		date := time.Now()
+		TeamsChatLog.SetText(fmt.Sprintf("%s\n%s [%s] :: %s", prevtext, date.Format("2006-01-02 15:04:05"), Username, EnteredText))
+	}
+	CustomEntryWidget := Common.NewCustomChatEntry(OnEnterKeyPress)
 
-	ChatEntry := widget.NewEntry()
-
+	//Teams chat entry's combined into one form.
 	TeamsChat := &widget.Form{
 		Items: []*widget.FormItem{
-			{Text: Username, Widget: ChatEntry},
+			{Text: "Teams Chat", Widget: TeamsChatLog},
+			{Text: Username, Widget: CustomEntryWidget},
 		},
 		OnSubmit: func() {
 			prevtext := TeamsChatLog.Text
 			date := time.Now()
-			TeamsChatLog.SetText(fmt.Sprintf("%s\n%s [%s] :: %s", prevtext, date.Format("2006-01-02 15:04:05"), Username, ChatEntry.Text))
+			TeamsChatLog.SetText(fmt.Sprintf("%s\n%s [%s] :: %s", prevtext, date.Format("2006-01-02 15:04:05"), Username, CustomEntryWidget.Text))
 		},
 		OnCancel:   nil,
 		SubmitText: "",
 		CancelText: "",
 	}
 
+	//creating all menu items.
 	mainMenu := fyne.NewMainMenu(
 		fyne.NewMenu("Options",
 			fyne.NewMenuItem("AddUser", testfunc),
@@ -56,28 +66,28 @@ func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource) {
 	)
 
 	// Create content for each pane
-	topLeftContent := widget.NewLabel("Active Implants")
+
+	Common.Init()
+	ImplantTable := Common.CreateImplantTable()
+
 	topRightContent := widget.NewLabel("Log Channel")
-	bottomContent := widget.NewLabel("Team Chat")
 
-	chatbox := container.New(layout.NewAdaptiveGridLayout(2), TeamsChatLog, TeamsChat)
-
-	//chatbox := container.NewAppTabs(TeamsChatLog, TeamsChat)
-	// := container.NewGridWithRows(2, , layout.NewSpacer(), )
-	bottomstack := container.NewStack(bottomContent, chatbox)
 	// Create a horizontal split for the top panes
-	topsplit := container.NewHSplit(topLeftContent, topRightContent)
-	bottomsplit := container.NewVSplit(topsplit, bottomstack)
+	topsplit := container.NewHSplit(ImplantTable, topRightContent)
+	//bottomsplit := container.NewVSplit(topsplit, TeamsChat)
 
 	// Create a border layout with the top and bottom panes
 	content := container.NewBorder(
 		nil, nil, // No left or right panes
 		nil, nil, // Top and bottom panes
-		topsplit, bottomsplit, // Center pane (topSplit)
+		topsplit, // Center pane (topSplit)
 	)
+	content2 := container.NewVSplit(content, TeamsChat)
+	//content3 := container.NewBorder(nil, nil, nil, nil, content2)
+
 	myWindow.SetMainMenu(mainMenu)
 
-	myWindow.SetContent(content)
+	myWindow.SetContent(content2)
 	myWindow.Resize(fyne.NewSize(600, 400))
 	myWindow.SetIcon(icon)
 

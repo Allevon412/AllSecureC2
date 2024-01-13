@@ -2,39 +2,31 @@ package Common
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"image/color"
 )
 
 type (
-	MyEntryStruct struct {
+	// extending the natural entry widget to have the functionality to send text by pressing enter.
+	CustomChatEntry struct {
 		widget.Entry
+		FormSubmitFunc func(CurrentText string)
 	}
 
+	//custom theme for allsecure so we do not have the greyed out team's chat box.
 	AllSecureTheme struct{}
+
+	TableOptions struct {
+		Headers    []string
+		CellWidth  float32
+		CellHeight float32
+	}
+
+	CustomTable struct {
+		widget.Table
+		TableOpts TableOptions
+	}
 )
 
+// asserting the custome theme
 var _ fyne.Theme = (*AllSecureTheme)(nil)
-
-func (m AllSecureTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
-
-	if name == theme.ColorNameDisabled {
-		return color.White
-	}
-
-	return theme.DefaultTheme().Color(name, variant)
-}
-
-func (m AllSecureTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
-
-	return theme.DefaultTheme().Icon(name)
-}
-
-func (m AllSecureTheme) Font(style fyne.TextStyle) fyne.Resource {
-	return theme.DefaultTheme().Font(style)
-}
-
-func (m AllSecureTheme) Size(name fyne.ThemeSizeName) float32 {
-	return theme.DefaultTheme().Size(name)
-}
+var _ fyne.Widget = (*CustomTable)(nil)
