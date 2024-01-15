@@ -2,6 +2,7 @@ package main
 
 import (
 	"Client/Common"
+	"Client/mainmenu"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -20,11 +21,20 @@ type FileInfo struct {
 	ProjectDir     string
 }
 
+var (
+	CustomUsernameEntry, CustomPasswordEntry, CustomServerFieldEntry *Common.CustomCredentialsEntry
+	FailedAuthField                                                  *widget.Label
+	myApp                                                            fyne.App
+	myWindow                                                         fyne.Window
+	ResourcePath                                                     string
+	r                                                                fyne.Resource
+	err                                                              error
+)
+
 func (FI *FileInfo) FillInfoStruct() {
 	var (
 		WorkDir string
 		content []byte
-		err     error
 	)
 	WorkDir, err = os.Getwd()
 	parts := strings.Split(WorkDir, "AllSecure")
@@ -48,71 +58,78 @@ func (FI *FileInfo) FillInfoStruct() {
 	}
 }
 
+// TODO remove placeholder info and logic checks for production.
+// custom function to authenticate user if the user presses enter on keyboard.
+func AuthenticateCredentials() {
+	var success bool
+
+	//check if our server field is the default setting if so use it.
+	if CustomServerFieldEntry.Text == "" && CustomUsernameEntry.Text == "" && CustomPasswordEntry.Text == "" {
+		success, err = Common.AuthenticateUser(CustomUsernameEntry.PlaceHolder, CustomPasswordEntry.PlaceHolder, CustomServerFieldEntry.PlaceHolder)
+	} else {
+		success, err = Common.AuthenticateUser(CustomUsernameEntry.Text, CustomPasswordEntry.Text, CustomServerFieldEntry.Text)
+	}
+	if err != nil {
+		log.Println("[error] Invalid Credentials, please try again", err)
+	}
+	switch success {
+	case true:
+		if CustomServerFieldEntry.Text == "" && CustomUsernameEntry.Text == "" && CustomPasswordEntry.Text == "" {
+			mainmenu.MainMenu(CustomUsernameEntry.PlaceHolder, myApp, r, ResourcePath)
+			myWindow.Close()
+		} else {
+			mainmenu.MainMenu(CustomUsernameEntry.Text, myApp, r, ResourcePath)
+			myWindow.Close()
+		}
+
+	case false:
+		FailedAuthField.Hidden = false
+	}
+}
+
 // AuthenticationForm is used to create the initial form users of the application will authenticate with.
 func (FI *FileInfo) AuthenticationForm() {
 	//create new app
-	myApp := app.New()
+	myApp = app.New()
 	//create window from app & set title
-	myWindow := myApp.NewWindow("AllSecure")
+	myWindow = myApp.NewWindow("AllSecure")
 
-	//create username entry field
-	UsernameField := widget.NewEntry()
-	UsernameField.PlaceHolder = "Allevon412"
+	//create custom username entry field if user presses enter AuthenticateCredentials will run.
+	CustomUsernameEntry = Common.NewCustomCredentialEntry(AuthenticateCredentials)
+	CustomUsernameEntry.PlaceHolder = "Allevon412" //set place holder for lazy debugger.
 	//create password entry field
-	PasswordField := widget.NewPasswordEntry()
-	PasswordField.PlaceHolder = "Password123"
+	CustomPasswordEntry = Common.NewCustomCredentialEntry(AuthenticateCredentials)
+	CustomPasswordEntry.PlaceHolder = "Password123"
+	CustomPasswordEntry.Password = true
 	//create server entry field
-	ServerField := widget.NewEntry()
-	ServerField.PlaceHolder = "127.0.0.1:31337"
+	CustomServerFieldEntry = Common.NewCustomCredentialEntry(AuthenticateCredentials)
+	CustomServerFieldEntry.PlaceHolder = "127.0.0.1:31337"
 
 	//set ICON
-	r, err := fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
+	r, err = fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
 	if err != nil {
 		log.Println("[error] unable to load server ico file", err)
 	}
 	myWindow.SetIcon(r)
+	//set resource path for future use
+	ResourcePath = FI.ProjectDir + "\\Assets\\"
 
 	//failed to auth
-	FailedAuthField := widget.NewLabel("Credentials Invalid, Please Try Again")
+	FailedAuthField = widget.NewLabel("Credentials Invalid, Please Try Again")
 	FailedAuthField.TextStyle = fyne.TextStyle{Bold: true}
 	FailedAuthField.Hidden = true
 
 	//create form
 	form := &widget.Form{
 		Items: []*widget.FormItem{ // we can specify items in the constructor
-			{Text: "Username: ", Widget: UsernameField},
-			{Text: "Password: ", Widget: PasswordField},
-			{Text: "Server: ", Widget: ServerField},
+			{Text: "Username: ", Widget: CustomUsernameEntry},
+			{Text: "Password: ", Widget: CustomPasswordEntry},
+			{Text: "Server: ", Widget: CustomServerFieldEntry},
 			{Widget: FailedAuthField},
 		},
 		//when submit button is pressed this is what executes
 		OnSubmit: func() { // optional, handle form submission
-			var success bool
-			var err error
-
-			//check if our server field is the default setting if so use it.
-			if ServerField.Text == "" {
-				success, err = Common.AuthenticateUser(UsernameField.PlaceHolder, PasswordField.PlaceHolder, ServerField.PlaceHolder)
-			} else {
-				success, err = Common.AuthenticateUser(UsernameField.Text, PasswordField.Text, ServerField.Text)
-			}
-			if err != nil {
-				log.Println("[error] Invalid Credentials, please try again", err)
-			}
-			switch success {
-			case true:
-				if ServerField.Text == "" {
-					MainMenu(UsernameField.PlaceHolder, myApp, r)
-					myWindow.Close()
-				} else {
-					MainMenu(UsernameField.Text, myApp, r)
-					myWindow.Close()
-				}
-
-			case false:
-				FailedAuthField.Hidden = false
-			}
-
+			AuthenticateCredentials()
 		},
 		//when close button is pressed this is what executes
 		//cancel button only shows if this is defined
@@ -148,7 +165,6 @@ func main() {
 	var FI FileInfo
 	FI.FillInfoStruct()
 	FI.AuthenticationForm()
-	//boarder()
 }
 
 //TODO: create the main menu after authentication.

@@ -1,0 +1,5 @@
+package mainmenu
+
+func testfunc() {
+
+}
