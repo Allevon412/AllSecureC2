@@ -15,6 +15,7 @@ func AuthenticateUser(username, password, databasepath string) (bool, error) {
 		UserRow  *sql.Rows
 		TempUser Common.DBUser
 	)
+
 	db, err = sql.Open("sqlite3", databasepath)
 	if err != nil {
 		log.Println("[error] Failed to open database", err)

@@ -10,7 +10,8 @@ import (
 
 var DatabasePath string
 
-func AuthenticateUser(ctx *gin.Context) {
+// TODO Create functioanlity to read JWT tokens.
+func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	var TempUser Common.User
 
 	err := ctx.BindJSON(&TempUser)
@@ -36,7 +37,7 @@ func (t *TS) AddAuthenticateUserEndpoint() bool {
 	DatabasePath = t.Server.FI.DataBasePath
 	AuthUser := &Common.Endpoint{
 		Endpoint: "AuthenticateUser",
-		Function: AuthenticateUser,
+		Function: t.AuthenticateUser,
 	}
 
 	return t.AddEndPoint(AuthUser)

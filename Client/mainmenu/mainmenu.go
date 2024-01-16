@@ -16,15 +16,33 @@ var (
 	err               error
 )
 
-func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
+func CreateMenuItems(OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
+	mainMenu := fyne.NewMainMenu(
+		fyne.NewMenu("Options",
+			fyne.NewMenuItem("View Users", func() { CreateUserWindow(OldWindow) }),
+			fyne.NewMenuItem("Add User", func() { CreateUserWindow(OldWindow) }),
+			fyne.NewMenuItem("Delete User", func() { CreateUserWindow(OldWindow) }),
+		),
+		fyne.NewMenu("View",
+			fyne.NewMenuItem("Team Chat", func() { AddTab(tabs, TeamsChat, "Teams Chat") }),
+			fyne.NewMenuItem("Listeners", func() { AddTab(tabs, widget.NewLabel("Listeners Test"), "Active Listeners") }),
+			fyne.NewMenuItem("Logging", func() { AddTab(tabs, widget.NewLabel("Logging Test"), "Logs") }),
+		),
+		fyne.NewMenu("Payload Builder",
+			fyne.NewMenuItem("Build Payload", testfunc),
+		),
+		fyne.NewMenu("Help",
+			fyne.NewMenuItem("Github", testfunc),
+			fyne.NewMenuItem("Documentation", testfunc),
+		),
+	)
+	return mainMenu
+}
 
-	//Create new window
-	NewWindow := OldWindow.NewWindow("TabContainer Widget")
-	username = Username
-
-	//Create new teams chat
+func CreateChatForm(Username string) *widget.Form {
 	teamsChatLog = widget.NewMultiLineEntry()
 	teamsChatLog.Disable()
+	teamsChatLog.SetMinRowsVisible(10)
 
 	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
 	customEntryWidget = Common.NewCustomChatEntry(UpdateChat)
@@ -43,6 +61,18 @@ func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourceP
 		CancelText: "",
 	}
 
+	return TeamsChat
+}
+
+func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
+
+	//Create new window
+	NewWindow := OldWindow.NewWindow("AllSecure")
+	username = Username
+
+	//Create new teams chat
+	TeamsChat := CreateChatForm(Username)
+
 	//load chat icon
 	chaticon, err = fyne.LoadResourceFromPath(ResourcePath + "chat.ico")
 	if err != nil {
@@ -53,50 +83,36 @@ func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourceP
 	tabs := container.NewDocTabs()
 
 	//creating all menu items.
-	mainMenu := fyne.NewMainMenu(
-		fyne.NewMenu("Options",
-			fyne.NewMenuItem("AddUser", testfunc),
-			fyne.NewMenuItem("DeleteUser", testfunc),
-		),
-		fyne.NewMenu("View",
-			fyne.NewMenuItem("Team Chat", func() { AddTab(tabs, TeamsChat, "Teams Chat") }),
-			fyne.NewMenuItem("Listeners", func() { AddTab(tabs, widget.NewLabel("Listeners Test"), "Active Listeners") }),
-			fyne.NewMenuItem("Logging", func() { AddTab(tabs, widget.NewLabel("Logging Test"), "Logs") }),
-		),
-		fyne.NewMenu("Payload Builder",
-			fyne.NewMenuItem("Build Payload", testfunc),
-		),
-		fyne.NewMenu("Help",
-			fyne.NewMenuItem("Github", testfunc),
-			fyne.NewMenuItem("Documentation", testfunc),
-		),
-	)
+	mainMenu := CreateMenuItems(OldWindow, TeamsChat, tabs)
+
+	//create initial tab
+	tabs.Append(container.NewTabItemWithIcon("Teams Chat", chaticon, TeamsChat))
 
 	// Create content for table pane
-	Common.Init()
+	Common.ImplantTableInit()
 	ImplantTable := Common.CreateImplantTable()
 
 	// TODO create logging pane.
-	topRightContent := widget.NewLabel("Log Channel")
+	topRightContent := widget.NewLabel("Logging Pane")
 
 	// Create a horizontal split for the top panes
 	topsplit := container.NewHSplit(ImplantTable, topRightContent)
 
+	//CenteredTabsContainer := container.New(&Common.CenteredBottomStacked{}, tabs)
+	CenteredTabsContainer := container.NewStack(tabs)
 	// Create a border layout with the top and bottom panes
 	TopCenteredSplitContent := container.NewBorder(
-		nil, nil, // No left or right panes
+		nil, CenteredTabsContainer, // No left or right panes
 		nil, nil, // Top and bottom panes
 		topsplit, // Center pane (topSplit)
 	)
 
-	BottomWindow := container.NewVSplit(TopCenteredSplitContent, tabs)
-	//content3 := container.NewBorder(nil, nil, nil, nil, content2)
-
+	//set window size parameters + main menu + the 3 window panes + icon.
 	NewWindow.SetMainMenu(mainMenu)
-
-	NewWindow.SetContent(BottomWindow)
+	NewWindow.SetContent(TopCenteredSplitContent)
 	NewWindow.Resize(fyne.NewSize(1920, 1080))
 	NewWindow.SetIcon(icon)
 
+	//show content. it's already running.
 	NewWindow.Show()
 }

@@ -29,6 +29,7 @@ var (
 	ResourcePath                                                     string
 	r                                                                fyne.Resource
 	err                                                              error
+	ClientObj                                                        Common.Client
 )
 
 func (FI *FileInfo) FillInfoStruct() {
@@ -65,19 +66,31 @@ func AuthenticateCredentials() {
 
 	//check if our server field is the default setting if so use it.
 	if CustomServerFieldEntry.Text == "" && CustomUsernameEntry.Text == "" && CustomPasswordEntry.Text == "" {
+		//set client obj data
+		ClientObj.Server = CustomServerFieldEntry.PlaceHolder
+		//attempt authentication
 		success, err = Common.AuthenticateUser(CustomUsernameEntry.PlaceHolder, CustomPasswordEntry.PlaceHolder, CustomServerFieldEntry.PlaceHolder)
 	} else {
+		//set client obj data
+		ClientObj.Server = CustomServerFieldEntry.Text
+		//attempt authentication
 		success, err = Common.AuthenticateUser(CustomUsernameEntry.Text, CustomPasswordEntry.Text, CustomServerFieldEntry.Text)
 	}
 	if err != nil {
 		log.Println("[error] Invalid Credentials, please try again", err)
 	}
+	//check authentication status
 	switch success {
 	case true:
+		//check for lazy development TODO remove
 		if CustomServerFieldEntry.Text == "" && CustomUsernameEntry.Text == "" && CustomPasswordEntry.Text == "" {
+			//set client obj data.
+			ClientObj.Username = CustomUsernameEntry.PlaceHolder
+			//go to next screen.
 			mainmenu.MainMenu(CustomUsernameEntry.PlaceHolder, myApp, r, ResourcePath)
 			myWindow.Close()
 		} else {
+			ClientObj.Username = CustomUsernameEntry.Text
 			mainmenu.MainMenu(CustomUsernameEntry.Text, myApp, r, ResourcePath)
 			myWindow.Close()
 		}

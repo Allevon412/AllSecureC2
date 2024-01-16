@@ -11,13 +11,14 @@ import (
 func AuthenticateUser(username, password, server string) (bool, error) {
 
 	var (
-		User      User
+		User      user
 		Jdata     []byte
 		err       error
 		resp      *http.Response
 		transport http.Transport
 		client    http.Client
 	)
+
 	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	client.Transport = &transport
 
@@ -45,4 +46,8 @@ func AuthenticateUser(username, password, server string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func RetrieveUserData() {
+
 }

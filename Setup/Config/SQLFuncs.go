@@ -37,9 +37,9 @@ func (config *AllSecureConfig) CreateUserTable(db *sql.Tx) bool {
 func (config *AllSecureConfig) InsertUserIntoTable(db *sql.Tx, username string, hashedpassword string) bool {
 	var err error
 	InsertUser := `
-	INSERT INTO users (username, password) VALUES (?, ?);
+	INSERT INTO users (username, password, perms) VALUES (?, ?, ?);
 `
-	_, err = db.Exec(InsertUser, config.Username, hashedpassword)
+	_, err = db.Exec(InsertUser, config.Username, hashedpassword, "Admin")
 	if err != nil {
 		log.Fatalln("[!] error inserting user into table", err)
 		return false

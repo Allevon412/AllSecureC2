@@ -65,14 +65,17 @@ func (t *TS) HandleRequest(ClientID string) {
 
 // very similar implmenetaiton to https://github.com/HavocFramework/Havoc/blob/main/teamserver/cmd/server/teamserver.go
 func (t *TS) Start() {
-
 	var (
 		ServerFinished         chan bool
 		DefaultEndPointsParsed chan bool
+		err                    error
+		currdir                string
 	)
+	//generate random string to sign our JWT's with.
+	t.Server.TokenKey, err = Crypt.GenerateRandomString(16)
 
 	//read the configuration file
-	currdir, err := os.Getwd()
+	currdir, err = os.Getwd()
 	if err != nil {
 		log.Fatalln("[error] obtaining current directory path")
 	}

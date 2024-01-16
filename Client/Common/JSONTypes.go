@@ -1,6 +1,6 @@
 package Common
 
-type User struct {
+type user struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }

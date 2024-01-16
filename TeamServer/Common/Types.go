@@ -31,7 +31,6 @@ type (
 		RemoteIP      string
 		Authenticated bool
 		Mutex         sync.Mutex
-		SessionId     string
 	}
 
 	FileInfo struct {
@@ -66,5 +65,6 @@ type (
 		FI     FileInfo
 
 		Endpoints []*Endpoint
+		TokenKey  string
 	}
 )
