@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-func AuthenticateUser(username, password, databasepath string) (bool, error) {
+func AuthenticateUser(username, password, databasepath string) (int, int, bool, error) {
 	var (
 		db       *sql.DB
 		err      error
@@ -19,35 +19,35 @@ func AuthenticateUser(username, password, databasepath string) (bool, error) {
 	db, err = sql.Open("sqlite3", databasepath)
 	if err != nil {
 		log.Println("[error] Failed to open database", err)
-		return false, err
+		return 0, 0, false, err
 	}
 
 	if err != nil {
 		log.Println("[error] hashing password", err)
-		return false, err
+		return 0, 0, false, err
 	}
 
 	GetUserQuery := `
-SELECT id, username, password FROM users WHERE username = ?;
+SELECT id, username, password, perms FROM users WHERE username = ?;
 `
 	UserRow, err = db.Query(GetUserQuery, username)
 
 	if err != nil {
 		log.Println("[error] attempting query", err)
-		return false, err
+		return 0, 0, false, err
 	}
 	defer UserRow.Close()
 
 	UserRow.Next()
-	err = UserRow.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Password)
+	err = UserRow.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Password, &TempUser.Admin)
 	if err != nil {
-		return false, err
+		return 0, 0, false, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(TempUser.Password), []byte(password))
 	if err == nil {
-		return true, nil
+		return TempUser.Admin, TempUser.ID, true, nil
 	}
-	return false, nil
+	return 0, 0, false, nil
 
 }

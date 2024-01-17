@@ -21,7 +21,7 @@ func (config *AllSecureConfig) CreateUserTable(db *sql.Tx) bool {
 	CreateUserTable := `
 	CREATE TABLE IF NOT EXISTS users (
 	    id INTEGER PRIMARY KEY AUTOINCREMENT,
-	    perms VARCHAR(16) NULL,
+	    adminperms INTEGER NOT NULL,
 	    username TEXT NOT NULL,
 	    password TEXT NOT NULL
 	);
@@ -37,9 +37,9 @@ func (config *AllSecureConfig) CreateUserTable(db *sql.Tx) bool {
 func (config *AllSecureConfig) InsertUserIntoTable(db *sql.Tx, username string, hashedpassword string) bool {
 	var err error
 	InsertUser := `
-	INSERT INTO users (username, password, perms) VALUES (?, ?, ?);
+	INSERT INTO users (username, password, adminperms) VALUES (?, ?, ?);
 `
-	_, err = db.Exec(InsertUser, config.Username, hashedpassword, "Admin")
+	_, err = db.Exec(InsertUser, config.Username, hashedpassword, 1)
 	if err != nil {
 		log.Fatalln("[!] error inserting user into table", err)
 		return false

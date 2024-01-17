@@ -19,14 +19,14 @@ func CheckIfFileExists(FilePath string) bool {
 	return true
 }
 
-func (config *AllSecureConfig) CheckIfDatabaseFolderExists() bool {
+func (config *AllSecureConfig) CheckIfExists(path string) bool {
 
 	//check if database exists
-	if config.DatabaseDir == "" {
+	if path == "" {
 		log.Fatalln("[!] There is no Database Directory in config")
 		return false
 	}
-	_, err := os.Stat(config.DatabaseDir)
+	_, err := os.Stat(path)
 	if errors.Is(err, os.ErrNotExist) {
 		return false
 	}
@@ -61,17 +61,26 @@ func (config *AllSecureConfig) CreateDatabase() (*os.File, error) {
 }
 
 func (config *AllSecureConfig) CheckForAndCreateDatabase() (*os.File, error) {
-	//check if database file exists
-	if config.CheckIfDatabaseFolderExists() {
+	//check if database folder exists
+	if config.CheckIfExists(config.DatabaseDir) {
 		config.DatabaseFullPath = config.DatabaseDir + "\\AllSecure.db"
-		return os.Open(config.DatabaseDir + "\\AllSecure.db")
+		//check if database file exists
+		if config.CheckIfExists(config.DatabaseDir + "\\AllSecure.db") {
+			//if so open it.
+			return os.Open(config.DatabaseDir + "\\AllSecure.db")
+		} else {
+			//if not create database & return handle to it.
+			return config.CreateDatabase()
+		}
 
 	}
+	//create folder since it doesn't exist.
 	err := config.CreateDatabaseFolder()
 	if err != nil {
 		log.Fatalln(err)
 		return nil, err
 	}
+	//create database since it cannot logically exist w/o the folder
 	return config.CreateDatabase()
 
 }

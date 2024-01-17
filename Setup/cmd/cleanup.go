@@ -27,7 +27,7 @@ func (FI *FileInfo) FillInfoStruct() {
 	)
 	WorkDir, err = os.Getwd()
 	parts := strings.Split(WorkDir, "AllSecure")
-	content, err = os.ReadFile(parts[0] + "AllSecure\\Server\\AllSecure.Server")
+	content, err = os.ReadFile(parts[0] + "AllSecure\\Config\\AllSecure.Config")
 	if err != nil {
 		log.Fatalln("[error] Error opening file", err)
 	}
@@ -60,6 +60,7 @@ func ConfirmDeletion() bool {
 }
 
 func (FI *FileInfo) DeleteData(FolderPath string) error {
+
 	err := filepath.Walk(FolderPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -90,12 +91,13 @@ for resetting the framework.
 	Run: func(cmd *cobra.Command, args []string) {
 		var FI FileInfo
 		FI.FillInfoStruct()
+		//TODO production needs to be able to determine current working directory for project folder & go from there.
 		if ConfirmDeletion() {
-			err := FI.DeleteData(FI.DataBasePath)
+			err := FI.DeleteData(strings.TrimSpace(FI.ProjectDir) + "\\Database")
 			if err != nil {
 				log.Fatalln("[error] attempting to delete the database path", err)
 			}
-			err = FI.DeleteData(FI.ConfigFilePath)
+			err = FI.DeleteData(strings.TrimSpace(FI.ProjectDir) + "\\Config")
 			if err != nil {
 				log.Fatalln("[error] attempting to delete the config file path", err)
 			}

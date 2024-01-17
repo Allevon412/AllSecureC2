@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
+	"strings"
 )
 
 var config Config.AllSecureConfig
@@ -25,6 +26,7 @@ The default settings for each command will be the current working directory for 
 The username will be AllSecure the password will be AllSecure123`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		config.ProjectDir = strings.Trim(config.ProjectDir, "\"")
 		config.DatabaseDir = config.ProjectDir + "\\Database"
 		_, err := config.CheckForAndCreateDatabase()
 		if err != nil {

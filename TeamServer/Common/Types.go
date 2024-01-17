@@ -12,6 +12,7 @@ type (
 		ID       int
 		Username string
 		Password string
+		Admin    int
 	}
 
 	HTTPServerConfig struct {
