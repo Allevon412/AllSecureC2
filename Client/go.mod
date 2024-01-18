@@ -6,7 +6,6 @@ require (
 	fyne.io/fyne/v2 v2.4.3
 	github.com/go-loremipsum/loremipsum v1.1.3
 	github.com/mattn/go-sqlite3 v1.14.19
-	github.com/therecipe/qt v0.0.0-20200904063919-c0c124a5770d
 )
 
 require (

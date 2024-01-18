@@ -1,7 +1,16 @@
 package mainmenu
 
 import (
+	"Client/Common"
+	"crypto/tls"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
 	"fyne.io/fyne/v2"
+	"io"
+	"log"
+	"net/http"
+	"strings"
 )
 
 // TODO add the add user functionality
@@ -14,8 +23,73 @@ func RemoveUser() {
 
 }
 
-func CreateUserWindow(OldWindow fyne.App) {
+func base64decode(encodedstr string) []byte {
+	dst := make([]byte, base64.StdEncoding.DecodedLen(len(encodedstr)))
+	_, err := base64.StdEncoding.Decode(dst, []byte(encodedstr))
+	if err != nil {
+		fmt.Println("decode error:", err)
+		return []byte{}
+	}
+	return dst
+}
+
+// TODO create fetch user data function. to retrieve user data table bindings.
+func GetUserData(clientobj *Common.Client) ([]byte, error) {
+	var (
+		token     []byte
+		err       error
+		req       *http.Request
+		resp      *http.Response
+		transport http.Transport
+		client    http.Client
+		data      []byte
+		decoded   []byte
+	)
+
+	//setup the http tls configuration
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport = &transport
+	//setup our endpoint
+	endpoint := "https://" + clientobj.Server + "/GetUserData"
+
+	//create a new request that our client will perform.
+	req, err = http.NewRequest("POST", endpoint, nil)
+	if err != nil {
+		log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
+	}
+	//marshal token into it's byte form.
+	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+	//set our request authorization header to be our jwt  token.
+	req.Header.Set("Authorization", strings.Trim(string(token), "\""))
+
+	//perform the request.
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Println("[error] attempting to perform request", err)
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	status := resp.StatusCode
+	if status != http.StatusOK {
+		log.Println("[error] in attempting to get user data. status: ", status)
+		return nil, nil
+	}
+
+	data, err = io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("[error] attempting to read resp body")
+		return nil, err
+	}
+	trimedstr := strings.Trim(string(data), "\"")
+
+	decoded = base64decode(trimedstr)
+
+	return decoded, nil
+}
+
+func CreateUserWindow(clientobj *Common.Client, OldWindow fyne.App) {
 	NewWindow := OldWindow.NewWindow("Admin Controls")
 	NewWindow.Show()
-
+	GetUserData(clientobj)
 }

@@ -22,13 +22,8 @@ func AuthenticateUser(username, password, databasepath string) (int, int, bool, 
 		return 0, 0, false, err
 	}
 
-	if err != nil {
-		log.Println("[error] hashing password", err)
-		return 0, 0, false, err
-	}
-
 	GetUserQuery := `
-SELECT id, username, password, perms FROM users WHERE username = ?;
+SELECT id, username, password, adminperms FROM users WHERE username = ?;
 `
 	UserRow, err = db.Query(GetUserQuery, username)
 

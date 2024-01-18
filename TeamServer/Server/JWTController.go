@@ -20,7 +20,7 @@ func (t *TS) CreateToken(userID int, username string, Admin bool) (string, error
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(t.Server.TokenKey)
+	signedToken, err := token.SignedString([]byte(t.Server.TokenKey))
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +30,7 @@ func (t *TS) CreateToken(userID int, username string, Admin bool) (string, error
 
 func (t *TS) ParseToken(TokenString string) (*Common.JWTClaims, error) {
 	token, err := jwt.ParseWithClaims(TokenString, &Common.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return t.Server.TokenKey, nil
+		return []byte(t.Server.TokenKey), nil
 	})
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (t *TS) ParseToken(TokenString string) (*Common.JWTClaims, error) {
 
 	claims, ok := token.Claims.(*Common.JWTClaims)
 	if !ok {
-		return nil, fmt.Errorf("Cloudn't parse claims")
+		return nil, fmt.Errorf("Couldn't parse claims")
 	}
 
 	return claims, nil

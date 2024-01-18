@@ -13,15 +13,14 @@ var (
 	customEntryWidget *Common.CustomChatEntry
 	username          string
 	chaticon          fyne.Resource
-	err               error
 )
 
-func CreateMenuItems(OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
+func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
 	mainMenu := fyne.NewMainMenu(
 		fyne.NewMenu("Options",
-			fyne.NewMenuItem("View Users", func() { CreateUserWindow(OldWindow) }),
-			fyne.NewMenuItem("Add User", func() { CreateUserWindow(OldWindow) }),
-			fyne.NewMenuItem("Delete User", func() { CreateUserWindow(OldWindow) }),
+			fyne.NewMenuItem("View Users", func() { CreateUserWindow(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Add User", func() { CreateUserWindow(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Delete User", func() { CreateUserWindow(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("View",
 			fyne.NewMenuItem("Team Chat", func() { AddTab(tabs, TeamsChat, "Teams Chat") }),
@@ -64,14 +63,14 @@ func CreateChatForm(Username string) *widget.Form {
 	return TeamsChat
 }
 
-func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
-
+func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
+	var err error
 	//Create new window
 	NewWindow := OldWindow.NewWindow("AllSecure")
-	username = Username
+	username = clientobj.Username
 
 	//Create new teams chat
-	TeamsChat := CreateChatForm(Username)
+	TeamsChat := CreateChatForm(username)
 
 	//load chat icon
 	chaticon, err = fyne.LoadResourceFromPath(ResourcePath + "chat.ico")
@@ -83,7 +82,7 @@ func MainMenu(Username string, OldWindow fyne.App, icon fyne.Resource, ResourceP
 	tabs := container.NewDocTabs()
 
 	//creating all menu items.
-	mainMenu := CreateMenuItems(OldWindow, TeamsChat, tabs)
+	mainMenu := CreateMenuItems(clientobj, OldWindow, TeamsChat, tabs)
 
 	//create initial tab
 	tabs.Append(container.NewTabItemWithIcon("Teams Chat", chaticon, TeamsChat))
