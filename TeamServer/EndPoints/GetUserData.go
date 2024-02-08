@@ -12,8 +12,7 @@ func GetUserData(databasepath string) ([]byte, error) {
 		db            *sql.DB
 		err           error
 		Rows          *sql.Rows
-		TempUser      Common.DBUser
-		TempJsonData  []byte
+		DBUserEntries []Common.DBUser
 		FinalJsonData []byte
 	)
 
@@ -22,6 +21,7 @@ func GetUserData(databasepath string) ([]byte, error) {
 		log.Println("[error] Failed to open database", err)
 		return []byte{}, err
 	}
+	defer db.Close()
 
 	GetUserQuery := `
 SELECT id, username, adminperms FROM users;
@@ -33,17 +33,18 @@ SELECT id, username, adminperms FROM users;
 	}
 	defer Rows.Close()
 	for Rows.Next() { //loop over each user
+		var TempUser Common.DBUser
 		//scan data into tempuser structure
 		err = Rows.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Admin)
 		if err != nil {
 			return []byte{}, err
 		}
 
-		TempJsonData, err = json.Marshal(TempUser)
-		if err != nil {
-			return []byte{}, err
-		}
-		FinalJsonData = append(FinalJsonData, TempJsonData...)
+		DBUserEntries = append(DBUserEntries, TempUser)
+	}
+	FinalJsonData, err = json.Marshal(DBUserEntries)
+	if err != nil {
+		return []byte{}, err
 	}
 
 	return FinalJsonData, nil

@@ -7,3 +7,9 @@ type user struct {
 type jwttoken struct {
 	JwtToken string `json:"token"`
 }
+type UserTableData struct {
+	ID       int    `json:"ID"`
+	Admin    int    `json:"Admin"`
+	Username string `json:"Username"`
+	Password string `json:"Password"`
+}
