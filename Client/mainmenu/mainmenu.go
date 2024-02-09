@@ -19,7 +19,7 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 	mainMenu := fyne.NewMainMenu(
 		fyne.NewMenu("Options",
 			fyne.NewMenuItem("View Users", func() { CreateUserWindow(clientobj, OldWindow) }),
-			fyne.NewMenuItem("Add User", func() { CreateUserWindow(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Add User", func() { AddUser(clientobj, OldWindow) }),
 			fyne.NewMenuItem("Delete User", func() { CreateUserWindow(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("View",

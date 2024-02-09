@@ -181,5 +181,3 @@ func main() {
 	FI.FillInfoStruct()
 	FI.AuthenticationForm()
 }
-
-//TODO: create the main menu after authentication.

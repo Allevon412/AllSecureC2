@@ -76,16 +76,12 @@ func ApplyUserSort(col int, t *widget.Table, TableEntries []UserTableData) {
 }
 
 // TODO: CREATE EXTENDED LABEL WIDGET AND THEN CREATE TAPPEDSECONDARY HANDLER
-func CreateUserTableObject(TableEntries []UserTableData, window fyne.Window) *widget.Table {
+func CreateUserTableObject(TableEntries []UserTableData, PopUpMenu *widget.PopUpMenu) *widget.Table {
 	var HeaderNames []string
 	HeaderNames = []string{"Username", "Administrator", "ID"}
 	t := widget.NewTableWithHeaders(func() (int, int) { return len(TableEntries), len(HeaderNames) },
 		func() fyne.CanvasObject {
 			l := NewCustomUserTableLabel(func(e *fyne.PointEvent) {
-				edit := fyne.NewMenuItem("Edit User", nil)
-				del := fyne.NewMenuItem("Delete User", nil)
-				menu := fyne.NewMenu("Options", edit, del)
-				PopUpMenu := widget.NewPopUpMenu(menu, window.Canvas())
 				PopUpMenu.ShowAtPosition(e.Position)
 				PopUpMenu.Show()
 			})

@@ -12,3 +12,9 @@ type JWTClaims struct {
 	Administrator bool   `json:"admin"`
 	jwt.StandardClaims
 }
+
+type NewUser struct {
+	Username string `json:"Username"`
+	Password string `json:"Password"`
+	Admin    bool   `json:"Admin"`
+}

@@ -87,6 +87,39 @@ func (t *TS) GetUserData(ctx *gin.Context) {
 	return
 }
 
+func (t *TS) AddNewUser(ctx *gin.Context) {
+	var (
+		claims  *Common.JWTClaims
+		NewUser Common.NewUser
+		token   string
+		err     error
+	)
+
+	token = ctx.GetHeader("Authorization")
+	if token == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+
+	claims, err = t.ParseToken(token)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+	if !claims.Administrator {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Insufficient permissions"})
+		return
+	}
+
+	err = ctx.BindJSON(&NewUser)
+	if err != nil {
+		log.Println("[error] attempting to bind new user data", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
+	EndPoints.AddUser(NewUser, t.Server.FI.DataBasePath)
+}
+
 // func to add GetUserData endpoint to the default list.
 func (t *TS) AddGetUserDataEndpoint() bool {
 
@@ -97,9 +130,18 @@ func (t *TS) AddGetUserDataEndpoint() bool {
 	return t.AddEndPoint(GetUserData)
 }
 
+func (t *TS) AddAddNewUserEndPoint() bool {
+	AddNewUser := &Common.Endpoint{
+		Endpoint: "AddNewUser",
+		Function: t.AddNewUser,
+	}
+	return t.AddEndPoint(AddNewUser)
+}
+
 // func to add all default endpoints to default list.
 func (t *TS) AddDefaultEndPoints() bool {
 	t.AddAuthenticateUserEndpoint()
 	t.AddGetUserDataEndpoint()
+	t.AddAddNewUserEndPoint()
 	return true
 }

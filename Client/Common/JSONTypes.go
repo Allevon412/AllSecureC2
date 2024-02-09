@@ -13,3 +13,9 @@ type UserTableData struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`
 }
+
+type NewUser struct {
+	Username string `json:"Username"`
+	Password string `json:"Password"`
+	Admin    bool   `json:"Admin"`
+}
