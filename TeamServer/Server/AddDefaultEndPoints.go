@@ -117,7 +117,12 @@ func (t *TS) AddNewUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
-	EndPoints.AddUser(NewUser, t.Server.FI.DataBasePath)
+	err = EndPoints.AddUser(NewUser, t.Server.FI.DataBasePath)
+	if err != nil {
+		log.Println("[error] attempting to add user to database", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
 }
 
 // func to add GetUserData endpoint to the default list.

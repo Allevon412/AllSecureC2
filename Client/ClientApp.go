@@ -65,7 +65,7 @@ func AuthenticateCredentials() {
 	var success bool
 
 	//check to see if default placeholder is used or if an entry is used. then set client obj variable.
-	if CustomServerFieldEntry.Text == "" && CustomUsernameEntry.PlaceHolder != "" {
+	if CustomUsernameEntry.Text == "" && CustomUsernameEntry.PlaceHolder != "" {
 		ClientObj.Username = CustomUsernameEntry.PlaceHolder
 	} else {
 		ClientObj.Username = CustomUsernameEntry.Text

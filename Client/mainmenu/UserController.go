@@ -16,7 +16,6 @@ import (
 	"strings"
 )
 
-// TODO add the add user functionality
 func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 
 	NewWindow := OldWindow.NewWindow("Add User Form")
@@ -34,6 +33,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	)
 	PasswordEntry.Password = true
 
+	//create a new form.
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{
@@ -53,13 +53,21 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 			},
 		},
 		OnSubmit: func() {
+			var (
+				data []byte
+			)
+			//close the form window at end of the function.
+			defer NewWindow.Close()
+
 			//setup the http tls configuration
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 			client.Transport = &transport
 			//setup our endpoint
 			endpoint := "https://" + clientobj.Server + "/AddNewUser"
 
+			//parse our user bool input to bind it to our NewUser struct.
 			admin, err = Common.ParseBool(AdminEntry.Text)
+			//marshal the data for http request.
 			Jdata, err = json.Marshal(Common.NewUser{
 				Username: UsernameEntry.Text,
 				Password: PasswordEntry.Text,
@@ -83,14 +91,28 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 				log.Println("[error] attempting to perform request", err)
 
 			}
-
+			//close http body @ end.
 			defer resp.Body.Close()
+
+			//check http response code.
 			status := resp.StatusCode
 			if status != http.StatusOK {
 				log.Println("[error] in attempting to get user data. status: ", status)
-
 			}
-			NewWindow.Close()
+
+			//obtain the updated list of users.
+			data, err = GetUserData(clientobj)
+			if err != nil {
+				log.Println("[error] attempting to obtain user data", err)
+			}
+			//unmarshal the list of updated users.
+			err = json.Unmarshal(removeNullBytes(data), &Common.TableEntries)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal data", err)
+			}
+			//refresh the table with the newly added user.
+			Common.UserTable.Refresh()
+			//exit. user added!
 		},
 
 		OnCancel:   NewWindow.Close,
@@ -98,6 +120,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 		CancelText: "Exit",
 	}
 
+	//show our form in the new window.
 	stack := container.NewStack(form)
 	NewWindow.SetContent(stack)
 	NewWindow.Resize(fyne.NewSize(700, 225))
@@ -106,7 +129,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 }
 
 // TODO add the remove user functionality
-func RemoveUser() {
+func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) {
 
 }
 
@@ -193,31 +216,48 @@ func removeNullBytes(data []byte) []byte {
 
 func CreateUserWindow(clientobj *Common.Client, OldWindow fyne.App) {
 	var (
-		data         []byte
-		TableEntries []Common.UserTableData
+		data []byte
 	)
+	//create new admin control window
 	NewWindow := OldWindow.NewWindow("Admin Controls")
-
+	//obtain list of users from remote server database.
 	data, err := GetUserData(clientobj)
 	if err != nil {
 		log.Println("[error] attempting to obtain user data", err)
 	}
-	log.Println(string(data))
-	err = json.Unmarshal(removeNullBytes(data), &TableEntries)
+	//unmarshal the data and store it.
+	err = json.Unmarshal(removeNullBytes(data), &Common.TableEntries)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal data", err)
 	}
+
 	//create menu items for popupmenu
-	add := fyne.NewMenuItem("Add new user", func() { AddUser(clientobj, OldWindow) })
-	edit := fyne.NewMenuItem("Edit this user", EditUser)
-	del := fyne.NewMenuItem("Delete user", RemoveUser)
+	add := fyne.NewMenuItem("Add new user", func() {
+		//create new user form when Add new user is selected from menu
+		err = AddUser(clientobj, OldWindow)
+		if err != nil {
+			log.Println("[error] attempting to add user", err)
+		}
+	})
+
+	//edit user popup menu
+	edit := fyne.NewMenuItem("Edit this user", func() {
+		EditUser()
+	})
+
+	//delete user popup menu
+	del := fyne.NewMenuItem("Delete user", func() {
+		RemoveUser(clientobj, OldWindow)
+	})
+
 	//create a new menu from menu items
 	menu := fyne.NewMenu("Options", add, edit, del)
 	//create popupmenu from menu.
 	PopUpMenu := widget.NewPopUpMenu(menu, NewWindow.Canvas())
 	//pass the table entry, and popup menu to our create table options.
-	UserTable := Common.CreateUserTableObject(TableEntries, PopUpMenu)
-	NewWindow.SetContent(UserTable)
+	Common.UserTable = Common.CreateUserTableObject(PopUpMenu)
+	//create user table window and show it.
+	NewWindow.SetContent(Common.UserTable)
 	NewWindow.Resize(fyne.NewSize(500, 500))
 	NewWindow.Show()
 }

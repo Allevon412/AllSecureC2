@@ -21,6 +21,7 @@ func AuthenticateUser(username, password, databasepath string) (int, int, bool, 
 		log.Println("[error] Failed to open database", err)
 		return 0, 0, false, err
 	}
+	defer db.Close()
 
 	GetUserQuery := `
 SELECT id, username, password, adminperms FROM users WHERE username = ?;
