@@ -25,7 +25,6 @@ func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	}
 
 	var success bool
-	log.Println("[debug] ", TempUser)
 	Admin, UserId, success, err = EndPoints.AuthenticateUser(TempUser.Username, TempUser.Password, t.Server.FI.DataBasePath)
 	if success && UserId != 0 {
 		//create the user's new jwt.
@@ -125,6 +124,44 @@ func (t *TS) AddNewUser(ctx *gin.Context) {
 	}
 }
 
+func (t *TS) DeleteUser(ctx *gin.Context) {
+	var (
+		claims  *Common.JWTClaims
+		NewUser Common.NewUser
+		token   string
+		err     error
+	)
+
+	token = ctx.GetHeader("Authorization")
+	if token == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+
+	claims, err = t.ParseToken(token)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+	if !claims.Administrator {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Insufficient permissions"})
+		return
+	}
+
+	err = ctx.BindJSON(&NewUser)
+	if err != nil {
+		log.Println("[error] attempting to bind new user data", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
+	err = EndPoints.DeleteUser(NewUser, t.Server.FI.DataBasePath)
+	if err != nil {
+		log.Println("[error] attempting to add user to database", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
+}
+
 // func to add GetUserData endpoint to the default list.
 func (t *TS) AddGetUserDataEndpoint() bool {
 
@@ -143,10 +180,19 @@ func (t *TS) AddAddNewUserEndPoint() bool {
 	return t.AddEndPoint(AddNewUser)
 }
 
+func (t *TS) AddDeleteUserEndPoint() bool {
+	DeleteUser := &Common.Endpoint{
+		Endpoint: "DeleteUser",
+		Function: t.DeleteUser,
+	}
+	return t.AddEndPoint(DeleteUser)
+}
+
 // func to add all default endpoints to default list.
 func (t *TS) AddDefaultEndPoints() bool {
 	t.AddAuthenticateUserEndpoint()
 	t.AddGetUserDataEndpoint()
 	t.AddAddNewUserEndPoint()
+	t.AddDeleteUserEndPoint()
 	return true
 }

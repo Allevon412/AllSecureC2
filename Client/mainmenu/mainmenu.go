@@ -20,7 +20,7 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 		fyne.NewMenu("Options",
 			fyne.NewMenuItem("View Users", func() { CreateUserWindow(clientobj, OldWindow) }),
 			fyne.NewMenuItem("Add User", func() { AddUser(clientobj, OldWindow) }),
-			fyne.NewMenuItem("Delete User", func() { CreateUserWindow(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Delete User", func() { RemoveUser(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("View",
 			fyne.NewMenuItem("Team Chat", func() { AddTab(tabs, TeamsChat, "Teams Chat") }),
@@ -38,6 +38,7 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 	return mainMenu
 }
 
+// TODO edit chat form to actually use websockets with server to send and recv messages from all logged in users.
 func CreateChatForm(Username string) *widget.Form {
 	teamsChatLog = widget.NewMultiLineEntry()
 	teamsChatLog.Disable()

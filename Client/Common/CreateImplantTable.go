@@ -51,7 +51,7 @@ func ImplantTableInit() {
 	}
 }
 
-// TODO create the custom table extension so you can dynamically add / delete rows.
+// TODO create logic for when new implant data comes down pipeline
 // Fyne labs dev blog about creating a table https://fynelabs.com/2023/10/05/user-data-sorting-with-a-fyne-table-widget/
 func CreateImplantTable() *widget.Table {
 	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantRows), len(Headers.HeaderNames) },

@@ -16,21 +16,87 @@ import (
 	"strings"
 )
 
+func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+	var (
+		data      []byte
+		admin     bool
+		Jdata     []byte
+		err       error
+		token     []byte
+		client    http.Client
+		transport http.Transport
+		resp      *http.Response
+		req       *http.Request
+	)
+	//close the form window at end of the function.
+	defer NewWindow.Close()
+
+	//setup the http tls configuration
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport = &transport
+	//setup our endpoint
+	endpoint := "https://" + clientobj.Server + "/AddNewUser"
+
+	//parse our user bool input to bind it to our NewUser struct.
+	admin, err = Common.ParseBool(AdminEntry.Text)
+	//marshal the data for http request.
+	Jdata, err = json.Marshal(Common.NewUser{
+		Username: UsernameEntry.Text,
+		Password: PasswordEntry.Text,
+		Admin:    admin,
+	})
+
+	//create a new request that our client will perform.
+	req, err = http.NewRequest("POST", endpoint, bytes.NewBuffer(Jdata))
+	if err != nil {
+		log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
+	}
+
+	//marshal token into it's byte form.
+	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+	//set our request authorization header to be our jwt  token.
+	req.Header.Set("Authorization", strings.Trim(string(token), "\""))
+
+	//perform the request.
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Println("[error] attempting to perform request", err)
+
+	}
+	//close http body @ end.
+	defer resp.Body.Close()
+
+	//check http response code.
+	status := resp.StatusCode
+	if status != http.StatusOK {
+		log.Println("[error] in attempting to get user data. status: ", status)
+	}
+
+	//obtain the updated list of users.
+	data, err = GetUserData(clientobj)
+	if err != nil {
+		log.Println("[error] attempting to obtain user data", err)
+	}
+	//unmarshal the list of updated users.
+	err = json.Unmarshal(removeNullBytes(data), &Common.TableEntries)
+	if err != nil {
+		log.Println("[error] attempting to unmarshal data", err)
+	}
+	//refresh the table with the newly added user.
+	Common.UserTable.Refresh()
+	//exit. user added!
+}
+
 func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 
 	NewWindow := OldWindow.NewWindow("Add User Form")
 
 	var (
-		token                                    []byte
-		err                                      error
-		req                                      *http.Request
-		resp                                     *http.Response
-		transport                                http.Transport
-		client                                   http.Client
-		admin                                    bool
-		Jdata                                    []byte
-		UsernameEntry, AdminEntry, PasswordEntry widget.Entry
+		UsernameEntry, AdminEntry, PasswordEntry *Common.CustomCredentialsEntry
 	)
+	UsernameEntry = Common.NewCustomCredentialEntry(func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) })
+	PasswordEntry = Common.NewCustomCredentialEntry(func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) })
+	AdminEntry = Common.NewCustomCredentialEntry(func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) })
 	PasswordEntry.Password = true
 
 	//create a new form.
@@ -38,82 +104,21 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 		Items: []*widget.FormItem{
 			{
 				Text:     "Username: ",
-				Widget:   &UsernameEntry,
+				Widget:   UsernameEntry,
 				HintText: "Allevon412",
 			},
 			{
 				Text:     "Password: ",
-				Widget:   &PasswordEntry,
+				Widget:   PasswordEntry,
 				HintText: "P@ssw0rd123!",
 			},
 			{
 				Text:     "Administrator: ",
-				Widget:   &AdminEntry,
+				Widget:   AdminEntry,
 				HintText: "True",
 			},
 		},
-		OnSubmit: func() {
-			var (
-				data []byte
-			)
-			//close the form window at end of the function.
-			defer NewWindow.Close()
-
-			//setup the http tls configuration
-			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-			client.Transport = &transport
-			//setup our endpoint
-			endpoint := "https://" + clientobj.Server + "/AddNewUser"
-
-			//parse our user bool input to bind it to our NewUser struct.
-			admin, err = Common.ParseBool(AdminEntry.Text)
-			//marshal the data for http request.
-			Jdata, err = json.Marshal(Common.NewUser{
-				Username: UsernameEntry.Text,
-				Password: PasswordEntry.Text,
-				Admin:    admin,
-			})
-
-			//create a new request that our client will perform.
-			req, err = http.NewRequest("POST", endpoint, bytes.NewBuffer(Jdata))
-			if err != nil {
-				log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
-			}
-
-			//marshal token into it's byte form.
-			token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
-			//set our request authorization header to be our jwt  token.
-			req.Header.Set("Authorization", strings.Trim(string(token), "\""))
-
-			//perform the request.
-			resp, err = client.Do(req)
-			if err != nil {
-				log.Println("[error] attempting to perform request", err)
-
-			}
-			//close http body @ end.
-			defer resp.Body.Close()
-
-			//check http response code.
-			status := resp.StatusCode
-			if status != http.StatusOK {
-				log.Println("[error] in attempting to get user data. status: ", status)
-			}
-
-			//obtain the updated list of users.
-			data, err = GetUserData(clientobj)
-			if err != nil {
-				log.Println("[error] attempting to obtain user data", err)
-			}
-			//unmarshal the list of updated users.
-			err = json.Unmarshal(removeNullBytes(data), &Common.TableEntries)
-			if err != nil {
-				log.Println("[error] attempting to unmarshal data", err)
-			}
-			//refresh the table with the newly added user.
-			Common.UserTable.Refresh()
-			//exit. user added!
-		},
+		OnSubmit: func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) },
 
 		OnCancel:   NewWindow.Close,
 		SubmitText: "Create User",
@@ -128,14 +133,102 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 
-// TODO add the remove user functionality
-func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) {
+func RemoveUserSubmitFunc(UsernameEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+	var (
+		data      []byte
+		token     []byte
+		err       error
+		req       *http.Request
+		resp      *http.Response
+		transport http.Transport
+		client    http.Client
+		Jdata     []byte
+	)
+	//close the form window at end of the function.
+	defer NewWindow.Close()
 
+	//setup the http tls configuration
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport = &transport
+	//setup our endpoint
+	endpoint := "https://" + clientobj.Server + "/DeleteUser"
+
+	//marshal the data for http request.
+	Jdata, err = json.Marshal(Common.NewUser{
+		Username: UsernameEntry.Text,
+	})
+
+	//create a new request that our client will perform.
+	req, err = http.NewRequest("POST", endpoint, bytes.NewBuffer(Jdata))
+	if err != nil {
+		log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
+	}
+
+	//marshal token into it's byte form.
+	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+	//set our request authorization header to be our jwt  token.
+	req.Header.Set("Authorization", strings.Trim(string(token), "\""))
+
+	//perform the request.
+	resp, err = client.Do(req)
+	if err != nil {
+		log.Println("[error] attempting to perform request", err)
+
+	}
+	//close http body @ end.
+	defer resp.Body.Close()
+
+	//check http response code.
+	status := resp.StatusCode
+	if status != http.StatusOK {
+		log.Println("[error] in attempting to get user data. status: ", status)
+	}
+
+	//obtain the updated list of users.
+	data, err = GetUserData(clientobj)
+	if err != nil {
+		log.Println("[error] attempting to obtain user data", err)
+	}
+	//unmarshal the list of updated users.
+	err = json.Unmarshal(removeNullBytes(data), &Common.TableEntries)
+	if err != nil {
+		log.Println("[error] attempting to unmarshal data", err)
+	}
+	//refresh the table with the newly added user.
+	Common.UserTable.Refresh()
+	//exit. user added!
 }
 
-// TODO add the edit user functionality
-func EditUser() {
+func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) error {
+	NewWindow := OldWindow.NewWindow("Add User Form")
 
+	var (
+		UsernameEntry *Common.CustomCredentialsEntry
+	)
+
+	UsernameEntry = Common.NewCustomCredentialEntry(func() { RemoveUserSubmitFunc(UsernameEntry, clientobj, NewWindow) })
+	//create a new form.
+	form := &widget.Form{
+		Items: []*widget.FormItem{
+			{
+				Text:     "User to Delete: ",
+				Widget:   UsernameEntry,
+				HintText: "Allevon412",
+			},
+		},
+		OnSubmit: func() { RemoveUserSubmitFunc(UsernameEntry, clientobj, NewWindow) },
+
+		OnCancel:   NewWindow.Close,
+		SubmitText: "Create User",
+		CancelText: "Exit",
+	}
+
+	//show our form in the new window.
+	stack := container.NewStack(form)
+	NewWindow.SetContent(stack)
+	NewWindow.Resize(fyne.NewSize(700, 150))
+	NewWindow.Show()
+	return nil
 }
 
 func base64decode(encodedstr string) []byte {
@@ -240,18 +333,16 @@ func CreateUserWindow(clientobj *Common.Client, OldWindow fyne.App) {
 		}
 	})
 
-	//edit user popup menu
-	edit := fyne.NewMenuItem("Edit this user", func() {
-		EditUser()
-	})
-
 	//delete user popup menu
 	del := fyne.NewMenuItem("Delete user", func() {
-		RemoveUser(clientobj, OldWindow)
+		err = RemoveUser(clientobj, OldWindow)
+		if err != nil {
+			log.Println("[error] attempting to add user", err)
+		}
 	})
 
 	//create a new menu from menu items
-	menu := fyne.NewMenu("Options", add, edit, del)
+	menu := fyne.NewMenu("Options", add, del)
 	//create popupmenu from menu.
 	PopUpMenu := widget.NewPopUpMenu(menu, NewWindow.Canvas())
 	//pass the table entry, and popup menu to our create table options.
