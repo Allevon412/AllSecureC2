@@ -64,6 +64,10 @@ func CreateChatForm(Username string) *widget.Form {
 	return TeamsChat
 }
 
+func ObtainWebSocketConn(clientobj *Common.Client) {
+
+}
+
 func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
 	var err error
 	//Create new window

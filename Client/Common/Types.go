@@ -1,6 +1,9 @@
 package Common
 
-import "net/http"
+import (
+	"github.com/gorilla/websocket"
+	"net/http"
+)
 
 type (
 	CookieStruct struct {
@@ -14,5 +17,6 @@ type (
 		Admin     bool
 		Cookie    CookieStruct
 		ClientObj http.Client
+		Conn      *websocket.Conn
 	}
 )
