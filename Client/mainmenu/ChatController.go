@@ -20,21 +20,34 @@ func SendChat(EnteredText string) {
 		log.Println("[error] attempting to write test message to the server websocket.")
 		return
 	}
-	
+
 	return
 }
 func UpdateChat() {
 
 	var err error
 	for {
-		prevtext := teamsChatLog.Text
+		lock.Lock()
+		g_prevtext = teamsChatLog.Text
+		lock.Unlock()
 		var NewMessage Common.WebSocketMessage
+		//g_clientobj.Conn.SetReadDeadline(time.Now().Add(time.Second * 1 / 2))
 		err = g_clientobj.Conn.ReadJSON(&NewMessage)
 		if err != nil {
+			//	if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+			//		continue
+			//	}
 			log.Println("[error] attempting to read web socket message")
 			return
 		}
-		teamsChatLog.SetText(fmt.Sprintf("%s\n%s", prevtext, NewMessage.Message))
+		teamsChatLog.SetText(fmt.Sprintf("%s\n%s", g_prevtext, NewMessage.Message))
 	}
 
+}
+
+func ClearChatHistory() {
+	teamsChatLog.SetText("")
+	lock.Lock()
+	g_prevtext = ""
+	lock.Unlock()
 }

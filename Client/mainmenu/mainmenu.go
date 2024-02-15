@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"log"
+	"sync"
 )
 
 var (
@@ -14,6 +15,8 @@ var (
 	g_username        string
 	chaticon          fyne.Resource
 	g_clientobj       *Common.Client
+	g_prevtext        string
+	lock              sync.Mutex
 )
 
 func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
@@ -64,9 +67,9 @@ func CreateChatForm(Username string) (*widget.Form, error) {
 		OnSubmit: func() {
 			SendChat(customEntryWidget.Text)
 		},
-		OnCancel:   nil,
+		OnCancel:   ClearChatHistory,
 		SubmitText: "",
-		CancelText: "",
+		CancelText: "Clear Chat History",
 	}
 
 	return TeamsChat, nil
