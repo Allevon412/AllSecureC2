@@ -130,11 +130,13 @@ func (t *TS) Start() {
 		}
 	})
 
-	t.Server.GinEngine.GET("/ws", func(c *gin.Context) {
+	t.Server.GinEngine.GET("/ws", func(ctx *gin.Context) {
 		var (
 			upgrader      websocket.Upgrader
 			WebSocket     *websocket.Conn
 			ClientID, err = Crypt.GenerateRandomString(8)
+			token         string
+			claims        *Common.JWTClaims
 		)
 		if err != nil {
 			log.Fatalln("[error] could not generate random string when starting team server")
@@ -145,8 +147,19 @@ func (t *TS) Start() {
 			log.Fatalln("[error] could not get the current directory")
 		}
 
-		if WebSocket, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to set up Websocket"})
+		if WebSocket, err = upgrader.Upgrade(ctx.Writer, ctx.Request, nil); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Failed to set up Websocket"})
+			return
+		}
+		token = ctx.GetHeader("Authorization")
+		if token == "" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+			return
+		}
+
+		claims, err = t.ParseToken(token)
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
 			return
 		}
 
@@ -155,6 +168,7 @@ func (t *TS) Start() {
 			Username:      "",
 			RemoteIP:      WebSocket.RemoteAddr().String(),
 			Authenticated: false,
+			Administrator: claims.Administrator,
 		})
 
 		go t.HandleRequest(ClientID)

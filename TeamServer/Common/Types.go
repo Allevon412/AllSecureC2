@@ -31,6 +31,7 @@ type (
 		Username      string
 		RemoteIP      string
 		Authenticated bool
+		Administrator bool
 		Mutex         sync.Mutex
 	}
 
