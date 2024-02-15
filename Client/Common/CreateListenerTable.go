@@ -9,31 +9,31 @@ import (
 	"strings"
 )
 
-var UserSorts = [5]Direction{}
+var ListenerSorts = [5]Direction{}
 
-type UserTableHeaders struct {
+type ListenerTableHeaders struct {
 	HeaderNames []string
 }
-type UserData struct {
-	UserID          int
-	UserName        string
-	Admin           bool
-	ActiveImplants  string
-	ActiveListeners string
+type ListenerData struct {
+	ListenerName string
+	Protocol     string
+	HOST         string
+	PortBind     int
+	PortConn     string
 }
 
 var (
-	UserHeaders      UserTableHeaders
-	UserTableEntries []UserTableData
-	UserTable        *widget.Table
+	ListenerHeaders      ListenerTableHeaders
+	ListenerTableEntries []ListenerTableData
+	ListenerTable        *widget.Table
 )
 
-func UserTableInit() {
-	UserHeaders.HeaderNames = []string{"User ID", "Username", "Administrator", "Active Implants", "Active Listeners"}
+func ListenerTableInit() {
+	ListenerHeaders.HeaderNames = []string{"Listener Name", "Protocol", "HOST", "Port Bind", "Port Conn"}
 }
 
-func ApplyUserSort(col int, t *widget.Table) {
-	order := UserSorts[col]
+func ApplyListenerSort(col int, t *widget.Table) {
+	order := ListenerSorts[col]
 	order++
 	if order > SortDesc {
 		order = SortOff
@@ -41,55 +41,55 @@ func ApplyUserSort(col int, t *widget.Table) {
 
 	//reset all and assign tapped sort
 	for i := 0; i < 3; i++ {
-		UserSorts[i] = SortOff
+		ListenerSorts[i] = SortOff
 	}
-	UserSorts[col] = order
+	ListenerSorts[col] = order
 
-	sort.Slice(UserTableEntries, func(i, j int) bool {
-		a := UserTableEntries[i]
-		b := UserTableEntries[j]
+	sort.Slice(ListenerTableEntries, func(i, j int) bool {
+		a := ListenerTableEntries[i]
+		b := ListenerTableEntries[j]
 
 		//compare them for no sorting
 		if order == SortOff {
-			return strings.Compare(a.Username, b.Username) < 0
+			return strings.Compare(a.ListenerName, b.ListenerName) < 0
 		}
 		switch col {
 		case 1:
 			if order == SortAsc {
-				return a.ID < b.ID
+				return strings.Compare(a.Protocol, b.Protocol) < 0
 			}
-			return a.ID > b.ID
+			return strings.Compare(a.Protocol, b.Protocol) > 0
 		case 2:
 			if order == SortAsc {
-				return a.Admin < b.Admin
+				return strings.Compare(a.HOST, b.HOST) < 0
 			}
-			return a.Admin > b.Admin
+			return strings.Compare(a.HOST, b.HOST) > 0
 		case 3:
 			if order == SortAsc {
-				return strings.Compare(a.ActiveImplants, b.ActiveImplants) < 0
+				return a.PortBind < b.PortBind
 			}
-			return strings.Compare(a.ActiveImplants, b.ActiveImplants) > 0
+			return a.PortBind > b.PortBind
 		case 4:
 			if order == SortAsc {
-				return strings.Compare(a.ActiveListeners, b.ActiveListeners) < 0
+				return strings.Compare(a.PortConn, b.PortConn) < 0
 			}
-			return strings.Compare(a.ActiveListeners, b.ActiveListeners) > 0
+			return strings.Compare(a.PortConn, b.PortConn) > 0
 
 		default:
 			if order == SortDesc {
-				return a.ID > b.ID
+				return strings.Compare(a.ListenerName, b.ListenerName) < 0
 			}
-			return a.ID < b.ID
+			return strings.Compare(a.ListenerName, b.ListenerName) > 0
 		}
 
 	})
 	t.Refresh()
 }
 
-func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
+func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	UserTableInit()
 	t := widget.NewTableWithHeaders(
-		func() (int, int) { return len(UserTableEntries), len(UserHeaders.HeaderNames) },
+		func() (int, int) { return len(ListenerTableEntries), len(ListenerHeaders.HeaderNames) },
 		func() fyne.CanvasObject {
 			l := NewCustomUserTableLabel(
 				func(e *fyne.PointEvent) {
@@ -104,24 +104,19 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			switch id.Col {
 			case 0:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(UserTableEntries[id.Row].Username)
+				l.SetText(ListenerTableEntries[id.Row].ListenerName)
 			case 1:
-				var admin string
-				admin = "False"
 				l.Truncation = fyne.TextTruncateOff
-				if UserTableEntries[id.Row].Admin == 1 {
-					admin = "True"
-				}
-				l.SetText(admin)
+				l.SetText(ListenerTableEntries[id.Row].Protocol)
 			case 2:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(strconv.Itoa(UserTableEntries[id.Row].ID))
+				l.SetText(ListenerTableEntries[id.Row].HOST)
 			case 3:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(UserTableEntries[id.Row].ActiveImplants)
+				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].PortBind))
 			case 4:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(UserTableEntries[id.Row].ActiveListeners)
+				l.SetText(ListenerTableEntries[id.Row].PortConn)
 			}
 		},
 	)
@@ -145,7 +140,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 		} else {
 			switch id.Col {
 			case 0:
-				b.SetText(UserHeaders.HeaderNames[id.Col])
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
 				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -155,7 +150,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 					b.Icon = nil
 				}
 			case 1:
-				b.SetText(UserHeaders.HeaderNames[id.Col])
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
 				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -165,7 +160,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 					b.Icon = nil
 				}
 			case 2:
-				b.SetText(UserHeaders.HeaderNames[id.Col])
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
 				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -175,7 +170,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 					b.Icon = nil
 				}
 			case 3:
-				b.SetText(UserHeaders.HeaderNames[id.Col])
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
 				switch sorts[id.Col] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -185,7 +180,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 					b.Icon = nil
 				}
 			case 4:
-				b.SetText(UserHeaders.HeaderNames[id.Col])
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
 				switch sorts[id.Col] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -198,7 +193,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 
 			b.Importance = widget.MediumImportance
 			b.OnTapped = func() {
-				ApplyUserSort(id.Col, t)
+				ApplyListenerSort(id.Col, t)
 			}
 			b.Enable()
 			b.Refresh()

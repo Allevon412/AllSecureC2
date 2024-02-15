@@ -41,7 +41,7 @@ func UpdateChat() {
 			log.Println("[error] attempting to read web socket message")
 			return
 		}
-		//set teams chat to the previous text + the new message.
+		//set teams chat to the previous text + the new message0.
 		lock.Lock()
 		teamsChatLog.SetText(fmt.Sprintf("%s\n%s", g_prevtext, NewMessage.Message))
 		lock.Unlock()

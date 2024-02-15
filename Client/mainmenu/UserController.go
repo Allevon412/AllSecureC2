@@ -50,7 +50,7 @@ func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomCr
 		log.Println("[error] attempting to obtain user data", err)
 	}
 	//unmarshal the list of updated users.
-	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.TableEntries)
+	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.UserTableEntries)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal data", err)
 	}
@@ -132,7 +132,7 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomCredentialsEntry, clientob
 		log.Println("[error] attempting to obtain user data", err)
 	}
 	//unmarshal the list of updated users.
-	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.TableEntries)
+	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.UserTableEntries)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal data", err)
 	}
@@ -198,7 +198,7 @@ func CreateUserWindow(clientobj *Common.Client, OldWindow fyne.App) {
 		log.Println("[error] attempting to obtain user data", err)
 	}
 	//unmarshal the data and store it.
-	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.TableEntries)
+	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.UserTableEntries)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal data", err)
 	}
@@ -228,6 +228,6 @@ func CreateUserWindow(clientobj *Common.Client, OldWindow fyne.App) {
 	Common.UserTable = Common.CreateUserTableObject(PopUpMenu)
 	//create user table window and show it.
 	NewWindow.SetContent(Common.UserTable)
-	NewWindow.Resize(fyne.NewSize(500, 500))
+	NewWindow.Resize(fyne.NewSize(835, 500))
 	NewWindow.Show()
 }
