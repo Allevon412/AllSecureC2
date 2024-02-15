@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"github.com/gorilla/websocket"
 	"io"
 	"log"
 	"net/http"
@@ -33,6 +34,9 @@ func PerformHTTPReq(clientobj *Client, endpoint string, body []byte) ([]byte, er
 	}
 	//marshal token into it's byte form.
 	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+	if err != nil {
+		log.Println("[error] attempting to marshal JWT token")
+	}
 	//set our request authorization header to be our jwt  token.
 	req.Header.Set("Authorization", strings.Trim(string(token), "\""))
 
@@ -56,4 +60,30 @@ func PerformHTTPReq(clientobj *Client, endpoint string, body []byte) ([]byte, er
 		return nil, err
 	}
 	return data, nil
+}
+
+func ObtainWebSocket(clientobj *Client) (*websocket.Conn, error) {
+	var (
+		token   []byte
+		err     error
+		headers http.Header
+	)
+
+	endpoint := "wss://" + clientobj.Server + "/ws"
+	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+	if err != nil {
+		log.Println("[error] attempting to marshal JWT token")
+		return nil, err
+	}
+	//set our request authorization header to be our jwt  token.
+	headers = make(http.Header)
+	headers.Set("Authorization", strings.Trim(string(token), "\""))
+	websocket.DefaultDialer.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	conn, _, err := websocket.DefaultDialer.Dial(endpoint, headers)
+	if err != nil {
+		log.Println("[error] attmepting to make websocket connection", err)
+		return nil, err
+	}
+
+	return conn, nil
 }

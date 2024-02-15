@@ -3,6 +3,7 @@ package Server
 import (
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -45,21 +46,39 @@ func (t *TS) ParseConfig(FilePath string) error {
 }
 
 func (t *TS) HandleRequest(ClientID string) {
+	var NewMessage Common.WebSocketMessage
 	value, isok := t.Server.Clients.Load(ClientID)
-
 	if !isok {
 		return
 	}
 
-	client := value.(*Common.Client)
-	_, NewClient, err := client.Conn.ReadMessage()
-
-	if err != nil {
-		log.Println("[error] reading client message", err)
-		t.Server.Clients.Delete(ClientID)
-		return
+	for {
+		client := value.(*Common.Client)
+		_, message, err := client.Conn.ReadMessage()
+		if err != nil {
+			log.Println("[error] reading client message", err)
+			t.Server.Clients.Delete(ClientID)
+			return
+		}
+		err = json.Unmarshal(message, &NewMessage)
+		if err != nil {
+			log.Println("[error] attempting to unmarshal websocket message data", err)
+			return
+		}
+		switch NewMessage.MessageType {
+		case "ChatMessage":
+			t.Server.Clients.Range(func(key, value any) bool {
+				client = value.(*Common.Client)
+				err = client.Conn.WriteJSON(NewMessage)
+				if err != nil {
+					log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
+					t.Server.Clients.Delete(ClientID)
+					return false
+				}
+				return true
+			})
+		}
 	}
-	fmt.Println(NewClient)
 
 }
 

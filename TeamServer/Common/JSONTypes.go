@@ -18,3 +18,8 @@ type NewUser struct {
 	Password string `json:"Password"`
 	Admin    bool   `json:"Admin"`
 }
+
+type WebSocketMessage struct {
+	MessageType string `json:"MessageType"`
+	Message     string `json:"Message"`
+}

@@ -11,8 +11,9 @@ import (
 var (
 	teamsChatLog      *widget.Entry
 	customEntryWidget *Common.CustomChatEntry
-	username          string
+	g_username        string
 	chaticon          fyne.Resource
+	g_clientobj       *Common.Client
 )
 
 func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
@@ -39,13 +40,20 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 }
 
 // TODO edit chat form to actually use websockets with server to send and recv messages from all logged in users.
-func CreateChatForm(Username string) *widget.Form {
+func CreateChatForm(Username string) (*widget.Form, error) {
+	//create websocket channel for chat.
+	err := ObtainWebSocketConn(g_clientobj)
+	if err != nil {
+		log.Fatalln("[error] attempting to create websocket. panicking")
+		return nil, err
+	}
+
 	teamsChatLog = widget.NewMultiLineEntry()
 	teamsChatLog.Disable()
 	teamsChatLog.SetMinRowsVisible(10)
 
 	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
-	customEntryWidget = Common.NewCustomChatEntry(UpdateChat)
+	customEntryWidget = Common.NewCustomChatEntry(SendChat)
 
 	//Teams chat entry's combined into one form.
 	TeamsChat := &widget.Form{
@@ -54,28 +62,41 @@ func CreateChatForm(Username string) *widget.Form {
 			{Text: Username, Widget: customEntryWidget},
 		},
 		OnSubmit: func() {
-			UpdateChat(customEntryWidget.Text)
+			SendChat(customEntryWidget.Text)
 		},
 		OnCancel:   nil,
 		SubmitText: "",
 		CancelText: "",
 	}
 
-	return TeamsChat
+	return TeamsChat, nil
 }
 
-func ObtainWebSocketConn(clientobj *Common.Client) {
-
+func ObtainWebSocketConn(clientobj *Common.Client) error {
+	var (
+		err error
+	)
+	clientobj.Conn, err = Common.ObtainWebSocket(clientobj)
+	if err != nil {
+		log.Println("[error] attempting to obtain socket connection", err)
+		return err
+	}
+	go UpdateChat()
+	return nil
 }
 
 func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
-	var err error
+
 	//Create new window
 	NewWindow := OldWindow.NewWindow("AllSecure")
-	username = clientobj.Username
+	g_clientobj = clientobj
+	g_username = clientobj.Username
 
 	//Create new teams chat
-	TeamsChat := CreateChatForm(username)
+	TeamsChat, err := CreateChatForm(clientobj.Username)
+	if err != nil {
+		log.Println("[error] attempting to create chat form. ", err)
+	}
 
 	//load chat icon
 	chaticon, err = fyne.LoadResourceFromPath(ResourcePath + "chat.ico")
@@ -119,4 +140,8 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 
 	//show content. it's already running.
 	NewWindow.Show()
+	NewWindow.SetCloseIntercept(func() {
+		clientobj.Conn.Close()
+		NewWindow.Close()
+	})
 }
