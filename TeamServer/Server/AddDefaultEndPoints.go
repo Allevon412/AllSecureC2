@@ -39,17 +39,6 @@ func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	return
 }
 
-// func to add the AuthenticateUser endpoint to the default list.
-func (t *TS) AddAuthenticateUserEndpoint() bool {
-
-	AuthUser := &Common.Endpoint{
-		Endpoint: "AuthenticateUser",
-		Function: t.AuthenticateUser,
-	}
-
-	return t.AddEndPoint(AuthUser)
-}
-
 // GetUserData endpoint request handler
 func (t *TS) GetUserData(ctx *gin.Context) {
 	var (
@@ -162,6 +151,52 @@ func (t *TS) DeleteUser(ctx *gin.Context) {
 	}
 }
 
+func (t *TS) GetActiveListeners(ctx *gin.Context) {
+	var (
+		claims    *Common.JWTClaims
+		Listeners []Common.ListenerData
+		JsonData  []byte
+		token     string
+		err       error
+	)
+
+	token = ctx.GetHeader("Authorization")
+	if token == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+
+	claims, err = t.ParseToken(token)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+	if claims.UserID <= 0 || claims.Username == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+	JsonData, err = EndPoints.GetActiveListeners(Listeners, t.Server.FI.DataBasePath, claims)
+	if err != nil {
+		log.Println("[error] attempting to retrieve user data from sql database", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, JsonData)
+	return
+}
+
+// func to add the AuthenticateUser endpoint to the default list.
+func (t *TS) AddAuthenticateUserEndpoint() bool {
+
+	AuthUser := &Common.Endpoint{
+		Endpoint: "AuthenticateUser",
+		Function: t.AuthenticateUser,
+	}
+
+	return t.AddEndPoint(AuthUser)
+}
+
 // func to add GetUserData endpoint to the default list.
 func (t *TS) AddGetUserDataEndpoint() bool {
 
@@ -187,6 +222,13 @@ func (t *TS) AddDeleteUserEndPoint() bool {
 	}
 	return t.AddEndPoint(DeleteUser)
 }
+func (t *TS) AddGetActiveListenersEndPoint() bool {
+	GetActiveListenersEndpoint := &Common.Endpoint{
+		Endpoint: "GetActiveListeners",
+		Function: t.GetActiveListeners,
+	}
+	return t.AddEndPoint(GetActiveListenersEndpoint)
+}
 
 // func to add all default endpoints to default list.
 func (t *TS) AddDefaultEndPoints() bool {
@@ -194,5 +236,6 @@ func (t *TS) AddDefaultEndPoints() bool {
 	t.AddGetUserDataEndpoint()
 	t.AddAddNewUserEndPoint()
 	t.AddDeleteUserEndPoint()
+	t.AddGetActiveListenersEndPoint()
 	return true
 }

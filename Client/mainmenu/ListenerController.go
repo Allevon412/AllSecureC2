@@ -29,7 +29,7 @@ func GetListenerData(clientobj *Common.Client) ([]byte, error) {
 	return decoded, nil
 }
 
-func CreateListenerTable(clientobj *Common.Client, window fyne.Window) *widget.Table {
+func CreateListenerTable(clientobj *Common.Client, window fyne.Window) {
 	var (
 		err error
 	)
@@ -62,6 +62,5 @@ func CreateListenerTable(clientobj *Common.Client, window fyne.Window) *widget.T
 	menu := fyne.NewMenu("Options", Create, Stop)
 	//create popupmenu from menu.
 	PopUpMenu := widget.NewPopUpMenu(menu, window.Canvas())
-	t := Common.CreateListenerTableObject(PopUpMenu)
-	return t
+	Common.ListenerTable = Common.CreateListenerTableObject(PopUpMenu)
 }

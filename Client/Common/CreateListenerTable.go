@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var ListenerSorts = [5]Direction{}
+var ListenerSorts = [7]Direction{}
 
 type ListenerTableHeaders struct {
 	HeaderNames []string
@@ -29,7 +29,7 @@ var (
 )
 
 func ListenerTableInit() {
-	ListenerHeaders.HeaderNames = []string{"Listener Name", "Protocol", "HOST", "Port Bind", "Port Conn"}
+	ListenerHeaders.HeaderNames = []string{"Listener Name", "Protocol", "HOST", "Port Bind", "Port Conn", "UserID", "Username"}
 }
 
 func ApplyListenerSort(col int, t *widget.Table) {
@@ -74,6 +74,16 @@ func ApplyListenerSort(col int, t *widget.Table) {
 				return strings.Compare(a.PortConn, b.PortConn) < 0
 			}
 			return strings.Compare(a.PortConn, b.PortConn) > 0
+		case 6:
+			if order == SortAsc {
+				return strings.Compare(a.UserName, b.UserName) < 0
+			}
+			return strings.Compare(a.UserName, b.UserName) > 0
+		case 5:
+			if order == SortAsc {
+				return a.UserID < b.UserID
+			}
+			return a.UserID > b.UserID
 
 		default:
 			if order == SortDesc {
@@ -87,7 +97,7 @@ func ApplyListenerSort(col int, t *widget.Table) {
 }
 
 func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
-	UserTableInit()
+	ListenerTableInit()
 	t := widget.NewTableWithHeaders(
 		func() (int, int) { return len(ListenerTableEntries), len(ListenerHeaders.HeaderNames) },
 		func() fyne.CanvasObject {
@@ -117,6 +127,12 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			case 4:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].PortConn)
+			case 5:
+				l.Truncation = fyne.TextTruncateOff
+				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].UserID))
+			case 6:
+				l.Truncation = fyne.TextTruncateOff
+				l.SetText(ListenerTableEntries[id.Row].UserName)
 			}
 		},
 	)
@@ -126,6 +142,8 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	t.SetColumnWidth(2, 125)
 	t.SetColumnWidth(3, 200)
 	t.SetColumnWidth(4, 200)
+	t.SetColumnWidth(5, 200)
+	t.SetColumnWidth(6, 200)
 
 	t.CreateHeader = func() fyne.CanvasObject {
 		return widget.NewButton("000", func() {})
@@ -141,7 +159,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			switch id.Col {
 			case 0:
 				b.SetText(ListenerHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch ListenerSorts[0] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -151,7 +169,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 1:
 				b.SetText(ListenerHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch ListenerSorts[1] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -161,7 +179,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 2:
 				b.SetText(ListenerHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch ListenerSorts[2] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -171,7 +189,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 3:
 				b.SetText(ListenerHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] {
+				switch ListenerSorts[3] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -181,7 +199,27 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 4:
 				b.SetText(ListenerHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] {
+				switch ListenerSorts[4] {
+				case SortAsc:
+					b.Icon = theme.MoveUpIcon()
+				case SortDesc:
+					b.Icon = theme.MoveDownIcon()
+				default:
+					b.Icon = nil
+				}
+			case 5:
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
+				switch ListenerSorts[5] {
+				case SortAsc:
+					b.Icon = theme.MoveUpIcon()
+				case SortDesc:
+					b.Icon = theme.MoveDownIcon()
+				default:
+					b.Icon = nil
+				}
+			case 6:
+				b.SetText(ListenerHeaders.HeaderNames[id.Col])
+				switch ListenerSorts[6] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:

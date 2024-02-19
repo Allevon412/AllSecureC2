@@ -21,6 +21,8 @@ type ListenerTableData struct {
 	HOST         string `json:"HOST"`
 	PortBind     int    `json:"PortBind"`
 	PortConn     string `json:"PortConn"`
+	UserName     string `json:"username"`
+	UserID       int    `json:"UserID"`
 }
 
 type NewUser struct {

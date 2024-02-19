@@ -146,7 +146,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			switch id.Col {
 			case 0:
 				b.SetText(UserHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch UserSorts[0] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -156,7 +156,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 1:
 				b.SetText(UserHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch UserSorts[1] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -166,7 +166,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 2:
 				b.SetText(UserHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] { // THIS MAY CAUSE ISSUES DUE TO INDEX ERROR
+				switch UserSorts[2] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -176,7 +176,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 3:
 				b.SetText(UserHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] {
+				switch UserSorts[3] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -186,7 +186,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 			case 4:
 				b.SetText(UserHeaders.HeaderNames[id.Col])
-				switch sorts[id.Col] {
+				switch UserSorts[4] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:

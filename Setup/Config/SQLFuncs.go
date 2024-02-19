@@ -34,6 +34,57 @@ func (config *AllSecureConfig) CreateUserTable(db *sql.Tx) bool {
 
 	return true
 }
+
+func (config *AllSecureConfig) CreateListenersTable(db *sql.Tx) bool {
+	var err error
+	CreateListenersTable := `
+CREATE TABLE IF NOT EXISTS listeners (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    listener_name TEXT,
+    protocol TEXT,
+    host TEXT,
+    port_bind INTEGER,
+    port_conn TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    );`
+
+	_, err = db.Exec(CreateListenersTable)
+	if err != nil {
+		log.Fatalln("[Error] attempting to create implant table with user_id association", err)
+		return false
+	}
+
+	return true
+}
+
+func (config *AllSecureConfig) CreateImplantsTable(db *sql.Tx) bool {
+	var err error
+	CreateImplantTable := `
+CREATE TABLE IF NOT EXISTS implants (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    implant_id TEXT,
+    external_ip TEXT,
+    internal_ip TEXT,
+    username TEXT,
+    computer_name TEXT,
+    pid INTEGER,
+    process_name TEXT,
+    health TEXT,
+    last_checkin TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    );`
+
+	_, err = db.Exec(CreateImplantTable)
+	if err != nil {
+		log.Fatalln("[Error] attempting to create implant table with user_id association", err)
+		return false
+	}
+
+	return true
+}
+
 func (config *AllSecureConfig) InsertUserIntoTable(db *sql.Tx, username string, hashedpassword string) bool {
 	var err error
 	InsertUser := `
@@ -71,6 +122,16 @@ func (config *AllSecureConfig) InitDatabase() {
 	if !config.CreateUserTable(tx) {
 		tx.Rollback()
 		log.Fatalln("[error] Error inserting first user")
+	}
+	//Create Listeners Table
+	if !config.CreateListenersTable(tx) {
+		tx.Rollback()
+		log.Fatalln("[error] creating listeners table.")
+	}
+	//Create Implants Table
+	if !config.CreateImplantsTable(tx) {
+		tx.Rollback()
+		log.Fatalln("[error] creating implants table.")
 	}
 
 	//Insert User Into Table

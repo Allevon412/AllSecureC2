@@ -27,10 +27,10 @@ type ImplantData struct {
 }
 
 var ImplantRows []ImplantData
-var Headers ImplantTableHeaders
+var ImplantHeaders ImplantTableHeaders
 
 func ImplantTableInit() {
-	Headers.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health"}
+	ImplantHeaders.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health"}
 	l := loremipsum.New()
 	for i := 0; i < 500; i++ {
 
@@ -54,7 +54,7 @@ func ImplantTableInit() {
 // TODO create logic for when new implant data comes down pipeline
 // Fyne labs dev blog about creating a table https://fynelabs.com/2023/10/05/user-data-sorting-with-a-fyne-table-widget/
 func CreateImplantTable() *widget.Table {
-	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantRows), len(Headers.HeaderNames) },
+	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantRows), len(ImplantHeaders.HeaderNames) },
 		func() fyne.CanvasObject { l := widget.NewLabel(""); return l },
 		func(id widget.TableCellID, o fyne.CanvasObject) {
 			l := o.(*widget.Label)
@@ -109,7 +109,7 @@ func CreateImplantTable() *widget.Table {
 		} else {
 			switch id.Col {
 			case 0:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[0] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -119,7 +119,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 1:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[1] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -129,7 +129,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 2:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[2] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -139,7 +139,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 3:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[3] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -149,7 +149,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 4:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[4] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -159,7 +159,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 5:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[5] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -169,7 +169,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 6:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[6] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -179,7 +179,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 7:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[7] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -189,7 +189,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 8:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[8] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
@@ -199,7 +199,7 @@ func CreateImplantTable() *widget.Table {
 					b.Icon = nil
 				}
 			case 9:
-				b.SetText(Headers.HeaderNames[id.Col])
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
 				switch sorts[8] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()

@@ -15,6 +15,8 @@ func AddTab(tabs *container.DocTabs, content fyne.CanvasObject, TabName string) 
 		NewTabItem = container.NewTabItemWithIcon(TabName, chaticon, content)
 	case *widget.Label:
 		NewTabItem = container.NewTabItemWithIcon(TabName, theme.FyneLogo(), content)
+	case *widget.Table:
+		NewTabItem = container.NewTabItemWithIcon(TabName, theme.FyneLogo(), content)
 	}
 
 	//obtain the items in our doc tabs container

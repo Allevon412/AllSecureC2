@@ -23,3 +23,13 @@ type WebSocketMessage struct {
 	MessageType string `json:"MessageType"`
 	Message     string `json:"Message"`
 }
+
+type ListenerData struct {
+	ListenerName string `json:"ListenerName"`
+	Protocol     string `json:"Protocol"`
+	HOST         string `json:"HOST"`
+	PortBind     int    `json:"PortBind"`
+	PortConn     string `json:"PortConn"`
+	UserName     string `json:"username"`
+	UserID       int    `json:"UserID"`
+}
