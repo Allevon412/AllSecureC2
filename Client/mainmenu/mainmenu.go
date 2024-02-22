@@ -27,6 +27,8 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 			fyne.NewMenuItem("View Users", func() { CreateUserWindow(clientobj, OldWindow) }),
 			fyne.NewMenuItem("Add User", func() { AddUser(clientobj, OldWindow) }),
 			fyne.NewMenuItem("Delete User", func() { RemoveUser(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Create Listener", func() { CreateListenerFunc(clientobj, OldWindow) }),
+			fyne.NewMenuItem("Stop Listener", func() { StopListenerFunc(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("View",
 			fyne.NewMenuItem("Team Chat", func() { AddTab(tabs, TeamsChat, "Teams Chat") }),
@@ -97,7 +99,7 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 	g_clientobj = clientobj
 	g_username = clientobj.Username
 
-	CreateListenerTable(clientobj, NewWindow)
+	CreateListenerTable(clientobj, NewWindow, OldWindow)
 
 	//Create new teams chat
 	TeamsChat, err := CreateChatForm(clientobj.Username)

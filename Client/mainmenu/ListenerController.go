@@ -4,15 +4,79 @@ import (
 	"Client/Common"
 	"encoding/json"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"strings"
 )
 
-func CreateListenerFunc() error {
+func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+
+}
+
+func StopListenerSubmitFunc() {
+
+}
+
+func CreateListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
+	NewWindow := OldWindow.NewWindow("Add User Form")
+
+	var (
+		ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry
+	)
+	ListNameEntry = Common.NewCustomCredentialEntry(func() {
+		CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
+	})
+	ListProtocol = Common.NewCustomCredentialEntry(func() {
+		CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
+	})
+	ListHost = Common.NewCustomCredentialEntry(func() {
+		CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
+	})
+	ListPort = Common.NewCustomCredentialEntry(func() {
+		CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
+	})
+
+	form := &widget.Form{
+		BaseWidget: widget.BaseWidget{},
+		Items: []*widget.FormItem{
+			{
+				Text:     "Listener Name",
+				Widget:   ListNameEntry,
+				HintText: "HTTPS_LISTENER",
+			},
+			{
+				Text:     "Protocol",
+				Widget:   ListProtocol,
+				HintText: "HTTPS",
+			},
+			{
+				Text:     "Serving Host",
+				Widget:   ListHost,
+				HintText: "127.0.0.1",
+			},
+			{
+				Text:     "Listening Port",
+				Widget:   ListPort,
+				HintText: "443",
+			},
+		},
+		OnSubmit: func() {
+			CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
+		},
+		OnCancel:   NewWindow.Close,
+		SubmitText: "Create Listener",
+		CancelText: "Exit",
+	}
+
+	//show our form in the new window.
+	stack := container.NewStack(form)
+	NewWindow.SetContent(stack)
+	NewWindow.Resize(fyne.NewSize(700, 300))
+	NewWindow.Show()
 	return nil
 }
-func StopListenerFunc() error {
+func StopListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 func GetListenerData(clientobj *Common.Client) ([]byte, error) {
@@ -29,7 +93,7 @@ func GetListenerData(clientobj *Common.Client) ([]byte, error) {
 	return decoded, nil
 }
 
-func CreateListenerTable(clientobj *Common.Client, window fyne.Window) {
+func CreateListenerTable(clientobj *Common.Client, window fyne.Window, OldWindow fyne.App) {
 	var (
 		err error
 	)
@@ -45,7 +109,7 @@ func CreateListenerTable(clientobj *Common.Client, window fyne.Window) {
 
 	Create := fyne.NewMenuItem("Create Listener", func() {
 		//create new user form when Add new user is selected from menu
-		err = CreateListenerFunc()
+		err = CreateListenerFunc(clientobj, OldWindow)
 		if err != nil {
 			log.Println("[error] attempting to add user", err)
 		}
@@ -53,7 +117,7 @@ func CreateListenerTable(clientobj *Common.Client, window fyne.Window) {
 
 	//delete user popup menu
 	Stop := fyne.NewMenuItem("Stop Listener", func() {
-		err = StopListenerFunc()
+		err = StopListenerFunc(clientobj, OldWindow)
 		if err != nil {
 			log.Println("[error] attempting to add user", err)
 		}
