@@ -17,7 +17,7 @@ func SendChat(EnteredText string) {
 
 	err := g_clientobj.Conn.WriteJSON(ChatMessage)
 	if err != nil {
-		log.Println("[error] attempting to write test message to the server websocket.")
+		log.Println("[error] attempting to write chat message to the server websocket.", err)
 		return
 	}
 

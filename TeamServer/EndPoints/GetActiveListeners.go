@@ -24,7 +24,7 @@ func GetActiveListeners(Listeners []Common.ListenerData, databasepath string, cl
 	defer db.Close()
 
 	GetListenersByUserQuery := `
-SELECT ld.listener_name,  u.username, ld.port_conn, ld.host, ld.protocol, ld.port_bind FROM users u JOIN listeners ld ON u.id = ld.user_id;
+SELECT ld.listener_name,  u.username, ld.host, ld.protocol, ld.port_bind FROM users u JOIN listeners ld ON u.id = ld.user_id;
 `
 	Rows, err = db.Query(GetListenersByUserQuery)
 	if err != nil {
@@ -36,7 +36,7 @@ SELECT ld.listener_name,  u.username, ld.port_conn, ld.host, ld.protocol, ld.por
 	for Rows.Next() { //loop over each user
 		var TempListener Common.ListenerData
 		//scan data into tempuser structure
-		err = Rows.Scan(&TempListener.ListenerName, &TempListener.UserName, &TempListener.PortConn, &TempListener.HOST, &TempListener.Protocol, &TempListener.PortBind)
+		err = Rows.Scan(&TempListener.ListenerName, &TempListener.UserName, &TempListener.HOST, &TempListener.Protocol, &TempListener.PortBind)
 		if err != nil {
 			return []byte{}, err
 		}

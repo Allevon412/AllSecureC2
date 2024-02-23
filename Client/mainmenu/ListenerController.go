@@ -7,11 +7,57 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"log"
+	"strconv"
 	"strings"
 )
 
 func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+	var (
+		Jdata        []byte
+		err          error
+		ListenerData Common.ListenerData
+		data         []byte
+	)
+	//close the form window at end of the function.
+	defer NewWindow.Close()
 
+	ListenerData.ListenerName = ListNameEntry.Text
+	ListenerData.HOST = ListHost.Text
+	ListenerData.Protocol = ListProtocol.Text
+	ListenerData.PortBind, err = strconv.Atoi(ListPort.Text)
+	if err != nil {
+		log.Println("[error] attempting to convert listener port to integer format", err)
+		return
+	}
+	Jdata, err = json.Marshal(ListenerData)
+	if err != nil {
+		log.Println("[error] attempting to marshal listener data", err)
+		return
+	}
+	ChatMessage := Common.WebSocketMessage{
+		MessageType: "CreateListener",
+		Message:     string(Jdata),
+	}
+
+	err = g_clientobj.Conn.WriteJSON(ChatMessage)
+	if err != nil {
+		log.Println("[error] attempting to write chat message to the server websocket.", err)
+		return
+	}
+
+	data, err = GetListenerData(clientobj)
+	if err != nil {
+		log.Println("[error] attempting to obtain new listener data after adding new listener", err)
+		return
+	}
+	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.ListenerTableEntries)
+	if err != nil {
+		log.Println("[error] attempting to unmarshal data", err)
+	}
+	//refresh the table with the newly added user.
+	Common.ListenerTable.Refresh()
+	//exit. listener added!
+	return
 }
 
 func StopListenerSubmitFunc() {

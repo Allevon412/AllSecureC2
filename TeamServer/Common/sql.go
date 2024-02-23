@@ -43,3 +43,33 @@ SELECT username FROM users WHERE username = ?;
 	}
 	return false, nil
 }
+
+func AddListenerToSQLTable(username, databasepath string, userid int, data ListenerData) error {
+	var (
+		db   *sql.DB
+		err  error
+		stmt *sql.Stmt
+	)
+	db, err = sql.Open("sqlite3", databasepath)
+	if err != nil {
+		log.Println("[error] Failed to open database", err)
+		return err
+	}
+	defer db.Close()
+	InsertListenerIntoTableQuery := `
+INSERT INTO listeners (user_id, listener_name, protocol, host, port_bind) VALUES (?, ?, ?, ?, ?)`
+	stmt, err = db.Prepare(InsertListenerIntoTableQuery)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	data.UserID = userid
+	data.UserName = username
+
+	_, err = stmt.Exec(data.UserID, data.ListenerName, data.Protocol, data.HOST, data.PortBind)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

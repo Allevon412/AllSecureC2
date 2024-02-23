@@ -77,6 +77,20 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return true
 			})
+		case "CreateListener":
+			var ListenerData Common.ListenerData
+			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal listener data", err)
+				return
+			}
+			go func() {
+				err = Common.AddListenerToSQLTable(client.Username, t.Server.FI.DataBasePath, client.UserID, ListenerData)
+				if err != nil {
+					log.Println("[error] attempting to add listener to database", err)
+				}
+				return
+			}()
 		}
 	}
 
@@ -165,7 +179,8 @@ func (t *TS) Start() {
 
 		t.Server.Clients.Store(ClientID, &Common.Client{
 			Conn:          WebSocket,
-			Username:      "",
+			Username:      claims.Username,
+			UserID:        claims.UserID,
 			RemoteIP:      WebSocket.RemoteAddr().String(),
 			Authenticated: false,
 			Administrator: claims.Administrator,

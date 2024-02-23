@@ -29,7 +29,6 @@ type ListenerData struct {
 	Protocol     string `json:"Protocol"`
 	HOST         string `json:"HOST"`
 	PortBind     int    `json:"PortBind"`
-	PortConn     string `json:"PortConn"`
 	UserName     string `json:"username"`
 	UserID       int    `json:"UserID"`
 }

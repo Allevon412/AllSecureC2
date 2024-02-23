@@ -29,6 +29,7 @@ type (
 		ID            string
 		Conn          *websocket.Conn
 		Username      string
+		UserID        int
 		RemoteIP      string
 		Authenticated bool
 		Administrator bool
