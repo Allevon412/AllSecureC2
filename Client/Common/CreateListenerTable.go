@@ -103,7 +103,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 		func() fyne.CanvasObject {
 			l := NewCustomUserTableLabel(
 				func(e *fyne.PointEvent) {
-					PopUpMenu.ShowAtPosition(e.Position)
+					PopUpMenu.ShowAtPosition(e.AbsolutePosition)
 					PopUpMenu.Show()
 				})
 			return l
