@@ -142,7 +142,7 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomCredentialsEntry, clientob
 }
 
 func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) error {
-	NewWindow := OldWindow.NewWindow("Add User Form")
+	NewWindow := OldWindow.NewWindow("Remove User Form")
 
 	var (
 		UsernameEntry *Common.CustomCredentialsEntry

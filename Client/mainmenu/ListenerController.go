@@ -60,12 +60,56 @@ func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *C
 	return
 }
 
-func StopListenerSubmitFunc() {
+func StopListenerSubmitFunc(ListNameEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+	// close the stop listener form window.
+	defer NewWindow.Close()
 
+	var (
+		ListenerData Common.ListenerData
+		err          error
+		Jdata        []byte
+		data         []byte
+	)
+
+	ListenerData.ListenerName = ListNameEntry.Text
+
+	if err != nil {
+		log.Println("[error] attempting to convert listener port to integer format", err)
+		return
+	}
+	Jdata, err = json.Marshal(ListenerData)
+	if err != nil {
+		log.Println("[error] attempting to marshal listener data", err)
+		return
+	}
+	ChatMessage := Common.WebSocketMessage{
+		MessageType: "RemoveListener",
+		Message:     string(Jdata),
+	}
+
+	err = g_clientobj.Conn.WriteJSON(ChatMessage)
+	if err != nil {
+		log.Println("[error] attempting to write chat message to the server websocket.", err)
+		return
+	}
+
+	data, err = GetListenerData(clientobj)
+	if err != nil {
+		log.Println("[error] attempting to obtain new listener data after adding new listener", err)
+		return
+	}
+	err = json.Unmarshal(Common.RemoveNullBytes(data), &Common.ListenerTableEntries)
+	if err != nil {
+		log.Println("[error] attempting to unmarshal data", err)
+	}
+	//refresh the table with the newly added user.
+	Common.ListenerTable.Refresh()
+	//exit. listener added!
+	return
 }
 
 func CreateListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
-	NewWindow := OldWindow.NewWindow("Add User Form")
+	NewWindow := OldWindow.NewWindow("Create Listener Form")
 
 	var (
 		ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry
@@ -123,6 +167,35 @@ func CreateListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 func StopListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
+	NewWindow := OldWindow.NewWindow("Stop Listener Form")
+
+	var (
+		ListNameEntry *Common.CustomCredentialsEntry
+	)
+
+	ListNameEntry = Common.NewCustomCredentialEntry(func() { StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow) })
+	form := &widget.Form{
+		BaseWidget: widget.BaseWidget{},
+		Items: []*widget.FormItem{
+			{
+				Text:     "Listener Name",
+				Widget:   ListNameEntry,
+				HintText: "HTTPS_LISTENER",
+			},
+		},
+		OnSubmit: func() {
+			StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow)
+		},
+		OnCancel:   NewWindow.Close,
+		SubmitText: "Create Listener",
+		CancelText: "Exit",
+	}
+
+	//show our form in the new window.
+	stack := container.NewStack(form)
+	NewWindow.SetContent(stack)
+	NewWindow.Resize(fyne.NewSize(700, 300))
+	NewWindow.Show()
 	return nil
 }
 func GetListenerData(clientobj *Common.Client) ([]byte, error) {
