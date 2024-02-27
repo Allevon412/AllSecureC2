@@ -89,7 +89,7 @@ func RemoveListenerFromSQLTable(databasepath string, data ListenerData) (Listene
 	}
 	defer db.Close()
 	SelectListenerToReturnQuery := `
-SELECT protocol, host, port_bind FROM listeners WHERE listener_name = ?`
+SELECT listener_name, protocol, host, port_bind FROM listeners WHERE listener_name = ?`
 	ListenerRow, err = db.Query(SelectListenerToReturnQuery, data.ListenerName)
 	if err != nil {
 		return ListenerData{}, err
@@ -97,7 +97,7 @@ SELECT protocol, host, port_bind FROM listeners WHERE listener_name = ?`
 	defer ListenerRow.Close()
 
 	for ListenerRow.Next() {
-		err = ListenerRow.Scan(&listdata.Protocol, &listdata.HOST, &listdata.PortBind)
+		err = ListenerRow.Scan(&listdata.ListenerName, &listdata.Protocol, &listdata.HOST, &listdata.PortBind)
 		if err != nil {
 			return ListenerData{}, err
 		}

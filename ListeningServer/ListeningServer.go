@@ -161,14 +161,29 @@ func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key 
 	return true
 }
 
-func Stop(address string, port int) bool {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+func Stop(ListenerName, address, path string, port int) bool {
+	var err error
+	ctx, cancel := context.WithTimeout(context.Background(), 0)
 	defer cancel()
 	for _, server := range ListeningServers {
-		if server.Config.Address == address && server.Config.Port == port && server.Active == true {
-			if err := server.Server.Shutdown(ctx); err != nil {
+		if server.Config.Address == address && server.Config.Port == port && server.Active == true && server.Config.Name == ListenerName {
+
+			if err = server.Server.Close(); err != nil {
+				log.Println("[error] attempting to close connections")
+				return false
+			}
+			if err = server.Server.Shutdown(ctx); err != nil {
+
 				log.Println("[error] server shutdown failed: ", err)
 				return false
+			}
+			err = os.Remove(path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".cert")
+			if err != nil {
+				log.Println("[error] attempting to delete the server certificate file", err)
+			}
+			err = os.Remove(path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".key")
+			if err != nil {
+				log.Println("[error] attempting to delete the server key file", err)
 			}
 			return true
 		}

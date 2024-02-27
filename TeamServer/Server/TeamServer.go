@@ -132,7 +132,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
-				ListeningServer.Stop(ListenerData.HOST, ListenerData.PortBind)
+				ListeningServer.Stop(ListenerData.ListenerName, ListenerData.HOST, t.Server.FI.ProjectDir, ListenerData.PortBind)
 				return
 			}()
 		}
