@@ -74,30 +74,48 @@ INSERT INTO listeners (user_id, listener_name, protocol, host, port_bind) VALUES
 	return nil
 }
 
-func RemoveListenerFromSQLTable(databasepath string, data ListenerData) error {
+func RemoveListenerFromSQLTable(databasepath string, data ListenerData) (ListenerData, error) {
 	var (
-		db   *sql.DB
-		err  error
-		stmt *sql.Stmt
+		db          *sql.DB
+		err         error
+		stmt        *sql.Stmt
+		ListenerRow *sql.Rows
+		listdata    ListenerData
 	)
 	db, err = sql.Open("sqlite3", databasepath)
 	if err != nil {
 		log.Println("[error] Failed to open database", err)
-		return err
+		return ListenerData{}, err
 	}
 	defer db.Close()
+	SelectListenerToReturnQuery := `
+SELECT protocol, host, port_bind FROM listeners WHERE listener_name = ?`
+	ListenerRow, err = db.Query(SelectListenerToReturnQuery, data.ListenerName)
+	if err != nil {
+		return ListenerData{}, err
+	}
+	defer ListenerRow.Close()
+
+	for ListenerRow.Next() {
+		err = ListenerRow.Scan(&listdata.Protocol, &listdata.HOST, &listdata.PortBind)
+		if err != nil {
+			return ListenerData{}, err
+		}
+	}
+
 	InsertListenerIntoTableQuery := `
 DELETE FROM listeners WHERE listener_name = ?`
+
 	stmt, err = db.Prepare(InsertListenerIntoTableQuery)
 	if err != nil {
-		return err
+		return ListenerData{}, err
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(data.ListenerName)
 	if err != nil {
-		return err
+		return ListenerData{}, err
 	}
 
-	return nil
+	return listdata, nil
 }

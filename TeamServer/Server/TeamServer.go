@@ -1,6 +1,7 @@
 package Server
 
 import (
+	"AllSecure/ListeningServer"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
@@ -91,6 +92,22 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return
 			}()
+
+			go func() {
+				if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
+					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default())
+					if success != true {
+						log.Println("[error] listening server did not start.")
+						return
+					}
+				} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
+					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default())
+					if success != true {
+						log.Println("[error] listening server did not start.")
+						return
+					}
+				}
+			}()
 		case "RemoveListener":
 			var ListenerData Common.ListenerData
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
@@ -99,10 +116,11 @@ func (t *TS) HandleRequest(ClientID string) {
 				return
 			}
 			go func() {
-				err = Common.RemoveListenerFromSQLTable(t.Server.FI.DataBasePath, ListenerData)
+				ListenerData, err = Common.RemoveListenerFromSQLTable(t.Server.FI.DataBasePath, ListenerData)
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
+				ListeningServer.Stop(ListenerData.HOST, ListenerData.PortBind)
 				return
 			}()
 		}
@@ -118,6 +136,7 @@ func (t *TS) Start() {
 		err                    error
 		currdir                string
 	)
+
 	//generate random string to sign our JWT's with.
 	t.Server.TokenKey, err = Crypt.GenerateRandomString(16)
 
