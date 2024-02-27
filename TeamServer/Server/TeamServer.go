@@ -91,6 +91,20 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return
 			}()
+		case "RemoveListener":
+			var ListenerData Common.ListenerData
+			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal listener data", err)
+				return
+			}
+			go func() {
+				err = Common.RemoveListenerFromSQLTable(t.Server.FI.DataBasePath, ListenerData)
+				if err != nil {
+					log.Println("[error] attempting to add listener to database", err)
+				}
+				return
+			}()
 		}
 	}
 

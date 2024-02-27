@@ -187,7 +187,7 @@ func StopListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 			StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow)
 		},
 		OnCancel:   NewWindow.Close,
-		SubmitText: "Create Listener",
+		SubmitText: "Stop Listener",
 		CancelText: "Exit",
 	}
 

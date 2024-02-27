@@ -73,3 +73,31 @@ INSERT INTO listeners (user_id, listener_name, protocol, host, port_bind) VALUES
 
 	return nil
 }
+
+func RemoveListenerFromSQLTable(databasepath string, data ListenerData) error {
+	var (
+		db   *sql.DB
+		err  error
+		stmt *sql.Stmt
+	)
+	db, err = sql.Open("sqlite3", databasepath)
+	if err != nil {
+		log.Println("[error] Failed to open database", err)
+		return err
+	}
+	defer db.Close()
+	InsertListenerIntoTableQuery := `
+DELETE FROM listeners WHERE listener_name = ?`
+	stmt, err = db.Prepare(InsertListenerIntoTableQuery)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(data.ListenerName)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
