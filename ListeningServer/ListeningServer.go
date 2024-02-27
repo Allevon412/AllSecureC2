@@ -95,20 +95,13 @@ func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Serv
 	return Server
 }
 
-func Start(Address string, port int, Secure bool, engine *gin.Engine) bool {
+func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key []byte, ListenerName, path string) bool {
+	var err error
+	var TempServer Common.ListeningServer
 
-	if len(ListeningServers) > 0 {
-		for _, server := range ListeningServers {
-			if server.Config.Port == port && server.Config.Address == Address && server.Active == true {
-				log.Println("[error] the server is already started and listening on the desired location", Address, port)
-				return false
-			}
-		}
-	}
-
-	ListeningServers = append(ListeningServers, Common.ListeningServer{
+	TempServer = Common.ListeningServer{
 		Config: &Common.HTTPServerConfig{
-			Name:         "",
+			Name:         ListenerName,
 			KillDate:     0,
 			WorkingHours: "",
 			Method:       "",
@@ -118,31 +111,53 @@ func Start(Address string, port int, Secure bool, engine *gin.Engine) bool {
 		},
 		GinEngine: engine,
 		Server:    &http.Server{Addr: Address + ":" + strconv.Itoa(port), Handler: engine},
-		TLS: struct {
-			Cert     []byte
-			Key      []byte
-			CertPath string
-			KeyPath  string
-		}{},
-		Active: true,
-	})
-
-	for _, server := range ListeningServers {
-		if server.Active && server.Config.Address == Address && server.Config.Port == port {
-			server.GinEngine.POST("/*endpoint", ProcessRequest)
-			server.GinEngine.GET("/*endpoint", DenyRequest)
-		}
+		TLS:       Common.TLSConfig{Key: Key, Cert: Cert, CertPath: path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".cert", KeyPath: path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".key"},
+		Active:    true,
 	}
 
-	for _, server := range ListeningServers {
-		if server.Config.Address == Address && server.Config.Port == port && server.Active == true {
-			err := server.Server.ListenAndServe()
-			if err != nil {
-				log.Println("[error] attempting to launch listening server", err)
+	if len(ListeningServers) > 0 {
+		for _, server := range ListeningServers {
+			if server.Config.Port == port && server.Config.Address == Address && server.Active == true && server.Config.Name == ListenerName {
+				log.Println("[error] the server is already started and listening on the desired location", Address, port)
 				return false
 			}
 		}
 	}
+
+	ListeningServers = append(ListeningServers, TempServer)
+
+	for _, server := range ListeningServers {
+
+		if server.Active && server.Config.Address == Address && server.Config.Port == port && server.Config.Name == ListenerName {
+
+			server.GinEngine.POST("/*endpoint", ProcessRequest)
+			server.GinEngine.GET("/*endpoint", DenyRequest)
+
+			if server.Config.Secure == true {
+
+				err = os.WriteFile(server.TLS.CertPath, Cert, 0644)
+				if err != nil {
+					log.Fatalln("[error] Failed to save certificate", err)
+				}
+				err = os.WriteFile(server.TLS.KeyPath, Key, 0644)
+				if err != nil {
+					log.Fatalln("[error] Failed to save key path", err)
+				}
+
+				if err = server.GinEngine.RunTLS(server.Config.Address+":"+strconv.Itoa(server.Config.Port), server.TLS.CertPath, server.TLS.KeyPath); err != nil {
+					log.Fatalln("[error] failed to start websocket: ", err)
+				}
+
+			} else {
+				err = server.Server.ListenAndServe()
+				if err != nil {
+					log.Println("[error] attempting to launch listening server", err)
+					return false
+				}
+			}
+		}
+	}
+
 	return true
 }
 

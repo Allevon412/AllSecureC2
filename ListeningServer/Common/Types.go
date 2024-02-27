@@ -15,6 +15,14 @@ type (
 		Secure       bool
 		Address      string
 	}
+
+	TLSConfig struct {
+		Cert []byte
+		Key  []byte
+
+		CertPath string
+		KeyPath  string
+	}
 )
 
 type (
@@ -24,13 +32,8 @@ type (
 		GinEngine *gin.Engine
 		Server    *http.Server
 
-		TLS struct {
-			Cert []byte
-			Key  []byte
+		TLS TLSConfig
 
-			CertPath string
-			KeyPath  string
-		}
 		Active bool
 	}
 )

@@ -94,14 +94,26 @@ func (t *TS) HandleRequest(ClientID string) {
 			}()
 
 			go func() {
+				//check if our listener is going to use secure comms.
 				if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
-					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default())
+
+					//generate a certificate.
+					var Cert, Key []byte
+					Cert, Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
+					if err != nil {
+						log.Fatalln("[error] Failed generating cert / key pair", err)
+					}
+
+					//start server.
+					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default(), Cert, Key, ListenerData.ListenerName, t.Server.FI.ProjectDir)
 					if success != true {
 						log.Println("[error] listening server did not start.")
 						return
 					}
+
+					//use unsecure comms.
 				} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
-					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default())
+					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default(), []byte{}, []byte{}, ListenerData.ListenerName, t.Server.FI.ProjectDir)
 					if success != true {
 						log.Println("[error] listening server did not start.")
 						return
