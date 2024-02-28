@@ -12,6 +12,7 @@ import (
 	"context"
 	"crypto/tls"
 	"crypto/x509"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -95,7 +96,7 @@ func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Serv
 	return Server
 }
 
-func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key []byte, ListenerName, path string) bool {
+func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key []byte, ListenerName, path string) error {
 	var err error
 	var TempServer Common.ListeningServer
 
@@ -119,7 +120,7 @@ func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key 
 		for _, server := range ListeningServers {
 			if server.Config.Port == port && server.Config.Address == Address && server.Active == true && server.Config.Name == ListenerName {
 				log.Println("[error] the server is already started and listening on the desired location", Address, port)
-				return false
+				return errors.New("[error] server has already been started")
 			}
 		}
 	}
@@ -152,13 +153,13 @@ func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key 
 				err = server.Server.ListenAndServe()
 				if err != nil {
 					log.Println("[error] attempting to launch listening server", err)
-					return false
+					return err
 				}
 			}
 		}
 	}
 
-	return true
+	return nil
 }
 
 func Stop(ListenerName, address, path string, port int) bool {

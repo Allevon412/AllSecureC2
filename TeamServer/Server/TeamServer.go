@@ -105,16 +105,16 @@ func (t *TS) HandleRequest(ClientID string) {
 					}
 
 					//start server.
-					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default(), Cert, Key, ListenerData.ListenerName, t.Server.FI.ProjectDir)
-					if success != true {
+					err = ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default(), Cert, Key, ListenerData.ListenerName, t.Server.FI.ProjectDir)
+					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
 					}
 
 					//use unsecure comms.
 				} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
-					success := ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default(), []byte{}, []byte{}, ListenerData.ListenerName, t.Server.FI.ProjectDir)
-					if success != true {
+					err = ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default(), []byte{}, []byte{}, ListenerData.ListenerName, t.Server.FI.ProjectDir)
+					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
 					}
@@ -170,6 +170,13 @@ func (t *TS) Start() {
 	go func() {
 		result := t.AddDefaultEndPoints()
 		DefaultEndPointsParsed <- result
+	}()
+
+	//start listeners in database that are already there from last session.
+	go func() {
+		var list_data []Common.ListenerData
+		list_data, err = Common.GetListenerData(t.Server.FI.DataBasePath)
+		StartListenersInDatabase(list_data, t.Server.FI.ProjectDir)
 	}()
 
 	t.Server.GinEngine.GET("/", func(context *gin.Context) {

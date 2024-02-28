@@ -44,6 +44,40 @@ SELECT username FROM users WHERE username = ?;
 	return false, nil
 }
 
+func GetListenerData(databasepath string) ([]ListenerData, error) {
+	var (
+		db          *sql.DB
+		err         error
+		ListenerRow *sql.Rows
+		listdata    ListenerData
+	)
+
+	db, err = sql.Open("sqlite3", databasepath)
+	if err != nil {
+		log.Println("[error] Failed to open database", err)
+		return []ListenerData{}, err
+	}
+	defer db.Close()
+
+	Query := `
+SELECT u.username, ld.user_id, ld.listener_name, ld.protocol, ld.host, ld.port_bind FROM users u JOIN listeners ld ON u.id = ld.user_id`
+
+	ListenerRow, err = db.Query(Query)
+	if err != nil {
+		log.Println("[error] failed to retrieve database rows", err)
+		return []ListenerData{}, err
+	}
+	var data_slice []ListenerData
+	for ListenerRow.Next() {
+		err = ListenerRow.Scan(&listdata.UserName, &listdata.UserID, &listdata.ListenerName, &listdata.Protocol, &listdata.HOST, &listdata.PortBind)
+		if err != nil {
+			return []ListenerData{}, err
+		}
+		data_slice = append(data_slice, listdata)
+	}
+	return data_slice, nil
+}
+
 func AddListenerToSQLTable(username, databasepath string, userid int, data ListenerData) error {
 	var (
 		db   *sql.DB
