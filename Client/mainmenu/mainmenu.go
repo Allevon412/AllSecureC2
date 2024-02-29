@@ -88,7 +88,7 @@ func ObtainWebSocketConn(clientobj *Common.Client) error {
 		log.Println("[error] attempting to obtain socket connection", err)
 		return err
 	}
-	go UpdateChat()
+	go CheckForNewEventsFromWS()
 	return nil
 }
 
@@ -123,14 +123,13 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 	tabs.Append(container.NewTabItemWithIcon("Teams Chat", chaticon, TeamsChat))
 
 	// Create content for table pane
-	Common.ImplantTableInit()
-	ImplantTable := Common.CreateImplantTable()
+	Common.ImplantTable = CreateImplantTable()
 
 	// TODO create logging pane.
 	topRightContent := widget.NewLabel("Logging Pane")
 
 	// Create a horizontal split for the top panes
-	topsplit := container.NewHSplit(ImplantTable, topRightContent)
+	topsplit := container.NewHSplit(Common.ImplantTable, topRightContent)
 
 	//CenteredTabsContainer := container.New(&Common.CenteredBottomStacked{}, tabs)
 	CenteredTabsContainer := container.NewStack(tabs)

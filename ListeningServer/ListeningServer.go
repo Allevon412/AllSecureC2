@@ -26,6 +26,7 @@ import (
 var (
 	agent_arr        []implant.Agent
 	ListeningServers []Common.ListeningServer
+	g_clientobj      Common.Client
 )
 
 func ProcessRequest(c *gin.Context) {
@@ -96,30 +97,39 @@ func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Serv
 	return Server
 }
 
-func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key []byte, ListenerName, path string) error {
+func Start(Server Common.NewListener) error {
+
+	go func() {
+		err := StartEventHandler(Server.Jwttoken, Server.TSAddr+Server.TSPort)
+		if err != nil {
+			log.Println("[error] attempting to start event handler", err)
+			return
+		}
+	}()
+
 	var err error
 	var TempServer Common.ListeningServer
 
 	TempServer = Common.ListeningServer{
 		Config: &Common.HTTPServerConfig{
-			Name:         ListenerName,
+			Name:         Server.ListenerName,
 			KillDate:     0,
 			WorkingHours: "",
 			Method:       "",
-			Port:         port,
-			Secure:       Secure,
-			Address:      Address,
+			Port:         Server.Port,
+			Secure:       Server.Secure,
+			Address:      Server.Address,
 		},
-		GinEngine: engine,
-		Server:    &http.Server{Addr: Address + ":" + strconv.Itoa(port), Handler: engine},
-		TLS:       Common.TLSConfig{Key: Key, Cert: Cert, CertPath: path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".cert", KeyPath: path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".key"},
+		GinEngine: Server.Engine,
+		Server:    &http.Server{Addr: Server.Address + ":" + strconv.Itoa(Server.Port), Handler: Server.Engine},
+		TLS:       Common.TLSConfig{Key: Server.Key, Cert: Server.Cert, CertPath: Server.Path + "\\ListeningServer\\Assets\\server_" + Server.ListenerName + ".cert", KeyPath: Server.Path + "\\ListeningServer\\Assets\\server_" + Server.ListenerName + ".key"},
 		Active:    true,
 	}
 
 	if len(ListeningServers) > 0 {
 		for _, server := range ListeningServers {
-			if server.Config.Port == port && server.Config.Address == Address && server.Active == true && server.Config.Name == ListenerName {
-				log.Println("[error] the server is already started and listening on the desired location", Address, port)
+			if server.Config.Port == Server.Port && server.Config.Address == Server.Address && server.Active == true && server.Config.Name == Server.ListenerName {
+				log.Println("[error] the server is already started and listening on the desired location", Server.Address, Server.Port)
 				return errors.New("[error] server has already been started")
 			}
 		}
@@ -129,18 +139,18 @@ func Start(Address string, port int, Secure bool, engine *gin.Engine, Cert, Key 
 
 	for _, server := range ListeningServers {
 
-		if server.Active && server.Config.Address == Address && server.Config.Port == port && server.Config.Name == ListenerName {
+		if server.Active && server.Config.Address == Server.Address && server.Config.Port == Server.Port && server.Config.Name == Server.ListenerName {
 
 			server.GinEngine.POST("/*endpoint", ProcessRequest)
 			server.GinEngine.GET("/*endpoint", DenyRequest)
 
 			if server.Config.Secure == true {
 
-				err = os.WriteFile(server.TLS.CertPath, Cert, 0644)
+				err = os.WriteFile(server.TLS.CertPath, Server.Cert, 0644)
 				if err != nil {
 					log.Fatalln("[error] Failed to save certificate", err)
 				}
-				err = os.WriteFile(server.TLS.KeyPath, Key, 0644)
+				err = os.WriteFile(server.TLS.KeyPath, Server.Key, 0644)
 				if err != nil {
 					log.Fatalln("[error] Failed to save key path", err)
 				}

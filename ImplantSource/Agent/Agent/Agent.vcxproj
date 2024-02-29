@@ -129,18 +129,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LoadResource.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="HttpRequest.c" />
+    <ClCompile Include="PerformRequest.c" />
     <ClCompile Include="Register.c" />
     <ClCompile Include="RetrieveInstructions.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="implant.h" />
     <ClInclude Include="Http.h" />
-    <ClInclude Include="LoadResource.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

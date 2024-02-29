@@ -2,6 +2,7 @@ package Common
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"net/http"
 )
 
@@ -23,9 +24,26 @@ type (
 		CertPath string
 		KeyPath  string
 	}
+
+	CookieStruct struct {
+		Token jwttoken
+	}
 )
 
 type (
+	NewListener struct {
+		Address      string
+		Port         int
+		Secure       bool
+		Engine       *gin.Engine
+		Cert, Key    []byte
+		ListenerName string
+		Path         string
+		Jwttoken     string
+		TSAddr       string
+		TSPort       string
+	}
+
 	ListeningServer struct {
 		Config *HTTPServerConfig
 
@@ -35,5 +53,12 @@ type (
 		TLS TLSConfig
 
 		Active bool
+	}
+
+	Client struct {
+		Server    string
+		Cookie    CookieStruct
+		ClientObj http.Client
+		Conn      *websocket.Conn
 	}
 )

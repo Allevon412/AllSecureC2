@@ -4,7 +4,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/go-loremipsum/loremipsum"
 	"sort"
 	"strconv"
 	"strings"
@@ -13,48 +12,20 @@ import (
 type ImplantTableHeaders struct {
 	HeaderNames []string
 }
-type ImplantData struct {
-	ImplantNum int
-	ID         string
-	InternalIP string
-	ExternalIP string
-	User       string
-	Computer   string
-	OS         string
-	PID        int
-	Process    string
-	Health     string
-}
 
-var ImplantRows []ImplantData
+var ImplantData []ImplantTableData
 var ImplantHeaders ImplantTableHeaders
+var ImplantTable *widget.Table
 
 func ImplantTableInit() {
 	ImplantHeaders.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health"}
-	l := loremipsum.New()
-	for i := 0; i < 500; i++ {
-
-		row := ImplantData{
-			ImplantNum: i,
-			ID:         l.Word(),
-			InternalIP: l.Word(),
-			ExternalIP: l.Word(),
-			User:       l.Word(),
-			Computer:   l.Word(),
-			OS:         l.Word(),
-			PID:        i,
-			Process:    l.Word(),
-			Health:     l.Word(),
-		}
-
-		ImplantRows = append(ImplantRows, row)
-	}
 }
 
 // TODO create logic for when new implant data comes down pipeline
 // Fyne labs dev blog about creating a table https://fynelabs.com/2023/10/05/user-data-sorting-with-a-fyne-table-widget/
 func CreateImplantTable() *widget.Table {
-	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantRows), len(ImplantHeaders.HeaderNames) },
+	ImplantTableInit()
+	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantData), len(ImplantHeaders.HeaderNames) },
 		func() fyne.CanvasObject { l := widget.NewLabel(""); return l },
 		func(id widget.TableCellID, o fyne.CanvasObject) {
 			l := o.(*widget.Label)
@@ -62,26 +33,26 @@ func CreateImplantTable() *widget.Table {
 			switch id.Col {
 			case 0:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(strconv.Itoa(ImplantRows[id.Row].ImplantNum))
+				l.SetText(strconv.Itoa(ImplantData[id.Row].ImplantNum))
 			case 1:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(ImplantRows[id.Row].ID)
+				l.SetText(ImplantData[id.Row].ID)
 			case 2:
-				l.SetText(ImplantRows[id.Row].InternalIP)
+				l.SetText(ImplantData[id.Row].InternalIP)
 			case 3:
-				l.SetText(ImplantRows[id.Row].ExternalIP)
+				l.SetText(ImplantData[id.Row].ExternalIP)
 			case 4:
-				l.SetText(ImplantRows[id.Row].User)
+				l.SetText(ImplantData[id.Row].User)
 			case 5:
-				l.SetText(ImplantRows[id.Row].Computer)
+				l.SetText(ImplantData[id.Row].Computer)
 			case 6:
-				l.SetText(ImplantRows[id.Row].OS)
+				l.SetText(ImplantData[id.Row].OS)
 			case 7:
-				l.SetText(strconv.Itoa(ImplantRows[id.Row].PID))
+				l.SetText(strconv.Itoa(ImplantData[id.Row].PID))
 			case 8:
-				l.SetText(ImplantRows[id.Row].Process)
+				l.SetText(ImplantData[id.Row].Process)
 			case 9:
-				l.SetText(ImplantRows[id.Row].Health)
+				l.SetText(ImplantData[id.Row].Health)
 			}
 		},
 	)
@@ -245,10 +216,10 @@ func ApplySort(col int, t *widget.Table) {
 	}
 	sorts[col] = order
 
-	sort.Slice(ImplantRows, func(i, j int) bool {
+	sort.Slice(ImplantData, func(i, j int) bool {
 		//grab two rows at indexes I & J
-		a := ImplantRows[i]
-		b := ImplantRows[j]
+		a := ImplantData[i]
+		b := ImplantData[j]
 
 		//compare them for no sorting
 		if order == SortOff {

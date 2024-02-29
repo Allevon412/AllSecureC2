@@ -2,6 +2,7 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
+	Common2 "AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
@@ -94,26 +95,42 @@ func (t *TS) HandleRequest(ClientID string) {
 			}()
 
 			go func() {
+				var token string
+				var NewListener Common2.NewListener
+
+				token, err = t.CreateToken(9999, "ListeningServer", false)
+				NewListener.Jwttoken = token
+				NewListener.Address = ListenerData.HOST
+				NewListener.Port = ListenerData.PortBind
+				NewListener.ListenerName = ListenerData.ListenerName
+				NewListener.Engine = gin.Default()
+				NewListener.Path = t.Server.FI.ProjectDir
+				NewListener.TSAddr = t.Server.Config.Address
+				NewListener.TSPort = t.Server.Config.Port
+				if err != nil {
+					log.Println("[error] attempting to perform ascii to integer conversion for TS server port", err)
+				}
+
 				//check if our listener is going to use secure comms.
 				if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
 
+					NewListener.Secure = true
 					//generate a certificate.
-					var Cert, Key []byte
-					Cert, Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
+					NewListener.Cert, NewListener.Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
 					if err != nil {
 						log.Fatalln("[error] Failed generating cert / key pair", err)
 					}
 
 					//start server.
-					err = ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, true, gin.Default(), Cert, Key, ListenerData.ListenerName, t.Server.FI.ProjectDir)
+					err = ListeningServer.Start(NewListener)
 					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
 					}
-
 					//use unsecure comms.
 				} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
-					err = ListeningServer.Start(ListenerData.HOST, ListenerData.PortBind, false, gin.Default(), []byte{}, []byte{}, ListenerData.ListenerName, t.Server.FI.ProjectDir)
+					NewListener.Secure = false
+					err = ListeningServer.Start(NewListener)
 					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
@@ -175,8 +192,18 @@ func (t *TS) Start() {
 	//start listeners in database that are already there from last session.
 	go func() {
 		var list_data []Common.ListenerData
+		var token string
+
 		list_data, err = Common.GetListenerData(t.Server.FI.DataBasePath)
-		StartListenersInDatabase(list_data, t.Server.FI.ProjectDir)
+		token, err = t.CreateToken(9999, "ListeningServer", false)
+
+		if err != nil {
+			log.Println("[error] attempting to convert team server port to integer", err)
+		}
+		err = StartListenersInDatabase(list_data, t.Server.FI.ProjectDir, token, t.Server.Config.Address, t.Server.Config.Port)
+		if err != nil {
+			log.Println("[error] attempting to start the listeners in the database.")
+		}
 	}()
 
 	t.Server.GinEngine.GET("/", func(context *gin.Context) {
@@ -198,12 +225,14 @@ func (t *TS) Start() {
 
 	t.Server.GinEngine.GET("/ws", func(ctx *gin.Context) {
 		var (
-			upgrader      websocket.Upgrader
-			WebSocket     *websocket.Conn
-			ClientID, err = Crypt.GenerateRandomString(8)
-			token         string
-			claims        *Common.JWTClaims
+			upgrader  websocket.Upgrader
+			WebSocket *websocket.Conn
+			ClientID  string
+			token     string
+			claims    *Common.JWTClaims
 		)
+		ClientID, err = Crypt.GenerateRandomString(8)
+
 		if err != nil {
 			log.Fatalln("[error] could not generate random string when starting team server")
 		}
@@ -247,7 +276,6 @@ func (t *TS) Start() {
 			KeyPath  = t.Server.FI.ProjectDir + "\\TeamServer" + "\\Assets\\server.key"
 			Cert     []byte
 			Key      []byte
-			err      error
 		)
 
 		t.Server.TLS.CertPath = CertPath

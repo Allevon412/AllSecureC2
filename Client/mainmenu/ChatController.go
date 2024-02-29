@@ -23,29 +23,18 @@ func SendChat(EnteredText string) {
 
 	return
 }
-func UpdateChat() {
+func UpdateChat(Message string) {
 
-	var err error
-	for {
-		//lock the mutex to ensure race condition does not occur.
-		lock.Lock()
-		//overwrite previous the current chat log text.
-		g_prevtext = teamsChatLog.Text
-		//unlock mutex so other threads may use it.
-		lock.Unlock()
-		var NewMessage Common.WebSocketMessage
-		//read message from server
-		//cannot wrap whole funciton in mutex lock / unlcok since this blocks the thread it will never unlock until a new message is received.
-		err = g_clientobj.Conn.ReadJSON(&NewMessage)
-		if err != nil {
-			log.Println("[error] attempting to read web socket message")
-			return
-		}
-		//set teams chat to the previous text + the new message0.
-		lock.Lock()
-		teamsChatLog.SetText(fmt.Sprintf("%s\n%s", g_prevtext, NewMessage.Message))
-		lock.Unlock()
-	}
+	//lock the mutex to ensure race condition does not occur.
+	lock.Lock()
+	//overwrite previous the current chat log text.
+	g_prevtext = teamsChatLog.Text
+	//unlock mutex so other threads may use it.
+	lock.Unlock()
+	//set teams chat to the previous text + the new message0.
+	lock.Lock()
+	teamsChatLog.SetText(fmt.Sprintf("%s\n%s", g_prevtext, Message))
+	lock.Unlock()
 
 }
 
