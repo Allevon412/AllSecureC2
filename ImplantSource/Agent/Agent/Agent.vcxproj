@@ -129,12 +129,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="enum.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="PerformRequest.c" />
     <ClCompile Include="Register.c" />
     <ClCompile Include="RetrieveInstructions.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="enum.h" />
     <ClInclude Include="implant.h" />
     <ClInclude Include="Http.h" />
   </ItemGroup>

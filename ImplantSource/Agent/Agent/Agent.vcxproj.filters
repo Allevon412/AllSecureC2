@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Http">
       <UniqueIdentifier>{0e2ac500-a738-444a-9a02-23e5910fb15a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Enumeration">
+      <UniqueIdentifier>{0a646f6c-37b2-4d57-acb1-880f62f6d3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Enumeration">
+      <UniqueIdentifier>{e3623071-4da1-46ed-a69d-603e31357353}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -39,6 +45,9 @@
     <ClCompile Include="PerformRequest.c">
       <Filter>Source Files\Http</Filter>
     </ClCompile>
+    <ClCompile Include="enum.c">
+      <Filter>Source Files\Enumeration</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="implant.h">
@@ -46,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Http.h">
       <Filter>Header Files\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="enum.h">
+      <Filter>Header Files\Enumeration</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

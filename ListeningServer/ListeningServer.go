@@ -49,6 +49,13 @@ func ProcessRequest(c *gin.Context) {
 	log.Printf("[+] Registered New Agent at [%s], Cmd Exec Path: %s\n", time.DateTime, newExecPath)
 	log.Printf("[+] Registered New Agent at [%s], Recv Cmd Exec Path: %s\n", time.DateTime, newRecvPath)
 
+	//TODO: retrieve the implant data from implant itself, process it & send event to team server.
+
+	err = SendEvent("NewImplant")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
 }
 func DenyRequest(c *gin.Context) {
 	c.Writer.WriteHeader(http.StatusNotFound)

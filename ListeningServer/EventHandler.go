@@ -1,6 +1,7 @@
 package ListeningServer
 
 import (
+	"AllSecure/ListeningServer/Common"
 	"crypto/tls"
 	"encoding/json"
 	"github.com/gorilla/websocket"
@@ -16,7 +17,7 @@ func CreateWebSocketConnection() (*websocket.Conn, error) {
 		err     error
 		headers http.Header
 	)
-	
+
 	endpoint := "wss://" + g_clientobj.Server + "/ws"
 	token, err = json.Marshal(g_clientobj.Cookie.Token.JwtToken)
 	if err != nil {
@@ -44,6 +45,29 @@ func StartEventHandler(token string, teamserver string) error {
 	if err != nil {
 		log.Println("[error] attempting to create websocket connection", err)
 		return err
+	}
+	return nil
+}
+
+func SendEvent(EventName string) error {
+	var NewMessage Common.NewWebSocketMessage
+	var err error
+	switch EventName {
+	case "NewImplant":
+		var NewImplant Common.ImplantData
+		var TempData []byte
+		NewMessage.MessageType = "NewImplant"
+		TempData, err = json.Marshal(NewImplant)
+		if err != nil {
+			log.Println("[error] attempting to marshal the implant data", err)
+			return err
+		}
+		NewMessage.Message = string(TempData)
+		err = g_clientobj.Conn.WriteJSON(NewMessage)
+		if err != nil {
+			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+			return err
+		}
 	}
 	return nil
 }
