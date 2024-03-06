@@ -1,12 +1,15 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Register.c
   enum.c
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Register.c(15,54): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(9,26): warning C4133: 'function': incompatible types - from 'RTL_OSVERSIONINFOEXW *' to 'PRTL_OSVERSIONINFOW'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(5,18): warning C4113: 'FARPROC' differs in parameter lists from 't_RtlGetVersion'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(5,18): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_RtlGetVersion'
-  main.c
-  Generating Code...
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(21,26): warning C4133: 'function': incompatible types - from 'RTL_OSVERSIONINFOEXW *' to 'PRTL_OSVERSIONINFOW'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(24,12): warning C4090: 'return': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(140,11): warning C4090: 'return': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(16,18): warning C4113: 'FARPROC' differs in parameter lists from 't_RtlGetVersion'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(16,18): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_RtlGetVersion'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(148,17): warning C4113: 'FARPROC' differs in parameter lists from 't_GetUserNameA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(148,17): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetUserNameA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(163,23): warning C4113: 'FARPROC' differs in parameter lists from 't_GetComputerNameExA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(163,23): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetComputerNameExA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(178): warning C4715: 'GetCompName': not all control paths return a value
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

