@@ -5,6 +5,7 @@ import (
 	Common2 "AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
+	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -166,6 +167,7 @@ func (t *TS) Start() {
 		DefaultEndPointsParsed chan bool
 		err                    error
 		currdir                string
+		ecdsaPrivKey           *ecdsa.PrivateKey
 	)
 
 	//generate random string to sign our JWT's with.
@@ -181,6 +183,15 @@ func (t *TS) Start() {
 	err = t.ParseConfig(parts[0] + "AllSecure\\Config\\AllSecure.Config")
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
+	}
+
+	ecdsaPrivKey, err = Crypt.GenerateECCKeys()
+	if err != nil {
+		log.Println("[error] attempting to create keys", err)
+	}
+	err = Crypt.SaveKeysToPEMFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\")
+	if err != nil {
+		log.Println("[error] attempting to save keys to pem files", err)
 	}
 
 	t.Server.GinEngine = gin.Default()

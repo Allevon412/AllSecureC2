@@ -1,15 +1,296 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  enum.c
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(21,26): warning C4133: 'function': incompatible types - from 'RTL_OSVERSIONINFOEXW *' to 'PRTL_OSVERSIONINFOW'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(24,12): warning C4090: 'return': different 'const' qualifiers
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(140,11): warning C4090: 'return': different 'const' qualifiers
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(16,18): warning C4113: 'FARPROC' differs in parameter lists from 't_RtlGetVersion'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(16,18): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_RtlGetVersion'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(148,17): warning C4113: 'FARPROC' differs in parameter lists from 't_GetUserNameA'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(148,17): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetUserNameA'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(163,23): warning C4113: 'FARPROC' differs in parameter lists from 't_GetComputerNameExA'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(163,23): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetComputerNameExA'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(178): warning C4715: 'GetCompName': not all control paths return a value
-  Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
-  'pwsh.exe' is not recognized as an internal or external command,
-  operable program or batch file.
+  der_decode_sequence_ex.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_decode_sequence_flexi.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_flexi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_decode_sequence_multi.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_decode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_sequence_ex.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_sequence.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_sequence_free.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_sequence_shrink.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_sequence_shrink.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  Generating Code...
+der_decode_sequence_ex.obj : error LNK2019: unresolved external symbol der_decode_custom_type_ex referenced in function der_decode_sequence_ex
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_boolean referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_boolean
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_boolean referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_integer referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_integer referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_integer
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_bit_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_bit_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_bit_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_octet_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_octet_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_octet_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_object_identifier referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_object_identifier referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_object_identifier
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_ia5_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_ia5_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_ia5_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_teletex_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_teletex_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_teletex_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_printable_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_printable_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_printable_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_utf8_string referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_utf8_string referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_utf8_string
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_utctime referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_utctime referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_utctime
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_generalizedtime referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_length_generalizedtime referenced in function s_der_decode_sequence_flexi
+der_length_sequence.obj : error LNK2001: unresolved external symbol der_length_generalizedtime
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_asn1_identifier referenced in function s_der_decode_sequence_flexi
+der_decode_sequence_flexi.obj : error LNK2019: unresolved external symbol der_decode_asn1_length referenced in function s_der_decode_sequence_flexi
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_custom_type referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_set referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_setof referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_boolean referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_integer referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_short_integer referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_bit_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_raw_bit_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_octet_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_object_identifier referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_ia5_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_printable_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_utf8_string referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_utctime referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_generalizedtime referenced in function der_encode_sequence_ex
+der_encode_sequence_ex.obj : error LNK2019: unresolved external symbol der_encode_asn1_length referenced in function der_encode_sequence_ex
+der_length_sequence.obj : error LNK2019: unresolved external symbol der_length_custom_type referenced in function der_length_sequence_ex
+der_length_sequence.obj : error LNK2019: unresolved external symbol der_length_short_integer referenced in function der_length_sequence_ex
+der_length_sequence.obj : error LNK2019: unresolved external symbol der_length_asn1_length referenced in function der_length_sequence_ex
+ecc_export_openssl.obj : error LNK2019: unresolved external symbol pk_get_oid referenced in function ecc_export_openssl
+ecc_import_pkcs8.obj : error LNK2001: unresolved external symbol pk_get_oid
+ecc_export_openssl.obj : error LNK2019: unresolved external symbol pk_oid_str_to_num referenced in function ecc_export_openssl
+ecc_set_curve.obj : error LNK2001: unresolved external symbol pk_oid_str_to_num
+ecc_set_curve_internal.obj : error LNK2001: unresolved external symbol pk_oid_str_to_num
+ecc_export_openssl.obj : error LNK2019: unresolved external symbol x509_encode_subject_public_key_info referenced in function ecc_export_openssl
+ecc_get_oid_str.obj : error LNK2019: unresolved external symbol pk_oid_num_to_str referenced in function ecc_get_oid_str
+ecc_import_openssl.obj : error LNK2001: unresolved external symbol pk_oid_num_to_str
+ecc_import_pkcs8.obj : error LNK2001: unresolved external symbol pk_oid_num_to_str
+ecc_import_x509.obj : error LNK2001: unresolved external symbol pk_oid_num_to_str
+ecc_import_pkcs8.obj : error LNK2019: unresolved external symbol pk_oid_cmp_with_asn1 referenced in function ecc_import_pkcs8
+ecc_import_pkcs8.obj : error LNK2019: unresolved external symbol pkcs8_decode_flexi referenced in function ecc_import_pkcs8
+ecc_import_x509.obj : error LNK2019: unresolved external symbol x509_decode_public_key_from_certificate referenced in function ecc_import_x509
+ecc_import_x509.obj : error LNK2019: unresolved external symbol x509_decode_subject_public_key_info referenced in function s_ecc_import_x509_with_curve
+ecc_recover_key.obj : error LNK2019: unresolved external symbol ssh_decode_sequence_multi referenced in function ecc_recover_key
+ecc_verify_hash.obj : error LNK2001: unresolved external symbol ssh_decode_sequence_multi
+ecc_recover_key.obj : error LNK2019: unresolved external symbol pk_oid_cmp_with_ulong referenced in function ecc_recover_key
+ecc_sign_hash.obj : error LNK2001: unresolved external symbol pk_oid_cmp_with_ulong
+ecc_verify_hash.obj : error LNK2001: unresolved external symbol pk_oid_cmp_with_ulong
+ecc_sign_hash.obj : error LNK2019: unresolved external symbol ssh_encode_sequence_multi referenced in function ecc_sign_hash_ex
+yarrow.obj : error LNK2001: unresolved external symbol rijndael_desc
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe : fatal error LNK1120: 56 unresolved externals

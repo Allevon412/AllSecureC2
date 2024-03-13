@@ -31,6 +31,9 @@
     <Filter Include="Header Files\Enumeration">
       <UniqueIdentifier>{e3623071-4da1-46ed-a69d-603e31357353}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\init">
+      <UniqueIdentifier>{15cd00dc-68b9-42bc-9088-f2d19a3bf6ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -48,6 +51,9 @@
     <ClCompile Include="enum.c">
       <Filter>Source Files\Enumeration</Filter>
     </ClCompile>
+    <ClCompile Include="parsekey.c">
+      <Filter>Source Files\Init</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="implant.h">
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="enum.h">
       <Filter>Header Files\Enumeration</Filter>
+    </ClInclude>
+    <ClInclude Include="parsekey.h">
+      <Filter>Header Files\init</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

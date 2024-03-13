@@ -1,6 +1,5 @@
 #include "Http.h"
 #include "implant.h"
-#include "LoadResource.h"
 
 BOOL RegisterAgent() {
 	Agent	new_agent		= { 0 };

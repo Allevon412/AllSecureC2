@@ -1,5 +1,7 @@
 #include "enum.h"
 
+//TODO finish enumeration
+
 BOOL Enumerate(pAgent agent)
 {
 	//TODO: this may be an issue since we're not allocating memory manually & copying it into buffer.
