@@ -151,6 +151,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="implant.h" />
     <ClInclude Include="Http.h" />
+    <ClInclude Include="package.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

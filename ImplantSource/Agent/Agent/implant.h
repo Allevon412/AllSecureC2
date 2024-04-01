@@ -6,5 +6,10 @@ typedef struct _Agent {
 	LPSTR OperatingSystem;
 	LPSTR UserName;
 	LPSTR ComputerName;
+	unsigned char* AESKey;
+	unsigned long AESKeySize;
+	unsigned char* EncryptedAESKey;
+	unsigned long EncryptedAESKeySize;
+
 }Agent, *pAgent;
 

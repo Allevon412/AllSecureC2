@@ -34,6 +34,9 @@
     <Filter Include="Header Files\Helpers">
       <UniqueIdentifier>{15cd00dc-68b9-42bc-9088-f2d19a3bf6ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\package">
+      <UniqueIdentifier>{44a4017a-381c-4929-9b8d-6bd808fb4b56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="Helpers.h">
       <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="package.h">
+      <Filter>Header Files\package</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

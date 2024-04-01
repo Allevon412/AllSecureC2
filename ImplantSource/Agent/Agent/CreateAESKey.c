@@ -12,6 +12,10 @@ char* CreateAESKey(prng_state* prng) {
         printf("Error generating symmetric key [0x%d]\n", result);
         return 1;
     }
+    for (int i = 0; i < symmetricKeySize; i++) {
+        printf("0x%02X ", *symmetricKey + i);
+    }
+    printf("\n");
 
     return symmetricKey;
 }

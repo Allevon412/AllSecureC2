@@ -30,7 +30,8 @@ D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(36,29): warning C4273: 'cl
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
   see previous definition of 'clock'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(34,19): warning C4090: 'function': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(32,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(39,19): warning C4090: 'function': different 'const' qualifiers
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

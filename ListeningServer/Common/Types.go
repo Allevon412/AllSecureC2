@@ -1,12 +1,26 @@
 package Common
 
 import (
+	"encoding/binary"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
 )
 
 type (
+	Package struct {
+		Size      uint32
+		MagicVal  []byte
+		AgentID   []byte
+		CmdID     []byte
+		RequestID []byte
+
+		//MetaData
+		EncryptedAESKeySize uint16
+		EncryptedAESKey     []byte
+	}
+
 	HTTPServerConfig struct {
 		Name         string
 		KillDate     int64
@@ -62,3 +76,20 @@ type (
 		Conn      *websocket.Conn
 	}
 )
+
+func (p *Package) UnmarshalBinary(data []byte) error {
+	if len(data) < 172 {
+		return fmt.Errorf("insufficient data for package unmarshalling")
+	}
+
+	p.Size = binary.LittleEndian.Uint32(data[:4])
+	p.MagicVal = data[4:8]
+	p.AgentID = data[8:12]
+	p.CmdID = data[12:16]
+	p.RequestID = data[16:20]
+
+	//MetaData
+	p.EncryptedAESKeySize = binary.LittleEndian.Uint16(data[20:22])
+	p.EncryptedAESKey = data[22:]
+	return nil
+}
