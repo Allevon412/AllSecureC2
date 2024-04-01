@@ -1,0 +1,2510 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Analysis.props(24,5): warning MSB4211: The property "MsvcAnalysisPluginPath" is being set to a value for the first time, but it was already consumed at "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CodeAnalysis.Extensions.props (33,5)".
+  CreateAESKey.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'CreateAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\CreateAESKey.c(16,9): warning C4047: 'return': 'char *' differs in levels of indirection from 'int'
+  CreatePRNGState.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'CreatePRNGState.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\CreatePRNGState.c(9,9): warning C4047: 'return': 'prng_state *' differs in levels of indirection from 'int'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\CreatePRNGState.c(17,9): warning C4047: 'return': 'prng_state *' differs in levels of indirection from 'int'
+  EncryptAESKey.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(9,161): warning C4133: 'function': incompatible types - from 'unsigned char *' to 'const ecc_key *'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(16,17): warning C4047: 'function': 'prng_state *' differs in levels of indirection from 'prng_state **'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(16,17): warning C4024: 'yarrow_done': different types for formal and actual parameter 1
+  enum.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(23,26): warning C4133: 'function': incompatible types - from 'RTL_OSVERSIONINFOEXW *' to 'PRTL_OSVERSIONINFOW'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(26,12): warning C4090: 'return': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(142,11): warning C4090: 'return': different 'const' qualifiers
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(18,18): warning C4113: 'FARPROC' differs in parameter lists from 't_RtlGetVersion'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(18,18): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_RtlGetVersion'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(150,17): warning C4113: 'FARPROC' differs in parameter lists from 't_GetUserNameA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(150,17): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetUserNameA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(165,23): warning C4113: 'FARPROC' differs in parameter lists from 't_GetComputerNameExA'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(165,23): warning C4133: 'initializing': incompatible types - from 'FARPROC' to 't_GetComputerNameExA'
+  main.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'main.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  parsekey.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'parsekey.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  PerformRequest.c
+  Register.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Register.c(14,54): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
+  RetrieveInstructions.c
+  aes.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  aesni.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aesni.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  aes_desc.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/ciphers/aes_desc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  aes_tab.c
+  hash_memory.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/helper/hash_memory.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  sha256.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/hashes/sha2/sha256.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  multi.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  rand_bn.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_bn.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  rand_prime.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/math/rand_prime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  compare_testvector.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/compare_testvector.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_argchk.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_argchk.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  Compiling...
+  crypt_cipher_descriptor.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_cipher_is_valid.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_cipher_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_find_hash.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_find_prng.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_find_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_hash_descriptor.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_hash_is_valid.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_hash_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_ltc_mp_descriptor.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_ltc_mp_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_prng_descriptor.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_descriptor.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_prng_is_valid.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_prng_is_valid.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_register_cipher.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_cipher.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_register_hash.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_hash.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  crypt_register_prng.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/crypt/crypt_register_prng.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  zeromem.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/misc/zeromem.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ctr_done.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_done.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ctr_encrypt.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_encrypt.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ctr_start.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/modes/ctr/ctr_start.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_bit_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_raw_bit_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_encode_raw_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_bit_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/bit/der_length_bit_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_boolean.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_encode_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  Compiling...
+  der_length_boolean.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/boolean/der_length_boolean.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_custom_type.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_encode_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_custom_type.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/custom_type/der_length_custom_type.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_generalizedtime.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_encode_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_generalizedtime.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/generalizedtime/der_length_generalizedtime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_asn1_maps.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_asn1_maps.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_asn1_identifier.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_asn1_length.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_encode_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_asn1_identifier.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_asn1_length.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/general/der_length_asn1_length.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_ia5_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_encode_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_ia5_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/ia5/der_length_ia5_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_integer.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_encode_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_integer.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/integer/der_length_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_object_identifier.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_encode_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_object_identifier.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/object_identifier/der_length_object_identifier.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_octet_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_encode_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_octet_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/octet/der_length_octet_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_printable_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_encode_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_printable_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/printable_string/der_length_printable_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  Compiling...
+  der_encode_sequence_ex.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_ex.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_sequence_multi.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_encode_sequence_multi.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_sequence.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/sequence/der_length_sequence.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_set.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_set.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_setof.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/set/der_encode_setof.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_short_integer.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_encode_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_short_integer.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/short_integer/der_length_short_integer.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_teletex_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/teletex_string/der_length_teletex_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_utctime.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_encode_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_utctime.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utctime/der_length_utctime.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_encode_utf8_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_encode_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  der_length_utf8_string.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/der/utf8/der_length_utf8_string.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  pk_oid_str.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/asn1/oid/pk_oid_str.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_encrypt_key.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_encrypt_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_find_curve.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_find_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_free.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_free.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_get_key.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_get_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_make_key.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_make_key.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_set_curve.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  Compiling...
+  ecc_set_curve_internal.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_set_curve_internal.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ecc_shared_secret.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ecc_shared_secret.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ltc_ecc_export_point.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_export_point.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  ltc_ecc_points.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/pk/ecc/ltc_ecc_points.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+  yarrow.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
+  see previous definition of 'malloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
+  see previous definition of 'realloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
+  see previous definition of 'calloc'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
+  see previous definition of 'free'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
+  see previous definition of 'qsort'
+  
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'TomCrypt/prngs/yarrow.c')
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
+  see previous definition of 'clock'
+  
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+enum.obj : error LNK2001: unresolved external symbol __imp_GetSystemMetrics
+main.obj : error LNK2001: unresolved external symbol ltm_desc
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Release\Agent.exe : fatal error LNK1120: 2 unresolved externals

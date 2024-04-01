@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -104,12 +107,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers\aes;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk\ecc;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OffsecTools\libtomcrypt\src;D:\OffsecTools\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winhttp.lib;crypt32.lib;D:\OffsecTools\libtommath\MSVC_x64_Release\tommath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winhttp.lib;tomcrypt.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OffsecTools\libtomcrypt\MSVC_x64_Release;D:\OffsecTools\libtomcrypt\MSVC_x64_Release\Intermediate</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -120,118 +124,33 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\OffsecTools\libtomcrypt\src;D:\OffsecTools\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winhttp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winhttp.lib;tomcrypt.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OffsecTools\libtomcrypt\MSVC_x64_Release;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CreateAESKey.c" />
+    <ClCompile Include="CreatePRNGState.c" />
+    <ClCompile Include="EncryptAESKey.c" />
     <ClCompile Include="enum.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="parsekey.c" />
     <ClCompile Include="PerformRequest.c" />
     <ClCompile Include="Register.c" />
     <ClCompile Include="RetrieveInstructions.c" />
-    <ClCompile Include="TomCrypt\ciphers\aes.c" />
-    <ClCompile Include="TomCrypt\ciphers\aesni.c" />
-    <ClCompile Include="TomCrypt\ciphers\aes_desc.c" />
-    <ClCompile Include="TomCrypt\ciphers\aes_tab.c" />
-    <ClCompile Include="TomCrypt\hashes\helper\hash_memory.c" />
-    <ClCompile Include="TomCrypt\hashes\sha2\sha256.c" />
-    <ClCompile Include="TomCrypt\math\multi.c" />
-    <ClCompile Include="TomCrypt\math\rand_bn.c" />
-    <ClCompile Include="TomCrypt\math\rand_prime.c" />
-    <ClCompile Include="TomCrypt\misc\compare_testvector.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_argchk.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_cipher_descriptor.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_cipher_is_valid.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_find_hash.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_find_prng.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_hash_descriptor.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_hash_is_valid.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_ltc_mp_descriptor.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_prng_descriptor.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_prng_is_valid.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_register_cipher.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_register_hash.c" />
-    <ClCompile Include="TomCrypt\misc\crypt\crypt_register_prng.c" />
-    <ClCompile Include="TomCrypt\misc\zeromem.c" />
-    <ClCompile Include="TomCrypt\modes\ctr\ctr_done.c" />
-    <ClCompile Include="TomCrypt\modes\ctr\ctr_encrypt.c" />
-    <ClCompile Include="TomCrypt\modes\ctr\ctr_start.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\bit\der_encode_bit_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\bit\der_encode_raw_bit_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\bit\der_length_bit_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\boolean\der_encode_boolean.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\boolean\der_length_boolean.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\custom_type\der_encode_custom_type.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\custom_type\der_length_custom_type.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\generalizedtime\der_encode_generalizedtime.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\generalizedtime\der_length_generalizedtime.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\general\der_asn1_maps.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\general\der_encode_asn1_identifier.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\general\der_encode_asn1_length.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\general\der_length_asn1_identifier.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\general\der_length_asn1_length.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\ia5\der_encode_ia5_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\ia5\der_length_ia5_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\integer\der_encode_integer.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\integer\der_length_integer.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\object_identifier\der_encode_object_identifier.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\object_identifier\der_length_object_identifier.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\octet\der_encode_octet_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\octet\der_length_octet_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\printable_string\der_encode_printable_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\printable_string\der_length_printable_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\sequence\der_encode_sequence_ex.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\sequence\der_encode_sequence_multi.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\sequence\der_length_sequence.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\set\der_encode_set.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\set\der_encode_setof.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\short_integer\der_encode_short_integer.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\short_integer\der_length_short_integer.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\teletex_string\der_length_teletex_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\utctime\der_encode_utctime.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\utctime\der_length_utctime.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\utf8\der_encode_utf8_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\der\utf8\der_length_utf8_string.c" />
-    <ClCompile Include="TomCrypt\pk\asn1\oid\pk_oid_str.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_encrypt_key.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_find_curve.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_free.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_get_key.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_make_key.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_set_curve.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_set_curve_internal.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ecc_shared_secret.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ltc_ecc_export_point.c" />
-    <ClCompile Include="TomCrypt\pk\ecc\ltc_ecc_points.c" />
-    <ClCompile Include="TomCrypt\prngs\yarrow.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enum.h" />
+    <ClInclude Include="Helpers.h" />
     <ClInclude Include="implant.h" />
     <ClInclude Include="Http.h" />
-    <ClInclude Include="parsekey.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_argchk.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_cfg.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_cipher.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_custom.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_hash.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_mac.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_macros.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_math.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_misc.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_pk.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_pkcs.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_private.h" />
-    <ClInclude Include="TomCrypt\headers\tomcrypt_prng.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

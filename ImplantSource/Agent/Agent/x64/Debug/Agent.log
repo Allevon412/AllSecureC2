@@ -1,43 +1,36 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  parsekey.c
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+  EncryptAESKey.c
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(27,28): warning C4273: 'malloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(101,15):
   see previous definition of 'malloc'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(28,28): warning C4273: 'realloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(126,15):
   see previous definition of 'realloc'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(29,28): warning C4273: 'calloc': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(66,15):
   see previous definition of 'calloc'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(30,26): warning C4273: 'free': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_malloc.h(89,14):
   see previous definition of 'free'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(32,26): warning C4273: 'qsort': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\corecrt_search.h(60,23):
   see previous definition of 'qsort'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
-  (compiling source file 'parsekey.c')
+D:\OffsecTools\libtomcrypt\src\headers\tomcrypt_cfg.h(36,29): warning C4273: 'clock': inconsistent dll linkage
+  (compiling source file 'EncryptAESKey.c')
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\time.h(144,26):
   see previous definition of 'clock'
   
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(30,17): warning C4098: 'encryptAESKey': 'void' function returning a value
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(38,17): warning C4098: 'encryptAESKey': 'void' function returning a value
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(50,17): warning C4098: 'encryptAESKey': 'void' function returning a value
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(56,26): warning C4047: 'function': 'unsigned char *' differs in levels of indirection from 'unsigned char (*)[32]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(56,26): warning C4024: 'yarrow_read': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(59,17): warning C4098: 'encryptAESKey': 'void' function returning a value
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(67,166): warning C4133: 'function': incompatible types - from 'unsigned char *' to 'const ecc_key *'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parsekey.c(70,17): warning C4098: 'encryptAESKey': 'void' function returning a value
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\EncryptAESKey.c(34,19): warning C4090: 'function': different 'const' qualifiers
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
