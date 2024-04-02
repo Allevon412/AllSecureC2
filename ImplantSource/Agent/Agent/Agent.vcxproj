@@ -140,7 +140,9 @@
     <ClCompile Include="CreatePRNGState.c" />
     <ClCompile Include="EncryptAESKey.c" />
     <ClCompile Include="enum.c" />
+    <ClCompile Include="localcstd.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="package.c" />
     <ClCompile Include="parsekey.c" />
     <ClCompile Include="PerformRequest.c" />
     <ClCompile Include="Register.c" />
@@ -151,6 +153,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="implant.h" />
     <ClInclude Include="Http.h" />
+    <ClInclude Include="localcstd.h" />
     <ClInclude Include="package.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

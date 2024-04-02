@@ -9,6 +9,13 @@ int ReadPrivKey(unsigned char** privKey, unsigned long* privKeySize, const char*
 
 int main(int argc, char* argv[])
 {
+
+    if (argc < 4) {
+        printf("[error] not enough arguments provided\n");
+        printf("Example: \n");
+        printf(".\KeyDecryptor.exe <base64 encoded encrypted key> <Path to private key file> <size of encrypted key>\n");
+        return -1;
+    }
     ltc_mp = ltm_desc;
     register_all_ciphers();
     register_all_hashes();
@@ -23,9 +30,6 @@ int main(int argc, char* argv[])
 
     unsigned char decryptedKey[250];
     unsigned long decryptedKeySize = sizeof(decryptedKey);
-    printf("Arg1: %s\n", argv[1]);
-    printf("Arg2: %s\n", argv[2]);
-    printf("Arg3: %s\n", argv[3]);
 
     if ((err = base64_decode(argv[1], strlen(argv[1]), decodedkey, &decodedKeySize) != CRYPT_OK)) {
         printf("[error] attmepting to base64 decode the aeskey. %s\n", error_to_string(err));
@@ -46,7 +50,7 @@ int main(int argc, char* argv[])
     }
     
     for (int i = 0; i < decryptedKeySize; i++) {
-        printf("0x%02X ", decryptedKey[i]);
+        printf("%c", decryptedKey[i]);
     }
     printf("\n");
     return 0;

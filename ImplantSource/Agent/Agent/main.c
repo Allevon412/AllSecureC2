@@ -8,14 +8,13 @@
 
 #include "Helpers.h"
 
-
-
-Agent g_ImplantData = { 0 };
+g_ImplantData = { 0 };
 
 int main()
 
 //TODO finish establishing secure comms.
 {
+    g_ImplantData.AgentID = 0xdeadbeef;
     ltc_mp = ltm_desc;
     register_all_ciphers();
     register_all_hashes();
