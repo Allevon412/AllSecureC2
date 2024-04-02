@@ -189,7 +189,7 @@ func (t *TS) Start() {
 	if err != nil {
 		log.Println("[error] attempting to create keys", err)
 	}
-	err = Crypt.SaveKeysToDERFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\")
+	err = Crypt.SaveKeysToDERFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
 	if err != nil {
 		log.Println("[error] attempting to save keys to pem files", err)
 	}

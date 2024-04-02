@@ -13,7 +13,7 @@ char* CreateAESKey(prng_state* prng) {
         return 1;
     }
     for (int i = 0; i < symmetricKeySize; i++) {
-        printf("0x%02X ", *symmetricKey + i);
+        printf("0x%02X ", symmetricKey[i]);
     }
     printf("\n");
 

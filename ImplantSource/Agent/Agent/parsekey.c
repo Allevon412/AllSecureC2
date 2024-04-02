@@ -1,6 +1,6 @@
 #include "Helpers.h"
 
-#define PUBLIC_KEY_FILE "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\Config\\ecc_public_key.der"
+#define PUBLIC_KEY_FILE "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\Config\\test_implant_ecc_public_key.der"
 
 int ReadPublicKey(unsigned char** publicKey, unsigned long* publicKeySize) {
 

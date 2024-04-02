@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>MFAGCWCGSAFlAwQCAQQhApUWVD+HsG6cPdmm96l6xKueAXCPE2HXGaoeBUX+r8ytBCD5sL97ZpCLlFOZqzM/SU5aW6d1eYwFnJjqH1EFRR4lBw== "C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\Config\test_implant_ecc_private_key.der" 82</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>MFAGCWCGSAFlAwQCAQQhApUWVD+HsG6cPdmm96l6xKueAXCPE2HXGaoeBUX+r8ytBCD5sL97ZpCLlFOZqzM/SU5aW6d1eYwFnJjqH1EFRR4lBw== "C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\Config\test_implant_ecc_private_key.der" 82</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>

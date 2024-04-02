@@ -10,8 +10,6 @@ import (
 	"AllSecure/TeamServer/Crypt"
 	"AllSecure/TeamServer/implant"
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -48,7 +46,8 @@ func ProcessRequest(c *gin.Context) {
 	}
 	log.Println("Size of the Encrypted AESKey: ", data_package.EncryptedAESKeySize)
 
-	err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\Config\\")
+	err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize,
+		"C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
 	if err != nil {
 		c.JSON(http.StatusMovedPermanently, DenyRequest)
 	}
@@ -69,42 +68,6 @@ func DenyRequest(c *gin.Context) {
 	c.Header("Server", "nginx")
 	c.Header("Content-Type", "text/html")
 	c.Writer.Write(html)
-}
-
-func InitTLSCerts() string {
-
-	var FilePath string
-	ServerPrivKey, err := Crypt.GeneratePrivateKey("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ServerConfig",
-		"ListeningServer")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	FilePath, err = Crypt.GenerateSelfSignedCert("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ServerConfig",
-		"ListeningServer", ServerPrivKey, "127.0.0.1")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return FilePath
-}
-
-func UpdateHttpServer(Server *http.Server, ClientCertFilePath string) *http.Server {
-	var (
-		ClientCert []byte
-		CertPool   *x509.CertPool
-		TlsConfig  *tls.Config
-		err        error
-	)
-
-	if ClientCert, err = os.ReadFile(ClientCertFilePath); err != nil {
-		log.Fatalln(err)
-	}
-	CertPool = x509.NewCertPool()
-	CertPool.AppendCertsFromPEM(ClientCert)
-
-	TlsConfig = &tls.Config{ClientCAs: CertPool, ClientAuth: tls.RequireAndVerifyClientCert}
-
-	Server = &http.Server{Addr: ":443", TLSConfig: TlsConfig}
-	return Server
 }
 
 func Start(Server Common.NewListener) error {

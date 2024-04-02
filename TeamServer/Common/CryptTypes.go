@@ -33,7 +33,7 @@ type ECCPublicKey struct {
 }
 
 type ECCPrivateKey struct {
-	Flags   byte
+	Flags   asn1.BitString
 	KeySize int
 	PubkeyX *big.Int
 	PubKeyY *big.Int

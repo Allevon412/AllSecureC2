@@ -5,7 +5,9 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/x509"
 	"encoding/asn1"
+	"encoding/pem"
 	"log"
 	"os"
 )
@@ -20,25 +22,55 @@ func GenerateECCKeys() (*ecdsa.PrivateKey, error) {
 	return privateKey, nil
 }
 
-func SaveKeysToDERFile(privateKey *ecdsa.PrivateKey, filepath string) error {
+func SaveKeysToDERFile(privateKey *ecdsa.PrivateKey, filepath string, implant_id string) error {
 	curve := elliptic.P256()
 	privateKey, err := ecdsa.GenerateKey(curve, rand.Reader)
 	if err != nil {
 		return err
 	}
 
-	privateKeyBytes, err := asn1.Marshal(privateKey)
+	privateKeyDerBytes, err := x509.MarshalECPrivateKey(privateKey)
 
 	// Write PEM block to a file
-	file, err := os.Create(filepath + "ecc_private_key.der")
+	pemBlockPrivKey := &pem.Block{
+		Type:    "EC PRIVATE KEY",
+		Headers: nil,
+		Bytes:   privateKeyDerBytes,
+	}
+
+	file, err := os.Create(filepath + implant_id + "_ecc_private_key.pem")
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	err = os.WriteFile(filepath+"ecc_private_key.der", privateKeyBytes, 0644)
+	err = pem.Encode(file, pemBlockPrivKey)
 	if err != nil {
 		log.Println("[error] attempting to create private key file using path ", filepath, err)
+		return err
+	}
+
+	file, err = os.Create(filepath + implant_id + "_ecc_private_key.der")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	privKey := Common.ECCPrivateKey{
+		Flags: asn1.BitString{
+			Bytes:     []byte{0x80}, //0x80 = 128 or most significant bit = 1
+			BitLength: 1,
+		},
+		KeySize: curve.Params().BitSize / 8,
+		PubkeyX: privateKey.PublicKey.X,
+		PubKeyY: privateKey.PublicKey.Y,
+		SecretK: privateKey.D,
+	}
+	privateKeyDerBytes, err = asn1.Marshal(privKey)
+
+	_, err = file.Write(privateKeyDerBytes)
+	if err != nil {
+		log.Println("[error] attempting to create private key der file.", err)
 		return err
 	}
 
@@ -52,15 +84,14 @@ func SaveKeysToDERFile(privateKey *ecdsa.PrivateKey, filepath string) error {
 		PubKeyY: privateKey.PublicKey.Y,
 	}
 
-	file, err = os.Create(filepath + "ecc_public_key.der")
+	file, err = os.Create(filepath + implant_id + "_ecc_public_key.der")
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	log.Println(pubKey)
 	publicKeyDerBytes, err := asn1.Marshal(pubKey)
-	log.Println(publicKeyDerBytes)
+
 	if err != nil {
 		log.Println("[error] attempting to create public key file.")
 		return err
