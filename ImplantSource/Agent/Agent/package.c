@@ -31,8 +31,9 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID) {
 	pPackage pack = CreatePackage(CommandID);
 	int err = 0;
 
-	if ((err = AddFourBytesToPackage(pack, 0)) != PACKAGE_SUCCESS) {
-		printf("[error] attempting to add four bytes to package.\n");
+	if ((err = AddInt32ToPackage(pack, 0)) != PACKAGE_SUCCESS) { //Setting the first four bytes of buffer to 0. This will allow us to put the length field in later @ beginning of buffer.
+																 //could also probably do this using the last four bytes of the buffer as well.
+		printf("[error] attempting to add four bytes to package. %s\n", ErrorToString(err));
 		return NULL;
 	}
 	AddInt32ToPackage(pack, AGENT_MAGIC_VALUE);
@@ -291,4 +292,31 @@ LPSTR ErrorToString(INT error) {
 		break;
 	}
 	return error;
+}
+
+INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
+	UINT32 padding = 0;
+
+	if (!pack)
+		return PACKAGE_DOES_NOT_EXIST;
+
+	if (!pack->Buffer)
+		return PACKAGE_BUFFER_DOES_NOT_EXIST;
+
+	AddInt32ToBuffer(pack->Buffer, pack->Length - sizeof(UINT32));
+
+	if (pack->Encrypt)
+	{
+		padding += (sizeof(UINT64) * 2) + 4; //rewrite of the havoc padding code.
+
+		if (pack->CommandID == INITIALIZE_AGENT) {
+			padding += 32 + 16;
+		}
+
+		//TODO perform encryption.
+	}
+
+	//TODO perform sending of package.
+
+	return PACKAGE_SUCCESS;
 }

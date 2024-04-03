@@ -46,6 +46,12 @@
     <Filter Include="Source Files\cstdreplacement">
       <UniqueIdentifier>{6e1655b6-dbef-4488-a2ac-e498b58dc9ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Operations">
+      <UniqueIdentifier>{fe33411e-26bc-47b2-a26a-34bc534f2cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Operations">
+      <UniqueIdentifier>{0325cfb8-e7c0-4ed2-9a2e-269dd9c18ad7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -81,6 +87,9 @@
     <ClCompile Include="localcstd.c">
       <Filter>Source Files\cstdreplacement</Filter>
     </ClCompile>
+    <ClCompile Include="Operations.c">
+      <Filter>Source Files\Operations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="implant.h">
@@ -100,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="localcstd.h">
       <Filter>Header Files\cstdreplacement</Filter>
+    </ClInclude>
+    <ClInclude Include="Operations.h">
+      <Filter>Header Files\Operations</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

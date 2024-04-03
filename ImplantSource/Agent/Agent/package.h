@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "localcstd.h"
 #include "implant.h"
+#include "Operations.h"
 
 
 enum package_return_values {
