@@ -24,7 +24,7 @@ func SendChat(EnteredText string) {
 	return
 }
 
-//TODO: change the number of maximum messages shown. delete the last one. (maybe use a linkedlist?)
+// TODO: change the number of maximum messages shown. delete the last one. (maybe use a linkedlist?)
 func UpdateChat(Message string) {
 
 	//lock the mutex to ensure race condition does not occur.

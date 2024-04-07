@@ -169,7 +169,6 @@ func (t *TS) Start() {
 		currdir                string
 		ecdsaPrivKey           *ecdsa.PrivateKey
 	)
-
 	//generate random string to sign our JWT's with.
 	t.Server.TokenKey, err = Crypt.GenerateRandomString(16)
 

@@ -1,10 +1,11 @@
 #pragma once
-#include <Windows.h>
-#include <stdio.h>
-#include "localcstd.h"
-#include "implant.h"
-#include "Operations.h"
+#include "Crypto.h"
+#include "agent.h"
 
+
+#define PACKAGE_HEADER_LENGTH 20
+
+struct Agent;
 
 enum package_return_values {
     PACKAGE_SUCCESS = 0,
@@ -25,16 +26,21 @@ enum package_return_values {
 /*
 
 Taken from havoc as a basic model.
-     Header (if specified):
+     Unencrypted Header (if specified):
         [ SIZE         ] 4 bytes
         [ Magic Value  ] 4 bytes
         [ Agent ID     ] 4 bytes
         [ COMMAND ID   ] 4 bytes
         [ Request ID   ] 4 bytes
 
-     MetaData:
-        [ AES KEY      ] 32 bytes
-        [ AES IV       ] 16 bytes
+     Encrypted Using ECC MetaData:
+        [ Encrypted AES KEY Len ] 4 bytes
+        [ Encrypted AES KEY ] ? bytes - calculated at runtime
+        [ Encrypted AES IV Len ] 4 bytes
+        [ Encrypted AES IV  ] ? bytes - calculated at runtime
+        
+     Encrypted MetaData:
+        
         [ Magic Value  ] 4 bytes
         [ Demon ID     ] 4 bytes
         [ Host Name    ] size + bytes
@@ -72,10 +78,13 @@ typedef struct _Package {
 }Package, * pPackage;
 
 
+//create packages
 pPackage CreatePackage(UINT32 CommandID);
+pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent agent);
+
+//add data to packages
 INT AddInt32ToPackage(pPackage pack, UINT32 data);
 void AddInt32ToBuffer(PUCHAR buffer, UINT32 Data);
-
 INT AddInt64ToPackage(pPackage pack, UINT64 data);
 void AddInt64ToBuffer(PUCHAR buffer, UINT64 data);
 INT AddBoolToPackage(pPackage pack, BOOLEAN data);
@@ -84,5 +93,15 @@ INT AddPaddingToPackage(pPackage pack, PCHAR data, SIZE_T size);
 INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size);
 INT AddStringToPackage(pPackage pack, PCHAR data);
 INT AddWStringToPackage(pPackage pack, PWCHAR data);
-INT DestroyPackage(pPackage pack);
-LPSTR ErrorToString(INT error);
+
+//delete packages
+INT DestroyPackage(pPackage pack, pAgent agent);
+
+//send packages
+INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent agent);
+
+//utility.
+LPSTR PackageErrorToString(INT error);
+
+//add package to agent data
+void AddPackageToAgentPackageList(pAgent agent, pPackage pack);

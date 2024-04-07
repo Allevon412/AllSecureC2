@@ -107,13 +107,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\OffsecTools\libtomcrypt\src;D:\OffsecTools\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winhttp.lib;tomcrypt.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OffsecTools\libtomcrypt\MSVC_x64_Release;D:\OffsecTools\libtomcrypt\MSVC_x64_Release\Intermediate</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OffsecTools\crypto\libtomcrypt\MSVC_x64_Release;D:\OffsecTools\libtomcrypt\MSVC_x64_Release\Intermediate</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\OffsecTools\libtomcrypt\src;D:\OffsecTools\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,17 +132,17 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winhttp.lib;tomcrypt.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OffsecTools\libtomcrypt\MSVC_x64_Release;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\OffsecTools\crypto\libtomcrypt\MSVC_x64_Release;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CreateAESKey.c" />
     <ClCompile Include="CreatePRNGState.c" />
+    <ClCompile Include="Crypto.c" />
     <ClCompile Include="EncryptAESKey.c" />
     <ClCompile Include="enum.c" />
     <ClCompile Include="localcstd.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="Operations.c" />
     <ClCompile Include="package.c" />
     <ClCompile Include="parsekey.c" />
     <ClCompile Include="PerformRequest.c" />
@@ -150,12 +150,12 @@
     <ClCompile Include="RetrieveInstructions.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Crypto.h" />
     <ClInclude Include="enum.h" />
     <ClInclude Include="Helpers.h" />
-    <ClInclude Include="implant.h" />
+    <ClInclude Include="agent.h" />
     <ClInclude Include="Http.h" />
     <ClInclude Include="localcstd.h" />
-    <ClInclude Include="Operations.h" />
     <ClInclude Include="package.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

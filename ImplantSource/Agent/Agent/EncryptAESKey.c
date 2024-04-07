@@ -29,13 +29,9 @@ int EncryptAESKey(unsigned char* SymmetricKey, unsigned int SymmetricKeySize, co
         printf("Error encrypting symmetric key %s\n", error_to_string(result));
         return 3;
     }
-    for (int i = 0; i < EncryptedKeySize; i++) {
-        printf("0x%02X ", EncryptedKey[i]);
-    }
-    printf("\n");
 
     *OutKey = EncryptedKey;
     *OutKeySize = EncryptedKeySize;
-    free(PublicKey);
+    
     return 0;
 }

@@ -1,5 +1,7 @@
-#include "Helpers.h"
 
+#include "Helpers.h"
+#include "localcstd.h"
+//TODO: generate a random AES key from server & IV.
 char* CreateAESKey(prng_state* prng) {
    
 
@@ -12,10 +14,22 @@ char* CreateAESKey(prng_state* prng) {
         printf("Error generating symmetric key [0x%d]\n", result);
         return 1;
     }
-    for (int i = 0; i < symmetricKeySize; i++) {
-        printf("0x%02X ", symmetricKey[i]);
-    }
-    printf("\n");
+    //TODO REMOVE THE OUTPUT FOR NON DEBUG PURPOSES.
 
     return symmetricKey;
+}
+
+char* CreateIV(prng_state* prng) {
+    unsigned int IVSize = 16;
+    BYTE* IV = (BYTE*)malloc(sizeof(BYTE) * IVSize);
+    
+    int result;
+    if ((result = sprng_read(IV, IVSize, prng)) != IVSize) {
+        printf("[error] attempting to generate randomized IV [%d]\n", result);
+        return -1;
+    }
+
+    //TODO REMOVE THE OUTPUT FOR NON DEBUG PURPOSES.
+    
+    return IV;
 }

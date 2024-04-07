@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     if (argc < 4) {
         printf("[error] not enough arguments provided\n");
         printf("Example: \n");
-        printf(".\KeyDecryptor.exe <base64 encoded encrypted key> <Path to private key file> <size of encrypted key>\n");
+        printf(".\KeyDecrypter.exe <base64 encoded encrypted key> <Path to private key file> <size of encrypted key>\n");
         return -1;
     }
     ltc_mp = ltm_desc;
@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < decryptedKeySize; i++) {
         printf("%c", decryptedKey[i]);
     }
+
     printf("\n");
     return 0;
 }

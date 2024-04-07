@@ -16,9 +16,6 @@
     <Filter Include="Source Files\Http">
       <UniqueIdentifier>{78198b09-b903-488c-a638-712160389f74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\implant">
-      <UniqueIdentifier>{e5852c53-76ba-460b-99ba-0362d552ce56}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Http">
       <UniqueIdentifier>{0e2ac500-a738-444a-9a02-23e5910fb15a}</UniqueIdentifier>
     </Filter>
@@ -46,11 +43,14 @@
     <Filter Include="Source Files\cstdreplacement">
       <UniqueIdentifier>{6e1655b6-dbef-4488-a2ac-e498b58dc9ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Operations">
-      <UniqueIdentifier>{fe33411e-26bc-47b2-a26a-34bc534f2cb4}</UniqueIdentifier>
+    <Filter Include="Source Files\Crypt">
+      <UniqueIdentifier>{2a267213-d020-4004-b011-b988f0011e5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Operations">
-      <UniqueIdentifier>{0325cfb8-e7c0-4ed2-9a2e-269dd9c18ad7}</UniqueIdentifier>
+    <Filter Include="Header Files\Crypt">
+      <UniqueIdentifier>{38dd581d-06eb-496c-a28e-ec195a22df1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\agent">
+      <UniqueIdentifier>{e5852c53-76ba-460b-99ba-0362d552ce56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,13 +87,13 @@
     <ClCompile Include="localcstd.c">
       <Filter>Source Files\cstdreplacement</Filter>
     </ClCompile>
-    <ClCompile Include="Operations.c">
-      <Filter>Source Files\Operations</Filter>
+    <ClCompile Include="Crypto.c">
+      <Filter>Source Files\Crypt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="implant.h">
-      <Filter>Header Files\implant</Filter>
+    <ClInclude Include="agent.h">
+      <Filter>Header Files\agent</Filter>
     </ClInclude>
     <ClInclude Include="Http.h">
       <Filter>Header Files\Http</Filter>
@@ -110,8 +110,8 @@
     <ClInclude Include="localcstd.h">
       <Filter>Header Files\cstdreplacement</Filter>
     </ClInclude>
-    <ClInclude Include="Operations.h">
-      <Filter>Header Files\Operations</Filter>
+    <ClInclude Include="Crypto.h">
+      <Filter>Header Files\Crypt</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

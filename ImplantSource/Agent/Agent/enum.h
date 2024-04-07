@@ -1,7 +1,7 @@
 #include <Windows.h>
 #include <winternl.h>
 #include <stdio.h>
-#include "implant.h"
+#include "agent.h"
 
 
 #define NTSUCCESS 0
