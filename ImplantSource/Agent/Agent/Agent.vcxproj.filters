@@ -52,6 +52,12 @@
     <Filter Include="Header Files\agent">
       <UniqueIdentifier>{e5852c53-76ba-460b-99ba-0362d552ce56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Crypt\wolfssl">
+      <UniqueIdentifier>{81bda67a-7dc9-4f6c-b3b0-b9c257fd3634}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Crypt\wolfssl">
+      <UniqueIdentifier>{0a778349-4977-44ba-9b57-b7a7267284c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -90,6 +96,84 @@
     <ClCompile Include="Crypto.c">
       <Filter>Source Files\Crypt</Filter>
     </ClCompile>
+    <ClCompile Include="wolfssl\misc.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\rsa.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\asn.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\dsa.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\error.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\sha.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\sha256.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\dh.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\hash.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\logging.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\md5.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\memory.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\random.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\sp_int.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\wc_port.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\wolfmath.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\coding.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\cryptocb.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\des3.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\hmac.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\aes.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\md2.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\pkcs12.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\pwdbased.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\rc2.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\wc_encrypt.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agent.h">
@@ -112,6 +196,111 @@
     </ClInclude>
     <ClInclude Include="Crypto.h">
       <Filter>Header Files\Crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\error-crypt.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\hash.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\logging.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\random.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\rsa.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\settings.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\types.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\wolfmath.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\sp_int.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\misc.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\visibility.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\asn.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\asn_public.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\wc_port.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\memory.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\dsa.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\dh.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\md5.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\sha.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\sha256.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\cpuid.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\aes.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\coding.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\des3.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\hmac.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\md2.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\pwdbased.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\rc2.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\wc_encrypt.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\cryptocb.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\pkcs12.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\hpke.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfssl\version.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfssl\callbacks.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\openssl\compat_types.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,11 +6,13 @@
 #include "enum.h"
 #include "Http.h"
 #include "localcstd.h"
+#include <wolfcrypt/rsa.h>
 
 int main()
 
 //TODO finish establishing secure comms.
 {
+
     pPackage pPack;
     Agent AgentData = { 0 };
     INT err;

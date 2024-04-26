@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\wolfssl;D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\wolfssl;D:\OffsecTools\crypto\libtomcrypt\src\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +148,32 @@
     <ClCompile Include="PerformRequest.c" />
     <ClCompile Include="Register.c" />
     <ClCompile Include="RetrieveInstructions.c" />
+    <ClCompile Include="wolfssl\aes.c" />
+    <ClCompile Include="wolfssl\asn.c" />
+    <ClCompile Include="wolfssl\coding.c" />
+    <ClCompile Include="wolfssl\cryptocb.c" />
+    <ClCompile Include="wolfssl\des3.c" />
+    <ClCompile Include="wolfssl\dh.c" />
+    <ClCompile Include="wolfssl\dsa.c" />
+    <ClCompile Include="wolfssl\error.c" />
+    <ClCompile Include="wolfssl\hash.c" />
+    <ClCompile Include="wolfssl\hmac.c" />
+    <ClCompile Include="wolfssl\logging.c" />
+    <ClCompile Include="wolfssl\md2.c" />
+    <ClCompile Include="wolfssl\md5.c" />
+    <ClCompile Include="wolfssl\memory.c" />
+    <ClCompile Include="wolfssl\misc.c" />
+    <ClCompile Include="wolfssl\pkcs12.c" />
+    <ClCompile Include="wolfssl\pwdbased.c" />
+    <ClCompile Include="wolfssl\random.c" />
+    <ClCompile Include="wolfssl\rc2.c" />
+    <ClCompile Include="wolfssl\rsa.c" />
+    <ClCompile Include="wolfssl\sha.c" />
+    <ClCompile Include="wolfssl\sha256.c" />
+    <ClCompile Include="wolfssl\sp_int.c" />
+    <ClCompile Include="wolfssl\wc_encrypt.c" />
+    <ClCompile Include="wolfssl\wc_port.c" />
+    <ClCompile Include="wolfssl\wolfmath.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Crypto.h" />
@@ -157,6 +183,41 @@
     <ClInclude Include="Http.h" />
     <ClInclude Include="localcstd.h" />
     <ClInclude Include="package.h" />
+    <ClInclude Include="wolfssl\openssl\compat_types.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\aes.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\asn.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\asn_public.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\coding.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\cpuid.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\cryptocb.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\des3.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\dh.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\dsa.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\error-crypt.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\hash.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\hmac.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\hpke.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\logging.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\md2.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\md5.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\memory.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\misc.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\pkcs12.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\pwdbased.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\random.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\rc2.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\rsa.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\settings.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\sha.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\sha256.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\sp_int.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\types.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\visibility.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\wc_encrypt.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\wc_port.h" />
+    <ClInclude Include="wolfssl\wolfcrypt\wolfmath.h" />
+    <ClInclude Include="wolfssl\wolfssl\callbacks.h" />
+    <ClInclude Include="wolfssl\wolfssl\version.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
