@@ -324,8 +324,8 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 		INT err;
 		//TODO perform encryption.
 		if ((err = AESEncrypt(
-			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
-			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - HEADERS - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
+			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
+			pack->Length - (PACKAGE_HEADER_LENGTH + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - HEADERS - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
 			Agent)																																	//agent pointer
 			) != 0) {
 			return err;

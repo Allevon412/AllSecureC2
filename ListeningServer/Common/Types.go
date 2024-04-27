@@ -17,10 +17,9 @@ type (
 		RequestID []byte
 
 		//MetaData
-		EncryptedAESKeySize uint32
-		EncryptedAESKey     []byte
-		EncryptedIVSize     uint32
-		EncryptedIV         []byte
+		EncryptedKeyIvSize uint32
+		EncryptedAESKey    []byte
+		EncryptedIV        []byte
 
 		//payload
 		EncryptedData     []byte
@@ -141,12 +140,11 @@ func (p *Package) UnmarshalBinary(data []byte) error {
 	p.RequestID = data[16:20]
 
 	//MetaData
-	p.EncryptedAESKeySize = binary.BigEndian.Uint32(data[20:24])
-	p.EncryptedAESKey = data[24 : 24+p.EncryptedAESKeySize]
-	p.EncryptedIVSize = binary.BigEndian.Uint32(data[24+p.EncryptedAESKeySize : 24+p.EncryptedAESKeySize+4])
-	p.EncryptedIV = data[24+p.EncryptedAESKeySize+4 : 24+p.EncryptedAESKeySize+4+p.EncryptedIVSize]
-	p.EncryptedDataSize = p.Size - (20 + p.EncryptedIVSize + p.EncryptedAESKeySize + 8)
-	p.EncryptedData = data[24+p.EncryptedAESKeySize+4+p.EncryptedIVSize : +24+p.EncryptedAESKeySize+4+p.EncryptedIVSize+p.EncryptedDataSize]
+	p.EncryptedKeyIvSize = 0x100
+	p.EncryptedAESKey = data[20 : 20+p.EncryptedKeyIvSize]
+	p.EncryptedIV = data[20+p.EncryptedKeyIvSize : 20+(p.EncryptedKeyIvSize*2)]
+	p.EncryptedDataSize = p.Size - (20 + p.EncryptedKeyIvSize*2)
+	p.EncryptedData = data[20+(p.EncryptedKeyIvSize*2) : +20+(p.EncryptedKeyIvSize*2)+p.EncryptedDataSize]
 
 	return nil
 }

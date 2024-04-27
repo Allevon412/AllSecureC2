@@ -2,11 +2,9 @@ package Crypt
 
 import (
 	"AllSecure/ListeningServer/Common"
-	"encoding/base64"
-	"fmt"
+	"crypto/aes"
+	"crypto/cipher"
 	"log"
-	"os/exec"
-	"strconv"
 )
 
 // .\PayloadDecryptor.exe <base64 encoded encrypted payload> <size of encrypted payload> <b64 AESKey> <SizeofAESKey> <b64 IV> <SizeOf IV>
@@ -18,57 +16,25 @@ func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, err
 		DecryptedIV     []byte
 	)
 
-	DecryptedAESKey, err = DecryptKeyIV(DataPackage.EncryptedAESKey, DataPackage.EncryptedAESKeySize,
-		filepath)
+	DecryptedAESKey, err = DecryptKeyIV(DataPackage.EncryptedAESKey, filepath)
 	if err != nil {
 		return []byte{}, err
 	}
 
-	DecryptedIV, err = DecryptKeyIV(DataPackage.EncryptedIV, DataPackage.EncryptedIVSize,
-		filepath)
+	DecryptedIV, err = DecryptKeyIV(DataPackage.EncryptedIV, filepath)
 	if err != nil {
 		return []byte{}, err
 	}
-	DecryptedAESKey = DecryptedAESKey[:32] //size of AESKey.
-	DecryptedIV = DecryptedIV[:16]         //size of IV
 
-	fmt.Print("Decrypted Key: ")
-	for _, b := range DecryptedAESKey {
-		fmt.Printf("0x%02X ", b)
-	}
-	fmt.Println()
-	fmt.Print("Decrypted IV: ")
-	for _, b := range DecryptedIV {
-		fmt.Printf("0x%02X ", b)
-	}
-	fmt.Println()
-	fmt.Print("Encrypted Payload: ")
-	for _, b := range DataPackage.EncryptedData {
-		fmt.Printf("0x%02X ", b)
-	}
-	fmt.Println()
-	fmt.Println("Encrypted Payload Size: ", strconv.Itoa(int(DataPackage.EncryptedDataSize)))
-
-	EncodedPayload := base64.URLEncoding.EncodeToString(DataPackage.EncryptedData)
-	EncodedKey := base64.URLEncoding.EncodeToString(DecryptedAESKey)
-	EncodedIV := base64.URLEncoding.EncodeToString(DecryptedIV)
-
-	fmt.Println("Encoded Key: ", EncodedKey)
-	fmt.Println("Encoded IV: ", EncodedIV)
-	fmt.Println("EncodedPayload: ", EncodedPayload)
-
-	cmd := exec.Command(filepath+"PayloadDecryptor.exe", //arg 0
-		strconv.Itoa(int(DataPackage.EncryptedDataSize)), //arg1
-		EncodedPayload, strconv.Itoa(len(EncodedPayload)), //arg2, 3
-		EncodedKey, strconv.Itoa(len(EncodedKey)), //arg4, 5
-		EncodedIV, strconv.Itoa(len(EncodedIV))) //arg6, 7
-
-	DecryptedPayload, err := cmd.Output()
+	block, err := aes.NewCipher(DecryptedAESKey)
 	if err != nil {
-		log.Println("[error] attempting to obtain the output of the command", err)
+		log.Println("[error] attempting to create new aes block", err)
 		return []byte{}, err
 	}
+	stream := cipher.NewCTR(block, DecryptedIV)
+	plaintext := make([]byte, DataPackage.EncryptedDataSize)
+	stream.XORKeyStream(plaintext, DataPackage.EncryptedData)
 
-	return DecryptedPayload, nil
+	return plaintext, nil
 
 }
