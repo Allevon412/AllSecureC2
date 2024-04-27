@@ -5,7 +5,6 @@ import (
 	Common2 "AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
-	"crypto/ecdsa"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -167,7 +166,7 @@ func (t *TS) Start() {
 		DefaultEndPointsParsed chan bool
 		err                    error
 		currdir                string
-		ecdsaPrivKey           *ecdsa.PrivateKey
+		//ecdsaPrivKey           *ecdsa.PrivateKey
 	)
 	//generate random string to sign our JWT's with.
 	t.Server.TokenKey, err = Crypt.GenerateRandomString(16)
@@ -183,15 +182,25 @@ func (t *TS) Start() {
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
 	}
+	/*
+		ecdsaPrivKey, err = Crypt.GenerateECCKeys()
+		if err != nil {
+			log.Println("[error] attempting to create keys", err)
+		}
+		err = Crypt.SaveKeysToDERFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
+		if err != nil {
+			log.Println("[error] attempting to save keys to pem files", err)
+		}
+	*/
 
-	ecdsaPrivKey, err = Crypt.GenerateECCKeys()
+	err = Crypt.GenerateRSAKeys(t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
 	if err != nil {
-		log.Println("[error] attempting to create keys", err)
+		log.Println("[error] attempting to generate RSA keys", err)
 	}
-	err = Crypt.SaveKeysToDERFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
-	if err != nil {
-		log.Println("[error] attempting to save keys to pem files", err)
-	}
+	//_, err = Crypt.DecryptAES(t.Server.FI.ProjectDir + "\\Config\\test_implant_rsa_private_key.pem.old")
+	//if err != nil {
+	//	log.Println("[error] attempting to decrypt AES key", err)
+	//}
 
 	t.Server.GinEngine = gin.Default()
 

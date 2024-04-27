@@ -1,5 +1,6 @@
 #include "Helpers.h"
 
+/*
 int EncryptAESKey(unsigned char* SymmetricKey, unsigned int SymmetricKeySize, const unsigned char* PublicKey, unsigned long PublicKeySize, unsigned char** OutKey, unsigned long* OutKeySize) {
     unsigned int result = 0;
     ecc_key mykey;
@@ -35,3 +36,4 @@ int EncryptAESKey(unsigned char* SymmetricKey, unsigned int SymmetricKeySize, co
     
     return 0;
 }
+*/

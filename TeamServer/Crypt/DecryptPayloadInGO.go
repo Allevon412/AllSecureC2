@@ -15,7 +15,7 @@ package Crypt
 
     unsigned char* decryptedPayload = (char*)malloc(sizeof(char) * sizeOfPayload);
     symmetric_CTR ctr;
-    if ((err = ctr_start(find_cipher("aes"), IV, AESKey, 32, 0, CTR_COUNTER_LITTLE_ENDIAN, &ctr)) != CRYPT_OK) {
+    if ((err = ctr_start(find_cipher("aes"), IV, AesKey, 32, 0, CTR_COUNTER_LITTLE_ENDIAN, &ctr)) != CRYPT_OK) {
         printf("Error attempting to create counter with provided args %s\n", error_to_string(err));
         return -1;
     }
@@ -27,4 +27,4 @@ package Crypt
 	return decryptedPayload;
 
 */
-import "C"
+//import "C"

@@ -78,15 +78,6 @@
     <ClCompile Include="parsekey.c">
       <Filter>Source Files\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="CreateAESKey.c">
-      <Filter>Source Files\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="EncryptAESKey.c">
-      <Filter>Source Files\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="CreatePRNGState.c">
-      <Filter>Source Files\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="package.c">
       <Filter>Source Files\Package</Filter>
     </ClCompile>
@@ -138,9 +129,6 @@
     <ClCompile Include="wolfssl\sp_int.c">
       <Filter>Source Files\Crypt\wolfssl</Filter>
     </ClCompile>
-    <ClCompile Include="wolfssl\wc_port.c">
-      <Filter>Source Files\Crypt\wolfssl</Filter>
-    </ClCompile>
     <ClCompile Include="wolfssl\wolfmath.c">
       <Filter>Source Files\Crypt\wolfssl</Filter>
     </ClCompile>
@@ -172,6 +160,9 @@
       <Filter>Source Files\Crypt\wolfssl</Filter>
     </ClCompile>
     <ClCompile Include="wolfssl\wc_encrypt.c">
+      <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="wolfssl\wc_port.c">
       <Filter>Source Files\Crypt\wolfssl</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,9 +227,6 @@
     <ClInclude Include="wolfssl\wolfcrypt\asn_public.h">
       <Filter>Header Files\Crypt\wolfssl</Filter>
     </ClInclude>
-    <ClInclude Include="wolfssl\wolfcrypt\wc_port.h">
-      <Filter>Header Files\Crypt\wolfssl</Filter>
-    </ClInclude>
     <ClInclude Include="wolfssl\wolfcrypt\memory.h">
       <Filter>Header Files\Crypt\wolfssl</Filter>
     </ClInclude>
@@ -300,6 +288,9 @@
       <Filter>Header Files\Crypt\wolfssl</Filter>
     </ClInclude>
     <ClInclude Include="wolfssl\openssl\compat_types.h">
+      <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="wolfssl\wolfcrypt\wc_port.h">
       <Filter>Header Files\Crypt\wolfssl</Filter>
     </ClInclude>
   </ItemGroup>

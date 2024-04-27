@@ -22,6 +22,7 @@
 /*!
     \file wolfssl/wolfcrypt/wc_port.h
 */
+#pragma once
 
 #ifndef WOLF_CRYPT_PORT_H
 #define WOLF_CRYPT_PORT_H

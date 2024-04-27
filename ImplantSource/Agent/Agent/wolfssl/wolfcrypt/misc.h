@@ -36,6 +36,7 @@ masking and clearing memory logic.
     extern "C" {
 #endif
 
+//#define NO_INLINE
 
 #ifdef NO_INLINE
 

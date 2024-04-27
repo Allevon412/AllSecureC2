@@ -2,28 +2,19 @@
 
 //TODO rewrite this to use AES encryption mechanism from maldev academy.
 INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, pAgent pAgent) {
-	symmetric_CTR ctr;
+	Aes aes;
 	int err;
 
-	if ((err = ctr_start(
-		find_cipher("aes"),				//AES CIpher
-		pAgent->IV,					//IV
-		pAgent->AESKey,				//KEY
-		pAgent->AESKeySize,			//KEYSIZE
-		0,								//Default number of rounds
-		CTR_COUNTER_LITTLE_ENDIAN,		//CTR Mode
-		&ctr							//CTR context
-	)) != CRYPT_OK) {
-		printf("[error] attempting to initialize ctr. %s\n", error_to_string(err));
+	if ((err = wc_AesSetKey(&aes, pAgent->AESKey, pAgent->AESKeySize, pAgent->IV, AES_ENCRYPTION)) != 0) {
+		printf("[error] attempting to initialize AES context\n");
+		return err;
+	}
+	if((err = wc_AesCtrEncrypt(&aes, Buffer, Buffer, BufferLength)) != 0) {
+		printf("[error] attempting to encrypt our package buffer\n");
 		return err;
 	}
 
-	if ((err = ctr_encrypt(Buffer, Buffer, BufferLength, &ctr)) != CRYPT_OK) {
-		printf("[error] attempting to encrypt our package buffer %s\n", error_to_string(err));
-		return err;
-	}
+	wc_AesFree(&aes);
 
-
-	ctr_done(&ctr);
-	return CRYPT_OK;
+	return 0;
 }

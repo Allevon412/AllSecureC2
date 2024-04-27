@@ -301,6 +301,7 @@ struct Aes {
 #ifdef WOLFSSL_ASYNC_CRYPT
     WC_ASYNC_DEV asyncDev;
 #endif /* WOLFSSL_ASYNC_CRYPT */
+#define WOLFSSL_AES_COUNTER
 #if defined(WOLFSSL_AES_COUNTER) || defined(WOLFSSL_AES_CFB) || \
     defined(WOLFSSL_AES_OFB) || defined(WOLFSSL_AES_XTS)
     word32  left;            /* unused bytes left from last call */

@@ -1,5 +1,6 @@
 #include "Helpers.h"
 
+/*
 
 prng_state* CreatePRNGState() {
     prng_state* prng = (prng_state*)malloc(sizeof(prng_state));
@@ -21,3 +22,4 @@ prng_state* CreatePRNGState() {
 
     return prng;
 }
+*/

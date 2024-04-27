@@ -234,8 +234,8 @@ INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_REALLOC_FAILED;
 
-	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size);
-	pack->Length += size;
+	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size); //TODO issues trying to copy memory?
+	pack->Length += size; 
 
 	return PACKAGE_SUCCESS;
 }
@@ -327,7 +327,7 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
 			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(UINT32) + Agent->EncryptedAESKeySize + sizeof(UINT32) + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - HEADERS - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
 			Agent)																																	//agent pointer
-			) != CRYPT_OK) {
+			) != 0) {
 			return err;
 		}
 	}

@@ -1,6 +1,7 @@
 
 #include "Helpers.h"
 #include "localcstd.h"
+/*
 //TODO: generate a random AES key from server & IV.
 char* CreateAESKey(prng_state* prng) {
    
@@ -33,3 +34,4 @@ char* CreateIV(prng_state* prng) {
     
     return IV;
 }
+*/
