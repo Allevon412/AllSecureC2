@@ -70,9 +70,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -112,8 +110,10 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winhttp.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OffsecTools\crypto\libtomcrypt\MSVC_x64_Release;D:\OffsecTools\libtomcrypt\MSVC_x64_Release\Intermediate</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\OffsecTools\libtomcrypt\MSVC_x64_Release\Intermediate</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,13 +131,16 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winhttp.lib;Advapi32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\OffsecTools\crypto\libtomcrypt\MSVC_x64_Release;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Crypto.c" />
     <ClCompile Include="enum.c" />
+    <ClCompile Include="init.c" />
     <ClCompile Include="localcstd.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="package.c" />
@@ -173,6 +176,7 @@
     <ClCompile Include="wolfssl\wolfmath.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Crypto.h" />
     <ClInclude Include="enum.h" />
     <ClInclude Include="Helpers.h" />

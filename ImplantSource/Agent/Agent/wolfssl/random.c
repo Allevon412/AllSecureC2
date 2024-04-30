@@ -2651,8 +2651,16 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 
 #elif defined(USE_WINDOWS_API)
 
+typedef BOOL(WINAPI* CryptReleaseContextFunc)(HCRYPTPROV, DWORD);
+typedef BOOL(WINAPI* CryptGenRandomFunc)(HCRYPTPROV, DWORD, BYTE*);
+typedef BOOL(WINAPI* CryptAcquireContextFunc)(HCRYPTPROV*, LPCTSTR, LPCTSTR, DWORD, DWORD);
+
 int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 {
+    CryptReleaseContextFunc pCryptReleaseContext = (CryptReleaseContextFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptReleaseContext");
+    CryptAcquireContextFunc pCryptAcquireContext = (CryptAcquireContextFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptAcquireContextA");
+    CryptGenRandomFunc pCryptGenRandom = (CryptGenRandomFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptGenRandom");
+
 #ifdef WOLF_CRYPTO_CB
     int ret;
 
@@ -2681,14 +2689,14 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
         }
     #endif /* HAVE_INTEL_RDSEED */
 
-    if(!CryptAcquireContext(&os->handle, 0, 0, PROV_RSA_FULL,
+    if(!pCryptAcquireContext(&os->handle, 0, 0, PROV_RSA_FULL,
                             CRYPT_VERIFYCONTEXT))
         return WINCRYPT_E;
 
-    if (!CryptGenRandom(os->handle, sz, output))
+    if (!pCryptGenRandom(os->handle, sz, output))
         return CRYPTGEN_E;
 
-    CryptReleaseContext(os->handle, 0);
+    pCryptReleaseContext(os->handle, 0);
 
     return 0;
 }

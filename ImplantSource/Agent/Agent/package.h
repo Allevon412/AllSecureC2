@@ -20,7 +20,7 @@ enum package_return_values {
 };
 
 
-#define AES_BLOCKLEN 16
+
 
 
 /*

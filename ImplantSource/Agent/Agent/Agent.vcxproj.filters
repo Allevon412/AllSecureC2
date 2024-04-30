@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Crypt\wolfssl">
       <UniqueIdentifier>{0a778349-4977-44ba-9b57-b7a7267284c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{b8b1bfd8-183b-42eb-b877-63f201bb18aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\agent">
+      <UniqueIdentifier>{0ee2fae9-3ebb-4968-9a7c-9c4d8d9ab4e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -164,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="wolfssl\wc_port.c">
       <Filter>Source Files\Crypt\wolfssl</Filter>
+    </ClCompile>
+    <ClCompile Include="init.c">
+      <Filter>Source Files\agent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="wolfssl\wolfcrypt\wc_port.h">
       <Filter>Header Files\Crypt\wolfssl</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
