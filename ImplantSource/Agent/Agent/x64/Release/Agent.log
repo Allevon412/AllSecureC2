@@ -1,16 +1,13 @@
 ﻿  Crypto.c
   Warning: For timing resistance / side-channel attack prevention consider using harden options
-  PerformRequest.c
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\PerformRequest.c(13,3): warning C4013: 'printf' undefined; assuming extern returning int
-  Register.c
-  RetrieveInstructions.c
   enum.c
+  init.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(20,33): warning C4133: 'function': incompatible types - from 'RTL_OSVERSIONINFOEXW *' to 'PRTL_OSVERSIONINFOW'
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(23,12): warning C4090: 'return': different 'const' qualifiers
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(139,11): warning C4090: 'return': different 'const' qualifiers
-  init.c
-  Warning: For timing resistance / side-channel attack prevention consider using harden options
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\init.c(9,9): warning C4101: 'ERR': unreferenced local variable
+  localcstd.c
   main.c
   Warning: For timing resistance / side-channel attack prevention consider using harden options
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\main.c(18,62): warning C4047: 'function': 'pAgent' differs in levels of indirection from 'pAgent *'
@@ -43,11 +40,68 @@ C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(353,14): warning C4133: '=': incompatible types - from 'pPackage' to '_PACKAGE *'
   parsekey.c
   Warning: For timing resistance / side-channel attack prevention consider using harden options
+  PerformRequest.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\PerformRequest.c(13,3): warning C4013: 'printf' undefined; assuming extern returning int
+  Register.c
+  RetrieveInstructions.c
+  aes.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  asn.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  coding.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  cryptocb.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  des3.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  dh.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  dsa.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  error.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  hash.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  hmac.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  Compiling...
+  logging.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  md2.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  md5.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  memory.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  misc.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  pkcs12.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  pwdbased.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  random.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  rc2.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  rsa.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  sha.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  sha256.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  sp_int.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  wc_encrypt.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  wc_port.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
+  wolfmath.c
+  Warning: For timing resistance / side-channel attack prevention consider using harden options
   Generating code
+  Previous IPDB not found, fall back to full compilation.
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c(175): warning C4715: 'GetCompName': not all control paths return a value
-  12 of 200 functions ( 6.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    9 functions had inline decision re-evaluated but remain unchanged
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(308): warning C4172: returning address of local variable or temporary: errorstr
+  All 200 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Release\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,

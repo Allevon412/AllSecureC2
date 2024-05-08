@@ -69,9 +69,6 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Register.c">
-      <Filter>Source Files\Http</Filter>
-    </ClCompile>
     <ClCompile Include="RetrieveInstructions.c">
       <Filter>Source Files\Http</Filter>
     </ClCompile>
@@ -173,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="init.c">
       <Filter>Source Files\agent</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterAgent.c">
+      <Filter>Source Files\agent</Filter>
+    </ClCompile>
+    <ClCompile Include="agent.c">
+      <Filter>Source Files\agent</Filter>
+    </ClCompile>
+    <ClCompile Include="token.c">
+      <Filter>Source Files\Enumeration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,5 +311,11 @@
     <ClInclude Include="Common.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>Header Files\Enumeration</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

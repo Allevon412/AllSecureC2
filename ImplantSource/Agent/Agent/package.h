@@ -33,7 +33,7 @@ Taken from havoc as a basic model.
         [ COMMAND ID   ] 4 bytes
         [ Request ID   ] 4 bytes
 
-     Encrypted Using ECC MetaData:
+     Encrypted Using RSA MetaData:
         [ Encrypted AES KEY Len ] 4 bytes
         [ Encrypted AES KEY ] ? bytes - calculated at runtime
         [ Encrypted AES IV Len ] 4 bytes

