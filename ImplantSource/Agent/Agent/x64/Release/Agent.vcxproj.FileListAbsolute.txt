@@ -1,0 +1,3 @@
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Release\Agent.vcxproj.MdMergeInputs.cache
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Release\Agent.vcxproj.cppwinrt_plat.cache
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Release\Agent.vcxproj.cppwinrt_comp.cache

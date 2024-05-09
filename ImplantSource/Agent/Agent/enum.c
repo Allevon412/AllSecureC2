@@ -91,67 +91,50 @@ INT GetCompName(pAgent agent) {
 }
 //TODO FIX THIS SHIT
 INT GetIPAddress(pAgent agent) {
-	WSADATA wsaData;
-	DWORD dwSize = 0;
-	DWORD dwRetVal = 0;
-	ULONG flags = GAA_FLAG_INCLUDE_PREFIX;
-	PIP_ADAPTER_ADDRESSES pAddresses = NULL, pCurrAddresses = NULL;
-	PIP_ADAPTER_UNICAST_ADDRESS pUnicast = NULL;
+	DWORD dwLength = 0;
+	PIP_ADAPTER_INFO adapter;
+	INT AdapterCount = 0;
 
-	// Initialize Winsock
-	if (agent->pWSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-		printf("WSAStartup failed.\n");
-		return 1;
-	}
+	if (agent->pGetAdaptersInfo(NULL, &dwLength)) {
+		if ((adapter = (PIP_ADAPTER_INFO)LocalAlloc(LPTR, dwLength)))
+		{
+			if (adapter) {
 
-	// Call GetAdaptersAddresses to determine the size needed
-	dwRetVal = agent->pGetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAddresses, &dwSize);
-	if (dwRetVal == ERROR_BUFFER_OVERFLOW) {
-		pAddresses = (IP_ADAPTER_ADDRESSES*)LocalAlloc(LPTR, dwSize);
-		if (pAddresses == NULL) {
-			printf("Memory allocation failed for IP_ADAPTER_ADDRESSES struct.\n");
-			agent->pWSACleanup();
-			return 1;
-		}
-	}
+				if (agent->pGetAdaptersInfo(adapter, &dwLength) == NO_ERROR) {
+					PIP_ADAPTER_INFO TmpAdapter = adapter;
+					while (TmpAdapter->Next && AdapterCount < 10) {
 
-	// Make the actual call to GetAdaptersAddresses
-	dwRetVal = agent->pGetAdaptersAddresses(AF_UNSPEC, flags, NULL, pAddresses, &dwSize);
-	if (dwRetVal == NO_ERROR) {
-		
-		// Iterate through all of the adapters
-		for (pCurrAddresses = pAddresses; pCurrAddresses != NULL; pCurrAddresses = pCurrAddresses->Next) {
-			int count = 0;
-			printf("\nAdapter name: %s\n", pCurrAddresses->AdapterName);
+						PIP_ADDR_STRING pIpAddressList = &TmpAdapter->IpAddressList;
+						INT IPAddressCount = 1;
+						
 
-			// Iterate through all of the unicast IP addresses
-			for (pUnicast = pCurrAddresses->FirstUnicastAddress; pUnicast != NULL; pUnicast = pUnicast->Next) {
-				LPSTR ip = (LPSTR)LocalAlloc(LPTR, INET6_ADDRSTRLEN);
-				void* addr;
+						while (pIpAddressList && IPAddressCount < 5) {
+							if (strcmp(pIpAddressList->IpAddress.String, "0.0.0.0") != 0) {
+								if (IPAddressCount == 1) {
+									agent->Context->IPAddress[AdapterCount][0] = LocalAlloc(LPTR, StringLengthA(TmpAdapter->Description));
+									MemoryCopy(agent->Context->IPAddress[AdapterCount][0], TmpAdapter->Description, StringLengthA(TmpAdapter->Description));
+								}
+								agent->Context->IPAddress[AdapterCount][IPAddressCount] = LocalAlloc(LPTR, StringLengthA(pIpAddressList->IpAddress.String));
+								MemoryCopy(agent->Context->IPAddress[AdapterCount][IPAddressCount], pIpAddressList->IpAddress.String, StringLengthA(pIpAddressList->IpAddress.String));
 
-				if (pUnicast->Address.lpSockaddr->sa_family == AF_INET) {
-					addr = &((struct sockaddr_in*)pUnicast->Address.lpSockaddr)->sin_addr;
+								IPAddressCount++;
+							}
+							pIpAddressList = pIpAddressList->Next;
+						}
+						AdapterCount++;
+						TmpAdapter = TmpAdapter->Next;
+					}
+					LocalFree(adapter);
+					return 0;
 				}
-				else {
-					addr = &((struct sockaddr_in6*)pUnicast->Address.lpSockaddr)->sin6_addr;
-				}
-
-				agent->pInetNtop(pUnicast->Address.lpSockaddr->sa_family, addr, ip, sizeof(ip));
-				agent->Context->IPAddress[count] = ip;
-				count++;
+				LocalFree(adapter);
+				return -1;
 			}
+			return -1;
 		}
+		return -1;
 	}
-	else {
-		printf("Call to GetAdaptersAddresses failed.\n");
-	}
-
-	if (pAddresses) {
-		free(pAddresses);
-	}
-
-	agent->pWSACleanup();
-	return 0;
+	return -1;
 }
 
 BOOL IsElevated(

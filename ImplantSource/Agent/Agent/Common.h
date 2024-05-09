@@ -1,6 +1,5 @@
 #pragma once
-#include <winsock2.h>
-#include <WS2tcpip.h>
+#include <WinSock2.h>
 
 #include <winternl.h> //we can remove this if we resolve all functions in NT dynamically.
 #include <Windows.h>
@@ -8,7 +7,6 @@
 
 #include <winhttp.h>
 #include <iphlpapi.h>
-
 
 #define AES_BLOCKLEN 16
 #define NTSUCCESS 0
@@ -118,6 +116,11 @@ typedef NTSTATUS(NTAPI* t_NtQueryInformationToken)(
 	PULONG ReturnLength
 );
 
+//IPhlpapi APIS
+typedef DWORD(WINAPI* t_GetAdaptersInfo)(
+	PIP_ADAPTER_INFO pAdapterInfo,
+	PULONG           pOutBufLen
+	);
 
 
 //ADVAPI APIS
@@ -138,32 +141,6 @@ typedef BOOL(WINAPI* t_GetComputerNameExA)(
 //USER32 APIS
 typedef int (WINAPI* t_GetSystemMetrics)(
 	int nIndex
-	);
-
-//HLPAPI APIS
-typedef ULONG(WINAPI* t_GetAdaptersAddresses)(
-	ULONG Family,
-	ULONG Flags,
-	PVOID Reserved,
-	PIP_ADAPTER_ADDRESSES AdapterAddresses,
-	PULONG SizePointer
-	);
-
-//WS2_32 APIS
-typedef INT (WINAPI* t_WSAStartup)(
-	WORD      wVersionRequested,
-	LPWSADATA lpWSAData
-	);
-
-typedef INT(WINAPI* t_WSACleanup)(
-	VOID
-	);
-
-typedef PCSTR (WINAPI* t_inet_ntop)(
-	INT       Family,
-	PVOID     pAddr,
-	PSTR      pStringBuf,
-	size_t    StringBufSize
 	);
 
 /*--------------------------------------------------------------------
@@ -690,8 +667,8 @@ typedef struct _INT_LDR_DATA_TABLE_ENTRY {
 	PVOID DllBase;
 	PVOID EntryPoint;
 	ULONG SizeOfImage;
-	UNICODE_STRING FullDllName;
-	UNICODE_STRING BaseDllName;
+	_INT_UNICODE_STRING FullDllName;
+	_INT_UNICODE_STRING BaseDllName;
 	ULONG Flags;
 	WORD LoadCount;
 	WORD TlsIndex;

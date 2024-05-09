@@ -2660,6 +2660,8 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     CryptReleaseContextFunc pCryptReleaseContext = (CryptReleaseContextFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptReleaseContext");
     CryptAcquireContextFunc pCryptAcquireContext = (CryptAcquireContextFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptAcquireContextA");
     CryptGenRandomFunc pCryptGenRandom = (CryptGenRandomFunc)GetProcAddress(GetModuleHandleA("advapi32.dll"), "CryptGenRandom");
+    if(pCryptReleaseContext == NULL || pCryptAcquireContext == NULL || pCryptGenRandom == NULL)
+		return WINCRYPT_E;
 
 #ifdef WOLF_CRYPTO_CB
     int ret;

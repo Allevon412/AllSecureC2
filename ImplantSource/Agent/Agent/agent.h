@@ -16,7 +16,7 @@ typedef struct _ContextInfo {
 	BYTE  wProductType;
 	LPSTR UserName;
 	LPSTR ComputerName;
-	LPSTR IPAddress[5];
+	LPSTR IPAddress[10][5];
 	DWORD PID;
 	DWORD TID;
 	DWORD PPID;
@@ -52,13 +52,7 @@ typedef struct _Agent {
 
 	//IPHLPAPI APIS'
 	HMODULE hIphlpapi;
-	t_GetAdaptersAddresses pGetAdaptersAddresses;
-
-	//Ws2_32 APIS
-	HMODULE hWs2_32;
-	t_WSAStartup pWSAStartup;
-	t_WSACleanup pWSACleanup;
-	t_inet_ntop pInetNtop;
+	t_GetAdaptersInfo pGetAdaptersInfo;
 
 	//http request APIS
 	//WINHTTP APIS

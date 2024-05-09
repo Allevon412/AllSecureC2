@@ -1,7 +1,7 @@
 #include "agent.h"
 
 void AgentMain() {
-	pAgent agent = (Agent*)malloc(sizeof(agent));
+	pAgent agent = (pAgent)LocalAlloc(LPTR, sizeof(agent));
 	INT err;
 
 	if ((err = init_agent(agent)) != 0) {
