@@ -102,7 +102,25 @@ INT GetIPAddress(pAgent agent) {
 
 				if (agent->pGetAdaptersInfo(adapter, &dwLength) == NO_ERROR) {
 					PIP_ADAPTER_INFO TmpAdapter = adapter;
-					while (TmpAdapter->Next && AdapterCount < 10) {
+					while (TmpAdapter && AdapterCount < 10) {
+
+						if (strncmp(TmpAdapter->Description, "Bluetooth", 9) == 0) {
+							TmpAdapter = TmpAdapter->Next;
+							continue;
+						}
+						if (strncmp(TmpAdapter->Description, "VMware", 6) == 0) {
+							TmpAdapter = TmpAdapter->Next;
+							continue;
+						}
+						if (strncmp(TmpAdapter->Description, "ExpressVPN", 10) == 0) {
+							TmpAdapter = TmpAdapter->Next;
+							continue;
+						}
+						if (strncmp(TmpAdapter->Description, "Hyper-V", 7) == 0) {
+							TmpAdapter = TmpAdapter->Next;
+							continue;
+						}
+							
 
 						PIP_ADDR_STRING pIpAddressList = &TmpAdapter->IpAddressList;
 						INT IPAddressCount = 1;

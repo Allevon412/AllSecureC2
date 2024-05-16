@@ -10,6 +10,7 @@ import (
 	"AllSecure/TeamServer/Crypt"
 	"AllSecure/TeamServer/implant"
 	"context"
+	"encoding/binary"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -48,9 +49,23 @@ func ProcessRequest(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	log.Println(string(decryptedPayload))
+	var CMDID = binary.BigEndian.Uint32(data_package.CmdID)
+	switch CMDID {
+	case Common.CMD_Initialize:
+		go func() {
+			err = InitializeAgent(decryptedPayload)
+			if err != nil {
+				log.Println("[error] attempting to initialize agent", err)
+			}
+		}()
+		break
+		//CMD_Initialize(decryptedPayload)
+	default:
+		break
+	} //switch
 
 }
+
 func DenyRequest(c *gin.Context) {
 	c.Writer.WriteHeader(http.StatusNotFound)
 	html, err := os.ReadFile("C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ListeningServer\\Assets\\NotFound.html")

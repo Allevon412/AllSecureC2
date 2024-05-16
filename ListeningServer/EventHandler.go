@@ -49,14 +49,30 @@ func StartEventHandler(token string, teamserver string) error {
 	return nil
 }
 
-func SendEvent(EventName string) error {
+func SendEvent(EventName string, data []byte) error {
 	var NewMessage Common.NewWebSocketMessage
 	var err error
+
 	switch EventName {
 	case "NewImplant":
 		var NewImplant Common.ImplantData
+		var ImpCtx Common.ImplantContext
 		var TempData []byte
 		NewMessage.MessageType = "NewImplant"
+		err = ImpCtx.UnmarshalBinary(data)
+		if err != nil {
+			log.Println("[error] attempting to unmarshal implant data", err)
+			return err
+		}
+		NewImplant.ImplantID = "First"
+		NewImplant.Computer = ImpCtx.Host_name
+		NewImplant.InternalIP = ImpCtx.Ip_addr
+		NewImplant.ExternalIP = ImpCtx.Ip_addr
+		NewImplant.User = ImpCtx.User_name
+		NewImplant.Health = true
+		NewImplant.OS = Common.GetWindowsVersion(ImpCtx.Os_info)
+		NewImplant.Process = ImpCtx.Process_name
+		NewImplant.PID = ImpCtx.Process_id
 		TempData, err = json.Marshal(NewImplant)
 		if err != nil {
 			log.Println("[error] attempting to marshal the implant data", err)

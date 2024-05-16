@@ -3,7 +3,10 @@
   Warning: For timing resistance / side-channel attack prevention consider using harden options
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(51,62): warning C4047: 'function': 'pAgent' differs in levels of indirection from 'pAgent *'
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(51,62): warning C4024: 'CreatePackageWithMetaData': different types for formal and actual parameter 2
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(116,157): warning C4133: 'function': incompatible types - from 'PWSTR' to 'PCHAR'
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(84,52): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(92,51): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(109,54): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c(119,58): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

@@ -17,7 +17,7 @@ type ImplantData struct {
 	User       string `json:"User"`
 	Computer   string `json:"Computer"`
 	OS         string `json:"OS"`
-	PID        int    `json:"PID"`
+	PID        uint32 `json:"PID"`
 	Process    string `json:"Process"`
 	Health     bool   `json:"Health"`
 }
