@@ -35,7 +35,7 @@ type ImplantTableData struct {
 	OS         string `json:"OS"`
 	PID        int    `json:"PID"`
 	Process    string `json:"Process"`
-	Health     string `json:"Health"`
+	Health     bool   `json:"Health"`
 }
 
 type NewUser struct {

@@ -20,7 +20,7 @@ func SendChat(EnteredText string) {
 		log.Println("[error] attempting to write chat message to the server websocket.", err)
 		return
 	}
-
+	customEntryWidget.SetText("")
 	return
 }
 

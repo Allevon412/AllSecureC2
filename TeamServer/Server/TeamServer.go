@@ -79,6 +79,9 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return true
 			})
+			break
+			//CHAT MESSAGE
+
 		case "CreateListener":
 			var ListenerData Common.ListenerData
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
@@ -137,6 +140,8 @@ func (t *TS) HandleRequest(ClientID string) {
 					}
 				}
 			}()
+			break //CREATE LISTENER
+
 		case "RemoveListener":
 			var ListenerData Common.ListenerData
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
@@ -152,10 +157,26 @@ func (t *TS) HandleRequest(ClientID string) {
 				ListeningServer.Stop(ListenerData.ListenerName, ListenerData.HOST, t.Server.FI.ProjectDir, ListenerData.PortBind)
 				return
 			}()
-		case "NewImplant":
+			break //REMOVE LISTENER
 
-		}
-	}
+		case "RegisterImplant":
+			t.Server.Clients.Range(func(key, value any) bool {
+				client = value.(*Common.Client)
+				err = client.Conn.WriteJSON(NewMessage)
+				if err != nil {
+					log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
+					t.Server.Clients.Delete(ClientID)
+					return false
+				}
+				return true
+			})
+			break // REGISTER IMPLANT
+
+		default:
+			continue
+		} //SWITCH STATEMENT
+
+	} //FOR LOOP
 
 }
 
@@ -182,25 +203,11 @@ func (t *TS) Start() {
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
 	}
-	/*
-		ecdsaPrivKey, err = Crypt.GenerateECCKeys()
-		if err != nil {
-			log.Println("[error] attempting to create keys", err)
-		}
-		err = Crypt.SaveKeysToDERFile(ecdsaPrivKey, t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
-		if err != nil {
-			log.Println("[error] attempting to save keys to pem files", err)
-		}
-	*/
 
 	err = Crypt.GenerateRSAKeys(t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
 	if err != nil {
 		log.Println("[error] attempting to generate RSA keys", err)
 	}
-	//_, err = Crypt.DecryptAES(t.Server.FI.ProjectDir + "\\Config\\test_implant_rsa_private_key.pem.old")
-	//if err != nil {
-	//	log.Println("[error] attempting to decrypt AES key", err)
-	//}
 
 	t.Server.GinEngine = gin.Default()
 

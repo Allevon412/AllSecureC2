@@ -17,6 +17,7 @@ func CheckForNewEventsFromWS() {
 		switch NewWSMessage.MessageType {
 		case "ChatMessage":
 			UpdateChat(NewWSMessage.Message)
+			break
 		case "RegisterImplant":
 			var TempImplantData Common.ImplantTableData
 			err = json.Unmarshal([]byte(NewWSMessage.Message), &TempImplantData)
@@ -24,8 +25,11 @@ func CheckForNewEventsFromWS() {
 				log.Println("[error] attempting to read implant data from web socket message", err)
 				continue
 			}
-			AddImplantToTable(TempImplantData)
 
+			AddImplantToTable(TempImplantData)
+			break
+		default:
+			break
 		}
 	}
 }

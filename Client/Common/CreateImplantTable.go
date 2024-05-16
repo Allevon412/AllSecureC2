@@ -52,7 +52,12 @@ func CreateImplantTable() *widget.Table {
 			case 8:
 				l.SetText(ImplantData[id.Row].Process)
 			case 9:
-				l.SetText(ImplantData[id.Row].Health)
+				if ImplantData[id.Row].Health {
+					l.SetText("Alive")
+				} else {
+					l.SetText("Dead")
+				}
+
 			}
 		},
 	)
@@ -171,7 +176,7 @@ func CreateImplantTable() *widget.Table {
 				}
 			case 9:
 				b.SetText(ImplantHeaders.HeaderNames[id.Col])
-				switch sorts[8] {
+				switch sorts[9] {
 				case SortAsc:
 					b.Icon = theme.MoveUpIcon()
 				case SortDesc:
@@ -201,7 +206,7 @@ const (
 	SortDesc
 )
 
-var sorts = [9]Direction{}
+var sorts = [10]Direction{}
 
 func ApplySort(col int, t *widget.Table) {
 	order := sorts[col]
@@ -273,9 +278,9 @@ func ApplySort(col int, t *widget.Table) {
 			return strings.Compare(a.Process, b.Process) > 0
 		case 9:
 			if order == SortAsc {
-				return strings.Compare(a.Health, b.Health) < 0
+				return a.Health
 			}
-			return strings.Compare(a.Health, b.Health) > 0
+			return !a.Health
 		default:
 			if order == SortDesc {
 				return a.ImplantNum > b.ImplantNum

@@ -5,7 +5,7 @@ func InitializeAgent(data []byte) error {
 		err error
 	)
 
-	err = SendEvent("NewImplant", data)
+	err = SendEvent("RegisterImplant", data)
 	if err != nil {
 		return err
 	}

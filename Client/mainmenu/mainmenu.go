@@ -70,6 +70,7 @@ func CreateChatForm(Username string) (*widget.Form, error) {
 		},
 		OnSubmit: func() {
 			SendChat(customEntryWidget.Text)
+			customEntryWidget.SetText("")
 		},
 		OnCancel:   ClearChatHistory,
 		SubmitText: "",

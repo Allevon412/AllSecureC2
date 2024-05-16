@@ -54,11 +54,11 @@ func SendEvent(EventName string, data []byte) error {
 	var err error
 
 	switch EventName {
-	case "NewImplant":
+	case "RegisterImplant":
 		var NewImplant Common.ImplantData
 		var ImpCtx Common.ImplantContext
 		var TempData []byte
-		NewMessage.MessageType = "NewImplant"
+		NewMessage.MessageType = "RegisterImplant"
 		err = ImpCtx.UnmarshalBinary(data)
 		if err != nil {
 			log.Println("[error] attempting to unmarshal implant data", err)

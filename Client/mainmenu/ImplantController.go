@@ -10,6 +10,8 @@ func CreateImplantTable() *widget.Table {
 }
 
 func AddImplantToTable(ImplantData Common.ImplantTableData) {
+	count := len(Common.ImplantData)
+	ImplantData.ImplantNum = count + 1
 	Common.ImplantData = append(Common.ImplantData, ImplantData)
 	Common.ImplantTable.Refresh()
 }
