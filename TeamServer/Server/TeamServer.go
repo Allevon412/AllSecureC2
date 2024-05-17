@@ -170,6 +170,17 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return true
 			})
+			var ImplantData Common.ImplantData
+			err = json.Unmarshal([]byte(NewMessage.Message), &ImplantData)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal implant data", err)
+				return
+			}
+			err = Common.AddImplantToSqlTable(t.Server.FI.DataBasePath, client.UserID, ImplantData)
+			if err != nil {
+				log.Println("[error] attempting to add implant to database", err)
+				return
+			}
 			break // REGISTER IMPLANT
 
 		default:

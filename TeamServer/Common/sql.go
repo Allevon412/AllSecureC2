@@ -172,8 +172,7 @@ CREATE TABLE IF NOT EXISTS implants (
     );`
 */
 
-/*
-func AddImplantToSqlTable(databasepath string, data ImplantData) error {
+func AddImplantToSqlTable(databasepath string, userid int, data ImplantData) error {
 	var (
 		db   *sql.DB
 		err  error
@@ -186,7 +185,14 @@ func AddImplantToSqlTable(databasepath string, data ImplantData) error {
 	}
 	defer db.Close()
 	InsertImplantIntoTableQuery := `
-INSERT INTO implants (user_id, implant_id, external_ip, internal_ip, username, computer_name, pid, process_name, health, last_checkin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-}
+INSERT INTO implants (user_id, implant_id, external_ip, internal_ip, username, computer_name, pid, process_name, health) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
-*/
+	stmt, err = db.Prepare(InsertImplantIntoTableQuery)
+	defer stmt.Close()
+	_, err = stmt.Exec(userid, data.ImplantID, data.ExternalIP, data.InternalIP, data.User, data.Computer, data.PID, data.Process, data.Health)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
