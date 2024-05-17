@@ -153,3 +153,40 @@ DELETE FROM listeners WHERE listener_name = ?`
 
 	return listdata, nil
 }
+
+/*
+	CreateImplantTable := `
+CREATE TABLE IF NOT EXISTS implants (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    implant_id TEXT,
+    external_ip TEXT,
+    internal_ip TEXT,
+    username TEXT,
+    computer_name TEXT,
+    pid INTEGER,
+    process_name TEXT,
+    health TEXT,
+    last_checkin TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    );`
+*/
+
+/*
+func AddImplantToSqlTable(databasepath string, data ImplantData) error {
+	var (
+		db   *sql.DB
+		err  error
+		stmt *sql.Stmt
+	)
+	db, err = sql.Open("sqlite3", databasepath)
+	if err != nil {
+		log.Println("[error] Failed to open database", err)
+		return err
+	}
+	defer db.Close()
+	InsertImplantIntoTableQuery := `
+INSERT INTO implants (user_id, implant_id, external_ip, internal_ip, username, computer_name, pid, process_name, health, last_checkin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+}
+
+*/
