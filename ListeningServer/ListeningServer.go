@@ -11,7 +11,6 @@ import (
 	"AllSecure/TeamServer/implant"
 	"context"
 	"encoding/binary"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -20,10 +19,13 @@ import (
 	"strconv"
 )
 
+type LS struct {
+	Listener Common.ListeningServer
+}
+
 var (
-	agent_arr        []implant.Agent
-	ListeningServers []Common.ListeningServer
-	g_clientobj      Common.Client
+	agent_arr   []implant.Agent
+	g_clientobj Common.Client
 )
 
 func ProcessRequest(c *gin.Context) {
@@ -54,6 +56,7 @@ func ProcessRequest(c *gin.Context) {
 	case Common.CMD_Initialize:
 		go func() {
 			err = InitializeAgent(decryptedPayload)
+
 			if err != nil {
 				log.Println("[error] attempting to initialize agent", err)
 			}
@@ -78,10 +81,10 @@ func DenyRequest(c *gin.Context) {
 	c.Writer.Write(html)
 }
 
-func Start(Server Common.NewListener) error {
+func (ls *LS) Start(token string) error {
 
 	go func() {
-		err := StartEventHandler(Server.Jwttoken, Server.TSAddr+Server.TSPort)
+		err := StartEventHandler(token, ls.Listener.TS.Address+ls.Listener.TS.Port)
 		if err != nil {
 			log.Println("[error] attempting to start event handler", err)
 			return
@@ -89,96 +92,56 @@ func Start(Server Common.NewListener) error {
 	}()
 
 	var err error
-	var TempServer Common.ListeningServer
+	ls.Listener.GinEngine.POST("/*endpoint", ProcessRequest)
+	ls.Listener.GinEngine.GET("/*endpoint", DenyRequest)
 
-	TempServer = Common.ListeningServer{
-		Config: &Common.HTTPServerConfig{
-			Name:         Server.ListenerName,
-			KillDate:     0,
-			WorkingHours: "",
-			Method:       "",
-			Port:         Server.Port,
-			Secure:       Server.Secure,
-			Address:      Server.Address,
-		},
-		GinEngine: Server.Engine,
-		Server:    &http.Server{Addr: Server.Address + ":" + strconv.Itoa(Server.Port), Handler: Server.Engine},
-		TLS:       Common.TLSConfig{Key: Server.Key, Cert: Server.Cert, CertPath: Server.Path + "\\ListeningServer\\Assets\\server_" + Server.ListenerName + ".cert", KeyPath: Server.Path + "\\ListeningServer\\Assets\\server_" + Server.ListenerName + ".key"},
-		Active:    true,
-	}
+	if ls.Listener.Config.Secure == true {
 
-	if len(ListeningServers) > 0 {
-		for _, server := range ListeningServers {
-			if server.Config.Port == Server.Port && server.Config.Address == Server.Address && server.Active == true && server.Config.Name == Server.ListenerName {
-				log.Println("[error] the server is already started and listening on the desired location", Server.Address, Server.Port)
-				return errors.New("[error] server has already been started")
-			}
+		err = os.WriteFile(ls.Listener.TLS.CertPath, ls.Listener.TLS.Cert, 0644)
+		if err != nil {
+			log.Fatalln("[error] Failed to save certificate", err)
 		}
-	}
+		err = os.WriteFile(ls.Listener.TLS.KeyPath, ls.Listener.TLS.Key, 0644)
+		if err != nil {
+			log.Fatalln("[error] Failed to save key path", err)
+		}
 
-	ListeningServers = append(ListeningServers, TempServer)
+		if err = ls.Listener.GinEngine.RunTLS(ls.Listener.Config.Address+":"+strconv.Itoa(ls.Listener.Config.Port),
+			ls.Listener.TLS.CertPath, ls.Listener.TLS.KeyPath); err != nil {
+			log.Fatalln("[error] failed to start websocket: ", err)
+		}
 
-	for _, server := range ListeningServers {
-
-		if server.Active && server.Config.Address == Server.Address && server.Config.Port == Server.Port && server.Config.Name == Server.ListenerName {
-
-			server.GinEngine.POST("/*endpoint", ProcessRequest)
-			server.GinEngine.GET("/*endpoint", DenyRequest)
-
-			if server.Config.Secure == true {
-
-				err = os.WriteFile(server.TLS.CertPath, Server.Cert, 0644)
-				if err != nil {
-					log.Fatalln("[error] Failed to save certificate", err)
-				}
-				err = os.WriteFile(server.TLS.KeyPath, Server.Key, 0644)
-				if err != nil {
-					log.Fatalln("[error] Failed to save key path", err)
-				}
-
-				if err = server.GinEngine.RunTLS(server.Config.Address+":"+strconv.Itoa(server.Config.Port), server.TLS.CertPath, server.TLS.KeyPath); err != nil {
-					log.Fatalln("[error] failed to start websocket: ", err)
-				}
-
-			} else {
-				err = server.Server.ListenAndServe()
-				if err != nil {
-					log.Println("[error] attempting to launch listening server", err)
-					return err
-				}
-			}
+	} else {
+		err = ls.Listener.HttpServer.ListenAndServe()
+		if err != nil {
+			log.Println("[error] attempting to launch listening server", err)
+			return err
 		}
 	}
 
 	return nil
 }
 
-func Stop(ListenerName, address, path string, port int) bool {
+func (ls *LS) Stop() bool {
 	var err error
 	ctx, cancel := context.WithTimeout(context.Background(), 0)
 	defer cancel()
-	for _, server := range ListeningServers {
-		if server.Config.Address == address && server.Config.Port == port && server.Active == true && server.Config.Name == ListenerName {
-
-			if err = server.Server.Close(); err != nil {
-				log.Println("[error] attempting to close connections")
-				return false
-			}
-			if err = server.Server.Shutdown(ctx); err != nil {
-
-				log.Println("[error] server shutdown failed: ", err)
-				return false
-			}
-			err = os.Remove(path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".cert")
-			if err != nil {
-				log.Println("[error] attempting to delete the server certificate file", err)
-			}
-			err = os.Remove(path + "\\ListeningServer\\Assets\\server_" + ListenerName + ".key")
-			if err != nil {
-				log.Println("[error] attempting to delete the server key file", err)
-			}
-			return true
-		}
+	if ls.Listener.HttpServer.Close(); err != nil {
+		log.Println("[error] attempting to close connections")
+		return false
 	}
-	return false
+	if err = ls.Listener.HttpServer.Shutdown(ctx); err != nil {
+		log.Println("[error] server shutdown failed: ", err)
+		return false
+	}
+	if err = os.Remove(ls.Listener.TLS.CertPath); err != nil {
+		log.Println("[error] attempting to delete the server certificate file", err)
+	}
+
+	err = os.Remove(ls.Listener.TLS.KeyPath)
+	if err != nil {
+		log.Println("[error] attempting to delete the server key file", err)
+	}
+	return true
+
 }

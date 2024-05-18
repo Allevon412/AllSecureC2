@@ -2,63 +2,76 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
-	Common2 "AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
 	"strings"
 )
 
-func StartListenersInDatabase(list_data []Common.ListenerData, path string, jwttoken, TSAddr string, TSPort string) error {
-	for _, listener := range list_data {
-		var err error
-		var NewListener Common2.NewListener
-		NewListener.ListenerName = listener.ListenerName
-		NewListener.Address = listener.HOST
-		NewListener.TSAddr = TSAddr
-		NewListener.Jwttoken = jwttoken
-		NewListener.Engine = gin.Default()
-		NewListener.Port = listener.PortBind
-		NewListener.Path = path
-		NewListener.TSPort = TSPort
+func (t *TS) StartListenersInDatabase(list_data []Common.ListenerData) error {
+	for _, ListenerData := range list_data {
 
-		// check to make sure the data returned from database is empty. If empty just continue.
-		if strings.Compare(listener.ListenerName, "") == 0 {
-			continue
-		}
-		// check to ensure what protocol we're using http or https.
-		if strings.Compare(strings.ToLower(listener.Protocol), strings.ToLower("HTTPS")) == 0 {
-			NewListener.Secure = true
+		var (
+			token        string
+			TempListener ListeningServer.LS
+			err          error
+		)
 
-			//generate cert / key for listening server.
-			NewListener.Cert, NewListener.Key, err = Crypt.HTTPSGenerateRSACertificate(listener.ListenerName)
+		TempListener.Listener.Config.Address = ListenerData.HOST
+		TempListener.Listener.Config.Port = ListenerData.PortBind
+		TempListener.Listener.GinEngine = gin.Default()
+		TempListener.Listener.Active = true
+		TempListener.Listener.Config.Name = ListenerData.ListenerName
+		TempListener.Listener.HttpServer = &http.Server{Addr: ListenerData.HOST + ":" + strconv.Itoa(ListenerData.PortBind), Handler: TempListener.Listener.GinEngine}
+		TempListener.Listener.TS.Address = t.Server.Config.Address
+		TempListener.Listener.TS.Port = t.Server.Config.Port
+
+		//check if our listener is going to use secure comms.
+		if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
+
+			//generate a certificate.
+			TempListener.Listener.TLS.Cert, TempListener.Listener.TLS.Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
 			if err != nil {
 				log.Fatalln("[error] Failed generating cert / key pair", err)
 			}
+			//set the path for the cert / key.
+			TempListener.Listener.TLS.CertPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
+			TempListener.Listener.TLS.KeyPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
+			TempListener.Listener.Config.Secure = true
 
-			//start listener
-			err = ListeningServer.Start(NewListener)
+			ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.
+			token, err = t.CreateToken(9999, ListenerData.ListenerName+"_"+strconv.Itoa(len(ListeningServers)), false)
 			if err != nil {
-				if strings.Compare(err.Error(), "[error] server has already been started") == 0 {
-					continue
-				} else {
-					return err
-				}
+				log.Println("[error] failed to create token")
+				return err
 			}
-		} else {
-			NewListener.Secure = false
-			// start http listener
-			err = ListeningServer.Start(NewListener)
+
+			//start server.
+			err = TempListener.Start(token)
 			if err != nil {
-				if strings.Compare(err.Error(), "[error] server has already been started") == 0 {
-					continue
-				} else {
-					return err
-				}
+				log.Println("[error] listening server did not start.")
+				return err
+			}
+			//use unsecure comms.
+		} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
+			TempListener.Listener.Config.Secure = false
+
+			ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.
+			token, err = t.CreateToken(9999, ListenerData.ListenerName+"_"+strconv.Itoa(len(ListeningServers)), false)
+			if err != nil {
+				log.Println("[error] failed to create token")
+				return err
+			}
+
+			err = TempListener.Start(token)
+			if err != nil {
+				log.Println("[error] listening server did not start.")
+				return err
 			}
 		}
-
 	}
 	return nil
 }

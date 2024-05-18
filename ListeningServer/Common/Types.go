@@ -78,6 +78,10 @@ type (
 		Secure       bool
 		Address      string
 	}
+	TeamServerConfig struct {
+		Address string
+		Port    string
+	}
 
 	TLSConfig struct {
 		Cert []byte
@@ -93,28 +97,18 @@ type (
 )
 
 type (
-	NewListener struct {
-		Address      string
-		Port         int
-		Secure       bool
-		Engine       *gin.Engine
-		Cert, Key    []byte
-		ListenerName string
-		Path         string
-		Jwttoken     string
-		TSAddr       string
-		TSPort       string
-	}
-
 	ListeningServer struct {
-		Config *HTTPServerConfig
+		Config HTTPServerConfig
+		TS     TeamServerConfig
 
-		GinEngine *gin.Engine
-		Server    *http.Server
+		GinEngine  *gin.Engine
+		HttpServer *http.Server
 
 		TLS TLSConfig
 
 		Active bool
+
+		UserId int
 	}
 
 	Client struct {

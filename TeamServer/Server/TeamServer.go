@@ -2,7 +2,6 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
-	Common2 "AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
@@ -12,12 +11,17 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
 type TS struct {
 	Server Common.TeamServer
 }
+
+var (
+	ListeningServers []ListeningServer.LS
+)
 
 func (t *TS) ParseConfig(FilePath string) error {
 
@@ -84,6 +88,8 @@ func (t *TS) HandleRequest(ClientID string) {
 
 		case "CreateListener":
 			var ListenerData Common.ListenerData
+			var TempListener ListeningServer.LS
+
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
 			if err != nil {
 				log.Println("[error] attempting to unmarshal listener data", err)
@@ -98,42 +104,48 @@ func (t *TS) HandleRequest(ClientID string) {
 			}()
 
 			go func() {
-				var token string
-				var NewListener Common2.NewListener
-
-				token, err = t.CreateToken(9999, "ListeningServer", false)
-				NewListener.Jwttoken = token
-				NewListener.Address = ListenerData.HOST
-				NewListener.Port = ListenerData.PortBind
-				NewListener.ListenerName = ListenerData.ListenerName
-				NewListener.Engine = gin.Default()
-				NewListener.Path = t.Server.FI.ProjectDir
-				NewListener.TSAddr = t.Server.Config.Address
-				NewListener.TSPort = t.Server.Config.Port
-				if err != nil {
-					log.Println("[error] attempting to perform ascii to integer conversion for TS server port", err)
-				}
+				var (
+					token string
+				)
+				TempListener.Listener.Config.Address = ListenerData.HOST
+				TempListener.Listener.Config.Port = ListenerData.PortBind
+				TempListener.Listener.GinEngine = gin.Default()
+				TempListener.Listener.Active = true
+				TempListener.Listener.Config.Name = ListenerData.ListenerName
+				TempListener.Listener.HttpServer = &http.Server{Addr: ListenerData.HOST + ":" + strconv.Itoa(ListenerData.PortBind), Handler: TempListener.Listener.GinEngine}
+				TempListener.Listener.TS.Address = t.Server.Config.Address
+				TempListener.Listener.TS.Port = t.Server.Config.Port
 
 				//check if our listener is going to use secure comms.
 				if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
 
-					NewListener.Secure = true
 					//generate a certificate.
-					NewListener.Cert, NewListener.Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
+					TempListener.Listener.TLS.Cert, TempListener.Listener.TLS.Key, err = Crypt.HTTPSGenerateRSACertificate(ListenerData.HOST)
 					if err != nil {
 						log.Fatalln("[error] Failed generating cert / key pair", err)
 					}
+					//set the path for the cert / key.
+					TempListener.Listener.TLS.CertPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
+					TempListener.Listener.TLS.KeyPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
+					TempListener.Listener.Config.Secure = true
+
+					ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.
+					token, err = t.CreateToken(9999, ListenerData.ListenerName+"_"+strconv.Itoa(len(ListeningServers)), false)
 
 					//start server.
-					err = ListeningServer.Start(NewListener)
+					err = TempListener.Start(token)
 					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
 					}
 					//use unsecure comms.
 				} else if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTP")) == 0 {
-					NewListener.Secure = false
-					err = ListeningServer.Start(NewListener)
+					TempListener.Listener.Config.Secure = false
+
+					ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.
+					token, err = t.CreateToken(9999, ListenerData.ListenerName+"_"+strconv.Itoa(len(ListeningServers)), false)
+
+					err = TempListener.Start(token)
 					if err != nil {
 						log.Println("[error] listening server did not start.")
 						return
@@ -154,7 +166,12 @@ func (t *TS) HandleRequest(ClientID string) {
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
-				ListeningServer.Stop(ListenerData.ListenerName, ListenerData.HOST, t.Server.FI.ProjectDir, ListenerData.PortBind)
+
+				for _, ls := range ListeningServers {
+					if ls.Listener.Config.Address == ListenerData.HOST && ls.Listener.Config.Port == ListenerData.PortBind && ls.Listener.Config.Name == ListenerData.ListenerName {
+						ls.Stop()
+					}
+				}
 				return
 			}()
 			break //REMOVE LISTENER
@@ -176,7 +193,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				log.Println("[error] attempting to unmarshal implant data", err)
 				return
 			}
-			err = Common.AddImplantToSqlTable(t.Server.FI.DataBasePath, client.UserID, ImplantData)
+			err = Common.AddImplantToSqlTable(t.Server.FI.DataBasePath, client.UserID, ImplantData) // user id is an int because when you create a new user it's added to the database with a number attached. all user's will have a number therefore you can determine what listener's / implants are started by which user's based on their user id.
 			if err != nil {
 				log.Println("[error] attempting to add implant to database", err)
 				return
@@ -231,15 +248,10 @@ func (t *TS) Start() {
 	//start listeners in database that are already there from last session.
 	go func() {
 		var list_data []Common.ListenerData
-		var token string
 
 		list_data, err = Common.GetListenerData(t.Server.FI.DataBasePath)
-		token, err = t.CreateToken(9999, "ListeningServer", false)
 
-		if err != nil {
-			log.Println("[error] attempting to convert team server port to integer", err)
-		}
-		err = StartListenersInDatabase(list_data, t.Server.FI.ProjectDir, token, t.Server.Config.Address, t.Server.Config.Port)
+		err = t.StartListenersInDatabase(list_data)
 		if err != nil {
 			log.Println("[error] attempting to start the listeners in the database.")
 		}
