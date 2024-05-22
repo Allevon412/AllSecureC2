@@ -8,7 +8,6 @@ package ListeningServer
 import (
 	"AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Crypt"
-	"AllSecure/TeamServer/implant"
 	"context"
 	"encoding/binary"
 	"github.com/gin-gonic/gin"
@@ -24,7 +23,7 @@ type LS struct {
 }
 
 var (
-	agent_arr   []implant.Agent
+	agent_arr   []Common.ImplantContext
 	g_clientobj Common.Client
 )
 
@@ -56,7 +55,6 @@ func ProcessRequest(c *gin.Context) {
 	case Common.CMD_Initialize:
 		go func() {
 			err = InitializeAgent(decryptedPayload)
-
 			if err != nil {
 				log.Println("[error] attempting to initialize agent", err)
 			}

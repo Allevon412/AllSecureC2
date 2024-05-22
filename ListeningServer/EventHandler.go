@@ -49,21 +49,16 @@ func StartEventHandler(token string, teamserver string) error {
 	return nil
 }
 
-func SendEvent(EventName string, data []byte) error {
+func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 	var NewMessage Common.NewWebSocketMessage
 	var err error
 
 	switch EventName {
 	case "RegisterImplant":
 		var NewImplant Common.ImplantData
-		var ImpCtx Common.ImplantContext
 		var TempData []byte
+
 		NewMessage.MessageType = "RegisterImplant"
-		err = ImpCtx.UnmarshalBinary(data)
-		if err != nil {
-			log.Println("[error] attempting to unmarshal implant data", err)
-			return err
-		}
 		NewImplant.ImplantID = "First"
 		NewImplant.Computer = ImpCtx.Host_name
 		NewImplant.InternalIP = ImpCtx.Ip_addr

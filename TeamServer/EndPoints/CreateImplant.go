@@ -1,3 +1,6 @@
 package EndPoints
 
-//TODO Create 'CreateImplant' endpoint
+// TODO Create 'CreateImplant' endpoint
+func CreateImplant() {
+
+}

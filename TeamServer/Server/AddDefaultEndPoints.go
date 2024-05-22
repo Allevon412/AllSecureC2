@@ -39,6 +39,17 @@ func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	return
 }
 
+// func to add the AuthenticateUser endpoint to the default list.
+func (t *TS) AddAuthenticateUserEndpoint() bool {
+
+	AuthUser := &Common.Endpoint{
+		Endpoint: "AuthenticateUser",
+		Function: t.AuthenticateUser,
+	}
+
+	return t.AddEndPoint(AuthUser)
+}
+
 // GetUserData endpoint request handler
 func (t *TS) GetUserData(ctx *gin.Context) {
 	var (
@@ -73,6 +84,16 @@ func (t *TS) GetUserData(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, JsonData)
 	return
+}
+
+// func to add GetUserData endpoint to the default list.
+func (t *TS) AddGetUserDataEndpoint() bool {
+
+	GetUserData := &Common.Endpoint{
+		Endpoint: "GetUserData",
+		Function: t.GetUserData,
+	}
+	return t.AddEndPoint(GetUserData)
 }
 
 func (t *TS) AddNewUser(ctx *gin.Context) {
@@ -113,6 +134,14 @@ func (t *TS) AddNewUser(ctx *gin.Context) {
 	}
 }
 
+func (t *TS) AddAddNewUserEndPoint() bool {
+	AddNewUser := &Common.Endpoint{
+		Endpoint: "AddNewUser",
+		Function: t.AddNewUser,
+	}
+	return t.AddEndPoint(AddNewUser)
+}
+
 func (t *TS) DeleteUser(ctx *gin.Context) {
 	var (
 		claims  *Common.JWTClaims
@@ -151,6 +180,14 @@ func (t *TS) DeleteUser(ctx *gin.Context) {
 	}
 }
 
+func (t *TS) AddDeleteUserEndPoint() bool {
+	DeleteUser := &Common.Endpoint{
+		Endpoint: "DeleteUser",
+		Function: t.DeleteUser,
+	}
+	return t.AddEndPoint(DeleteUser)
+}
+
 func (t *TS) GetActiveListeners(ctx *gin.Context) {
 	var (
 		claims    *Common.JWTClaims
@@ -186,48 +223,50 @@ func (t *TS) GetActiveListeners(ctx *gin.Context) {
 	return
 }
 
-// func to add the AuthenticateUser endpoint to the default list.
-func (t *TS) AddAuthenticateUserEndpoint() bool {
-
-	AuthUser := &Common.Endpoint{
-		Endpoint: "AuthenticateUser",
-		Function: t.AuthenticateUser,
-	}
-
-	return t.AddEndPoint(AuthUser)
-}
-
-// func to add GetUserData endpoint to the default list.
-func (t *TS) AddGetUserDataEndpoint() bool {
-
-	GetUserData := &Common.Endpoint{
-		Endpoint: "GetUserData",
-		Function: t.GetUserData,
-	}
-	return t.AddEndPoint(GetUserData)
-}
-
-func (t *TS) AddAddNewUserEndPoint() bool {
-	AddNewUser := &Common.Endpoint{
-		Endpoint: "AddNewUser",
-		Function: t.AddNewUser,
-	}
-	return t.AddEndPoint(AddNewUser)
-}
-
-func (t *TS) AddDeleteUserEndPoint() bool {
-	DeleteUser := &Common.Endpoint{
-		Endpoint: "DeleteUser",
-		Function: t.DeleteUser,
-	}
-	return t.AddEndPoint(DeleteUser)
-}
 func (t *TS) AddGetActiveListenersEndPoint() bool {
 	GetActiveListenersEndpoint := &Common.Endpoint{
 		Endpoint: "GetActiveListeners",
 		Function: t.GetActiveListeners,
 	}
 	return t.AddEndPoint(GetActiveListenersEndpoint)
+}
+
+func (t *TS) CreateImplant(ctx *gin.Context) {
+	var (
+		claims *Common.JWTClaims
+		token  string
+		err    error
+	)
+
+	token = ctx.GetHeader("Authorization")
+	if token == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+
+	claims, err = t.ParseToken(token)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+	if claims.UserID <= 0 || claims.Username == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Parameters"})
+		return
+	}
+
+	EndPoints.CreateImplant()
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Implant Created"})
+	return
+}
+
+func (t *TS) AddCreateImplantEndPoint() bool {
+	CreateImplant := &Common.Endpoint{
+		Endpoint: "CreateImplant",
+		Function: t.CreateImplant,
+	}
+	return t.AddEndPoint(CreateImplant)
+
 }
 
 // func to add all default endpoints to default list.
