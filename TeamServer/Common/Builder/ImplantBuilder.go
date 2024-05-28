@@ -1,12 +1,16 @@
 package Builder
 
 import (
+	LSCommon "AllSecure/ListeningServer/Common"
+	TSCommon "AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Common/Packer"
 	"AllSecure/TeamServer/Common/win32"
 	"bytes"
+	"errors"
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 )
 
 const (
@@ -225,19 +229,58 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		AgentConfig  = Packer.Packer{}
 		Sleep        int
 		Jitter       int
-		Alloc        int
-		Execute      int
-		Spawn64      string
-		Spawn86      string
-		ObfTechnique int
-		ObfBypass    int
-		ProxyLoading = PROXYLOADING_NONE
-		StackSpoof   = win32.FALSE
-		Syscall      = win32.FALSE
-		AmsiPatch    = AMSIETW_PATCH_NONE
+		//Alloc        int
+		//Execute      int
+		//Spawn64      string
+		//Spawn86      string
+		//ObfTechnique int
+		//ObfBypass    int
+		//ProxyLoading = PROXYLOADING_NONE
+		//StackSpoof   = win32.FALSE
+		//Syscall      = win32.FALSE
+		//AmsiPatch    = AMSIETW_PATCH_NONE
 		err          error
 	)
 
+	if val, ok := ab.config.Config["Sleep"].(string); ok {
+		Sleep, err = strconv.Atoi(val)
+		if err != nil {
+			log.Println("[error] failed to convert sleep value to int: ", err)
+			return nil, err
+		}
+	}
+
+	if val, ok := ab.config.Config["Jitter"].(string); ok {
+		Jitter, err = strconv.Atoi(val)
+		if err != nil {
+			log.Println("[error] failed to convert jitter value to int: ", err)
+			return nil, err
+		}
+		if Jitter < 0 || Jitter > 100 {
+			return nil, errors.New("jitter value must be between 0 and 100")
+		}
+	} else {
+		log.Println("[warning] jitter value not set, defaulting to 0")
+		Jitter = 0
+	}
+
+	AgentConfig.AddInt(Sleep)
+	AgentConfig.AddInt(Jitter)
+
+	switch ab.config.ListenerType {
+	case TSCommon.HTTP_SERVER:
+		var (
+			Config = ab.config.ListenerConfig.(*TSCommon.HTTPServerConfig)
+			Port, err = strconv.Atoi(Config.Port)
+		)
+		if Port == 0 || err != nil {
+			return nil, errors.New("invalid port")
+		}
+		AgentConfig.AddInt64(Config.KillDate)
+		WorkingHours, err := 
+	}
+
+	return AgentConfig.GetBuffer(), nil
 }
 
 func (ab *AgentBuilder) SetOutputPath(path string) {

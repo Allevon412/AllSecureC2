@@ -43,6 +43,13 @@ func (p *Packer) AddInt32(data int32) {
 	p.size += 4
 }
 
+func (p *Packer) AddInt(data int) {
+	var buffer = make([]byte, 0)
+	binary.LittleEndian.PutUint32(buffer, uint32(data))
+	p.data = append(p.data, buffer...)
+	p.size += 4
+}
+
 // adds 2 bytes of data to the packaer struct
 func (p *Packer) AddInt16(data int16) {
 	var buffer = make([]byte, 0)
@@ -93,6 +100,10 @@ func (p *Packer) Build() []byte {
 		p.data = Crypt.AES256CTR(p.data, p.AesKey, p.AesIv)
 	}
 
+	return p.data
+}
+
+func (p *Packer) GetBuffer() []byte {
 	return p.data
 }
 

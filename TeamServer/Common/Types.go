@@ -7,6 +7,11 @@ import (
 	"sync"
 )
 
+const (
+	HTTP_SERVER = 1
+	SMB_SERVER  = 2
+)
+
 type (
 	DBUser struct {
 		ID       int
