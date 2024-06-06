@@ -2,11 +2,13 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
+	"AllSecure/TeamServer/Common/Builder"
 	"AllSecure/TeamServer/Common/SQL"
 	"AllSecure/TeamServer/Common/Types"
 	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -199,7 +201,7 @@ func (t *TS) Start() {
 		log.Fatalln("[error] obtaining current directory path")
 	}
 	parts := strings.Split(currdir, "AllSecure")
-
+	//once config file has been parse. assert the type to the correct configuration struct.
 	config, err := Utility.ParseConfig(parts[0]+"AllSecure\\Config\\", "AllSecure.Config", &t.Server.TSConfig)
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
@@ -209,14 +211,20 @@ func (t *TS) Start() {
 	} else {
 		log.Fatalln("[error] type assertion failed")
 	}
-
+	//generate encryption keys for team server.
 	err = Crypt.GenerateRSAKeys(t.Server.TSConfig.ProjectDir+"\\Config\\", "test_implant")
 	if err != nil {
 		log.Println("[error] attempting to generate RSA keys", err)
 	}
-
+	//set web server  handler for team server.
 	t.Server.GinEngine = gin.Default()
 
+	//testing function for generating payloads.
+	//TODO: remove later once more logic has been built between client/server
+	err = t.GeneratePayload()
+	if err != nil {
+		log.Fatalln("[error] attempting to generate payload", err)
+	}
 	//add default endpoints in separate routine.
 	go func() {
 		result := t.AddDefaultEndPoints()
@@ -251,7 +259,7 @@ func (t *TS) Start() {
 			}
 		}
 	})
-
+	// handle incoming web socket requests. This is the handler for client / server communication.
 	t.Server.GinEngine.GET("/ws", func(ctx *gin.Context) {
 		var (
 			upgrader  websocket.Upgrader
@@ -364,4 +372,13 @@ func (t *TS) RemoveEndPoint(endpoint string) bool {
 	}
 
 	return true
+}
+
+func (t *TS) GeneratePayload() error {
+	AgentBuilder := Builder.NewImplantBuilder(t.Server.TSConfig.ProjectDir)
+	success := AgentBuilder.Build()
+	if !success {
+		return errors.New("[error] failed to build the implant")
+	}
+	return nil
 }

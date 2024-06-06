@@ -29,7 +29,7 @@ func (p *Packer) NewPacker(AesKey, AesIV []byte) *Packer {
 
 // adds 8 bytes of data to the Packer struct
 func (p *Packer) AddInt64(data int64) {
-	var buffer = make([]byte, 0)
+	var buffer = make([]byte, 8)
 	binary.LittleEndian.PutUint64(buffer, uint64(data))
 	p.data = append(p.data, buffer...)
 	p.size += 8
@@ -37,14 +37,14 @@ func (p *Packer) AddInt64(data int64) {
 
 // adds 8 bytes of data to the Packer struct
 func (p *Packer) AddInt32(data int32) {
-	var buffer = make([]byte, 0)
+	var buffer = make([]byte, 4)
 	binary.LittleEndian.PutUint32(buffer, uint32(data))
 	p.data = append(p.data, buffer...)
 	p.size += 4
 }
 
 func (p *Packer) AddInt(data int) {
-	var buffer = make([]byte, 0)
+	var buffer = make([]byte, 4)
 	binary.LittleEndian.PutUint32(buffer, uint32(data))
 	p.data = append(p.data, buffer...)
 	p.size += 4
@@ -52,7 +52,7 @@ func (p *Packer) AddInt(data int) {
 
 // adds 2 bytes of data to the packaer struct
 func (p *Packer) AddInt16(data int16) {
-	var buffer = make([]byte, 0)
+	var buffer = make([]byte, 2)
 	binary.LittleEndian.PutUint16(buffer, uint16(data))
 	p.data = append(p.data, buffer...)
 	p.size += 2
@@ -66,7 +66,7 @@ func (p *Packer) AddInt8(data int8) {
 
 // add 4 bytes of unsigned data to the Packer
 func (p *Packer) AddUint32(data uint32) {
-	var buffer = make([]byte, 0)
+	var buffer = make([]byte, 4)
 	binary.LittleEndian.PutUint32(buffer, data)
 	p.data = append(p.data, buffer...)
 	p.size += 4

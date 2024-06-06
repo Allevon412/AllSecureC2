@@ -119,16 +119,28 @@ func ParseConfig(FilePath, FileName string, Config any) (any, error) {
 			log.Println("[info] TeamServer configuration file parsed successfully: ", val)
 		}
 		break
-	case "ImplantBuilder.Config":
+	case "Implant.Config":
 		if val, ok = Config.(*Types.ImplantConfig); ok {
 			err = json.Unmarshal(content, &val)
 			if err != nil {
-				log.Println("[error] Error unmarshalling JSON", err)
+				log.Println("[error] Error unmarshalling JSON, Implant config", err)
 				return nil, err
 			}
-			log.Println("[info] ImplantBuilder configuration file parsed successfully: ", val)
+			log.Println("[info] Implant configuration file parsed successfully: ", val)
 		}
 		break
+
+	case "Builder.Config":
+		if val, ok = Config.(*Types.BuilderConfig); ok {
+			err = json.Unmarshal(content, &val)
+			if err != nil {
+				log.Println("[error] Error unmarshalling JSON, builder config.", err)
+				return nil, err
+			}
+			log.Println("[info] Builder configuration file parsed successfully: ", val)
+		}
+		break
+
 	}
 
 	return val, nil
