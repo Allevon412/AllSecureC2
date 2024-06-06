@@ -1,7 +1,7 @@
 package Server
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
@@ -9,7 +9,7 @@ import (
 
 func (t *TS) CreateToken(userID int, username string, Admin bool) (string, error) {
 
-	claims := Common.JWTClaims{
+	claims := Types.JWTClaims{
 		UserID:        userID,
 		Username:      username,
 		Administrator: Admin,
@@ -28,15 +28,15 @@ func (t *TS) CreateToken(userID int, username string, Admin bool) (string, error
 	return signedToken, nil
 }
 
-func (t *TS) ParseToken(TokenString string) (*Common.JWTClaims, error) {
-	token, err := jwt.ParseWithClaims(TokenString, &Common.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (t *TS) ParseToken(TokenString string) (*Types.JWTClaims, error) {
+	token, err := jwt.ParseWithClaims(TokenString, &Types.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(t.Server.TokenKey), nil
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*Common.JWTClaims)
+	claims, ok := token.Claims.(*Types.JWTClaims)
 	if !ok {
 		return nil, fmt.Errorf("Couldn't parse claims")
 	}

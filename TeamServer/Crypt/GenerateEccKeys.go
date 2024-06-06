@@ -1,7 +1,7 @@
 package Crypt
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -56,7 +56,7 @@ func SaveKeysToDERFile(privateKey *ecdsa.PrivateKey, filepath string, implant_id
 	}
 	defer file.Close()
 
-	privKey := Common.ECCPrivateKey{
+	privKey := Types.ECCPrivateKey{
 		Flags: asn1.BitString{
 			Bytes:     []byte{0x80}, //0x80 = 128 or most significant bit = 1
 			BitLength: 1,
@@ -74,7 +74,7 @@ func SaveKeysToDERFile(privateKey *ecdsa.PrivateKey, filepath string, implant_id
 		return err
 	}
 
-	pubKey := Common.ECCPublicKey{
+	pubKey := Types.ECCPublicKey{
 		Flags: asn1.BitString{
 			Bytes:     []byte{0x00},
 			BitLength: 1,

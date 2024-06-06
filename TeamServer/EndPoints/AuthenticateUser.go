@@ -1,7 +1,7 @@
 package EndPoints
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
@@ -13,7 +13,7 @@ func AuthenticateUser(username, password, databasepath string) (int, int, bool, 
 		db       *sql.DB
 		err      error
 		UserRow  *sql.Rows
-		TempUser Common.DBUser
+		TempUser Types.DBUser
 	)
 
 	db, err = sql.Open("sqlite3", databasepath)

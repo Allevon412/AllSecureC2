@@ -1,14 +1,15 @@
 package EndPoints
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/SQL"
+	"AllSecure/TeamServer/Common/Types"
 	"database/sql"
 	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 )
 
-func AddUser(NewUser Common.NewUser, DatabasePath string) error {
+func AddUser(NewUser Types.NewUser, DatabasePath string) error {
 
 	var (
 		db             *sql.DB
@@ -19,7 +20,7 @@ func AddUser(NewUser Common.NewUser, DatabasePath string) error {
 		RowsAffected   int64
 		Exists         bool
 	)
-	Exists, err = Common.CheckIfUserExists(NewUser.Username, DatabasePath)
+	Exists, err = SQL.CheckIfUserExists(NewUser.Username, DatabasePath)
 	if err != nil {
 		log.Println("[error] attempting to check if user exists in db. ", err)
 		return err

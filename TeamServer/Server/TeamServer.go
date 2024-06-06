@@ -2,7 +2,9 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/SQL"
+	"AllSecure/TeamServer/Common/Types"
+	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
@@ -15,34 +17,22 @@ import (
 )
 
 type TS struct {
-	Server Common.TeamServer
+	Server Types.TeamServer
 }
 
 var (
 	ListeningServers []ListeningServer.LS
 )
 
-func (t *TS) ParseConfig(FilePath string) error {
-
-	content, err := os.ReadFile(FilePath + "AllSecure.Config")
-	if err != nil {
-		log.Fatalln("[error] Error opening file", err)
-	}
-	err = json.Unmarshal(content, &t.Server.TSConfig)
-	log.Println("[info] TeamServer configuration file parsed successfully: ", t.Server.TSConfig)
-
-	return nil
-}
-
 func (t *TS) HandleRequest(ClientID string) {
-	var NewMessage Common.WebSocketMessage
+	var NewMessage Types.WebSocketMessage
 	value, isok := t.Server.Clients.Load(ClientID)
 	if !isok {
 		return
 	}
 
 	for {
-		client := value.(*Common.Client)
+		client := value.(*Types.Client)
 		_, message, err := client.Conn.ReadMessage()
 		if err != nil {
 			log.Println("[error] reading client message", err)
@@ -57,7 +47,7 @@ func (t *TS) HandleRequest(ClientID string) {
 		switch NewMessage.MessageType {
 		case "ChatMessage":
 			t.Server.Clients.Range(func(key, value any) bool {
-				client = value.(*Common.Client)
+				client = value.(*Types.Client)
 				err = client.Conn.WriteJSON(NewMessage)
 				if err != nil {
 					log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
@@ -70,7 +60,7 @@ func (t *TS) HandleRequest(ClientID string) {
 			//CHAT MESSAGE
 
 		case "CreateListener":
-			var ListenerData Common.ListenerData
+			var ListenerData Types.ListenerData
 			var TempListener ListeningServer.LS
 
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
@@ -79,7 +69,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				return
 			}
 			go func() {
-				err = Common.AddListenerToSQLTable(client.Username, t.Server.TSConfig.DatabasePath, client.UserID, ListenerData)
+				err = SQL.AddListenerToSQLTable(client.Username, t.Server.TSConfig.DatabasePath, client.UserID, ListenerData)
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
@@ -138,14 +128,14 @@ func (t *TS) HandleRequest(ClientID string) {
 			break //CREATE LISTENER
 
 		case "RemoveListener":
-			var ListenerData Common.ListenerData
+			var ListenerData Types.ListenerData
 			err = json.Unmarshal([]byte(NewMessage.Message), &ListenerData)
 			if err != nil {
 				log.Println("[error] attempting to unmarshal listener data", err)
 				return
 			}
 			go func() {
-				ListenerData, err = Common.RemoveListenerFromSQLTable(t.Server.TSConfig.DatabasePath, ListenerData)
+				ListenerData, err = SQL.RemoveListenerFromSQLTable(t.Server.TSConfig.DatabasePath, ListenerData)
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
@@ -161,7 +151,7 @@ func (t *TS) HandleRequest(ClientID string) {
 
 		case "RegisterImplant":
 			t.Server.Clients.Range(func(key, value any) bool {
-				client = value.(*Common.Client)
+				client = value.(*Types.Client)
 				err = client.Conn.WriteJSON(NewMessage)
 				if err != nil {
 					log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
@@ -170,13 +160,13 @@ func (t *TS) HandleRequest(ClientID string) {
 				}
 				return true
 			})
-			var ImplantData Common.ImplantData
+			var ImplantData Types.ImplantData
 			err = json.Unmarshal([]byte(NewMessage.Message), &ImplantData)
 			if err != nil {
 				log.Println("[error] attempting to unmarshal implant data", err)
 				return
 			}
-			err = Common.AddImplantToSqlTable(t.Server.TSConfig.DatabasePath, client.UserID, ImplantData) // user id is an int because when you create a new user it's added to the database with a number attached. all user's will have a number therefore you can determine what listener's / implants are started by which user's based on their user id.
+			err = SQL.AddImplantToSqlTable(t.Server.TSConfig.DatabasePath, client.UserID, ImplantData) // user id is an int because when you create a new user it's added to the database with a number attached. all user's will have a number therefore you can determine what listener's / implants are started by which user's based on their user id.
 			if err != nil {
 				log.Println("[error] attempting to add implant to database", err)
 				return
@@ -210,9 +200,14 @@ func (t *TS) Start() {
 	}
 	parts := strings.Split(currdir, "AllSecure")
 
-	err = t.ParseConfig(parts[0] + "AllSecure\\Config\\")
+	config, err := Utility.ParseConfig(parts[0]+"AllSecure\\Config\\", "AllSecure.Config", &t.Server.TSConfig)
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
+	}
+	if tsConfig, ok := config.(*Types.TSConfig); ok {
+		t.Server.TSConfig = *tsConfig
+	} else {
+		log.Fatalln("[error] type assertion failed")
 	}
 
 	err = Crypt.GenerateRSAKeys(t.Server.TSConfig.ProjectDir+"\\Config\\", "test_implant")
@@ -230,9 +225,9 @@ func (t *TS) Start() {
 
 	//start listeners in database that are already there from last session.
 	go func() {
-		var list_data []Common.ListenerData
+		var list_data []Types.ListenerData
 
-		list_data, err = Common.GetListenerData(t.Server.TSConfig.DatabasePath)
+		list_data, err = SQL.GetListenerData(t.Server.TSConfig.DatabasePath)
 
 		err = t.StartListenersInDatabase(list_data)
 		if err != nil {
@@ -263,7 +258,7 @@ func (t *TS) Start() {
 			WebSocket *websocket.Conn
 			ClientID  string
 			token     string
-			claims    *Common.JWTClaims
+			claims    *Types.JWTClaims
 		)
 		ClientID, err = Crypt.GenerateRandomString(8)
 
@@ -292,7 +287,7 @@ func (t *TS) Start() {
 			return
 		}
 
-		t.Server.Clients.Store(ClientID, &Common.Client{
+		t.Server.Clients.Store(ClientID, &Types.Client{
 			Conn:          WebSocket,
 			Username:      claims.Username,
 			UserID:        claims.UserID,
@@ -349,7 +344,7 @@ func (t *TS) Start() {
 
 }
 
-func (t *TS) AddEndPoint(endpoint *Common.Endpoint) bool {
+func (t *TS) AddEndPoint(endpoint *Types.Endpoint) bool {
 	for _, EP := range t.Server.Endpoints {
 		if EP.Endpoint == endpoint.Endpoint {
 			return false

@@ -1,7 +1,7 @@
 package Server
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"AllSecure/TeamServer/EndPoints"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -11,7 +11,7 @@ import (
 // func to handle requests to the AuthenticateUser endpoint
 func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	var (
-		TempUser Common.User
+		TempUser Types.User
 		UserId   int
 		Admin    int
 		token    string
@@ -42,7 +42,7 @@ func (t *TS) AuthenticateUser(ctx *gin.Context) {
 // func to add the AuthenticateUser endpoint to the default list.
 func (t *TS) AddAuthenticateUserEndpoint() bool {
 
-	AuthUser := &Common.Endpoint{
+	AuthUser := &Types.Endpoint{
 		Endpoint: "AuthenticateUser",
 		Function: t.AuthenticateUser,
 	}
@@ -53,7 +53,7 @@ func (t *TS) AddAuthenticateUserEndpoint() bool {
 // GetUserData endpoint request handler
 func (t *TS) GetUserData(ctx *gin.Context) {
 	var (
-		claims   *Common.JWTClaims
+		claims   *Types.JWTClaims
 		token    string
 		err      error
 		JsonData []byte
@@ -89,7 +89,7 @@ func (t *TS) GetUserData(ctx *gin.Context) {
 // func to add GetUserData endpoint to the default list.
 func (t *TS) AddGetUserDataEndpoint() bool {
 
-	GetUserData := &Common.Endpoint{
+	GetUserData := &Types.Endpoint{
 		Endpoint: "GetUserData",
 		Function: t.GetUserData,
 	}
@@ -98,8 +98,8 @@ func (t *TS) AddGetUserDataEndpoint() bool {
 
 func (t *TS) AddNewUser(ctx *gin.Context) {
 	var (
-		claims  *Common.JWTClaims
-		NewUser Common.NewUser
+		claims  *Types.JWTClaims
+		NewUser Types.NewUser
 		token   string
 		err     error
 	)
@@ -135,7 +135,7 @@ func (t *TS) AddNewUser(ctx *gin.Context) {
 }
 
 func (t *TS) AddAddNewUserEndPoint() bool {
-	AddNewUser := &Common.Endpoint{
+	AddNewUser := &Types.Endpoint{
 		Endpoint: "AddNewUser",
 		Function: t.AddNewUser,
 	}
@@ -144,8 +144,8 @@ func (t *TS) AddAddNewUserEndPoint() bool {
 
 func (t *TS) DeleteUser(ctx *gin.Context) {
 	var (
-		claims  *Common.JWTClaims
-		NewUser Common.NewUser
+		claims  *Types.JWTClaims
+		NewUser Types.NewUser
 		token   string
 		err     error
 	)
@@ -181,7 +181,7 @@ func (t *TS) DeleteUser(ctx *gin.Context) {
 }
 
 func (t *TS) AddDeleteUserEndPoint() bool {
-	DeleteUser := &Common.Endpoint{
+	DeleteUser := &Types.Endpoint{
 		Endpoint: "DeleteUser",
 		Function: t.DeleteUser,
 	}
@@ -190,8 +190,8 @@ func (t *TS) AddDeleteUserEndPoint() bool {
 
 func (t *TS) GetActiveListeners(ctx *gin.Context) {
 	var (
-		claims    *Common.JWTClaims
-		Listeners []Common.ListenerData
+		claims    *Types.JWTClaims
+		Listeners []Types.ListenerData
 		JsonData  []byte
 		token     string
 		err       error
@@ -224,7 +224,7 @@ func (t *TS) GetActiveListeners(ctx *gin.Context) {
 }
 
 func (t *TS) AddGetActiveListenersEndPoint() bool {
-	GetActiveListenersEndpoint := &Common.Endpoint{
+	GetActiveListenersEndpoint := &Types.Endpoint{
 		Endpoint: "GetActiveListeners",
 		Function: t.GetActiveListeners,
 	}
@@ -233,7 +233,7 @@ func (t *TS) AddGetActiveListenersEndPoint() bool {
 
 func (t *TS) CreateImplant(ctx *gin.Context) {
 	var (
-		claims *Common.JWTClaims
+		claims *Types.JWTClaims
 		token  string
 		err    error
 	)
@@ -261,7 +261,7 @@ func (t *TS) CreateImplant(ctx *gin.Context) {
 }
 
 func (t *TS) AddCreateImplantEndPoint() bool {
-	CreateImplant := &Common.Endpoint{
+	CreateImplant := &Types.Endpoint{
 		Endpoint: "CreateImplant",
 		Function: t.CreateImplant,
 	}

@@ -2,7 +2,7 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"AllSecure/TeamServer/Crypt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (t *TS) StartListenersInDatabase(list_data []Common.ListenerData) error {
+func (t *TS) StartListenersInDatabase(list_data []Types.ListenerData) error {
 	for _, ListenerData := range list_data {
 
 		var (

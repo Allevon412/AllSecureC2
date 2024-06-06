@@ -1,9 +1,12 @@
 package Utility
 
 import (
+	"AllSecure/TeamServer/Common/Types"
+	"encoding/json"
 	"errors"
 	"golang.org/x/text/encoding/unicode"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -94,4 +97,39 @@ func ParseWorkingHours(WorkingHours string) (int32, error) {
 	}
 
 	return IntWorkingHours, nil
+}
+
+func ParseConfig(FilePath, FileName string, Config any) (any, error) {
+	var (
+		val any
+		ok  bool
+	)
+	content, err := os.ReadFile(FilePath + FileName)
+	if err != nil {
+		log.Fatalln("[error] Error opening file", err)
+	}
+	switch FileName {
+	case "AllSecure.Config":
+		if val, ok = Config.(*Types.TSConfig); ok {
+			err = json.Unmarshal(content, &val)
+			if err != nil {
+				log.Println("[error] Error unmarshalling JSON", err)
+				return nil, err
+			}
+			log.Println("[info] TeamServer configuration file parsed successfully: ", val)
+		}
+		break
+	case "ImplantBuilder.Config":
+		if val, ok = Config.(*Types.ImplantConfig); ok {
+			err = json.Unmarshal(content, &val)
+			if err != nil {
+				log.Println("[error] Error unmarshalling JSON", err)
+				return nil, err
+			}
+			log.Println("[info] ImplantBuilder configuration file parsed successfully: ", val)
+		}
+		break
+	}
+
+	return val, nil
 }

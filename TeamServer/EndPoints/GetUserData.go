@@ -1,7 +1,7 @@
 package EndPoints
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Types"
 	"database/sql"
 	"encoding/json"
 	"log"
@@ -12,7 +12,7 @@ func GetUserData(databasepath string) ([]byte, error) {
 		db            *sql.DB
 		err           error
 		Rows          *sql.Rows
-		DBUserEntries []Common.DBUser
+		DBUserEntries []Types.DBUser
 		FinalJsonData []byte
 	)
 
@@ -33,7 +33,7 @@ SELECT id, username, adminperms FROM users;
 	}
 	defer Rows.Close()
 	for Rows.Next() { //loop over each user
-		var TempUser Common.DBUser
+		var TempUser Types.DBUser
 		//scan data into tempuser structure
 		err = Rows.Scan(&TempUser.ID, &TempUser.Username, &TempUser.Admin)
 		if err != nil {
