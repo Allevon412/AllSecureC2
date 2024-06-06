@@ -26,8 +26,8 @@ func (t *TS) StartListenersInDatabase(list_data []Common.ListenerData) error {
 		TempListener.Listener.Active = true
 		TempListener.Listener.Config.Name = ListenerData.ListenerName
 		TempListener.Listener.HttpServer = &http.Server{Addr: ListenerData.HOST + ":" + strconv.Itoa(ListenerData.PortBind), Handler: TempListener.Listener.GinEngine}
-		TempListener.Listener.TS.Address = t.Server.Config.Address
-		TempListener.Listener.TS.Port = t.Server.Config.Port
+		TempListener.Listener.TS.Address = t.Server.TSConfig.Address
+		TempListener.Listener.TS.Port = t.Server.TSConfig.Port
 
 		//check if our listener is going to use secure comms.
 		if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
@@ -38,8 +38,8 @@ func (t *TS) StartListenersInDatabase(list_data []Common.ListenerData) error {
 				log.Fatalln("[error] Failed generating cert / key pair", err)
 			}
 			//set the path for the cert / key.
-			TempListener.Listener.TLS.CertPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
-			TempListener.Listener.TLS.KeyPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
+			TempListener.Listener.TLS.CertPath = t.Server.TSConfig.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
+			TempListener.Listener.TLS.KeyPath = t.Server.TSConfig.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
 			TempListener.Listener.Config.Secure = true
 
 			ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.

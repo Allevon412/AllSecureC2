@@ -133,7 +133,7 @@ type AgentBuilder struct {
 func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 	var builder = new(AgentBuilder)
 
-	builder.sourcePath = path + "/" + PayloadDir + "/" + "Agent"
+	builder.sourcePath = path + "/" + PayloadDir + "/" + "Agent" + "/"
 	builder.config.Arch = ARCHITECTURE_X64
 
 	builder.compilerOptions.SourceDirs = []string{
@@ -144,9 +144,13 @@ func NewImplantBuilder(config BuilderConfig, path string) *AgentBuilder {
 		"src/Helpers",
 		"src/Http",
 		"src/Package",
+		"src/wolfssl",
 	}
 	builder.compilerOptions.IncludeDirs = []string{
 		"include",
+		"include/wolfssl/oppenssl",
+		"include/wolfssl/wolfcrypt",
+		"include/wolfssl/wolfssl",
 	}
 
 	/*
@@ -366,7 +370,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	switch ab.config.ListenerType {
 	case TSCommon.HTTP_SERVER:
 		var (
-			Config = ab.config.ListenerConfig.(*TSCommon.HTTPServerConfig)
+			Config = ab.config.ListenerConfig.(*TSCommon.ListenerConfig)
 			err    error
 		)
 		AgentConfig.AddInt64(Config.KillDate)

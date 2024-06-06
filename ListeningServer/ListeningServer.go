@@ -82,7 +82,7 @@ func DenyRequest(c *gin.Context) {
 func (ls *LS) Start(token string) error {
 
 	go func() {
-		err := StartEventHandler(token, ls.Listener.TS.Address+ls.Listener.TS.Port)
+		err := StartEventHandler(token, ls.Listener.TS.Address+":"+ls.Listener.TS.Port)
 		if err != nil {
 			log.Println("[error] attempting to start event handler", err)
 			return

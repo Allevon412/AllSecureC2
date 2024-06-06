@@ -20,7 +20,24 @@ type (
 		Admin    int
 	}
 
-	HTTPServerConfig struct {
+	/*
+	 "Name": "AllSecureTS",
+	    "Address": "127.0.0.1",
+	    "Port": "31337",
+	    "DatabasePath" : "C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\Database\AllSecure.db",
+	    "ConfigPath" : "C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\Config\AllSecure.Config",
+	    "ProjectDir" : "C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure"
+	*/
+	TSConfig struct {
+		Name         string `json:"Name"`
+		Address      string `json:"Address"`
+		Port         string `json:"Port"`
+		DatabasePath string `json:"DatabasePath"`
+		ConfigPath   string `json:"ConfigPath"`
+		ProjectDir   string `json:"ProjectDir"`
+	}
+
+	ListenerConfig struct {
 		Name         string
 		KillDate     int64
 		WorkingHours string
@@ -44,12 +61,6 @@ type (
 		Mutex         sync.Mutex
 	}
 
-	FileInfo struct {
-		DataBasePath   string
-		ConfigFilePath string
-		ProjectDir     string
-	}
-
 	Endpoint struct {
 		Endpoint string
 		Function func(ctx *gin.Context)
@@ -58,7 +69,8 @@ type (
 
 type (
 	TeamServer struct {
-		Config  HTTPServerConfig
+		TSConfig TSConfig
+
 		Clients sync.Map //sync safe capability for multiple go routines to handle multiple clients. havoc framework inspired
 
 		GinEngine *gin.Engine
@@ -73,7 +85,6 @@ type (
 		}
 
 		Active bool
-		FI     FileInfo
 
 		Endpoints []*Endpoint
 		TokenKey  string

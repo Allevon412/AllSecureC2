@@ -25,7 +25,7 @@ func (t *TS) AuthenticateUser(ctx *gin.Context) {
 	}
 
 	var success bool
-	Admin, UserId, success, err = EndPoints.AuthenticateUser(TempUser.Username, TempUser.Password, t.Server.FI.DataBasePath)
+	Admin, UserId, success, err = EndPoints.AuthenticateUser(TempUser.Username, TempUser.Password, t.Server.TSConfig.DatabasePath)
 	if success && UserId != 0 {
 		//create the user's new jwt.
 		token, err = t.CreateToken(UserId, TempUser.Username, Admin != 0) //Admin != 0 is checking if the integer is not equal to zero. In the case that it is, it will return false. In the case that it isn't it will return true.
@@ -75,7 +75,7 @@ func (t *TS) GetUserData(ctx *gin.Context) {
 		return
 	}
 
-	JsonData, err = EndPoints.GetUserData(t.Server.FI.DataBasePath)
+	JsonData, err = EndPoints.GetUserData(t.Server.TSConfig.DatabasePath)
 	if err != nil {
 		log.Println("[error] attempting to retrieve user data from sql database", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
@@ -126,7 +126,7 @@ func (t *TS) AddNewUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
-	err = EndPoints.AddUser(NewUser, t.Server.FI.DataBasePath)
+	err = EndPoints.AddUser(NewUser, t.Server.TSConfig.DatabasePath)
 	if err != nil {
 		log.Println("[error] attempting to add user to database", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
@@ -172,7 +172,7 @@ func (t *TS) DeleteUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
-	err = EndPoints.DeleteUser(NewUser, t.Server.FI.DataBasePath)
+	err = EndPoints.DeleteUser(NewUser, t.Server.TSConfig.DatabasePath)
 	if err != nil {
 		log.Println("[error] attempting to add user to database", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
@@ -212,7 +212,7 @@ func (t *TS) GetActiveListeners(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Parameters"})
 		return
 	}
-	JsonData, err = EndPoints.GetActiveListeners(Listeners, t.Server.FI.DataBasePath, claims)
+	JsonData, err = EndPoints.GetActiveListeners(Listeners, t.Server.TSConfig.DatabasePath, claims)
 	if err != nil {
 		log.Println("[error] attempting to retrieve user data from sql database", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})

@@ -5,7 +5,6 @@ import (
 	"AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -25,29 +24,13 @@ var (
 
 func (t *TS) ParseConfig(FilePath string) error {
 
-	content, err := os.ReadFile(FilePath)
-	fmt.Println(string(content))
+	content, err := os.ReadFile(FilePath + "AllSecure.Config")
 	if err != nil {
 		log.Fatalln("[error] Error opening file", err)
 	}
-	parts := strings.Split(string(content), "\n")
-	for _, line := range parts {
-		line_parts := strings.Split(line, "=")
-		switch line_parts[0] {
-		case "DatabaseFilePath":
-			t.Server.FI.DataBasePath = line_parts[1]
-		case "ConfigFilePath":
-			t.Server.FI.ConfigFilePath = line_parts[1]
-		case "ProjectDir":
-			t.Server.FI.ProjectDir = line_parts[1]
-		case "TeamServerAddress":
-			t.Server.Config.Address = line_parts[1]
-		case "TeamServerPort":
-			t.Server.Config.Port = line_parts[1]
-		default:
-			continue
-		}
-	}
+	err = json.Unmarshal(content, &t.Server.TSConfig)
+	log.Println("[info] TeamServer configuration file parsed successfully: ", t.Server.TSConfig)
+
 	return nil
 }
 
@@ -96,7 +79,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				return
 			}
 			go func() {
-				err = Common.AddListenerToSQLTable(client.Username, t.Server.FI.DataBasePath, client.UserID, ListenerData)
+				err = Common.AddListenerToSQLTable(client.Username, t.Server.TSConfig.DatabasePath, client.UserID, ListenerData)
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
@@ -113,8 +96,8 @@ func (t *TS) HandleRequest(ClientID string) {
 				TempListener.Listener.Active = true
 				TempListener.Listener.Config.Name = ListenerData.ListenerName
 				TempListener.Listener.HttpServer = &http.Server{Addr: ListenerData.HOST + ":" + strconv.Itoa(ListenerData.PortBind), Handler: TempListener.Listener.GinEngine}
-				TempListener.Listener.TS.Address = t.Server.Config.Address
-				TempListener.Listener.TS.Port = t.Server.Config.Port
+				TempListener.Listener.TS.Address = t.Server.TSConfig.Address
+				TempListener.Listener.TS.Port = t.Server.TSConfig.Port
 
 				//check if our listener is going to use secure comms.
 				if strings.Compare(strings.ToLower(ListenerData.Protocol), strings.ToLower("HTTPS")) == 0 {
@@ -125,8 +108,8 @@ func (t *TS) HandleRequest(ClientID string) {
 						log.Fatalln("[error] Failed generating cert / key pair", err)
 					}
 					//set the path for the cert / key.
-					TempListener.Listener.TLS.CertPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
-					TempListener.Listener.TLS.KeyPath = t.Server.FI.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
+					TempListener.Listener.TLS.CertPath = t.Server.TSConfig.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".cert"
+					TempListener.Listener.TLS.KeyPath = t.Server.TSConfig.ProjectDir + "\\ListeningServer\\Assets\\server_" + ListenerData.ListenerName + ".key"
 					TempListener.Listener.Config.Secure = true
 
 					ListeningServers = append(ListeningServers, TempListener) // add newest listener to our list of listening servers.
@@ -162,7 +145,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				return
 			}
 			go func() {
-				ListenerData, err = Common.RemoveListenerFromSQLTable(t.Server.FI.DataBasePath, ListenerData)
+				ListenerData, err = Common.RemoveListenerFromSQLTable(t.Server.TSConfig.DatabasePath, ListenerData)
 				if err != nil {
 					log.Println("[error] attempting to add listener to database", err)
 				}
@@ -193,7 +176,7 @@ func (t *TS) HandleRequest(ClientID string) {
 				log.Println("[error] attempting to unmarshal implant data", err)
 				return
 			}
-			err = Common.AddImplantToSqlTable(t.Server.FI.DataBasePath, client.UserID, ImplantData) // user id is an int because when you create a new user it's added to the database with a number attached. all user's will have a number therefore you can determine what listener's / implants are started by which user's based on their user id.
+			err = Common.AddImplantToSqlTable(t.Server.TSConfig.DatabasePath, client.UserID, ImplantData) // user id is an int because when you create a new user it's added to the database with a number attached. all user's will have a number therefore you can determine what listener's / implants are started by which user's based on their user id.
 			if err != nil {
 				log.Println("[error] attempting to add implant to database", err)
 				return
@@ -227,12 +210,12 @@ func (t *TS) Start() {
 	}
 	parts := strings.Split(currdir, "AllSecure")
 
-	err = t.ParseConfig(parts[0] + "AllSecure\\Config\\AllSecure.Config")
+	err = t.ParseConfig(parts[0] + "AllSecure\\Config\\")
 	if err != nil {
 		log.Fatalln("[error] reading the configuration file")
 	}
 
-	err = Crypt.GenerateRSAKeys(t.Server.FI.ProjectDir+"\\Config\\", "test_implant")
+	err = Crypt.GenerateRSAKeys(t.Server.TSConfig.ProjectDir+"\\Config\\", "test_implant")
 	if err != nil {
 		log.Println("[error] attempting to generate RSA keys", err)
 	}
@@ -249,7 +232,7 @@ func (t *TS) Start() {
 	go func() {
 		var list_data []Common.ListenerData
 
-		list_data, err = Common.GetListenerData(t.Server.FI.DataBasePath)
+		list_data, err = Common.GetListenerData(t.Server.TSConfig.DatabasePath)
 
 		err = t.StartListenersInDatabase(list_data)
 		if err != nil {
@@ -261,7 +244,7 @@ func (t *TS) Start() {
 		context.Redirect(http.StatusMovedPermanently, "home/")
 	})
 
-	t.Server.GinEngine.Static("/home", t.Server.FI.ProjectDir+"\\TeamServer\\Assets\\Index")
+	t.Server.GinEngine.Static("/home", t.Server.TSConfig.ProjectDir+"\\TeamServer\\Assets\\Index")
 
 	t.Server.GinEngine.POST("/:endpoint", func(ctx *gin.Context) {
 		var endpoint = ctx.Request.RequestURI[1:]
@@ -323,8 +306,8 @@ func (t *TS) Start() {
 
 	go func(Host, Port string) {
 		var (
-			CertPath = t.Server.FI.ProjectDir + "\\TeamServer" + "\\Assets\\server.cert"
-			KeyPath  = t.Server.FI.ProjectDir + "\\TeamServer" + "\\Assets\\server.key"
+			CertPath = t.Server.TSConfig.ProjectDir + "\\TeamServer" + "\\Assets\\server.cert"
+			KeyPath  = t.Server.TSConfig.ProjectDir + "\\TeamServer" + "\\Assets\\server.key"
 			Cert     []byte
 			Key      []byte
 		)
@@ -346,7 +329,7 @@ func (t *TS) Start() {
 			log.Fatalln("[error] Failed to save key path", err)
 		}
 
-		if err := t.Server.GinEngine.RunTLS(Host+Port, t.Server.TLS.CertPath, t.Server.TLS.KeyPath); err != nil {
+		if err := t.Server.GinEngine.RunTLS(Host+":"+Port, t.Server.TLS.CertPath, t.Server.TLS.KeyPath); err != nil {
 			log.Fatalln("[error] failed to start websocket: ", err)
 		}
 
@@ -354,7 +337,7 @@ func (t *TS) Start() {
 
 		os.Exit(0)
 
-	}(t.Server.Config.Address, t.Server.Config.Port)
+	}(t.Server.TSConfig.Address, t.Server.TSConfig.Port)
 
 	DefaultsAdded := <-DefaultEndPointsParsed
 	if DefaultsAdded == false {
