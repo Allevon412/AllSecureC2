@@ -25,9 +25,12 @@ type (
 		KillDate     int64
 		WorkingHours string
 		Method       string
-		Port         string
+		UserAgent    string
+		Headers      []string
+		HostHeader   string
 		Secure       bool
-		Address      string
+		HostRotation string
+		Hosts        []string
 	}
 
 	Client struct {
