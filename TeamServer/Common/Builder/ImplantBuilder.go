@@ -59,9 +59,7 @@ func NewImplantBuilder(path string) *AgentBuilder {
 	}
 	builder.CompilerOptions.IncludeDirs = []string{
 		"include",
-		"include/wolfssl/oppenssl",
-		"include/wolfssl/wolfcrypt",
-		"include/wolfssl/wolfssl",
+		"include/wolfssl",
 	}
 
 	/*
@@ -95,20 +93,19 @@ func NewImplantBuilder(path string) *AgentBuilder {
 
 	if builder.CompilerOptions.Config.DebugDev {
 		builder.CompilerOptions.CFlags = []string{
-			"",
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
-			"-Wl, --no-seh --enable-stdcall-fixup --gc-sections ",
+			"-Wl,--no-seh,--enable-stdcall-fixup,--gc-sections",
 		}
 	} else {
-		builder.CompilerOptions.CFlags = []string{"",
+		builder.CompilerOptions.CFlags = []string{
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-s -ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
-			"-Wl, -s, --no-seh --enable-stdcall-fixup --gc-sections ",
+			"-Wl,-s,--no-seh,--enable-stdcall-fixup,--gc-sections",
 		}
 	}
 
@@ -121,7 +118,7 @@ func NewImplantBuilder(path string) *AgentBuilder {
 
 func (ab *AgentBuilder) Build() bool {
 	var (
-		CompilerCommand string
+		CompilerCommand []string
 	)
 
 	ab.CompileDir = "C:\\Windows\\Temp\\" + Types.PayloadDir + "\\"
@@ -135,8 +132,12 @@ func (ab *AgentBuilder) Build() bool {
 		}
 	}
 
+	//TODO set filetype and extension to be dynamic from client input.
+	ab.FileType = Types.FILETYPE_WINDOWS_EXE
+	ab.FileExtenstion = "exe"
+
 	if ab.OutputPath == "" && ab.FileExtenstion != "" {
-		ab.SetOutputPath(ab.CompileDir + Types.PayloadName + ab.FileExtenstion)
+		ab.SetOutputPath(ab.CompileDir + Types.PayloadName + "." + ab.FileExtenstion)
 	}
 
 	Config, err := ab.PatchConfig()
@@ -150,7 +151,7 @@ func (ab *AgentBuilder) Build() bool {
 		if i == (len(Config) - 1) {
 			ConfigByteString += fmt.Sprintf("0x%02x", Config[i])
 		} else {
-			ConfigByteString += fmt.Sprintf("0x%02x`,", Config[i])
+			ConfigByteString += fmt.Sprintf("0x%02x\\,", Config[i])
 		}
 	}
 	ConfigByteString += "}"
@@ -164,7 +165,7 @@ func (ab *AgentBuilder) Build() bool {
 			return false
 		}
 		ab.CompilerOptions.Config.Compiler64 = abs
-		CompilerCommand += "\"" + ab.CompilerOptions.Config.Compiler64 + "\" "
+		//CompilerCommand += ab.CompilerOptions.Config.Compiler64 + " "
 	} else {
 		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler86)
 		if err != nil {
@@ -172,7 +173,7 @@ func (ab *AgentBuilder) Build() bool {
 			return false
 		}
 		ab.CompilerOptions.Config.Compiler86 = abs
-		CompilerCommand += "\"" + ab.CompilerOptions.Config.Compiler86 + "\" "
+		//CompilerCommand += ab.CompilerOptions.Config.Compiler86 + " "
 	}
 
 	//add sources
@@ -191,48 +192,50 @@ func (ab *AgentBuilder) Build() bool {
 					(strings.Contains(f.Name(), ".x86.") && ab.ImplantConfig.Arch == Types.ARCHITECTURE_X86) {
 					rand_name, _ := Crypt.GenerateRandomString(10)
 					AsmObj := ab.CompileDir + rand_name + ".o"
-					var AsmCompileStr string
+					var AsmCompileStr []string
 					if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
-						AsmCompileStr = fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj)
+						AsmCompileStr = append(AsmCompileStr, fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj))
 					} else {
-						AsmCompileStr = fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj)
+						AsmCompileStr = append(AsmCompileStr, fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj))
 					}
 					ab.FilesCreated = append(ab.FilesCreated, AsmObj)
 					ab.CompileCmd(AsmCompileStr)
-					CompilerCommand += AsmObj + " "
+					CompilerCommand = append(CompilerCommand, AsmObj)
 				}
 			} else if path.Ext(f.Name()) == ".c" {
-				CompilerCommand += FilePath + " "
+				CompilerCommand = append(CompilerCommand, FilePath)
 			}
 		}
 	}
 	// add all include files under include directories
 	for _, dir := range ab.CompilerOptions.IncludeDirs {
-		CompilerCommand += "-I" + dir + " "
+		CompilerCommand = append(CompilerCommand, "-I"+dir)
 	}
 
 	// add all compiler flags
-	CompilerCommand += strings.Join(ab.CompilerOptions.CFlags, " ")
+	for _, str := range ab.CompilerOptions.CFlags {
+		CompilerCommand = append(CompilerCommand, strings.Split(str, " ")...)
+	}
 
 	// add all definitions. Will compile with -D flag
 	// adds preprocessor declarations to the code so that certain code sections will run when
 	// the defines are set.
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, ab.GetListenerDefinitons()...)
 	for _, define := range ab.CompilerOptions.Defines {
-		CompilerCommand += "-D" + define + " "
+		CompilerCommand = append(CompilerCommand, "-D"+define)
 	}
 
 	switch ab.FileType { // will only by exe for now
 	case Types.FILETYPE_WINDOWS_EXE:
 		if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
-			CompilerCommand += "-D MAIN_THREADED -e main"
+			CompilerCommand = append(CompilerCommand, "-D MAIN_THREADED -e main")
 		} else {
-			CompilerCommand += "-D MAIN_THREADED -e _main"
+			CompilerCommand = append(CompilerCommand, "-D MAIN_THREADED -e _main")
 		}
-		CompilerCommand += ab.CompilerOptions.Main.Exe + " "
+		CompilerCommand = append(CompilerCommand, ab.CompilerOptions.Main.Exe)
 		break
 	}
-	CompilerCommand += "-o" + ab.OutputPath
+	CompilerCommand = append(CompilerCommand, "-o"+ab.OutputPath)
 
 	Success := ab.CompileCmd(CompilerCommand)
 	return Success
@@ -356,9 +359,9 @@ func (ab *AgentBuilder) SetOutputPath(path string) {
 	ab.OutputPath = path
 }
 
-func (ab *AgentBuilder) CompileCmd(cmd string) bool {
+func (ab *AgentBuilder) CompileCmd(cmd []string) bool {
 	var (
-		CommandLine = exec.Command("powershell.exe", "-c", cmd)
+		CommandLine = exec.Command("gcc")
 		stdout      bytes.Buffer
 		stderr      bytes.Buffer
 		err         error
@@ -367,10 +370,11 @@ func (ab *AgentBuilder) CompileCmd(cmd string) bool {
 	CommandLine.Dir = ab.SourcePath
 	CommandLine.Stdout = &stdout
 	CommandLine.Stderr = &stderr
+	CommandLine.Args = append(CommandLine.Args, cmd...)
 
 	//TODO remove debug output
-	log.Println("[info] compiling agent with command: ", cmd)
-	log.Println("[info] compiling agent in directory: ", ab.SourcePath)
+	log.Println("[info] compiling agent with command: ", CommandLine.Args)
+	log.Println("[info] compiling agent with working directory: ", ab.SourcePath)
 
 	err = CommandLine.Run()
 	if err != nil {

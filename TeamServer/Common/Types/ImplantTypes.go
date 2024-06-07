@@ -104,7 +104,7 @@ type AgentBuilder struct {
 		Defines     []string
 
 		Main struct {
-			Demon string
+			Agent string
 			Dll   string
 			Exe   string
 			Svc   string
