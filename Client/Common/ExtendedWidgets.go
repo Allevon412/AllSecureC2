@@ -36,9 +36,9 @@ func (ce *CustomChatEntry) TypedKey(key *fyne.KeyEvent) {
 	ce.Entry.TypedKey(key)
 }
 
-func NewCustomCredentialEntry(SubmitFunc func()) *CustomCredentialsEntry {
+func NewCustomCredentialEntry(SubmitFunc func()) *CustomEntry {
 
-	entry := &CustomCredentialsEntry{widget.Entry{
+	entry := &CustomEntry{widget.Entry{
 		DisableableWidget: widget.DisableableWidget{},
 		Text:              "",
 		TextStyle:         fyne.TextStyle{},
@@ -60,7 +60,7 @@ func NewCustomCredentialEntry(SubmitFunc func()) *CustomCredentialsEntry {
 	return entry
 }
 
-func (cce *CustomCredentialsEntry) TypedKey(key *fyne.KeyEvent) {
+func (cce *CustomEntry) TypedKey(key *fyne.KeyEvent) {
 	if key.Name == fyne.KeyEnter || key.Name == fyne.KeyReturn {
 		cce.FormSubmitFunc()
 	}

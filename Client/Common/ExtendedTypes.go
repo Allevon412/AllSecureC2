@@ -12,7 +12,7 @@ type (
 		FormSubmitFunc func(CurrentText string)
 	}
 
-	CustomCredentialsEntry struct {
+	CustomEntry struct {
 		widget.Entry
 		FormSubmitFunc func()
 	}

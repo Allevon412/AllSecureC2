@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
 	var (
 		Jdata        []byte
 		err          error
@@ -60,7 +60,7 @@ func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *C
 	return
 }
 
-func StopListenerSubmitFunc(ListNameEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func StopListenerSubmitFunc(ListNameEntry *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
 	// close the stop listener form window.
 	defer NewWindow.Close()
 
@@ -112,7 +112,7 @@ func CreateListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 	NewWindow := OldWindow.NewWindow("Create Listener Form")
 
 	var (
-		ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomCredentialsEntry
+		ListNameEntry, ListProtocol, ListHost, ListPort *Common.CustomEntry
 	)
 	ListNameEntry = Common.NewCustomCredentialEntry(func() {
 		CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort, clientobj, NewWindow)
@@ -170,7 +170,7 @@ func StopListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 	NewWindow := OldWindow.NewWindow("Stop Listener Form")
 
 	var (
-		ListNameEntry *Common.CustomCredentialsEntry
+		ListNameEntry *Common.CustomEntry
 	)
 
 	ListNameEntry = Common.NewCustomCredentialEntry(func() { StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow) })

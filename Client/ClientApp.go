@@ -25,7 +25,7 @@ type ClientConfig struct {
 }
 
 var (
-	CustomUsernameEntry, CustomPasswordEntry, CustomServerFieldEntry *Common.CustomCredentialsEntry
+	CustomUsernameEntry, CustomPasswordEntry, CustomServerFieldEntry *Common.CustomEntry
 	FailedAuthField                                                  *widget.Label
 	myApp                                                            fyne.App
 	myWindow                                                         fyne.Window

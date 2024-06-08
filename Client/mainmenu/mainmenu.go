@@ -36,7 +36,7 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 			fyne.NewMenuItem("Logging", func() { AddTab(tabs, widget.NewLabel("Logging Test"), "Logs") }),
 		),
 		fyne.NewMenu("Payload Builder",
-			fyne.NewMenuItem("Build Payload", testfunc),
+			fyne.NewMenuItem("Build Payload", func() { ImplantBuilderForm(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("Help",
 			fyne.NewMenuItem("Github", testfunc),

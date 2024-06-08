@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
 	var (
 		data      []byte
 		admin     bool
@@ -64,7 +64,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	NewWindow := OldWindow.NewWindow("Add User Form")
 
 	var (
-		UsernameEntry, AdminEntry, PasswordEntry *Common.CustomCredentialsEntry
+		UsernameEntry, AdminEntry, PasswordEntry *Common.CustomEntry
 	)
 	UsernameEntry = Common.NewCustomCredentialEntry(func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) })
 	PasswordEntry = Common.NewCustomCredentialEntry(func() { AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry, clientobj, NewWindow) })
@@ -105,7 +105,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 
-func RemoveUserSubmitFunc(UsernameEntry *Common.CustomCredentialsEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
 	var (
 		data  []byte
 		err   error
@@ -145,7 +145,7 @@ func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	NewWindow := OldWindow.NewWindow("Remove User Form")
 
 	var (
-		UsernameEntry *Common.CustomCredentialsEntry
+		UsernameEntry *Common.CustomEntry
 	)
 
 	UsernameEntry = Common.NewCustomCredentialEntry(func() { RemoveUserSubmitFunc(UsernameEntry, clientobj, NewWindow) })
