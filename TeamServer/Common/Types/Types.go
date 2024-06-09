@@ -39,14 +39,12 @@ type (
 
 	ListenerConfig struct {
 		Name         string   `json:"Name"`
-		KillDate     int64    `json:"KillDate"`
-		WorkingHours string   `json:"WorkingHours"`
+		ListenerType int      `json:"ListenerType"`
 		Method       string   `json:"Method"`
 		UserAgent    string   `json:"UserAgent"`
-		Headers      []string `json:"Headers"`
+		Headers      string   `json:"Headers"`
 		HostHeader   string   `json:"HostHeader"`
 		Secure       bool     `json:"Secure"`
-		HostRotation string   `json:"HostRotation"`
 		Hosts        []string `json:"Hosts"`
 	}
 

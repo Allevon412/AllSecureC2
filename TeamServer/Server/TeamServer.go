@@ -2,13 +2,11 @@ package Server
 
 import (
 	"AllSecure/ListeningServer"
-	"AllSecure/TeamServer/Common/Builder"
 	"AllSecure/TeamServer/Common/SQL"
 	"AllSecure/TeamServer/Common/Types"
 	"AllSecure/TeamServer/Common/Utility"
 	"AllSecure/TeamServer/Crypt"
 	"encoding/json"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
@@ -219,12 +217,6 @@ func (t *TS) Start() {
 	//set web server  handler for team server.
 	t.Server.GinEngine = gin.Default()
 
-	//testing function for generating payloads.
-	//TODO: remove later once more logic has been built between client/server
-	err = t.GeneratePayload()
-	if err != nil {
-		log.Fatalln("[error] attempting to generate payload", err)
-	}
 	//add default endpoints in separate routine.
 	go func() {
 		result := t.AddDefaultEndPoints()
@@ -372,13 +364,4 @@ func (t *TS) RemoveEndPoint(endpoint string) bool {
 	}
 
 	return true
-}
-
-func (t *TS) GeneratePayload() error {
-	AgentBuilder := Builder.NewImplantBuilder(t.Server.TSConfig.ProjectDir)
-	success := AgentBuilder.Build()
-	if !success {
-		return errors.New("[error] failed to build the implant")
-	}
-	return nil
 }

@@ -50,7 +50,7 @@ func PerformHTTPReq(clientobj *Client, endpoint string, body []byte) ([]byte, er
 	defer resp.Body.Close()
 	status := resp.StatusCode
 	if status != http.StatusOK {
-		log.Println("[error] in attempting to get user data. status: ", status)
+		log.Println("[error] in attempting to perform request. status: ", status)
 		return nil, errors.New("invalid status code")
 	}
 

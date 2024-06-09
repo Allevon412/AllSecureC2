@@ -52,11 +52,16 @@ type BuilderConfig struct {
 	SendLogs   bool
 }
 type ImplantConfig struct {
-	Arch           int            `json:"Arch"`
-	ListenerType   int            `json:"ListenerType"`
-	ListenerConfig ListenerConfig `json:"ListenerConfig"`
-	Sleep          string         `json:"Sleep"`
-	Jitter         string         `json:"Jitter"`
+	Arch                 int            `json:"Arch"`
+	KillDate             int64          `json:"KillDate"`
+	WorkingHours         string         `json:"WorkingHours"`
+	HostRotation         string         `json:"HostRotation"`
+	ListenerConfig       ListenerConfig `json:"ListenerConfig"`
+	InjectionType        string         `json:"InjectionType"`
+	MemoryEncryptionType string         `json:"MemoryEncryptionType"`
+	Format               string         `json:"Format"`
+	Sleep                int            `json:"Sleep"`
+	Jitter               int            `json:"Jitter"`
 }
 
 type AgentBuilder struct {

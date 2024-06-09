@@ -1,6 +1,19 @@
 package EndPoints
 
-// TODO Create 'CreateImplant' endpoint
-func CreateImplant() {
+import (
+	"AllSecure/TeamServer/Common/Builder"
+	"AllSecure/TeamServer/Common/Types"
+	"errors"
+)
 
+// TODO Create 'CreateImplant' endpoint
+func CreateImplant(ImplantData *Types.ImplantConfig, ProjectDir string) error {
+
+	builder := Builder.NewImplantBuilder(ImplantData, ProjectDir)
+	success := builder.Build()
+	if !success {
+		return errors.New("failed to build implant")
+	}
+	
+	return nil
 }

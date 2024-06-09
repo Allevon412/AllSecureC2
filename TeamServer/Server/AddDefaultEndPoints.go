@@ -233,10 +233,18 @@ func (t *TS) AddGetActiveListenersEndPoint() bool {
 
 func (t *TS) CreateImplant(ctx *gin.Context) {
 	var (
-		claims *Types.JWTClaims
-		token  string
-		err    error
+		ImplantConfig *Types.ImplantConfig
+		claims        *Types.JWTClaims
+		data          []byte
+		token         string
+		err           error
 	)
+	_, err = ctx.Request.Body.Read(data)
+	if err != nil {
+		log.Println("[error] attempting to read post body.", err)
+	}
+
+	log.Println("Create Implant Request Coming in: ", string(data))
 
 	token = ctx.GetHeader("Authorization")
 	if token == "" {
@@ -253,8 +261,19 @@ func (t *TS) CreateImplant(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Parameters"})
 		return
 	}
-
-	EndPoints.CreateImplant()
+	ImplantConfig = &Types.ImplantConfig{}
+	err = ctx.BindJSON(ImplantConfig)
+	if err != nil {
+		log.Println("[error] attempting to bind implant data", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
+		return
+	}
+	go func() {
+		err = EndPoints.CreateImplant(ImplantConfig, t.Server.TSConfig.ProjectDir)
+		if err != nil {
+			log.Println("[error] attempting to create implant", err)
+		}
+	}()
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Implant Created"})
 	return
@@ -276,5 +295,6 @@ func (t *TS) AddDefaultEndPoints() bool {
 	t.AddAddNewUserEndPoint()
 	t.AddDeleteUserEndPoint()
 	t.AddGetActiveListenersEndPoint()
+	t.AddCreateImplantEndPoint()
 	return true
 }
