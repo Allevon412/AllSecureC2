@@ -6,7 +6,6 @@ import (
 	"errors"
 )
 
-// TODO Create 'CreateImplant' endpoint
 func CreateImplant(ImplantData *Types.ImplantConfig, ProjectDir string) error {
 
 	builder := Builder.NewImplantBuilder(ImplantData, ProjectDir)
@@ -14,6 +13,6 @@ func CreateImplant(ImplantData *Types.ImplantConfig, ProjectDir string) error {
 	if !success {
 		return errors.New("failed to build implant")
 	}
-	
+
 	return nil
 }

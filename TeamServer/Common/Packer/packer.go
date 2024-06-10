@@ -82,7 +82,7 @@ func (p *Packer) AddWString(data string) {
 
 func (p *Packer) AddBytes(data []byte) {
 	var buffer = make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer, uint32(len(data))) // add size of data as prefix to buffer size.
+	binary.LittleEndian.PutUint32(buffer, uint32(len(data))) // add size of data as prefix to buffer.
 	p.data = append(p.data, buffer...)
 	p.data = append(p.data, data...)
 	p.size += 4

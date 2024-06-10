@@ -33,6 +33,7 @@ type (
 
 	ImplantConfig struct {
 		Arch                 int            `json:"Arch"`
+		Name                 string         `json:"Name"`
 		KillDate             int64          `json:"KillDate"`
 		WorkingHours         string         `json:"WorkingHours"`
 		HostRotation         string         `json:"HostRotation"`

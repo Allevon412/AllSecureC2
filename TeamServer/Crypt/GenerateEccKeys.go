@@ -12,6 +12,7 @@ import (
 	"os"
 )
 
+// TODO unused file remove later.
 func GenerateECCKeys() (*ecdsa.PrivateKey, error) {
 	// Generate a private key
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)

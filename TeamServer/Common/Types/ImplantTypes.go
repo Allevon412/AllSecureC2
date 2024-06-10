@@ -53,6 +53,7 @@ type BuilderConfig struct {
 }
 type ImplantConfig struct {
 	Arch                 int            `json:"Arch"`
+	Name                 string         `json:"Name"`
 	KillDate             int64          `json:"KillDate"`
 	WorkingHours         string         `json:"WorkingHours"`
 	HostRotation         string         `json:"HostRotation"`
@@ -67,6 +68,7 @@ type ImplantConfig struct {
 type AgentBuilder struct {
 	BuildSource bool
 	SourcePath  string
+	RSAKeyPath  string
 	Silent      bool
 
 	Payloads []string

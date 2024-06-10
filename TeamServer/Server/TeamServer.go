@@ -209,11 +209,7 @@ func (t *TS) Start() {
 	} else {
 		log.Fatalln("[error] type assertion failed")
 	}
-	//generate encryption keys for team server.
-	err = Crypt.GenerateRSAKeys(t.Server.TSConfig.ProjectDir+"\\Config\\", "test_implant")
-	if err != nil {
-		log.Println("[error] attempting to generate RSA keys", err)
-	}
+
 	//set web server  handler for team server.
 	t.Server.GinEngine = gin.Default()
 

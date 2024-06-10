@@ -47,7 +47,8 @@ func CreateImplantFunc(ImplantName, WorkingHours *Common.CustomEntry, KillDate t
 		}
 	}
 
-	ImplantData.ListenerConfig.Name = ImplantName.Text
+	ImplantData.Name = ImplantName.Text
+	ImplantData.ListenerConfig.Name = Listener.Selected[0]
 	ImplantData.WorkingHours = WorkingHours.Text
 	ImplantData.KillDate = KillDate.Unix()
 	ImplantData.ListenerConfig.Headers = CustomHeaders

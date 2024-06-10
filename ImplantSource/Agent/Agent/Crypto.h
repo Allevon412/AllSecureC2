@@ -4,4 +4,4 @@
 #include "agent.h"
 
 
-INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, pAgent pAgent);
+INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV);

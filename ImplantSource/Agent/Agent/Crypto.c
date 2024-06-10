@@ -1,11 +1,11 @@
 #include "Crypto.h"
 
 //TODO rewrite this to use AES encryption mechanism from maldev academy.
-INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, pAgent pAgent) {
+INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV) {
 	Aes aes;
 	int err;
 
-	if ((err = wc_AesSetKey(&aes, pAgent->AESKey, pAgent->AESKeySize, pAgent->IV, AES_ENCRYPTION)) != 0) {
+	if ((err = wc_AesSetKey(&aes, AESKey, AesKeySize, IV, AES_ENCRYPTION)) != 0) {
 		printf("[error] attempting to initialize AES context\n");
 		return err;
 	}
