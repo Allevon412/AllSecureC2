@@ -158,3 +158,4 @@ VOID ParserFree(PPARSER parser) {
 		parser->Buffer = NULL;
 	}
 }
+

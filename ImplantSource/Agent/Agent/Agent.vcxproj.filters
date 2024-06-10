@@ -183,6 +183,9 @@
     <ClCompile Include="parser.c">
       <Filter>Source Files\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="ListManager.c">
+      <Filter>Source Files\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agent.h">
@@ -318,6 +321,9 @@
       <Filter>Header Files\Enumeration</Filter>
     </ClInclude>
     <ClInclude Include="parser.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ListManager.h">
       <Filter>Header Files\Helpers</Filter>
     </ClInclude>
   </ItemGroup>

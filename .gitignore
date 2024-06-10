@@ -1,2 +1,2 @@
 #ignore all files in the copilt_chat directory
-**/copilot_chat/
+.\ImplantSource\Agent\.vs\Agent\copilot-chat\

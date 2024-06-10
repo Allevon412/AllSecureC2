@@ -116,6 +116,18 @@ typedef NTSTATUS(NTAPI* t_NtQueryInformationToken)(
 	PULONG ReturnLength
 );
 
+typedef NTSTATUS(NTAPI* t_RtlAllocateHeap) (
+	PVOID  HeapHandle,
+	ULONG  Flags,
+	SIZE_T Size
+);
+typedef NTSTATUS(NTAPI* t_RtlReAllocateHeap) (
+	IN PVOID                HeapHandle,
+	IN ULONG                Flags,
+	IN PVOID                MemoryPointer,
+	IN ULONG                Size
+);
+
 //IPhlpapi APIS
 typedef DWORD(WINAPI* t_GetAdaptersInfo)(
 	PIP_ADAPTER_INFO pAdapterInfo,
@@ -331,7 +343,7 @@ typedef struct _PEB64
 		};
 	};
 	ULONG NtGlobalFlag2;                                                    //0x7c4
-} _INT_PEB, * P_INT_PEB;
+} _INT_PEB, *P_INT_PEB;
 #else
 //0x480 bytes (sizeof)
 typedef struct _PEB32
@@ -520,7 +532,11 @@ typedef struct _INT_TEB
 	struct _INT_CLIENT_ID ClientId;                                             //0x40
 	VOID* ActiveRpcHandle;                                                  //0x50
 	VOID* ThreadLocalStoragePointer;                                        //0x58
-	struct _PEB* ProcessEnvironmentBlock;                                   //0x60
+#ifndef _WIN64
+	struct PPEB ProcessEnvironmentBlock;                                   //0x60
+#else
+	P_INT_PEB ProcessEnvironmentBlock;
+#endif
 	ULONG LastErrorValue;                                                   //0x68
 	ULONG CountOfOwnedCriticalSections;                                     //0x6c
 	VOID* CsrClientThread;                                                  //0x70
@@ -698,3 +714,6 @@ typedef struct _INT_INITIAL_TEB {
 	PVOID                StackCommitMax;
 	PVOID                StackReserved;
 } _INT_INITIAL_TEB, * P_INT_INITIAL_TEB;
+
+
+#define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap

@@ -143,6 +143,7 @@
     <ClCompile Include="Crypto.c" />
     <ClCompile Include="enum.c" />
     <ClCompile Include="init.c" />
+    <ClCompile Include="ListManager.c" />
     <ClCompile Include="localcstd.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="package.c" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="agent.h" />
     <ClInclude Include="Http.h" />
+    <ClInclude Include="ListManager.h" />
     <ClInclude Include="localcstd.h" />
     <ClInclude Include="package.h" />
     <ClInclude Include="parser.h" />

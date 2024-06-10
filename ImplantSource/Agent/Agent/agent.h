@@ -28,9 +28,16 @@ typedef struct _ContextInfo {
 	BOOL Elevated;
 } ContextInfo, *PContextInfo ;
 
+typedef struct _HostData {
+	LPWSTR Host;
+	INT Port;
+	BOOL Alive;
+	struct _HostData* Next;
+} HostData, * pHostData;
+
 typedef struct _ListenerConfig {
 	DWORD HostRotation;
-	PWCHAR Hosts;
+	pHostData Hosts;
 	DWORD Port;
 	BOOL Secure;
 	PWCHAR Method;
@@ -61,6 +68,8 @@ typedef struct _Agent {
 	t_NtOpenProcessToken pNtOpenProcessToken;
 	t_NtOpenThreadToken pNtOpenThreadToken;
 	t_NtQueryInformationToken pNtQueryInformationToken;
+	t_RtlAllocateHeap pRtlAllocateHeap;
+	t_RtlReAllocateHeap pRtlReAllocateHeap;
 
 	
 	//KERNEL32 APIS
@@ -135,3 +144,4 @@ INT init_agent(pAgent agent);
 INT RegisterAgent(pAgent agent);
 BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength);
 void AgentMain();
+INT ParseConfig(pAgent agent);
