@@ -18,3 +18,14 @@ INT AESEncrypt(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize
 
 	return 0;
 }
+
+ULONG GenerateRandomNumber(pAgent agent) {
+	ULONG Seed = 0;
+	Seed = agent->pNtGetTickCount();
+	Seed = agent->pRtlRandomEx(&Seed);
+	Seed = agent->pRtlRandomEx(&Seed);
+
+	Seed = (Seed % (LONG_MAX - 2 + 1)) + 2;
+
+	return Seed % 2 == 0 ? Seed : Seed + 1;
+}

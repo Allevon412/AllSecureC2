@@ -38,10 +38,13 @@ typedef struct _HostData {
 typedef struct _ListenerConfig {
 	DWORD HostRotation;
 	pHostData Hosts;
+	pHostData CurrentHost;
+	UINT NumHosts;
 	DWORD Port;
 	BOOL Secure;
-	PWCHAR Method;
-	PWCHAR Headers[];
+	LPWSTR Method;
+	LPWSTR* Headers;
+	LPWSTR UserAgent;
 
 } ListenerConfig, *PListenerConfig;
 
@@ -70,6 +73,8 @@ typedef struct _Agent {
 	t_NtQueryInformationToken pNtQueryInformationToken;
 	t_RtlAllocateHeap pRtlAllocateHeap;
 	t_RtlReAllocateHeap pRtlReAllocateHeap;
+	t_RtlRandomEx pRtlRandomEx;
+	t_NtGetTickCount pNtGetTickCount;
 
 	
 	//KERNEL32 APIS

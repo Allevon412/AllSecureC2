@@ -116,7 +116,7 @@ typedef NTSTATUS(NTAPI* t_NtQueryInformationToken)(
 	PULONG ReturnLength
 );
 
-typedef NTSTATUS(NTAPI* t_RtlAllocateHeap) (
+typedef PVOID(NTAPI* t_RtlAllocateHeap) (
 	PVOID  HeapHandle,
 	ULONG  Flags,
 	SIZE_T Size
@@ -127,6 +127,14 @@ typedef NTSTATUS(NTAPI* t_RtlReAllocateHeap) (
 	IN PVOID                MemoryPointer,
 	IN ULONG                Size
 );
+
+typedef NTSTATUS(NTAPI* t_RtlRandomEx)(
+	PULONG Seed
+);
+
+typedef NTSTATUS(NTAPI* t_NtGetTickCount)(
+	);
+
 
 //IPhlpapi APIS
 typedef DWORD(WINAPI* t_GetAdaptersInfo)(
@@ -717,3 +725,6 @@ typedef struct _INT_INITIAL_TEB {
 
 
 #define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap
+
+#define HOST_ROTATION_ROUND_ROBIN 0
+#define HOST_ROTATION_RANDOM 1

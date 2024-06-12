@@ -5,7 +5,7 @@ pHostData AddHost(pAgent agent, LPWSTR host, SIZE_T size, INT port) {
 	pHostData data = NULL;
 	
 	//generate memory to store our agent data in the heap.
-	data = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, size);
+	data = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, sizeof(HostData));
 	data->Host = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, size + sizeof(WCHAR));
 
 	//store port
@@ -19,3 +19,40 @@ pHostData AddHost(pAgent agent, LPWSTR host, SIZE_T size, INT port) {
 	agent->config->listenerConfig.Hosts = data;
 	return data;
 }
+
+pHostData SelectHost(pAgent agent, DWORD HostRotation) {
+	pHostData data = agent->config->listenerConfig.Hosts;
+	DWORD i = 0;
+	//if we have no hosts return null.
+	if (agent->config->listenerConfig.NumHosts == 0) {
+		return NULL;
+	}
+	//if we have only one host return that host.
+	if (agent->config->listenerConfig.NumHosts == 1) {
+		return data;
+	}
+	switch (HostRotation) {
+	case HOST_ROTATION_RANDOM:
+		i = GenerateRandomNumber(agent) % agent->config->listenerConfig.NumHosts;
+		while (data != NULL && i > 0) {
+			data = data->Next;
+			i--;
+		}
+		agent->config->listenerConfig.CurrentHost = data;
+		break;
+	case HOST_ROTATION_ROUND_ROBIN:
+		if (agent->config->listenerConfig.Hosts->Alive) {
+			agent->config->listenerConfig.CurrentHost = agent->config->listenerConfig.Hosts;
+		}
+		else {
+			data = agent->config->listenerConfig.Hosts;
+			while (data != NULL && !data->Alive) {
+				data = data->Next;
+			}
+			agent->config->listenerConfig.CurrentHost = data;
+		}
+		break;
+	}
+	return data;
+}
+
