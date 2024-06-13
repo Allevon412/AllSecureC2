@@ -3,5 +3,5 @@
 
 
 
-HANDLE PerformRequest(pAgent agent, LPCWSTR UserAgent, LPCWSTR HttpEndpoint, LPCWSTR pswzServerName, LPVOID DataBuff, DWORD dwDataLen, LPCWSTR pswzRequestHeaders);
+HANDLE PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength);
 BOOL GetCommand();
