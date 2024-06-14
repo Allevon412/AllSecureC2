@@ -15,10 +15,11 @@ VOID NewParser(PPARSER parser, PBYTE Buffer, UINT32 size) {
 }
 
 VOID ParserDecrypt(PPARSER parser, PBYTE Key, PBYTE Iv) {
+	BOOL Encrypt = FALSE;
 	if (parser == NULL) {
 		return;
 	}
-	AESEncrypt(parser->Buffer, parser->Length, Key, AES_256_KEY_SIZE, Iv);
+	AESCTR(parser->Buffer, parser->Length, Key, AES_256_KEY_SIZE, Iv, Encrypt);
 
 }
 

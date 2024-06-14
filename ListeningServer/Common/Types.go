@@ -53,11 +53,13 @@ type (
 	}
 
 	Package struct {
-		Size      uint32
-		MagicVal  []byte
-		AgentID   []byte
-		CmdID     []byte
-		RequestID []byte
+		Size          uint32
+		MagicVal      []byte
+		AgentID       []byte
+		CmdID         []byte
+		RequestID     []byte
+		AgentNameSize uint32
+		AgentName     string
 
 		//MetaData
 		EncryptedKeyIvSize uint32
@@ -128,11 +130,10 @@ Taken from havoc as a basic model.
 	        [ Agent ID     ] 4 bytes
 	        [ COMMAND ID   ] 4 bytes
 	        [ Request ID   ] 4 bytes
+			[ Agent Name   ] size + bytes
 
 	     Encrypted Using RSA MetaData:
-	        [ Encrypted AES KEY Len ] 4 bytes - not encrypted
 	        [ Encrypted AES KEY ] ? bytes - calculated at runtime
-	        [ Encrypted AES IV Len ] 4 bytes - not encrypted
 	        [ Encrypted AES IV  ] ? bytes - calculated at runtime
 			[ size of encrypted payload ] 4 bytes - not encrypted
 
@@ -179,13 +180,17 @@ func (p *Package) UnmarshalBinary(data []byte) error {
 	p.AgentID = data[8:12]
 	p.CmdID = data[12:16]
 	p.RequestID = data[16:20]
+	p.AgentNameSize = binary.BigEndian.Uint32(data[20:24])
+	p.AgentName = string(data[24 : 24+p.AgentNameSize])
+
+	var baseindex = 24 + p.AgentNameSize
 
 	//MetaData
 	p.EncryptedKeyIvSize = 0x100
-	p.EncryptedAESKey = data[20 : 20+p.EncryptedKeyIvSize]
-	p.EncryptedIV = data[20+p.EncryptedKeyIvSize : 20+(p.EncryptedKeyIvSize*2)]
-	p.EncryptedDataSize = p.Size - (20 + p.EncryptedKeyIvSize*2)
-	p.EncryptedData = data[20+(p.EncryptedKeyIvSize*2) : +20+(p.EncryptedKeyIvSize*2)+p.EncryptedDataSize]
+	p.EncryptedAESKey = data[baseindex : baseindex+p.EncryptedKeyIvSize]
+	p.EncryptedIV = data[baseindex+p.EncryptedKeyIvSize : baseindex+(p.EncryptedKeyIvSize*2)]
+	p.EncryptedDataSize = p.Size - (baseindex + p.EncryptedKeyIvSize*2)
+	p.EncryptedData = data[baseindex+(p.EncryptedKeyIvSize*2) : baseindex+(p.EncryptedKeyIvSize*2)+p.EncryptedDataSize]
 
 	return nil
 }

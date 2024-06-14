@@ -4,7 +4,6 @@ import (
 	"AllSecure/ListeningServer/Common"
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"log"
 )
 
@@ -15,12 +14,12 @@ func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, err
 		DecryptedIV     []byte
 	)
 
-	DecryptedAESKey, err = DecryptKeyIV(DataPackage.EncryptedAESKey, filepath)
+	DecryptedAESKey, err = DecryptKeyIV(DataPackage.EncryptedAESKey, filepath, DataPackage.AgentName)
 	if err != nil {
 		return []byte{}, err
 	}
 
-	DecryptedIV, err = DecryptKeyIV(DataPackage.EncryptedIV, filepath)
+	DecryptedIV, err = DecryptKeyIV(DataPackage.EncryptedIV, filepath, DataPackage.AgentName)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -36,32 +35,4 @@ func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, err
 
 	return plaintext, nil
 
-}
-
-func AESCTREncrypt(Plaintext []byte) ([]byte, []byte, []byte, error) {
-	key := make([]byte, 32)
-	iv := make([]byte, 16)
-
-	_, err := rand.Read(key)
-	if err != nil {
-		log.Println("[error] attempting to generate random key", err)
-		return []byte{}, []byte{}, []byte{}, err
-	}
-	_, err = rand.Read(iv)
-	if err != nil {
-		log.Println("[error] attempting to generate random iv", err)
-		return []byte{}, []byte{}, []byte{}, err
-	}
-
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		log.Println("[error] attempting to create new aes block", err)
-		return []byte{}, []byte{}, []byte{}, err
-	}
-
-	stream := cipher.NewCTR(block, iv)
-	encryptedData := make([]byte, len(Plaintext))
-	stream.XORKeyStream(encryptedData, Plaintext)
-
-	return encryptedData, key, iv, nil
 }

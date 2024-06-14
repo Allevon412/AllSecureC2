@@ -85,10 +85,15 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 			C:\Strawberry\c\bin\x86_64-w64-mingw32-gcc.exe //x64
 
 	*/
+	//TODO remove the debug flag setting here.
+	if !builder.CompilerOptions.Config.DebugDev {
+		builder.CompilerOptions.Config.DebugDev = true
+	}
 
 	if builder.CompilerOptions.Config.DebugDev {
 		builder.CompilerOptions.CFlags = []string{
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
+			"-gcodeview",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
@@ -294,6 +299,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 
 	AgentConfig.AddInt(ab.ImplantConfig.Sleep)
 	AgentConfig.AddInt(ab.ImplantConfig.Jitter)
+	AgentConfig.AddString(ab.ImplantConfig.Name)
 
 	switch ab.ImplantConfig.ListenerConfig.ListenerType {
 	case Types.HTTP_SERVER:

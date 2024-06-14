@@ -48,7 +48,7 @@ INT RegisterAgent(pAgent agent) {
     INT err;
     pPackage pPack;
 
-    if ((pPack = CreatePackageWithMetaData(INITIALIZE_AGENT, &agent)) == NULL) {
+    if ((pPack = CreatePackageWithMetaData(INITIALIZE_AGENT, agent)) == NULL) {
         printf("[error] attempting to create package\n");
         return -1;
     }
@@ -177,7 +177,6 @@ INT RegisterAgent(pAgent agent) {
         printf("[error] attempting to add os arch to package\n");
         return -1;
     }
-    //add IP address data to package.
 
     PackageSendMetaDataPackage(agent->packages, NULL, NULL, agent);
 

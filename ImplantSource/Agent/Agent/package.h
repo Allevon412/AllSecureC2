@@ -29,14 +29,12 @@ Taken from havoc as a basic model.
      Unencrypted Header (if specified):
         [ SIZE         ] 4 bytes
         [ Magic Value  ] 4 bytes
-        [ Agent ID     ] 4 bytes
+        [ Agent Name   ] size + bytes
         [ COMMAND ID   ] 4 bytes
         [ Request ID   ] 4 bytes
 
      Encrypted Using RSA MetaData:
-        [ Encrypted AES KEY Len ] 4 bytes
         [ Encrypted AES KEY ] ? bytes - calculated at runtime
-        [ Encrypted AES IV Len ] 4 bytes
         [ Encrypted AES IV  ] ? bytes - calculated at runtime
         
      Encrypted MetaData:
