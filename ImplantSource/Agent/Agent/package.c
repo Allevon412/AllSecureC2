@@ -317,7 +317,7 @@ LPSTR PackageErrorToString(INT error) {
 }
 
 INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent Agent) {
-
+	BOOL Success;
 	if (!pack)
 		return PACKAGE_DOES_NOT_EXIST;
 
@@ -341,7 +341,9 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 	}
 
 	//TODO perform sending of package.
-	SendRegisterRequest(Agent, Agent->packages->Buffer, Agent->packages->Length);
+	if (!(Success = SendRegisterRequest(Agent, Agent->packages->Buffer, Agent->packages->Length))) {
+		return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER;
+	}
 
 	return PACKAGE_SUCCESS;
 } 

