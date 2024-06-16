@@ -3,4 +3,4 @@
 
 
 
-INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength);
+INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer OutBuffer);

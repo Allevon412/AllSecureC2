@@ -1,6 +1,6 @@
 #include "Http.h"
 
-INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength) {
+INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
 	HANDLE hConnect;
 	HANDLE hRequest;
 	

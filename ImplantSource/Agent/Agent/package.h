@@ -1,6 +1,6 @@
 #pragma once
 #include "Crypto.h"
-#include "agent.h"
+#include "Http.h"
 
 
 #define PACKAGE_HEADER_LENGTH 20
@@ -70,6 +70,7 @@ typedef struct _Package {
     SIZE_T  Length;
     BOOL    Encrypt;
     BOOL    Destroy; /* destroy this package after Transmit */
+	BOOL    Sent;
 
     struct  _PACKAGE* Next;
 
@@ -97,6 +98,7 @@ INT DestroyPackage(pPackage pack, pAgent agent);
 
 //send packages
 INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent agent);
+BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size);
 
 //utility.
 LPSTR PackageErrorToString(INT error);

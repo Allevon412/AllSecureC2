@@ -4,5 +4,5 @@
 #include "agent.h"
 
 
-INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV, BOOL Encrypt);
+INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV);
 ULONG GenerateRandomNumber(pAgent agent);

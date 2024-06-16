@@ -723,6 +723,11 @@ typedef struct _INT_INITIAL_TEB {
 	PVOID                StackReserved;
 } _INT_INITIAL_TEB, * P_INT_INITIAL_TEB;
 
+typedef struct _DataBuffer {
+	BYTE* Buffer;
+	ULONG BufferLength;
+} DataBuffer, * pDataBuffer;
+
 
 #define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap
 

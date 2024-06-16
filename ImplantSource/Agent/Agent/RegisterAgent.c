@@ -189,7 +189,7 @@ INT RegisterAgent(pAgent agent) {
 
 BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength) {
 
-    if ((PerformRequest(agent, Buffer, BufferLength)) == 0) {
+    if ((PerformRequest(agent, Buffer, BufferLength, NULL)) == 0) {
         agent->session->Active = TRUE;
         return TRUE;
     }

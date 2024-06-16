@@ -7,40 +7,52 @@
       "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\TaskController.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\TaskController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\TaskController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Http.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\agent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\RegisterAgent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\RegisterAgent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\package.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\package.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\package.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Http.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\RegisterAgent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\RegisterAgent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Http.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Common.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Common.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Crypto.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Crypto.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\agent.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\init.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\init.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\TaskController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\TaskController.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Http.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\agent.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\init.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\init.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\localcstd.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -55,16 +67,8 @@
       "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Crypto.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\parser.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\parser.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|solutionrelative:Agent\\Crypto.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{DE57793F-0A8F-437F-BAA8-185F74156E29}|Agent\\Agent.vcxproj|C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\ListManager.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -78,8 +82,21 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Common.h",
+              "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Common.h",
+              "RelativeDocumentMoniker": "Agent\\Common.h",
+              "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Common.h",
+              "RelativeToolTip": "Agent\\Common.h",
+              "ViewState": "AQIAALcCAAAAAAAAAAAAANgCAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-16T16:55:40.763Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -88,14 +105,14 @@
               "RelativeDocumentMoniker": "Agent\\TaskController.c",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\TaskController.c",
               "RelativeToolTip": "Agent\\TaskController.c",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAACTAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-06-16T05:50:01.658Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "TaskController.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\TaskController.h",
               "RelativeDocumentMoniker": "Agent\\TaskController.h",
@@ -103,12 +120,11 @@
               "RelativeToolTip": "Agent\\TaskController.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-06-16T05:49:49.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-16T05:49:49.285Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "localcstd.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\localcstd.h",
               "RelativeDocumentMoniker": "Agent\\localcstd.h",
@@ -116,25 +132,24 @@
               "RelativeToolTip": "Agent\\localcstd.h",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-06-16T05:16:13.389Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-16T05:16:13.389Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Http.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.h",
               "RelativeDocumentMoniker": "Agent\\Http.h",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.h",
               "RelativeToolTip": "Agent\\Http.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAABEAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAABIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-06-15T03:26:52.952Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "localcstd.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\localcstd.c",
               "RelativeDocumentMoniker": "Agent\\localcstd.c",
@@ -142,25 +157,24 @@
               "RelativeToolTip": "Agent\\localcstd.c",
               "ViewState": "AQIAACoAAAAAAAAAAAAiwFYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-06-14T14:03:18.948Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-14T14:03:18.948Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "agent.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.h",
               "RelativeDocumentMoniker": "Agent\\agent.h",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.h",
               "RelativeToolTip": "Agent\\agent.h",
-              "ViewState": "AQIAAHIAAAAAAAAAAAAAAIkAAAARAAAA",
+              "ViewState": "AQIAAHIAAAAAAAAAAAAAAJUAAAAOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-06-14T13:32:40.29Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "init.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\init.c",
               "RelativeDocumentMoniker": "Agent\\init.c",
@@ -168,37 +182,37 @@
               "RelativeToolTip": "Agent\\init.c",
               "ViewState": "AQIAAAMAAAAAAAAAAAAgwO8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-06-14T13:32:15.968Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-14T13:32:15.968Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "package.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.h",
               "RelativeDocumentMoniker": "Agent\\package.h",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.h",
               "RelativeToolTip": "Agent\\package.h",
-              "ViewState": "AQIAADAAAAAAAAAAAAAowGIAAAAeAAAA",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAAAGQAAABOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-06-14T13:23:36.656Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 7,
               "Title": "Crypto.h",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.h",
               "RelativeDocumentMoniker": "Agent\\Crypto.h",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.h",
               "RelativeToolTip": "Agent\\Crypto.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAKAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAABWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-06-14T13:11:16.36Z"
+              "WhenOpened": "2024-06-14T13:11:16.36Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "parser.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\parser.c",
               "RelativeDocumentMoniker": "Agent\\parser.c",
@@ -210,7 +224,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 11,
               "Title": "agent.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\agent.c",
               "RelativeDocumentMoniker": "Agent\\agent.c",
@@ -218,12 +232,11 @@
               "RelativeToolTip": "Agent\\agent.c",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-05-19T21:36:15.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-19T21:36:15.788Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "ListManager.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\ListManager.c",
               "RelativeDocumentMoniker": "Agent\\ListManager.c",
@@ -235,13 +248,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "package.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.c",
               "RelativeDocumentMoniker": "Agent\\package.c",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\package.c",
               "RelativeToolTip": "Agent\\package.c",
-              "ViewState": "AQIAADUBAAAAAAAAAAAAAFcBAABhAAAA",
+              "ViewState": "AQIAAFUBAAAAAAAAAAAAAGABAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-06-10T05:10:43.32Z",
               "EditorCaption": ""
@@ -254,39 +267,40 @@
               "RelativeDocumentMoniker": "Agent\\RegisterAgent.c",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\RegisterAgent.c",
               "RelativeToolTip": "Agent\\RegisterAgent.c",
-              "ViewState": "AQIAAKgAAAAAAAAAAAAAALYAAAA7AAAA",
+              "ViewState": "AQIAAKQAAAAAAAAAAAAswL0AAABKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-06-13T00:44:09.058Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 5,
               "Title": "Http.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.c",
               "RelativeDocumentMoniker": "Agent\\Http.c",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Http.c",
               "RelativeToolTip": "Agent\\Http.c",
-              "ViewState": "AQIAADAAAAAAAAAAAAAAAEkAAAABAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-06-13T00:53:58.371Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 8,
               "Title": "Crypto.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.c",
               "RelativeDocumentMoniker": "Agent\\Crypto.c",
               "ToolTip": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\Crypto.c",
               "RelativeToolTip": "Agent\\Crypto.c",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAwwAgAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAwwAMAAABWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2024-06-10T04:09:58.815Z"
+              "WhenOpened": "2024-06-10T04:09:58.815Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "main.c",
               "DocumentMoniker": "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\ImplantSource\\Agent\\Agent\\main.c",
               "RelativeDocumentMoniker": "Agent\\main.c",

