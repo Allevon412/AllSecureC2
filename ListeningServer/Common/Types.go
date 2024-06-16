@@ -167,7 +167,7 @@ Taken from havoc as a basic model.
 */
 
 const (
-	CMD_Initialize uint32 = iota
+	CMD_Register uint32 = iota
 )
 
 func (p *Package) UnmarshalBinary(data []byte) error {

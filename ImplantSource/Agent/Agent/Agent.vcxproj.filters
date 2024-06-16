@@ -64,13 +64,16 @@
     <Filter Include="Source Files\agent">
       <UniqueIdentifier>{0ee2fae9-3ebb-4968-9a7c-9c4d8d9ab4e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\TaskController">
+      <UniqueIdentifier>{6a53e4c6-c592-4ebe-bb6b-b7ac80afd47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TaskController">
+      <UniqueIdentifier>{819578d6-2376-47e1-ab45-c610b041fa68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RetrieveInstructions.c">
-      <Filter>Source Files\Http</Filter>
     </ClCompile>
     <ClCompile Include="Http.c">
       <Filter>Source Files\Http</Filter>
@@ -185,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="ListManager.c">
       <Filter>Source Files\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskController.c">
+      <Filter>Source Files\TaskController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="ListManager.h">
       <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskController.h">
+      <Filter>Header Files\TaskController</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

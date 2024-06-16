@@ -52,15 +52,15 @@ func ProcessRequest(c *gin.Context) {
 
 	var CMDID = binary.BigEndian.Uint32(data_package.CmdID)
 	switch CMDID {
-	case Common.CMD_Initialize:
+	case Common.CMD_Register:
 		go func() {
-			err = InitializeAgent(decryptedPayload)
+			err = RegisterAgent(decryptedPayload)
 			if err != nil {
 				log.Println("[error] attempting to initialize agent", err)
 			}
 		}()
 		break
-		//CMD_Initialize(decryptedPayload)
+		//CMD_Register
 	default:
 		break
 	} //switch

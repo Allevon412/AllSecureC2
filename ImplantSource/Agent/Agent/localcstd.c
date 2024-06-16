@@ -47,3 +47,41 @@ UINT32 bswap32(UINT32 x) {
 		((x >> 24) & 0x000000ff);
 }
 
+LPSTR generateRandomString(size_t length) {
+	// Define the character set to use (you can modify this to include more characters)
+	const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
+	LPSTR str = (LPSTR)LocalAlloc(LPTR, length + 1);
+
+	// Seed the random number generator
+	srand(time(NULL));
+
+	// Generate the random string
+	for (size_t i = 0; i < length; ++i) {
+		int key = rand() % charsetSize;
+		str[i] = charset[key];
+	}
+
+	// Null-terminate the string
+	str[length] = '\0';
+	return str;
+}
+LPWSTR generateRandomStringW(size_t length) {
+	// Define the character set to use (you can modify this to include more characters)
+	const LPWSTR charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
+	LPWSTR str = (LPSTR)LocalAlloc(LPTR, (length + 1) * sizeof(WCHAR));
+
+	// Seed the random number generator
+	srand(time(NULL));
+
+	// Generate the random string
+	for (size_t i = 0; i < length; ++i) {
+		int key = rand() % charsetSize;
+		str[i] = charset[key];
+	}
+
+	// Null-terminate the string
+	str[length] = L'\0';
+	return str;
+}

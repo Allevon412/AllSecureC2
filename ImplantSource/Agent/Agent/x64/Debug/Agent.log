@@ -1,30 +1,7 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  package.c
-  Warning: For timing resistance / side-channel attack prevention consider using harden options
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(56,37): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(188,53): warning C4311: 'type cast': pointer truncation from 'PVOID' to 'UINT32'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(270,7): warning C4133: '=': incompatible types - from '_PACKAGE *' to 'pPackage'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(292,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(292,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(295,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(295,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(298,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(298,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(301,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(301,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(304,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(304,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(307,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(307,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(310,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(310,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(313,13): warning C4047: 'function': 'char *const ' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(313,13): warning C4024: 'sprintf_s': different types for formal and actual parameter 1
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(316,2): warning C4047: 'return': 'LPSTR' differs in levels of indirection from 'LPSTR [100]'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(327,37): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(336,17): warning C4244: 'function': conversion from 'SIZE_T' to 'ULONG', possible loss of data
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(344,69): warning C4244: 'function': conversion from 'SIZE_T' to 'ULONG', possible loss of data
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(359,9): warning C4133: '=': incompatible types - from '_PACKAGE *' to 'pPackage'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(361,14): warning C4133: '=': incompatible types - from 'pPackage' to '_PACKAGE *'
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(316,1): warning C4172: returning address of local variable or temporary: errorstr
+  localcstd.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\localcstd.c(57,8): warning C4013: 'time' undefined; assuming extern returning int
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\localcstd.c(73,9): warning C4133: 'initializing': incompatible types - from 'LPSTR' to 'LPWSTR'
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.

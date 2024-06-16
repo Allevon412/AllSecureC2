@@ -4,4 +4,3 @@
 
 
 INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength);
-BOOL GetCommand();

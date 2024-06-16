@@ -135,9 +135,8 @@ typedef struct _Agent {
 	BYTE* EncryptedIV;
 	ULONG EncryptedIVSize;
 
+	struct _Package* MetaDataPackage;
 	struct _Package* packages;
-	
-
 
 
 }Agent, * pAgent;
@@ -145,7 +144,7 @@ typedef struct _Agent {
 
 
 enum Agent_Operations {
-	INITIALIZE_AGENT = 0,
+	REGISTER_AGENT = 0,
 	EXIT_AGENT,
 	SLEEP_AGENT,
 	GET_AGENT_JOB,

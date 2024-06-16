@@ -151,7 +151,7 @@
     <ClCompile Include="parser.c" />
     <ClCompile Include="Http.c" />
     <ClCompile Include="RegisterAgent.c" />
-    <ClCompile Include="RetrieveInstructions.c" />
+    <ClCompile Include="TaskController.c" />
     <ClCompile Include="token.c" />
     <ClCompile Include="wolfssl\aes.c" />
     <ClCompile Include="wolfssl\asn.c" />
@@ -191,6 +191,7 @@
     <ClInclude Include="localcstd.h" />
     <ClInclude Include="package.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="TaskController.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="wolfssl\openssl\compat_types.h" />
     <ClInclude Include="wolfssl\wolfcrypt\aes.h" />
