@@ -33,7 +33,7 @@ import (
 type (
 	ImplantContext struct {
 		Magic_val           []byte
-		Agent_id            []byte
+		Agent_id            uint32
 		Host_name_length    uint32
 		Host_name           string
 		User_name_length    uint32
@@ -50,6 +50,13 @@ type (
 		Elevated            uint32
 		Os_info             [5]uint32
 		Os_arch             uint32
+	}
+
+	Implant struct {
+		ImplantName string
+		AESKey      []byte
+		IV          []byte
+		Alive       bool
 	}
 
 	Package struct {
@@ -168,10 +175,14 @@ Taken from havoc as a basic model.
 
 const (
 	CMD_Register uint32 = iota
+	CMD_EXIT
+	CMD_SLEEP
+	CMD_GET_JOB
+	CMD_CHECKIN
 )
 
-func (p *Package) UnmarshalBinary(data []byte) error {
-	if len(data) < 172 {
+func (p *Package) UnmarshalHeader(data []byte) error {
+	if len(data) < 20 {
 		return fmt.Errorf("insufficient data for package unmarshalling")
 	}
 
@@ -182,6 +193,11 @@ func (p *Package) UnmarshalBinary(data []byte) error {
 	p.RequestID = data[16:20]
 	p.AgentNameSize = binary.BigEndian.Uint32(data[20:24])
 	p.AgentName = string(data[24 : 24+p.AgentNameSize])
+
+	return nil
+}
+
+func (p *Package) UnmarshalEncryptedMetaData(data []byte) error {
 
 	var baseindex = 24 + p.AgentNameSize
 
@@ -217,9 +233,9 @@ func (p *Package) UnmarshalBinary(data []byte) error {
 	        //not included currently [ WorkingHours ] 4 bytes
 */
 
-func (c *ImplantContext) UnmarshalBinary(data []byte) error {
+func (c *ImplantContext) UnmarshalContext(data []byte) error {
 	c.Magic_val = data[:4]
-	c.Agent_id = data[4:8]
+	c.Agent_id = binary.BigEndian.Uint32(data[4:8])
 	c.Host_name_length = binary.BigEndian.Uint32(data[8:12])
 	c.Host_name = string(data[12 : 12+c.Host_name_length])
 	c.User_name_length = binary.BigEndian.Uint32(data[12+c.Host_name_length : 16+c.Host_name_length])

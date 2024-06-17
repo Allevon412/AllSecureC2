@@ -34,5 +34,4 @@ func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, err
 	stream.XORKeyStream(plaintext, DataPackage.EncryptedData)
 
 	return plaintext, nil
-
 }

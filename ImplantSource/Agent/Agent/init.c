@@ -93,6 +93,10 @@ INT init_agent() {
     if (!agent->apis->pWinHttpReadData) {
         return -1;
     }
+	agent->apis->pWinHttpCloseHandle = (t_WinHttpCloseHandle)GetProcAddress(agent->apis->hWinHttp, "WinHttpCloseHandle");
+	if (!agent->apis->pWinHttpCloseHandle) {
+		return -1;
+	}
 
     //obtain ntdll apis
     agent->apis->pRtlGetVersion = (t_RtlGetVersion)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlGetVersion");

@@ -113,6 +113,8 @@ typedef struct _Win32 {
 	t_WinHttpAddRequestHeaders pWinHttpAddRequestHeaders;
 	t_WinHttpSetOption pWinHttpSetOption;
 	t_WinHttpReadData pWinHttpReadData;
+	t_WinHttpCloseHandle pWinHttpCloseHandle;
+
 } Win32, * pWin32;
 
 //TODO clean up this structure.
@@ -167,3 +169,4 @@ INT RegisterAgent();
 BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength);
 void AgentMain();
 INT ParseConfig();
+void AgentRoutine();

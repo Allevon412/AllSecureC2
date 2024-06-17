@@ -11,7 +11,7 @@ func RegisterAgent(data []byte) error {
 		ImpCtx Common.ImplantContext
 	)
 
-	err = ImpCtx.UnmarshalBinary(data)
+	err = ImpCtx.UnmarshalContext(data)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal implant data", err)
 		return err
@@ -21,8 +21,6 @@ func RegisterAgent(data []byte) error {
 	if err != nil {
 		return err
 	}
-
-	agent_arr = append(agent_arr, ImpCtx)
 
 	return nil
 }

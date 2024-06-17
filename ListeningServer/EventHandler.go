@@ -59,7 +59,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 		var TempData []byte
 
 		NewMessage.MessageType = "RegisterImplant"
-		NewImplant.ImplantID = "First"
+		NewImplant.ImplantId = ImpCtx.Agent_id
 		NewImplant.Computer = ImpCtx.Host_name
 		NewImplant.InternalIP = ImpCtx.Ip_addr
 		NewImplant.ExternalIP = ImpCtx.Ip_addr

@@ -86,7 +86,9 @@ typedef BOOL(WINAPI* t_WinHttpReadData)(
 	DWORD     dwNumberOfBytesToRead,
 	LPDWORD   lpdwNumberOfBytesRead
 	);
-
+typedef BOOL(WINAPI* t_WinHttpCloseHandle)(
+	HINTERNET hInternet
+	);
 
 
 
