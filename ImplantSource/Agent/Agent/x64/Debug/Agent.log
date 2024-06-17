@@ -1,7 +1,4 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (BreadSlice.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  localcstd.c
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\localcstd.c(57,8): warning C4013: 'time' undefined; assuming extern returning int
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\localcstd.c(73,9): warning C4133: 'initializing': incompatible types - from 'LPSTR' to 'LPWSTR'
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

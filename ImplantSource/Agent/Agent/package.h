@@ -79,7 +79,7 @@ typedef struct _Package {
 
 //create packages
 pPackage CreatePackage(UINT32 CommandID);
-pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent agent);
+pPackage CreatePackageWithMetaData(UINT32 CommandID);
 
 //add data to packages
 INT AddInt32ToPackage(pPackage pack, UINT32 data);
@@ -94,14 +94,14 @@ INT AddStringToPackage(pPackage pack, PCHAR data);
 INT AddWStringToPackage(pPackage pack, PWCHAR data);
 
 //delete packages
-INT DestroyPackage(pPackage pack, pAgent agent);
+INT DestroyPackage(pPackage pack);
 
 //send packages
-INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent agent);
-BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size);
+INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize);
+BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size);
 
 //utility.
 LPSTR PackageErrorToString(INT error);
 
 //add package to agent data
-void AddPackageToAgentPackageList(pAgent agent, pPackage pack);
+void AddPackageToAgentPackageList(pPackage pack);

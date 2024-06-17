@@ -3,9 +3,8 @@
 
 
 HANDLE TokenCurrentHandle(
-    pAgent agent
 );
 BOOL TokenElevated(
-    IN HANDLE Token, pAgent agent
+    IN HANDLE Token
 );
 

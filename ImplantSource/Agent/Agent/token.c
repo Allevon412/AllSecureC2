@@ -1,12 +1,10 @@
 #include "token.h"
 
-HANDLE TokenCurrentHandle(
-    pAgent agent
-) {
+HANDLE TokenCurrentHandle() {
     HANDLE   Token = NULL;
     NTSTATUS NtStatus = STATUS_UNSUCCESSFUL;
 
-    if (!NT_SUCCESS(NtStatus = agent->pNtOpenThreadToken(NtCurrentThread(), TOKEN_QUERY, TRUE, &Token)))
+    if (!NT_SUCCESS(NtStatus = agent->apis->pNtOpenThreadToken(NtCurrentThread(), TOKEN_QUERY, TRUE, &Token)))
     {
         if (NtStatus != STATUS_NO_TOKEN)
         {
@@ -15,7 +13,7 @@ HANDLE TokenCurrentHandle(
             return NULL;
         }
 
-        if (!NT_SUCCESS(NtStatus = agent->pNtOpenProcessToken(NtCurrentProcess(), TOKEN_QUERY, &Token)))
+        if (!NT_SUCCESS(NtStatus = agent->apis->pNtOpenProcessToken(NtCurrentProcess(), TOKEN_QUERY, &Token)))
         {
             //PRINTF("NtOpenProcessToken: Failed:[%08x : %ld]\n", NtStatus, Instance->Win32.RtlNtStatusToDosError(NtStatus));
             //NtSetLastError(Instance->Win32.RtlNtStatusToDosError(NtStatus));
@@ -26,12 +24,12 @@ HANDLE TokenCurrentHandle(
     return Token;
 }
 
-BOOL TokenElevated( IN HANDLE Token, pAgent agent) {
+BOOL TokenElevated( IN HANDLE Token) {
     TOKEN_ELEVATION Data = { 0 };
     DWORD           Size = sizeof(TOKEN_ELEVATION);
     BOOL            Admin = FALSE;
 
-    if (NT_SUCCESS(agent->pNtQueryInformationToken(Token, TokenElevation, &Data, Size, &Size))) {
+    if (NT_SUCCESS(agent->apis->pNtQueryInformationToken(Token, TokenElevation, &Data, Size, &Size))) {
         Admin = Data.TokenIsElevated;
     }
 

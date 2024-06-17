@@ -1,4 +1,3 @@
 #pragma once
-#include <Windows.h>
 
-BOOL PerformTask();
+void PerformTask();

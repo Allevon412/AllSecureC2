@@ -72,13 +72,19 @@ typedef BOOL(WINAPI* t_WinHttpReceiveResponse)(
 	);
 
 typedef BOOL(WINAPI* t_WinHttpQueryHeaders)(
-
-HINTERNET hRequest,
+	HINTERNET hRequest,
 	DWORD     dwInfoLevel,
 	LPCWSTR   pwszName,
 	LPVOID    lpBuffer,
 	LPDWORD   lpdwBufferLength,
 	LPDWORD   lpdwIndex
+	);
+
+typedef BOOL(WINAPI* t_WinHttpReadData)(
+	HINTERNET hRequest,
+	LPVOID    lpBuffer,
+	DWORD     dwNumberOfBytesToRead,
+	LPDWORD   lpdwNumberOfBytesRead
 	);
 
 
@@ -161,6 +167,19 @@ typedef BOOL(WINAPI* t_GetComputerNameExA)(
 //USER32 APIS
 typedef int (WINAPI* t_GetSystemMetrics)(
 	int nIndex
+	);
+
+typedef LPVOID(WINAPI* t_LocalAlloc)(
+	UINT   uFlags,
+	SIZE_T uBytes
+	);
+typedef LPVOID(WINAPI* t_LocalReAlloc)(
+	LPVOID lpMem,
+	SIZE_T uBytes,
+	UINT   uFlags
+	);
+typedef BOOL(WINAPI* t_LocalFree)(
+	HLOCAL hMem
 	);
 
 /*--------------------------------------------------------------------

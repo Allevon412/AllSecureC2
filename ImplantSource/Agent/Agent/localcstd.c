@@ -1,4 +1,3 @@
-
 #include "localcstd.h"
 
 SIZE_T StringLengthA(LPCSTR String) {
@@ -51,14 +50,16 @@ LPSTR generateRandomString(size_t length) {
 	// Define the character set to use (you can modify this to include more characters)
 	const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
-	LPSTR str = (LPSTR)LocalAlloc(LPTR, length + 1);
+	LPSTR str = (LPSTR)agent->apis->pLocalAlloc(LPTR, length + 1);
 
-	// Seed the random number generator
-	srand(time(NULL));
+	ULONG Seed = 0;
+	Seed = agent->apis->pNtGetTickCount();
+
 
 	// Generate the random string
 	for (size_t i = 0; i < length; ++i) {
-		int key = rand() % charsetSize;
+		Seed = agent->apis->pRtlRandomEx(&Seed);
+		int key = Seed % charsetSize;
 		str[i] = charset[key];
 	}
 
@@ -70,14 +71,16 @@ LPWSTR generateRandomStringW(size_t length) {
 	// Define the character set to use (you can modify this to include more characters)
 	const LPWSTR charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
-	LPWSTR str = (LPSTR)LocalAlloc(LPTR, (length + 1) * sizeof(WCHAR));
+	LPWSTR str = (LPSTR)agent->apis->pLocalAlloc(LPTR, (length + 1) * sizeof(WCHAR));
 
 	// Seed the random number generator
-	srand(time(NULL));
+	ULONG Seed = 0;
+	Seed = agent->apis->pNtGetTickCount();
 
 	// Generate the random string
 	for (size_t i = 0; i < length; ++i) {
-		int key = rand() % charsetSize;
+		Seed = agent->apis->pRtlRandomEx(&Seed);
+		int key = Seed % charsetSize;
 		str[i] = charset[key];
 	}
 

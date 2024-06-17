@@ -81,9 +81,6 @@
     <ClCompile Include="enum.c">
       <Filter>Source Files\Enumeration</Filter>
     </ClCompile>
-    <ClCompile Include="parsekey.c">
-      <Filter>Source Files\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="package.c">
       <Filter>Source Files\Package</Filter>
     </ClCompile>

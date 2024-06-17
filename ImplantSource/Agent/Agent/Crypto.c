@@ -21,11 +21,11 @@ INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BY
 	return 0;
 }
 
-ULONG GenerateRandomNumber(pAgent agent) {
+ULONG GenerateRandomNumber() {
 	ULONG Seed = 0;
-	Seed = agent->pNtGetTickCount();
-	Seed = agent->pRtlRandomEx(&Seed);
-	Seed = agent->pRtlRandomEx(&Seed);
+	Seed = agent->apis->pNtGetTickCount();
+	Seed = agent->apis->pRtlRandomEx(&Seed);
+	Seed = agent->apis->pRtlRandomEx(&Seed);
 
 	Seed = (Seed % (LONG_MAX - 2 + 1)) + 2;
 

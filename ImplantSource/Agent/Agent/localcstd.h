@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "agent.h"
 
 
 #define MemorySet __stosb

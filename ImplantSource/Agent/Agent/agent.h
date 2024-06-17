@@ -47,7 +47,7 @@ typedef struct _ListenerConfig {
 	LPWSTR* Headers;
 	LPWSTR UserAgent;
 
-} ListenerConfig, *PListenerConfig;
+} ListenerConfig, *pListenerConfig;
 
 //TODO FINISH ADDING LISTENER / AGENT CONFIG DATA/
 typedef struct _AgentConfig {
@@ -60,7 +60,7 @@ typedef struct _AgentConfig {
 	BYTE* RSAPubKey;
 	DWORD RSAPubKeySize;
 	LPSTR AgentName;
-	ListenerConfig listenerConfig;
+	pListenerConfig listenerConfig;
 
 } AgentConfig, *PAgentConfig;
 
@@ -68,11 +68,8 @@ typedef struct _HttpSession {
 	BOOL Active;
 } HttpSession, *pHttpSession;
 
-//TODO clean up this structure.
-//I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
-typedef struct _Agent {
 
-
+typedef struct _Win32 {
 	//enumeration apis
 	//NTDLL APIS
 	t_RtlGetVersion pRtlGetVersion;
@@ -85,9 +82,12 @@ typedef struct _Agent {
 	t_RtlRandomEx pRtlRandomEx;
 	t_NtGetTickCount pNtGetTickCount;
 
-	
+
 	//KERNEL32 APIS
 	t_GetComputerNameExA pGetComputerNameExA;
+	t_LocalAlloc pLocalAlloc;
+	t_LocalReAlloc pLocalReAlloc;
+	t_LocalFree pLocalFree;
 
 	//ADVAPI APIS
 	HMODULE hAdvapi32;
@@ -112,6 +112,15 @@ typedef struct _Agent {
 	t_WinHttpQueryHeaders pWinHttpQueryHeaders;
 	t_WinHttpAddRequestHeaders pWinHttpAddRequestHeaders;
 	t_WinHttpSetOption pWinHttpSetOption;
+	t_WinHttpReadData pWinHttpReadData;
+} Win32, * pWin32;
+
+//TODO clean up this structure.
+//I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
+typedef struct _Agent {
+
+
+	pWin32 apis;
 
 	//agent configuration
 	PAgentConfig config;
@@ -142,6 +151,7 @@ typedef struct _Agent {
 }Agent, * pAgent;
 
 
+extern pAgent agent;
 
 enum Agent_Operations {
 	REGISTER_AGENT = 0,
@@ -152,8 +162,8 @@ enum Agent_Operations {
 };
 
 
-INT init_agent(pAgent agent);
-INT RegisterAgent(pAgent agent);
-BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength);
+INT init_agent();
+INT RegisterAgent();
+BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength);
 void AgentMain();
-INT ParseConfig(pAgent agent);
+INT ParseConfig();

@@ -2,7 +2,7 @@
 #include "parser.h"
 #include "package.h"
 
-VOID PerformTask(pAgent agent) {
+void PerformTask() {
 
     PARSER   Parser = { 0 };
     DataBuffer   Buffer = { 0 };

@@ -2,5 +2,4 @@
 #include "agent.h"
 
 
-
-INT PerformRequest(pAgent agent, BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer OutBuffer);
+INT PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer OutBuffer);

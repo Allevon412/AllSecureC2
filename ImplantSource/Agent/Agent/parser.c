@@ -6,7 +6,7 @@ VOID NewParser(PPARSER parser, PBYTE Buffer, UINT32 size) {
 		return;
 	}
 
-	parser->Original = LocalAlloc(LPTR, size);
+	parser->Original = agent->apis->pLocalAlloc(LPTR, size);
 	MemoryCopy(parser->Original, Buffer, size);
 
 	parser->Buffer = parser->Original;
@@ -15,11 +15,10 @@ VOID NewParser(PPARSER parser, PBYTE Buffer, UINT32 size) {
 }
 
 VOID ParserDecrypt(PPARSER parser, PBYTE Key, PBYTE Iv) {
-	BOOL Encrypt = FALSE;
 	if (parser == NULL) {
 		return;
 	}
-	AESCTR(parser->Buffer, parser->Length, Key, AES_256_KEY_SIZE, Iv, Encrypt);
+	AESCTR(parser->Buffer, parser->Length, Key, AES_256_KEY_SIZE, Iv);
 
 }
 
@@ -154,7 +153,7 @@ VOID ParserFree(PPARSER parser) {
 	
 	if (parser->Original) {
 		MemorySet(parser->Original, 0, parser->Size);
-		LocalFree(parser->Original);
+		agent->apis->pLocalFree(parser->Original);
 		parser->Original = NULL;
 		parser->Buffer = NULL;
 	}

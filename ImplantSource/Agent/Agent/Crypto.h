@@ -5,4 +5,4 @@
 
 
 INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV);
-ULONG GenerateRandomNumber(pAgent agent);
+ULONG GenerateRandomNumber();

