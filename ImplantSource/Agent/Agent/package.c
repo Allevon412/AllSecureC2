@@ -383,7 +383,7 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 	//encrypt the big package.
 	AESCTR((BYTE*)pack->Buffer + Offset, pack->Length - Offset, agent->AESKey, agent->AESKeySize, agent->IV);
 	//send the big package.
-	if ((PerformRequest(pack->Buffer, pack->Length, Response, Size)) == 0)
+	if (PerformRequest(pack->Buffer, pack->Length, Response, Size))
 	{
 		Success = TRUE;
 	}

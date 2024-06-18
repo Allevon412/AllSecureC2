@@ -8,6 +8,7 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	DWORD HTTP_FLAGS = 0;
 	LPWSTR HttpEndpoint = { 0 };
 	PVOID RespBuffer = { 0 };
+	BYTE TempBuffer[1024] = { 0 };
 	DWORD BytesRead = 0;
 	SIZE_T TotalBytesAdded = 0;
 	BOOL Success = FALSE;
@@ -94,7 +95,7 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 
 				do
 				{
-					Success = agent->apis->pWinHttpReadData(hRequest, RespBuffer, 0, &BytesRead);
+					Success = agent->apis->pWinHttpReadData(hRequest, TempBuffer, sizeof(TempBuffer), &BytesRead);
 					if (!Success || BytesRead == 0) {
 						break;
 					}
@@ -106,8 +107,16 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 					else {
 						RespBuffer = agent->apis->pLocalReAlloc(RespBuffer, TotalBytesAdded + BytesRead, LMEM_MOVEABLE | LMEM_ZEROINIT);
 					}
+					MemoryCopy((BYTE*)((SIZE_T)RespBuffer + TotalBytesAdded), TempBuffer, BytesRead);
+					MemorySet(TempBuffer, 0, sizeof(TempBuffer));
+					TotalBytesAdded += BytesRead;
 
 				} while (Success == TRUE);
+
+				Response->Buffer = RespBuffer;
+				Response->BufferLength = TotalBytesAdded;
+				Success = TRUE;
+				goto EXIT;
 			}
 			else { // no response needed. Uusally for metadata requests. 
 				Success = TRUE;
@@ -135,6 +144,5 @@ EXIT:
 		agent->apis->pWinHttpCloseHandle(hSession);
 	}
 
-
-	return 0;
+	return Success;
 }

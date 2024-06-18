@@ -34,7 +34,7 @@ pHostData SelectHost(DWORD HostRotation) {
 	}
 	switch (HostRotation) {
 	case HOST_ROTATION_RANDOM:
-		i = GenerateRandomNumber(agent) % agent->config->listenerConfig->NumHosts;
+		i = GenerateRandomNumber() % agent->config->listenerConfig->NumHosts;
 		while (data != NULL && i > 0) {
 			data = data->Next;
 			i--;
@@ -53,6 +53,20 @@ pHostData SelectHost(DWORD HostRotation) {
 			agent->config->listenerConfig->CurrentHost = data;
 		}
 		break;
+	case HOST_ROTATION_FAIL_OVER:
+		agent->config->listenerConfig->CurrentHost->Alive = FALSE;
+		
+		if (agent->config->listenerConfig->NumHosts > 1) { // ensure the number of hosts is greater than 1. othwerwise just keep trying the same host.
+			while (data != NULL)
+			{
+				if (agent->config->listenerConfig->CurrentHost != data) { // the host that has failed is the current host.
+					agent->config->listenerConfig->CurrentHost = data;
+					break;
+				}
+				data = data->Next;
+			}
+		}
+		
 	}
 	return data;
 }

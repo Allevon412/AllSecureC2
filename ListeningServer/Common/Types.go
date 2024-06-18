@@ -282,8 +282,8 @@ func (q *Queue) Dequeue() (interface{}, error) {
 
 func (a *AgentCmd) MarshalAgentCmd() []byte {
 	var data = make([]byte, 8)
-	binary.BigEndian.PutUint32(data, a.CmdID)
-	binary.BigEndian.PutUint32(data, a.RequestID)
+	binary.LittleEndian.PutUint32(data[:4], a.CmdID)
+	binary.LittleEndian.PutUint32(data[4:8], a.RequestID)
 	data = append(data, a.DataBuffer...)
 	return data
 }

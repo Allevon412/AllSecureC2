@@ -752,5 +752,9 @@ typedef struct _DataBuffer {
 
 #define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap
 
-#define HOST_ROTATION_ROUND_ROBIN 0
-#define HOST_ROTATION_RANDOM 1
+#define MAX_HOST_FAILURES 10
+enum HOST_ROTATION {
+	HOST_ROTATION_ROUND_ROBIN = 0,
+	HOST_ROTATION_RANDOM,
+	HOST_ROTATION_FAIL_OVER
+};

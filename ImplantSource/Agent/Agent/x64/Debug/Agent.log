@@ -29,7 +29,7 @@ C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(372,46): warning C4244: 'function': conversion from 'SIZE_T' to 'UINT32', possible loss of data
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(382,32): warning C4244: '=': conversion from 'unsigned __int64' to 'UINT32', possible loss of data
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(384,52): warning C4244: 'function': conversion from 'SIZE_T' to 'ULONG', possible loss of data
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(386,60): warning C4020: 'PerformRequest': too many actual parameters
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(386,59): warning C4020: 'PerformRequest': too many actual parameters
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(394,52): warning C4244: 'function': conversion from 'SIZE_T' to 'ULONG', possible loss of data
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(410,22): warning C4133: '=': incompatible types - from '_PACKAGE *' to '_Package *'
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(430,22): warning C4133: '=': incompatible types - from '_PACKAGE *' to 'pPackage'
@@ -37,6 +37,12 @@ C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(452,19): warning C4133: '=': incompatible types - from '_PACKAGE *' to 'pPackage'
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(471,9): warning C4133: '=': incompatible types - from '_PACKAGE *' to 'pPackage'
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(473,14): warning C4133: '=': incompatible types - from 'pPackage' to '_PACKAGE *'
+  Http.c
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c(20,3): warning C4013: 'printf' undefined; assuming extern returning int
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c(71,74): warning C4244: 'function': conversion from 'SIZE_T' to 'DWORD', possible loss of data
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c(71,88): warning C4244: 'function': conversion from 'SIZE_T' to 'DWORD', possible loss of data
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c(117,30): warning C4244: '=': conversion from 'SIZE_T' to 'ULONG', possible loss of data
+  Generating Code...
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c(318,1): warning C4172: returning address of local variable or temporary: errorstr
   Agent.vcxproj -> C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\x64\Debug\Agent.exe
   'pwsh.exe' is not recognized as an internal or external command,

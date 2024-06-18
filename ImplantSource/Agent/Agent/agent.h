@@ -28,6 +28,8 @@ typedef struct _ContextInfo {
 	BOOL Elevated;
 } ContextInfo, *PContextInfo ;
 
+
+
 typedef struct _HostData {
 	LPWSTR Host;
 	INT Port;
@@ -161,6 +163,7 @@ enum Agent_Operations {
 	SLEEP_AGENT,
 	GET_AGENT_JOB,
 	CHECKIN_AGENT,
+	NO_JOB,
 };
 
 

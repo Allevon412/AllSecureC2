@@ -32,6 +32,12 @@ void TaskingRoutine() {
         }
 
 		//TODO parse the buffer and extract the command ID and request ID.
+        printf("{");
+		for (int i = 0; i < Buffer.BufferLength; i++)
+        {
+			printf("0x%02X, ", Buffer.Buffer[i]);
+		}
+		printf("}\n");
     }
 
 	

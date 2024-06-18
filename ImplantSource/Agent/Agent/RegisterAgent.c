@@ -194,7 +194,7 @@ INT RegisterAgent() {
 
 BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength) {
 
-    if ((PerformRequest(Buffer, BufferLength, NULL)) == 0) {
+    if (PerformRequest(Buffer, BufferLength, NULL)) {
         agent->session->Active = TRUE;
         return TRUE;
     }

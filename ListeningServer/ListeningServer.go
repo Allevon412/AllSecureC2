@@ -88,8 +88,9 @@ func ProcessRequest(c *gin.Context) {
 			)
 			AgentCmd.CmdID = Common.CMD_NO_JOB
 			AgentCmd.RequestID = data_package.RequestID + 1
-
+			log.Println(AgentCmd.MarshalAgentCmd())
 			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+
 		} else {
 			var (
 				AgentCmd Common.AgentCmd
@@ -109,7 +110,7 @@ func ProcessRequest(c *gin.Context) {
 			}
 
 		}
-		break
+		break // CMD_GET_JOB
 
 	default:
 		break
