@@ -2,6 +2,7 @@ package ListeningServer
 
 import (
 	"AllSecure/ListeningServer/Common"
+	"errors"
 	"log"
 )
 
@@ -23,4 +24,24 @@ func RegisterAgent(data []byte) error {
 	}
 
 	return nil
+}
+
+func QueueCmd() {
+
+}
+
+func SendActiveImplantData() error {
+	var (
+		err error
+	)
+	if len(agent_arr) == 0 {
+		return errors.New("[info] Agent Array is empty. No agents to send.")
+	}
+	for _, agent := range agent_arr {
+		if agent.Alive {
+
+		}
+	}
+
+	return err
 }

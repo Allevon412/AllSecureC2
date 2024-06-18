@@ -3,6 +3,7 @@ package mainmenu
 import (
 	"Client/Common"
 	"fyne.io/fyne/v2/widget"
+	"log"
 	"strings"
 )
 
@@ -25,5 +26,20 @@ func AddImplantToTable(ImplantData Common.ImplantTableData) {
 }
 
 func RemoveImplantFromTable() {
+
+}
+
+func GetActiveImplants(clientobj *Common.Client) ([]byte, error) {
+
+	endpoint := "https://" + clientobj.Server + "/GetActiveImplants"
+	data, err := Common.PerformHTTPReq(clientobj, endpoint, nil)
+	if err != nil {
+		log.Println("[error] attempting to retrieve user data", err)
+	}
+	trimedstr := strings.Trim(string(data), "\"")
+
+	decoded := Common.Base64Decode(trimedstr)
+
+	return decoded, nil
 
 }

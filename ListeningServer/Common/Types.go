@@ -2,6 +2,7 @@ package Common
 
 import (
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -24,10 +25,7 @@ import (
 	        //not included currently [ Base Address ] 8 bytes
 	        [ OS Info      ] ( 5 * 4 ) bytes
 	        [ OS Arch      ] 4 bytes
-	        //not included currently [ SleepDelay   ] 4 bytes
-	        //not included currently [ SleepJitter  ] 4 bytes
-	        //not included currently [ Killdate     ] 8 bytes
-	        //not included currently [ WorkingHours ] 4 bytes
+
 */
 
 type (
@@ -62,9 +60,9 @@ type (
 	Package struct {
 		Size          uint32
 		MagicVal      []byte
-		AgentID       []byte
-		CmdID         []byte
-		RequestID     []byte
+		AgentID       uint32
+		CmdID         uint32
+		RequestID     uint32
 		AgentNameSize uint32
 		AgentName     string
 
@@ -102,6 +100,14 @@ type (
 
 	CookieStruct struct {
 		Token jwttoken
+	}
+
+	Queue []interface{}
+
+	AgentCmd struct {
+		CmdID      uint32 //command to execute
+		RequestID  uint32
+		DataBuffer []byte
 	}
 )
 
@@ -179,6 +185,7 @@ const (
 	CMD_SLEEP
 	CMD_GET_JOB
 	CMD_CHECKIN
+	CMD_NO_JOB
 )
 
 func (p *Package) UnmarshalHeader(data []byte) error {
@@ -188,9 +195,9 @@ func (p *Package) UnmarshalHeader(data []byte) error {
 
 	p.Size = binary.BigEndian.Uint32(data[:4])
 	p.MagicVal = data[4:8]
-	p.AgentID = data[8:12]
-	p.CmdID = data[12:16]
-	p.RequestID = data[16:20]
+	p.AgentID = binary.BigEndian.Uint32(data[8:12])
+	p.CmdID = binary.BigEndian.Uint32(data[12:16])
+	p.RequestID = binary.BigEndian.Uint32(data[16:20])
 	p.AgentNameSize = binary.BigEndian.Uint32(data[20:24])
 	p.AgentName = string(data[24 : 24+p.AgentNameSize])
 
@@ -258,4 +265,25 @@ func (c *ImplantContext) UnmarshalContext(data []byte) error {
 
 	return nil
 
+}
+
+func (q *Queue) Enqueue(value interface{}) {
+	*q = append(*q, value)
+}
+
+func (q *Queue) Dequeue() (interface{}, error) {
+	if len(*q) == 0 {
+		return nil, errors.New("[error] Queue is empty")
+	}
+	element := (*q)[0]
+	*q = (*q)[1:]
+	return element, nil
+}
+
+func (a *AgentCmd) MarshalAgentCmd() []byte {
+	var data = make([]byte, 8)
+	binary.BigEndian.PutUint32(data, a.CmdID)
+	binary.BigEndian.PutUint32(data, a.RequestID)
+	data = append(data, a.DataBuffer...)
+	return data
 }

