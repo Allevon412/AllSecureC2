@@ -2,23 +2,21 @@ package ListeningServer
 
 import (
 	"AllSecure/ListeningServer/Common"
-	"errors"
 	"log"
 )
 
-func RegisterAgent(data []byte) error {
+func RegisterAgent(Agent *Common.Implant, data []byte) error {
 	var (
-		err    error
-		ImpCtx Common.ImplantContext
+		err error
 	)
 
-	err = ImpCtx.UnmarshalContext(data)
+	Agent.Context.UnmarshalContext(data)
 	if err != nil {
 		log.Println("[error] attempting to unmarshal implant data", err)
 		return err
 	}
 
-	err = SendEvent("RegisterImplant", ImpCtx)
+	err = SendEvent("RegisterImplant", Agent.Context)
 	if err != nil {
 		return err
 	}
@@ -28,20 +26,4 @@ func RegisterAgent(data []byte) error {
 
 func QueueCmd() {
 
-}
-
-func SendActiveImplantData() error {
-	var (
-		err error
-	)
-	if len(agent_arr) == 0 {
-		return errors.New("[info] Agent Array is empty. No agents to send.")
-	}
-	for _, agent := range agent_arr {
-		if agent.Alive {
-
-		}
-	}
-
-	return err
 }

@@ -20,7 +20,6 @@ void AgentMain() {
 	
 	if ((err = RegisterAgent()) != 0) {
 		printf("[error] attempting to register agent\n");
-		return -1;
 	}
 
 	AgentRoutine();

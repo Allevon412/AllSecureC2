@@ -2,6 +2,7 @@ package mainmenu
 
 import (
 	"Client/Common"
+	"encoding/json"
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"strings"
@@ -29,10 +30,12 @@ func RemoveImplantFromTable() {
 
 }
 
-func GetActiveImplants(clientobj *Common.Client) ([]byte, error) {
+func GetActiveImplants(clientobj *Common.Client, Message Common.WebSocketMessage) ([]byte, error) {
 
 	endpoint := "https://" + clientobj.Server + "/GetActiveImplants"
-	data, err := Common.PerformHTTPReq(clientobj, endpoint, nil)
+	JData, err := json.Marshal(Message)
+
+	data, err := Common.PerformHTTPReq(clientobj, endpoint, JData)
 	if err != nil {
 		log.Println("[error] attempting to retrieve user data", err)
 	}

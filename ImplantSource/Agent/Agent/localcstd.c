@@ -49,7 +49,7 @@ UINT32 bswap32(UINT32 x) {
 LPSTR generateRandomString(size_t length) {
 	// Define the character set to use (you can modify this to include more characters)
 	const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
+	size_t charsetSize = StringLengthA(charset); // Subtract 1 to avoid the null terminator
 	LPSTR str = (LPSTR)agent->apis->pLocalAlloc(LPTR, length + 1);
 
 	ULONG Seed = 0;
@@ -70,7 +70,7 @@ LPSTR generateRandomString(size_t length) {
 LPWSTR generateRandomStringW(size_t length) {
 	// Define the character set to use (you can modify this to include more characters)
 	const LPWSTR charset = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	size_t charsetSize = sizeof(charset) - 1; // Subtract 1 to avoid the null terminator
+	size_t charsetSize = StringLengthW(charset); 
 	LPWSTR str = (LPSTR)agent->apis->pLocalAlloc(LPTR, (length + 1) * sizeof(WCHAR));
 
 	// Seed the random number generator

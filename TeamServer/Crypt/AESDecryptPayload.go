@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, error) {
+func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, []byte, []byte, error) {
 	var (
 		err             error
 		DecryptedAESKey []byte
@@ -16,22 +16,22 @@ func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, err
 
 	DecryptedAESKey, err = DecryptKeyIV(DataPackage.EncryptedAESKey, filepath, DataPackage.AgentName)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, []byte{}, []byte{}, err
 	}
 
 	DecryptedIV, err = DecryptKeyIV(DataPackage.EncryptedIV, filepath, DataPackage.AgentName)
 	if err != nil {
-		return []byte{}, err
+		return []byte{}, []byte{}, []byte{}, err
 	}
 
 	block, err := aes.NewCipher(DecryptedAESKey)
 	if err != nil {
 		log.Println("[error] attempting to create new aes block", err)
-		return []byte{}, err
+		return []byte{}, []byte{}, []byte{}, err
 	}
 	stream := cipher.NewCTR(block, DecryptedIV)
 	plaintext := make([]byte, DataPackage.EncryptedDataSize)
 	stream.XORKeyStream(plaintext, DataPackage.EncryptedData)
 
-	return plaintext, nil
+	return plaintext, DecryptedAESKey, DecryptedIV, nil
 }

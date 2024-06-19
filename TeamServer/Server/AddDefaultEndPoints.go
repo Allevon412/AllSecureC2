@@ -234,10 +234,11 @@ func (t *TS) CreateImplant(ctx *gin.Context) {
 
 func (t *TS) GetActiveImplants(ctx *gin.Context) {
 	var (
-		claims *Types.JWTClaims
-		data   []byte
-		token  string
-		err    error
+		claims  *Types.JWTClaims
+		Message Types.WebSocketMessage
+		data    []byte
+		token   string
+		err     error
 	)
 	_, err = ctx.Request.Body.Read(data)
 	if err != nil {
@@ -259,12 +260,20 @@ func (t *TS) GetActiveImplants(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Parameters"})
 		return
 	}
-	err = EndPoints.GetActiveImplants()
-	if err != nil {
-		log.Println("[error] attempting to retrieve user data from sql database", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
-		return
-	}
+
+	err = ctx.BindJSON(&Message)
+
+	t.Server.Clients.Range(func(key, value any) bool {
+		client := value.(*Types.Client)
+		if client.Type == Types.ListeningServer {
+			err = EndPoints.GetActiveImplants(client, Message)
+			if err != nil {
+				log.Println("[error] attempting to retrieve user data from sql database", err)
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
+			}
+		}
+		return true
+	})
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Implants retrieved"})
 	return

@@ -255,6 +255,7 @@ func (t *TS) Start() {
 			ClientID  string
 			token     string
 			claims    *Types.JWTClaims
+			Type      Types.ClientType
 		)
 		ClientID, err = Crypt.GenerateRandomString(8)
 
@@ -283,12 +284,19 @@ func (t *TS) Start() {
 			return
 		}
 
+		if claims.UserID == 9999 {
+			Type = Types.ListeningServer
+		} else {
+			Type = Types.ClientApp
+		}
+
 		t.Server.Clients.Store(ClientID, &Types.Client{
 			Conn:          WebSocket,
 			Username:      claims.Username,
 			UserID:        claims.UserID,
+			Type:          Type,
 			RemoteIP:      WebSocket.RemoteAddr().String(),
-			Authenticated: false,
+			Authenticated: true,
 			Administrator: claims.Administrator,
 		})
 

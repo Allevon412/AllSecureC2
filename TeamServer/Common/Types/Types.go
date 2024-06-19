@@ -50,6 +50,7 @@ type (
 
 	Client struct {
 		ID            string
+		Type          ClientType
 		Conn          *websocket.Conn
 		Username      string
 		UserID        int
@@ -87,4 +88,13 @@ type (
 		Endpoints []*Endpoint
 		TokenKey  string
 	}
+)
+
+type (
+	ClientType int
+)
+
+const (
+	ListeningServer ClientType = iota
+	ClientApp
 )

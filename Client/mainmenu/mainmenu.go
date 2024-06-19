@@ -149,6 +149,18 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 
 	//show content. it's already running.
 	NewWindow.Show()
+
+	//Get Any Active Implants on Startup
+	ImplantMessage := Common.WebSocketMessage{
+		MessageType: "GetActiveImplants",
+		Message:     "",
+	}
+	_, err = GetActiveImplants(clientobj, ImplantMessage)
+	if err != nil {
+		log.Println("[error] attempting to obtain active implants", err)
+	}
+	Common.ImplantTable.Refresh()
+
 	NewWindow.SetCloseIntercept(func() {
 		clientobj.Conn.Close()
 		NewWindow.Close()

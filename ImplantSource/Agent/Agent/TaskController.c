@@ -37,14 +37,18 @@ void TaskingRoutine() {
 		AgentCMD.CommandID = ParserReadInt32(&Parser);
 		AgentCMD.RequestID = ParserReadInt32(&Parser);
         
-		if (AgentCMD.CommandID == NO_JOB)
-        {
-			continue;
-		}
-        else
-        {
-			//TDODO implenement command execution.
+        switch (AgentCMD.CommandID) {
+        case NO_JOB:
+			break;
+
+        case REGISTER_AGENT:
+            PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL);
+            break;
+
+        default:
+            break;
         }
+		
     }
 
 	

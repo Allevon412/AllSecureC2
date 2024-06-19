@@ -69,6 +69,7 @@ func ObtainWebSocket(clientobj *Client) (*websocket.Conn, error) {
 		headers http.Header
 	)
 
+	//setup the websocket connection.
 	endpoint := "wss://" + clientobj.Server + "/ws"
 	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
 	if err != nil {

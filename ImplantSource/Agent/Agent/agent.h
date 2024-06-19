@@ -175,7 +175,6 @@ enum Agent_Operations {
 
 INT init_agent();
 INT RegisterAgent();
-BOOL SendRegisterRequest(VOID* Buffer, ULONG BufferLength);
 void AgentMain();
 INT ParseConfig();
 void AgentRoutine();

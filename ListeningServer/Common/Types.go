@@ -3,7 +3,6 @@ package Common
 import (
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -55,6 +54,7 @@ type (
 		AESKey      []byte
 		IV          []byte
 		Alive       bool
+		Context     ImplantContext
 	}
 
 	Package struct {
@@ -190,7 +190,7 @@ const (
 
 func (p *Package) UnmarshalHeader(data []byte) error {
 	if len(data) < 20 {
-		return fmt.Errorf("insufficient data for package unmarshalling")
+		return errors.New("insufficient data for package unmarshalling")
 	}
 
 	p.Size = binary.BigEndian.Uint32(data[:4])
@@ -204,8 +204,20 @@ func (p *Package) UnmarshalHeader(data []byte) error {
 	return nil
 }
 
-func (p *Package) UnmarshalEncryptedMetaData(data []byte) error {
+func (p *Package) UnmarshalEncryptedData(data []byte) error {
+	if len(data) <= int(24+p.AgentNameSize) {
+		return errors.New("[error] insufficient data for package unmarshalling")
+	}
+	var baseindex = 24 + p.AgentNameSize
+	p.EncryptedDataSize = p.Size - baseindex
+	p.EncryptedData = data[baseindex : baseindex+p.EncryptedDataSize]
+	return nil
+}
 
+func (p *Package) UnmarshalEncryptedMetaData(data []byte) error {
+	if len(data) < 24 {
+		return errors.New("[error] insufficient data for package unmarshalling")
+	}
 	var baseindex = 24 + p.AgentNameSize
 
 	//MetaData
@@ -240,7 +252,7 @@ func (p *Package) UnmarshalEncryptedMetaData(data []byte) error {
 	        //not included currently [ WorkingHours ] 4 bytes
 */
 
-func (c *ImplantContext) UnmarshalContext(data []byte) error {
+func (c *ImplantContext) UnmarshalContext(data []byte) {
 	c.Magic_val = data[:4]
 	c.Agent_id = binary.BigEndian.Uint32(data[4:8])
 	c.Host_name_length = binary.BigEndian.Uint32(data[8:12])
@@ -263,8 +275,10 @@ func (c *ImplantContext) UnmarshalContext(data []byte) error {
 	c.Os_info[4] = binary.BigEndian.Uint32(data[56+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 60+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
 	c.Os_arch = binary.BigEndian.Uint32(data[60+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 64+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
 
-	return nil
+}
 
+func (q *Queue) PreemptQueue(value interface{}) {
+	*q = append([]interface{}{value}, *q...)
 }
 
 func (q *Queue) Enqueue(value interface{}) {
