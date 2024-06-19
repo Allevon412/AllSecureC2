@@ -12,6 +12,7 @@ void TaskingRoutine() {
     UINT32   TaskBufferSize = { 0 };
     UINT32   CommandID = { 0 };
     UINT32   RequestID = { 0 };
+	AgentCMD AgentCMD = { 0 };
 
 
     while (TRUE) {
@@ -32,12 +33,18 @@ void TaskingRoutine() {
         }
 
 		//TODO parse the buffer and extract the command ID and request ID.
-        printf("{");
-		for (int i = 0; i < Buffer.BufferLength; i++)
+		NewParser(&Parser, Buffer.Buffer, Buffer.BufferLength);
+		AgentCMD.CommandID = ParserReadInt32(&Parser);
+		AgentCMD.RequestID = ParserReadInt32(&Parser);
+        
+		if (AgentCMD.CommandID == NO_JOB)
         {
-			printf("0x%02X, ", Buffer.Buffer[i]);
+			continue;
 		}
-		printf("}\n");
+        else
+        {
+			//TDODO implenement command execution.
+        }
     }
 
 	

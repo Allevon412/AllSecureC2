@@ -119,6 +119,12 @@ typedef struct _Win32 {
 
 } Win32, * pWin32;
 
+typedef struct _AgentCMD {
+	UINT CommandID;
+	UINT RequestID;
+	BYTE* DATA;
+} AgentCMD, * pAgentCMD;
+
 //TODO clean up this structure.
 //I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
 typedef struct _Agent {
