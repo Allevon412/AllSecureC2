@@ -166,11 +166,6 @@ typedef BOOL(WINAPI* t_GetComputerNameExA)(
 	LPDWORD              nSize
 	);
 
-//USER32 APIS
-typedef int (WINAPI* t_GetSystemMetrics)(
-	int nIndex
-	);
-
 typedef LPVOID(WINAPI* t_LocalAlloc)(
 	UINT   uFlags,
 	SIZE_T uBytes
@@ -183,6 +178,19 @@ typedef LPVOID(WINAPI* t_LocalReAlloc)(
 typedef BOOL(WINAPI* t_LocalFree)(
 	HLOCAL hMem
 	);
+typedef BOOL(WINAPI* t_GetLocalTime)(
+	LPSYSTEMTIME lpSystemTime
+	);
+
+typedef VOID(WINAPI* t_GetSystemTimeAsFileTime)(
+	LPFILETIME lpSystemTimeAsFileTime
+	);
+
+//USER32 APIS
+typedef int (WINAPI* t_GetSystemMetrics)(
+	int nIndex
+	);
+
 
 /*--------------------------------------------------------------------
   STRUCTURES

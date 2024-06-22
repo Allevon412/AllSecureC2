@@ -153,6 +153,14 @@ INT init_agent() {
     if (!agent->apis->pLocalFree) {
         return -1;
     }
+    agent->apis->pGetSystemTimeAsFileTime = (t_GetSystemTimeAsFileTime)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetSystemTimeAsFileTime");
+	if (!agent->apis->pGetSystemTimeAsFileTime) {
+		return -1;
+	}
+	agent->apis->pGetLocalTime = (t_GetLocalTime)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetLocalTime");
+	if (!agent->apis->pGetLocalTime) {
+		return -1;
+	}
 
     //obtain user32 apis
     agent->apis->pGetSystemMetrics = (t_GetSystemMetrics)GetProcAddress(GetModuleHandleA("user32.dll"), "GetSystemMetrics");

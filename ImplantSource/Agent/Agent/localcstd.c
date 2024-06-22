@@ -88,3 +88,18 @@ LPWSTR generateRandomStringW(size_t length) {
 	str[length] = L'\0';
 	return str;
 }
+
+UINT64 GetUnixTime()
+{
+	FILETIME ft;
+	LARGE_INTEGER li;
+
+	agent->apis->pGetSystemTimeAsFileTime(&ft);
+	li.LowPart = ft.dwLowDateTime;
+	li.HighPart = ft.dwHighDateTime;
+
+	const UINT64 EPOCH_DIFFERENCE = 116444736000000000ULL;
+	UINT64 time = (li.QuadPart - EPOCH_DIFFERENCE) / 10000000ULL;
+	
+	return time;
+}

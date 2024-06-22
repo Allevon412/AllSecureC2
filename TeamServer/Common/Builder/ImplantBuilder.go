@@ -93,7 +93,7 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 	if builder.CompilerOptions.Config.DebugDev {
 		builder.CompilerOptions.CFlags = []string{
 			"-Os -fno-asynchronous-unwind-tables -masm=intel",
-			"-gcodeview",
+			//"-gcodeview",
 			"-fno-ident -fpack-struct=8 -falign-functions=1",
 			"-ffunction-sections -fdata-sections -falign-jumps=1 -w",
 			"-falign-labels=1 -fPIC",
@@ -307,6 +307,7 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 			Config = ab.ImplantConfig.ListenerConfig
 			err    error
 		)
+
 		AgentConfig.AddInt64(ab.ImplantConfig.KillDate)
 		WorkingHours, err := Utility.ParseWorkingHours(ab.ImplantConfig.WorkingHours)
 		if err != nil {
