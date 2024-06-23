@@ -35,6 +35,13 @@ func (p *Packer) AddInt64(data int64) {
 	p.size += 8
 }
 
+func (p *Packer) AddUInt64(data uint64) {
+	var buffer = make([]byte, 8)
+	binary.LittleEndian.PutUint64(buffer, data)
+	p.data = append(p.data, buffer...)
+	p.size += 8
+}
+
 // adds 8 bytes of data to the Packer struct
 func (p *Packer) AddInt32(data int32) {
 	var buffer = make([]byte, 4)

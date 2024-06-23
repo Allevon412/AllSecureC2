@@ -10,7 +10,6 @@ void AgentMain() {
 	INT err;
 	Agent Agent = { 0 };
 	agent = &Agent;
-	
 
 	if ((err = init_agent()) != 0) {
 		printf("[error] attempting to initialize agent\n");

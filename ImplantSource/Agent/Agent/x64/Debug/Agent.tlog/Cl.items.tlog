@@ -1,13 +1,14 @@
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\agent.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\agent.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Crypto.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\Crypto.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\enum.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\enum.obj
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\evasive.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\evasive.obj
+C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\Http.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\init.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\init.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\ListManager.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\ListManager.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\localcstd.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\localcstd.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\main.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\main.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\package.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\package.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\parser.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\parser.obj
-C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\Http.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\Http.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\RegisterAgent.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\RegisterAgent.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TaskController.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\TaskController.obj
 C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\token.c;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\x64\Debug\token.obj

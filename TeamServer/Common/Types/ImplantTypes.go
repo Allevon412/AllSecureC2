@@ -120,3 +120,43 @@ type AgentBuilder struct {
 
 	OutputPath string
 }
+
+// had to switch this from map to slice because go does not iterate over the keys in an order it does it randomly.
+// we need predictablility to parse these in the pe file.
+var DllNameHashes = []uint64{
+	0xAF6973267322CEF1, //KERNEL32.DLL
+	0xD99176CD993A6E6C, //ntdll.dll
+}
+
+var ApiNameHashes = []uint64{
+	0x27C27F0E9D246F42, //WinHttpOpen
+	0xEB0E11CDF0F8755D, //WinHttpConnect
+	0x271EFDAEEC211456, //WinHttpOpenRequest
+	0x371EFDAEEC1C1D40, //WinHttpSendRequest
+	0xB34C34E468B2D450, //WinHttpSetOption
+	0x61B35AE1647C5613, //WinHttpAddRequestHeaders
+	0x5849BC331DE4F77,  //WinHttpReceiveResponse
+	0xBC2634B9D6ABC69B, //WinHttpQueryHeaders
+	0xBBCD1381F969714B, //WinHttpReadData
+	0xE91AC4AB50E39E3E, //WinHttpCloseHandle
+	0x934CBF2CB5BA65FE, //RtlGetVersion
+	0xE7BF643E93800065, //NtClose
+	0x96366A0AA4E7804E, //NtOpenProcessToken
+	0x1F25DB6092C0F340, //NtOpenThreadToken
+	0x30650DA980EEDACA, //NtQueryInformationToken
+	0x75A514F31871F04A, //RtlAllocateHeap
+	0x75A4A0B9D2C3F04A, //RtlReAllocateHeap
+	0xD3B77E4DD8696D61, //RtlRandomEx
+	0x7416C5FD78F4D55E, //NtGetTickCount
+	0x5FC99BF0197A7133, //GetAdaptersInfo
+	0x61EF0CEE5979D62B, //GetUserNameA
+	0xC89E0CCD2E1EF42B, //GetComputerNameExA
+	0xDFB3641D9871EFFB, //LocalAlloc
+	0x9E13641CB4B6622B, //LocalReAlloc
+	0xCBCA36CC38F7CC65, //LocalFree
+	0xB22B0F2C5A666505, //LoadLibraryA
+	0x2B3DEF2C9071F059, //GetProcAddress
+	0x71DEA6CC38F7CD4F, //GetLocalTime
+	0x1261F2B90D585BD0, //GetSystemTimeAsFileTime
+	0x9774D5E616F6E65D, //GetSystemMetrics
+}

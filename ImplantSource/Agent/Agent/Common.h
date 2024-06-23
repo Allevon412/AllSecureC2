@@ -41,6 +41,16 @@ typedef HINTERNET(WINAPI* t_WinHttpOpenRequest)(
 	DWORD     dwFlags
 	);
 
+typedef BOOL(WINAPI* t_WinHttpSendRequest)(
+	HINTERNET hRequest,
+	LPCWSTR   pwszHeaders,
+	DWORD     dwHeadersLength,
+	LPVOID    lpOptional,
+	DWORD     dwOptionalLength,
+	DWORD     dwTotalLength,
+	DWORD_PTR  dwContext
+	);
+
 typedef BOOL(WINAPI* t_WinHttpSetOption)(
 	HINTERNET hInternet,
 	DWORD     dwOption,
@@ -53,17 +63,6 @@ typedef BOOL(WINAPI* t_WinHttpAddRequestHeaders)(
 	LPCWSTR   pwszHeaders,
 	DWORD     dwHeadersLength,
 	DWORD     dwModifiers
-	);
-
-
-typedef BOOL(WINAPI* t_WinHttpSendRequest)(
-HINTERNET hRequest,
-	LPCWSTR   pwszHeaders,
-	DWORD     dwHeadersLength,
-	LPVOID    lpOptional,
-	DWORD     dwOptionalLength,
-	DWORD     dwTotalLength,
-	DWORD_PTR  dwContext
 	);
 
 typedef BOOL(WINAPI* t_WinHttpReceiveResponse)(
@@ -186,15 +185,45 @@ typedef VOID(WINAPI* t_GetSystemTimeAsFileTime)(
 	LPFILETIME lpSystemTimeAsFileTime
 	);
 
+typedef HMODULE(WINAPI* t_LoadLibraryA)(
+	LPCSTR lpLibFileName
+	);
+typedef FARPROC(WINAPI* t_GetProcAddress)(
+	HMODULE hModule,
+	LPCSTR lpProcName
+	);
+
 //USER32 APIS
 typedef int (WINAPI* t_GetSystemMetrics)(
 	int nIndex
 	);
 
-
 /*--------------------------------------------------------------------
   STRUCTURES
 --------------------------------------------------------------------*/
+
+//0x18 bytes (sizeof)
+typedef struct _RTL_BALANCED_NODE
+{
+	union
+	{
+		struct _RTL_BALANCED_NODE* Children[2];                             //0x0
+		struct
+		{
+			struct _RTL_BALANCED_NODE* Left;                                //0x0
+			struct _RTL_BALANCED_NODE* Right;                               //0x8
+		};
+	};
+	union
+	{
+		struct
+		{
+			UCHAR Red : 1;                                                    //0x10
+			UCHAR Balance : 2;                                                //0x10
+		};
+		ULONGLONG ParentValue;                                              //0x10
+	};
+}_RTL_BALANCED_NODE, * P_RTL_BALANCED_NODE;
 
 typedef struct _INT_LSA_UNICODE_STRING {
 	USHORT Length;
@@ -226,6 +255,76 @@ typedef struct _INT_PEB_LDR_DATA {
 	LIST_ENTRY              InMemoryOrderModuleList;
 	LIST_ENTRY              InInitializationOrderModuleList;
 } _INT_PEB_LDR_DATA, * P_INT_PEB_LDR_DATA;
+
+//0x120 bytes (sizeof)
+typedef struct _INT_LDR_DATA_TABLE_ENTRY
+{
+	struct _LIST_ENTRY InLoadOrderLinks;                                    //0x0
+	struct _LIST_ENTRY InMemoryOrderLinks;                                  //0x10
+	struct _LIST_ENTRY InInitializationOrderLinks;                          //0x20
+	VOID* DllBase;                                                          //0x30
+	VOID* EntryPoint;                                                       //0x38
+	ULONG SizeOfImage;                                                      //0x40
+	struct _UNICODE_STRING FullDllName;                                     //0x48
+	struct _UNICODE_STRING BaseDllName;                                     //0x58
+	union
+	{
+		UCHAR FlagGroup[4];                                                 //0x68
+		ULONG Flags;                                                        //0x68
+		struct
+		{
+			ULONG PackagedBinary : 1;                                         //0x68
+			ULONG MarkedForRemoval : 1;                                       //0x68
+			ULONG ImageDll : 1;                                               //0x68
+			ULONG LoadNotificationsSent : 1;                                  //0x68
+			ULONG TelemetryEntryProcessed : 1;                                //0x68
+			ULONG ProcessStaticImport : 1;                                    //0x68
+			ULONG InLegacyLists : 1;                                          //0x68
+			ULONG InIndexes : 1;                                              //0x68
+			ULONG ShimDll : 1;                                                //0x68
+			ULONG InExceptionTable : 1;                                       //0x68
+			ULONG ReservedFlags1 : 2;                                         //0x68
+			ULONG LoadInProgress : 1;                                         //0x68
+			ULONG LoadConfigProcessed : 1;                                    //0x68
+			ULONG EntryProcessed : 1;                                         //0x68
+			ULONG ProtectDelayLoad : 1;                                       //0x68
+			ULONG ReservedFlags3 : 2;                                         //0x68
+			ULONG DontCallForThreads : 1;                                     //0x68
+			ULONG ProcessAttachCalled : 1;                                    //0x68
+			ULONG ProcessAttachFailed : 1;                                    //0x68
+			ULONG CorDeferredValidate : 1;                                    //0x68
+			ULONG CorImage : 1;                                               //0x68
+			ULONG DontRelocate : 1;                                           //0x68
+			ULONG CorILOnly : 1;                                              //0x68
+			ULONG ChpeImage : 1;                                              //0x68
+			ULONG ReservedFlags5 : 2;                                         //0x68
+			ULONG Redirected : 1;                                             //0x68
+			ULONG ReservedFlags6 : 2;                                         //0x68
+			ULONG CompatDatabaseProcessed : 1;                                //0x68
+		};
+	};
+	USHORT ObsoleteLoadCount;                                               //0x6c
+	USHORT TlsIndex;                                                        //0x6e
+	struct _LIST_ENTRY HashLinks;                                           //0x70
+	ULONG TimeDateStamp;                                                    //0x80
+	struct _ACTIVATION_CONTEXT* EntryPointActivationContext;                //0x88
+	VOID* Lock;                                                             //0x90
+	struct _LDR_DDAG_NODE* DdagNode;                                        //0x98
+	struct _LIST_ENTRY NodeModuleLink;                                      //0xa0
+	struct _LDRP_LOAD_CONTEXT* LoadContext;                                 //0xb0
+	VOID* ParentDllBase;                                                    //0xb8
+	VOID* SwitchBackContext;                                                //0xc0
+	struct _RTL_BALANCED_NODE BaseAddressIndexNode;                         //0xc8
+	struct _RTL_BALANCED_NODE MappingInfoIndexNode;                         //0xe0
+	ULONGLONG OriginalBase;                                                 //0xf8
+	union _LARGE_INTEGER LoadTime;                                          //0x100
+	ULONG BaseNameHashValue;                                                //0x108
+	enum _LDR_DLL_LOAD_REASON LoadReason;                                   //0x10c
+	ULONG ImplicitPathOptions;                                              //0x110
+	ULONG ReferenceCount;                                                   //0x114
+	ULONG DependentLoadFlags;                                               //0x118
+	UCHAR SigningLevel;                                                     //0x11c
+}_INT_LDR_DATA_TABLE_ENTRY, * P_INT_LDR_DATA_TABLE_ENTRY;
 
 struct _INT_STRING64
 {
@@ -259,7 +358,7 @@ typedef struct _PEB64
 	UCHAR Padding0[4];                                                      //0x4
 	ULONGLONG Mutant;                                                       //0x8
 	ULONGLONG ImageBaseAddress;                                             //0x10
-	ULONGLONG Ldr;                                                          //0x18
+	P_INT_LDR_DATA_TABLE_ENTRY Ldr;                                                          //0x18
 	ULONGLONG ProcessParameters;                                            //0x20
 	ULONGLONG SubSystemData;                                                //0x28
 	ULONGLONG ProcessHeap;                                                  //0x30
@@ -713,35 +812,9 @@ typedef struct _INT_TEB
 
 } _INT_TEB, *P_INT_TEB;
 
-typedef struct _INT_LDR_DATA_TABLE_ENTRY {
-	LIST_ENTRY InLoadOrderLinks;
-	LIST_ENTRY InMemoryOrderLinks;
-	LIST_ENTRY InInitializationOrderLinks;
-	PVOID DllBase;
-	PVOID EntryPoint;
-	ULONG SizeOfImage;
-	_INT_UNICODE_STRING FullDllName;
-	_INT_UNICODE_STRING BaseDllName;
-	ULONG Flags;
-	WORD LoadCount;
-	WORD TlsIndex;
-	union {
-		LIST_ENTRY HashLinks;
-		struct {
-			PVOID SectionPointer;
-			ULONG CheckSum;
-		};
-	};
-	union {
-		ULONG TimeDateStamp;
-		PVOID LoadedImports;
-	};
-	PACTIVATION_CONTEXT EntryPointActivationContext;
-	PVOID PatchInformation;
-	LIST_ENTRY ForwarderLinks;
-	LIST_ENTRY ServiceTagLinks;
-	LIST_ENTRY StaticLinks;
-} _INT_LDR_DATA_TABLE_ENTRY, * P_INT_LDR_DATA_TABLE_ENTRY;
+
+
+
 
 
 typedef struct _INT_INITIAL_TEB {

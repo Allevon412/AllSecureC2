@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\wolfssl;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\helper;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\hashes\sha2;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\ciphers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\headers;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\prngs;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\pk;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\modes\ctr;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\misc\crypt;C:\Users\Brendan Ortiz\Documents\GOProjcets\AllSecure\ImplantSource\Agent\Agent\TomCrypt\math;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,16 +139,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="agent.c" />
     <ClCompile Include="Crypto.c" />
     <ClCompile Include="enum.c" />
+    <ClCompile Include="evasive.c" />
+    <ClCompile Include="Http.c" />
     <ClCompile Include="init.c" />
     <ClCompile Include="ListManager.c" />
     <ClCompile Include="localcstd.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="package.c" />
     <ClCompile Include="parser.c" />
-    <ClCompile Include="Http.c" />
     <ClCompile Include="RegisterAgent.c" />
     <ClCompile Include="TaskController.c" />
     <ClCompile Include="token.c" />
@@ -180,11 +184,12 @@
     <ClCompile Include="wolfssl\wolfmath.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="agent.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Crypto.h" />
     <ClInclude Include="enum.h" />
+    <ClInclude Include="evasive.h" />
     <ClInclude Include="Helpers.h" />
-    <ClInclude Include="agent.h" />
     <ClInclude Include="Http.h" />
     <ClInclude Include="ListManager.h" />
     <ClInclude Include="localcstd.h" />
@@ -227,9 +232,6 @@
     <ClInclude Include="wolfssl\wolfcrypt\wolfmath.h" />
     <ClInclude Include="wolfssl\wolfssl\callbacks.h" />
     <ClInclude Include="wolfssl\wolfssl\version.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,6 +22,52 @@ SIZE_T StringLengthW(LPCWSTR String) {
 	return (String2 - String);
 }
 
+LPSTR ToLowerA(LPSTR String) {
+	if (String == NULL) return NULL;
+
+	// Allocate memory for the new string (+1 for the null terminator)
+	LPSTR lowerStr = (LPSTR)agent->apis->pLocalAlloc(LPTR, (StringLengthA(String) + 1));
+	if (lowerStr == NULL) return NULL; // Check for allocation failure
+
+	// Convert each character to lowercase and copy it
+	for (int i = 0; String[i] != '\0'; i++) {
+		if (String[i] >= 'A' && String[i] <= 'Z') {
+			lowerStr[i] = String[i] + 32; // Convert to lowercase
+		}
+		else {
+			lowerStr[i] = String[i]; // Copy character as is
+		}
+	}
+
+	// Null-terminate the new string
+	lowerStr[StringLengthA(String)] = '\0';
+
+	return lowerStr;
+}
+
+LPWSTR ToLowerW(LPWSTR String) {
+	if (String == NULL) return NULL;
+
+	// Allocate memory for the new string (+1 for the null terminator)
+	LPWSTR lowerStr = (LPWSTR)agent->apis->pLocalAlloc(LPTR, ((StringLengthW(String) + 1) * sizeof(WCHAR)));
+	if (lowerStr == NULL) return NULL; // Check for allocation failure
+
+	// Convert each character to lowercase and copy it
+	for (int i = 0; String[i] != '\0'; i++) {
+		if (String[i] >= 'A' && String[i] <= 'Z') {
+			lowerStr[i] = String[i] + 32; // Convert to lowercase
+		}
+		else {
+			lowerStr[i] = String[i]; // Copy character as is
+		}
+	}
+
+	// Null-terminate the new string
+	lowerStr[StringLengthW(String)] = '\0';
+
+	return lowerStr;
+}
+
 void MemoryCopy(void* dest, const void* src, size_t n) {
 	char* csrc = (char*)src;
 	char* cdest = (char*)dest;
