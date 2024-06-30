@@ -71,6 +71,9 @@ func CreateImplantFunc(ImplantName, WorkingHours *Common.CustomEntry, KillDate t
 	//setup our endpoint
 	endpoint := "https://" + clientobj.Server + "/CreateImplant"
 
+	//TODO remove debug output.
+	log.Println("[info] sending implant data to server: ", ImplantData)
+	log.Println("[info] kill date: ", KillDate.String())
 	//parse our user bool input to bind it to our NewUser struct.
 	//marshal the data for http request.
 	Jdata, err = json.Marshal(ImplantData)
@@ -78,7 +81,7 @@ func CreateImplantFunc(ImplantName, WorkingHours *Common.CustomEntry, KillDate t
 		log.Println("[error] attempting to marshal implant data", err)
 		return
 	}
-	log.Println("[info] sending implant data to server: ", string(Jdata))
+
 	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
 	if err != nil {
 		log.Println("[error] attempting to create new implant", err)

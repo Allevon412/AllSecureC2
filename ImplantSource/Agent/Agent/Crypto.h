@@ -4,5 +4,5 @@
 #include "agent.h"
 
 
-INT AESCTR(BYTE* Buffer, ULONG BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV);
-ULONG GenerateRandomNumber();
+INT AESCTR(BYTE* Buffer, DWORD BufferLength, BYTE* AESKey, UINT32 AesKeySize, BYTE* IV);
+DWORD GenerateRandomNumber();
