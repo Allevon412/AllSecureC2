@@ -120,6 +120,7 @@ typedef struct _Win32 {
 	HMODULE hAdvapi32;
 	t_GetUserNameA pGetUserNameA;
 	t_SystemFunction032 pSystemFunction032;
+	HMODULE hCryptSp;
 
 	//USER32 APIS
 	HMODULE hUser32;

@@ -105,11 +105,12 @@ LPVOID RetrieveFunctionPointerFromhash(HMODULE Module, UINT64 Hash) {
 
 	for (DWORD i = 0; i < pExportDirectory->NumberOfNames; i++) {
         //TODO remove debug statements
-	//	printf("FunctionName: %s\n", (LPSTR)((LPBYTE)Module + pAddressOfNames[i]));
+    	//printf("FunctionName: %s\n", (LPSTR)((LPBYTE)Module + pAddressOfNames[i]));
 		UINT64 functionNameHash = Rotr64HashA((LPSTR)((LPBYTE)Module + pAddressOfNames[i])); // there could be issues here because i used WSTR to generate hashes. Here we're using ASTR
-	//	printf("FunctionNameHash: 0x%llX\n", functionNameHash);
+    	//printf("FunctionNameHash: 0x%llX\n", functionNameHash);
         if (functionNameHash == Hash) {
-			return (LPVOID)((LPBYTE)Module + pAddressOfFunctions[pAddressOfNameOrdinals[i]]);
+            DWORD funcRVA = pAddressOfFunctions[pAddressOfNameOrdinals[i]];
+			return (LPVOID)((LPBYTE)Module + funcRVA);
 		}
 	}
 	return NULL;
@@ -218,6 +219,7 @@ void printhashes() {
         "VirtualProtect",
         "SystemFunction032",
         "WaitForSingleObjectEx",
+        "SystemFunction033",
         
     };
 	printf("ApiNameHashes = {\n");

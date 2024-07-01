@@ -25,11 +25,7 @@ typedef VOID(NTAPI* RTL_WAITORTIMERCALLBACKFUNC) (
 	BOOLEAN TimerOrWaitFired
 );
 
-typedef struct _DataBuffer {
-	DWORD BufferLength;
-	DWORD MaxBufferLength;
-	BYTE* Buffer;
-} DataBuffer, * pDataBuffer;
+
 
 //HTTP APIS
 //WINHTTP APIS
@@ -253,9 +249,9 @@ typedef BOOL(WINAPI* t_GetUserNameA)(
 	LPSTR   lpBuffer,
 	LPDWORD pcbBuffer
 	);
-typedef NTSTATUS(*t_SystemFunction032)(
-		  pDataBuffer data,
-	const pDataBuffer key
+typedef NTSTATUS(NTAPI* t_SystemFunction032)(
+	struct USTRING* data,
+	const struct USTRING* key
 	);
 
 
@@ -926,7 +922,17 @@ typedef struct _INT_TEB
 
 } _INT_TEB, *P_INT_TEB;
 
+typedef struct _DataBuffer {
+	DWORD BufferLength;
+	DWORD MaxBufferLength;
+	BYTE* Buffer;
+} DataBuffer, * pDataBuffer;
 
+typedef struct _USTRING {
+	DWORD Length;
+	DWORD MaximumLength;
+	PVOID Buffer;
+}USTRING, *pUSTRING;
 
 typedef struct _INT_INITIAL_TEB {
 	PVOID                StackBase;
