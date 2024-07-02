@@ -175,4 +175,5 @@ var ApiNameHashes = []uint64{
 	0x9B2E41BE54366260, //VirtualProtect 43
 	0x8231D59A3A04EF1D, //SystemFunction032 44
 	0x38B9B8DA106ECFF9, //WaitForSingleObjectEx 45
+	0x110F544938E7BE7F, //LdrGetProcedureAddress 46
 }

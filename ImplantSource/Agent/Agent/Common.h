@@ -236,6 +236,13 @@ typedef NTSTATUS(NTAPI* t_NtDuplicateObject)(
 	ULONG       Options
 	);
 
+typedef NTSTATUS(NTAPI* t_LdrGetProcedureAddress)(
+	IN HMODULE              ModuleHandle,
+	IN PANSI_STRING         FunctionName OPTIONAL,
+	IN WORD                 Oridinal OPTIONAL,
+	OUT PVOID* FunctionAddress
+	);
+
 
 //IPhlpapi APIS
 typedef DWORD(WINAPI* t_GetAdaptersInfo)(

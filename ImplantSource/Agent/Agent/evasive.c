@@ -91,26 +91,49 @@ LPVOID RetrieveModuleHandleFromHash(UINT64 hash) {
 LPVOID RetrieveFunctionPointerFromhash(HMODULE Module, UINT64 Hash) {
 	PIMAGE_NT_HEADERS pNtHeaders = NULL;
 	PIMAGE_EXPORT_DIRECTORY pExportDirectory = NULL;
+    DWORD ExportDirectorySize = 0;
 	PDWORD pAddressOfFunctions = NULL;
 	PDWORD pAddressOfNames = NULL;
 	PWORD pAddressOfNameOrdinals = NULL;
+    LPSTR FunctionName = NULL;
+    NTSTATUS Success = 0;
 
 
     pNtHeaders = (PIMAGE_NT_HEADERS)((LPBYTE)Module + ((PIMAGE_DOS_HEADER)Module)->e_lfanew);
 	pExportDirectory = (PIMAGE_EXPORT_DIRECTORY)((LPBYTE)Module + pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+    ExportDirectorySize = (DWORD)((LPBYTE)Module + pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].Size);
 
 	pAddressOfFunctions = (PDWORD)((LPBYTE)Module + pExportDirectory->AddressOfFunctions);
 	pAddressOfNames = (PDWORD)((LPBYTE)Module + pExportDirectory->AddressOfNames);
 	pAddressOfNameOrdinals = (PWORD)((LPBYTE)Module + pExportDirectory->AddressOfNameOrdinals);
 
 	for (DWORD i = 0; i < pExportDirectory->NumberOfNames; i++) {
+
+        FunctionName = (LPSTR)((LPBYTE)Module + pAddressOfNames[i]);
         //TODO remove debug statements
     	//printf("FunctionName: %s\n", (LPSTR)((LPBYTE)Module + pAddressOfNames[i]));
-		UINT64 functionNameHash = Rotr64HashA((LPSTR)((LPBYTE)Module + pAddressOfNames[i])); // there could be issues here because i used WSTR to generate hashes. Here we're using ASTR
+		UINT64 functionNameHash = Rotr64HashA(FunctionName); // there could be issues here because i used WSTR to generate hashes. Here we're using ASTR
     	//printf("FunctionNameHash: 0x%llX\n", functionNameHash);
         if (functionNameHash == Hash) {
+
             DWORD funcRVA = pAddressOfFunctions[pAddressOfNameOrdinals[i]];
-			return (LPVOID)((LPBYTE)Module + funcRVA);
+			LPVOID FunctionAddr = (LPVOID)((LPBYTE)Module + funcRVA);
+
+            if ((ULONG_PTR)FunctionAddr >= (ULONG_PTR)pExportDirectory && (ULONG_PTR)FunctionAddr < (ULONG_PTR)pExportDirectory + ExportDirectorySize) { // we've received a forwarded address.
+
+                USTRING ForwardedFunction;
+                ForwardedFunction.Length = StringLengthA(FunctionName);
+                ForwardedFunction.MaximumLength = ForwardedFunction.Length + sizeof(CHAR);
+                ForwardedFunction.Buffer = FunctionName;
+
+                if ((Success = (agent->apis->pLdrGetProcedureAddress(Module, &ForwardedFunction, 0, &FunctionAddr))) != 0)
+                {
+                    return NULL; 
+                }
+                
+            }
+
+            return FunctionAddr;
 		}
 	}
 	return NULL;
@@ -219,7 +242,8 @@ void printhashes() {
         "VirtualProtect",
         "SystemFunction032",
         "WaitForSingleObjectEx",
-        "SystemFunction033",
+        "LdrGetProcedureAddress"
+
         
     };
 	printf("ApiNameHashes = {\n");

@@ -153,6 +153,7 @@ func (ab *AgentBuilder) Build() bool {
 	HashConfig.AddString("winhttp.dll")
 	HashConfig.AddString("User32.dll")
 	HashConfig.AddString("iphlpapi.dll")
+	HashConfig.AddString("cryptsp.dll")
 	EncryptedHashConfig, HashKey, HashIv, err := Crypt.AESCTREncrypt(HashConfig.GetBuffer())
 	if err != nil {
 		log.Println("[error] attempting to encrypt config: ", err)

