@@ -7,6 +7,7 @@ void PerformSleepObf();
 BOOL EventSet(_In_ HANDLE Event);
 
 
+
 #define _Ekko
 
 #ifdef _Ekko

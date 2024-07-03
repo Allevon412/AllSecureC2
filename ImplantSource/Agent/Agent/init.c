@@ -28,7 +28,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[47] = { 0 };
+UINT64 ApiHashes[48] = { 0 };
 
 INT init_agent() {
 
@@ -182,6 +182,10 @@ INT init_agent() {
     agent->apis->pLdrGetProcedureAddress = (t_LdrGetProcedureAddress)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[46]);
     if (!agent->apis->pLdrGetProcedureAddress)
         return -1;
+    
+    agent->apis->pNtQueryVirtualMemory = (t_NtQueryVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[47]);
+    if (!agent->apis->pNtQueryVirtualMemory)
+        return -1;
 
 
     //obtain iphlpapi apis
@@ -311,6 +315,7 @@ INT init_agent() {
 
     agent->ModuleBaseAddr = GetModuleBaseAddr(0);
     agent->ImageSize = GetImageSize(agent->ModuleBaseAddr);
+    agent->NumSections = GetNumberOfSections(agent->ModuleBaseAddr);
 
     return 0;
 }

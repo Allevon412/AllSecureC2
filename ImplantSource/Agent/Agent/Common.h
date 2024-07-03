@@ -242,6 +242,14 @@ typedef NTSTATUS(NTAPI* t_LdrGetProcedureAddress)(
 	IN WORD                 Oridinal OPTIONAL,
 	OUT PVOID* FunctionAddress
 	);
+typedef NTSTATUS(NTAPI* t_NtQueryVirtualMemory)(
+	IN HANDLE							ProcessHandle,
+	IN PVOID							BaseAddress,
+	IN enum MEMORY_INFORMATION_CLASS	MemoryInformationClass,
+	OUT PVOID							Buffer,
+	IN SIZE_T							Length,
+	OUT PSIZE_T							ResultLength OPTIONAL
+	);
 
 
 //IPhlpapi APIS
@@ -958,3 +966,10 @@ enum HOST_ROTATION {
 	HOST_ROTATION_RANDOM,
 	HOST_ROTATION_FAIL_OVER
 };
+
+
+typedef enum _MEMORY_INFORMATION_CLASS {
+
+	MemoryBasicInformation
+
+} MEMORY_INFORMATION_CLASS, * PMEMORY_INFORMATION_CLASS;

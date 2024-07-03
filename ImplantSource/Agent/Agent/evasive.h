@@ -12,4 +12,5 @@ LPVOID RetrieveFunctionPointerFromhash(HMODULE Module, UINT64 Hash);
 // accepts 0 to return the current image's hash.
 PVOID GetModuleBaseAddr(_In_ UINT64 Hash);
 DWORD GetImageSize(_In_ PVOID ModuleBase);
+WORD GetNumberOfSections(_In_ PVOID ModuleBase);
 void printhashes();

@@ -176,6 +176,14 @@ DWORD GetImageSize(_In_ PVOID ModuleBase)
     
 }
 
+WORD GetNumberOfSections(_In_ PVOID ModuleBase)
+{
+    IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)ModuleBase;
+    IMAGE_NT_HEADERS* NtHeaders = (IMAGE_NT_HEADERS*)((BYTE*)ModuleBase + dosHeader->e_lfanew);
+
+    return NtHeaders->FileHeader.NumberOfSections;
+}
+
 //TODO finish the putting the hashes into the agent using the config builder. maybe even put it in a custom section?
 void printhashes() {
 
@@ -242,9 +250,8 @@ void printhashes() {
         "VirtualProtect",
         "SystemFunction032",
         "WaitForSingleObjectEx",
-        "LdrGetProcedureAddress"
-
-        
+        "LdrGetProcedureAddress",
+        "NtQueryVirtualMemory"
     };
 	printf("ApiNameHashes = {\n");
 	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {
