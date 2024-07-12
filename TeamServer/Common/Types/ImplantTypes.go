@@ -1,7 +1,7 @@
 package Types
 
 const (
-	PayloadDir  = "Payloads"
+	PayloadDir  = "ImplantSource"
 	PayloadName = "Agent"
 )
 
@@ -42,12 +42,16 @@ const (
 const (
 	ARCHITECTURE_X64 = 1
 	ARCHITECTURE_X86 = 2
+	MASM             = 1
+	NASM             = 3
+	SRC              = 2
 )
 
 type BuilderConfig struct {
 	Compiler64 string
 	Compiler86 string
 	Nasm       string
+	Masm       string
 	DebugDev   bool
 	SendLogs   bool
 }
@@ -177,4 +181,15 @@ var ApiNameHashes = []uint64{
 	0x38B9B8DA106ECFF9, //WaitForSingleObjectEx 45
 	0x110F544938E7BE7F, //LdrGetProcedureAddress 46
 	0x210CDD966E269A36, //NtQueryVirtualMemory 47
+	0x65067263CD6B0D3D, //BaseThreadInitThunk 48
+	0x391E03B20EE79746, //RtlUserThreadStart 49
+}
+
+var DllNames = []string{
+	"advapi32.dll",
+	"winhttp.dll",
+	"User32.dll",
+	"iphlpapi.dll",
+	"cryptsp.dll",
+	"kernelbase.dll",
 }

