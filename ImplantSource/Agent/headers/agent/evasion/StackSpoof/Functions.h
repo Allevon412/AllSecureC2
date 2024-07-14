@@ -2,9 +2,6 @@
 #include <Windows.h>
 
 typedef PIMAGE_RUNTIME_FUNCTION_ENTRY PERF;
-typedef SIZE_T(WINAPI* VirtualQueryType)(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, SIZE_T dwLength);
-typedef HANDLE(WINAPI* OpenProcessType)(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId);
-typedef DWORD(WINAPI* GetCurrentProcessIdType)();
 
 PIMAGE_RUNTIME_FUNCTION_ENTRY RTFindFunctionByAddress(UINT64, DWORD64);
 PIMAGE_RUNTIME_FUNCTION_ENTRY RTFindFunctionByIndex(UINT64, DWORD);

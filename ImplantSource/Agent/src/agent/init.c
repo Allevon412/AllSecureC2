@@ -235,8 +235,9 @@ INT init_agent() {
     if(!agent->apis->pGetSystemMetrics){
         return -1;
     }
-    CopyMemory(agent->apis->BaseThreadInitThunkHash, ApiHashes[48], sizeof(UINT64));
-    CopyMemory(agent->apis->RtlUserThreadStartHash, ApiHashes[49], sizeof(UINT64));
+
+    agent->apis->BaseThreadInitThunkHash = ApiHashes[48];
+    agent->apis->RtlUserThreadStartHash = ApiHashes[49];
 
 	RtlSecureZeroMemory(ApiHashes, sizeof(ApiHashes));
 	RtlSecureZeroMemory(DllHashes, sizeof(DllHashes));

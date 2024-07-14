@@ -467,10 +467,6 @@ func (ab *AgentBuilder) CompileCmd(cmd []string, CompilationType int) bool {
 		err         error
 	)
 
-	CommandLine.Dir = ab.SourcePath
-	CommandLine.Stdout = &stdout
-	CommandLine.Stderr = &stderr
-
 	// handle special case we're compiling our asm objects using masm gcc command will come next
 	if CompilationType == Types.MASM {
 		CommandLine = *exec.Command(ab.CompilerOptions.Config.Masm)
@@ -482,6 +478,10 @@ func (ab *AgentBuilder) CompileCmd(cmd []string, CompilationType int) bool {
 		CommandLine = *exec.Command("gcc")
 		CommandLine.Args = append(CommandLine.Args, cmd...)
 	}
+
+	CommandLine.Dir = ab.SourcePath
+	CommandLine.Stdout = &stdout
+	CommandLine.Stderr = &stderr
 
 	//TODO remove debug output
 	log.Println("[info] compiling agent with command: ", CommandLine.Args)

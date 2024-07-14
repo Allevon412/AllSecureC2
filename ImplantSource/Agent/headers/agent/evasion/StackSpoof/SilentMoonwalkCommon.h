@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef SILENTMOONWALKCOMMON_H_INCLUDED
+#define SILENTMOONWALKCOMMON_H_INCLUDED
+
+
 #include "../../../cstdreplacement/localcstd.h"
 #include <psapi.h>
 #include <dbghelp.h>
@@ -214,69 +218,15 @@ typedef struct _tagSTACKFRAME {
 #endif
 
 
-BYTE ExtractOpInfo(BYTE OpIC) {
-    return OpIC >> 4;
-}
+BYTE ExtractOpInfo(BYTE OpIC);
 
-BYTE ExtractOpCode(BYTE OpIC) {
-    return OpIC & 0x0F;
-}
+BYTE ExtractOpCode(BYTE OpIC);
 
-char* GetOpInfo(int op) {
-    char* reg = (char*)malloc(4);
-    if (reg == NULL) {
-        return NULL;
-    }
+char* GetOpInfo(int op);
 
-    MemorySet((BYTE*)reg, 0, 4);
+static unsigned long int next = 1;
 
-    if (op == 0) {
-        MemoryCopy(reg, "RAX", 4);
-    }
-    else if (op == 1) {
-        MemoryCopy(reg, "RCX", 4);
-    }
-    else if (op == 2) {
-        MemoryCopy(reg, "RDX", 4);
-    }
-    else if (op == 3) {
-        MemoryCopy(reg, "RBX", 4);
-    }
-    else if (op == 4) {
-        MemoryCopy(reg, "RSP", 4);
-    }
-    else if (op == 5) {
-        MemoryCopy(reg, "RBP", 4);
-    }
-    else if (op == 6) {
-        MemoryCopy(reg, "RSI", 4);
-    }
-    else if (op == 7) {
-        MemoryCopy(reg, "RDI", 4);
-    }
-    else if (op == 8) {
-        MemoryCopy(reg, "R8\0", 4);
-    }
-    else if (op == 9) {
-        MemoryCopy(reg, "R9\0", 4);
-    }
-    else if (op == 10) {
-        MemoryCopy(reg, "R10", 4);
-    }
-    else if (op == 11) {
-        MemoryCopy(reg, "R11", 4);
-    }
-    else if (op == 12) {
-        MemoryCopy(reg, "R12", 4);
-    }
-    else if (op == 13) {
-        MemoryCopy(reg, "R13", 4);
-    }
-    else if (op == 14) {
-        MemoryCopy(reg, "R14", 4);
-    }
-    else if (op == 15) {
-        MemoryCopy(reg, "R15", 4);
-    }
-    return reg;
-}
+int int_rand(void);
+
+void int_srand(unsigned int seed);
+#endif
