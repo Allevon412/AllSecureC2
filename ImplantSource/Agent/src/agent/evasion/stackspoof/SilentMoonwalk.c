@@ -65,7 +65,7 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args) {
     PUNWIND_INFO ui = NULL;
     DWORD StackSizeOf = 0;
 
-    f = RTFindFunctionByAddress((UINT64)kernel32Base, (DWORD)pBaseThreadInitThunk - (UINT64)kernel32Base);
+    f = RTFindFunctionByAddress((UINT64)kernel32Base, (UINT64)pBaseThreadInitThunk - (UINT64)kernel32Base);
 
     if (f != NULL) {
         ui = (PUNWIND_INFO)((UINT64)kernel32Base + (DWORD) f->UnwindData);
@@ -112,7 +112,7 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args) {
     stackOffsetWhereRbpIsPushed = FindPushRbp(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_pop_rsp_frame, &rtTargetOffset);
 
     FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_jmp_gadget, 0);
-    FindGadget(kernel32Base, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_stack_pivot_gadget, 1);
+    FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_stack_pivot_gadget, 1);
 
     spoof_call(&sConfig);
 }
