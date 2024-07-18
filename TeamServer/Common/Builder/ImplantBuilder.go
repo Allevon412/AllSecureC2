@@ -494,7 +494,7 @@ func (ab *AgentBuilder) CompileCmd(cmd []string, CompilationType int) bool {
 		return false
 	}
 
-	err = os.Rename(ab.OutputPath, ab.SourcePath+Types.PayloadName+"."+ab.FileExtenstion)
+	err = os.Rename(ab.OutputPath, ab.SourcePath+"/"+Types.PayloadName+"."+ab.FileExtenstion)
 	if err != nil {
 		log.Println("[error] attempting to move compiled binary: ", err)
 		return false

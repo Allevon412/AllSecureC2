@@ -1,5 +1,6 @@
 #pragma once
 #include "Common/Common.h"
+#include "evasion/stackspoof/SilentMoonwalk.h"
 
 #define AGENT_MAGIC_VALUE 0x0041153C //allsec in l33t speak.
 //config bytes
@@ -160,6 +161,12 @@ typedef struct _AgentCMD {
 	BYTE* DATA;
 } AgentCMD, * pAgentCMD;
 
+typedef struct _MoonWalking {
+	PVOID RetAddr;
+	PVOID FunctionPointer;
+	PArgs Arguments;
+} MoonWalking, * pMoonWalking;
+
 //TODO clean up this structure.
 //I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
 typedef struct _Agent {
@@ -203,6 +210,7 @@ typedef struct _Agent {
 	struct _Package* MetaDataPackage;
 	struct _Package* packages;
 
+	pMoonWalking Walker;
 
 }Agent, * pAgent;
 

