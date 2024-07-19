@@ -41,11 +41,6 @@ void AgentMain(PVOID RetAddr) {
 
 	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
 
-	agent->Walker->FunctionPointer = GetProcAddress(GetModuleHandleA("User32"), "MessageBoxA");
-	agent->Walker->Arguments = &arguments;
-
-	SilentMoonwalkMain(agent->Walker->FunctionPointer, agent->Walker->Arguments, agent->Walker->RetAddr);
-
 	AgentRoutine();
 
 }
