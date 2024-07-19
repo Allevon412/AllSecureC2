@@ -75,3 +75,9 @@ ApiNameHashes   {
 0x391E03B20EE79746, //RtlUserThreadStart 49
 }
 
+
+
+0x7ffeb1de4df0 - wait for single object ex
+0x7FFEB1DE4DF0 - args array.
+
+2, 0x16787660fc0

