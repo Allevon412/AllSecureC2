@@ -18,9 +18,19 @@ Where does AllSecure Differ from Havoc or other C2 frameworks? Well, there's a f
 4. The implant uses the silentmoonwalk technqiue for stack spoofing. 
 
  ## RoadMap
-I want to implement my own authentication scheme when the implant connects to the listening server. I.e. uses specific User-Agent, Specific IP address expected, specific authentication code or something similar.
-The code only works as a 64bit executable at the moment, there will be support in the future for different versions i.e. shellcode, dll, 32bit of each format, loaders.
-I would like to implement a custom packer as well.
+- I want to implement my own authentication scheme when the implant connects to the listening server. I.e. uses specific User-Agent, Specific IP address expected, specific authentication code or something similar.
+- The code only works as a 64bit executable at the moment, there will be support in the future for different versions i.e. shellcode, dll, 32bit of each format, loaders.
+- I would like to implement a custom packer as well.
+- reflective loader capability
+- evasive loader grab main functionality of agent
+- indirect syscalls
+- unhooking
+- amsi & etw patching
+- persistence techniques
+- injecting into 32bit & 64bit processes
+- tunneling / socks proxying
+- redirectors?
+- stomp peheader and create custom loader to handle it.
 
 
 This project will be updated only as a way for me to learn new techniques and see how they incorporate into the bigger picture of an entire C2 framework. For example, when a C2 server tells the implant to perform reflective loading of a DLL or PE file, what does that look like? When an implant is set up to use a secondary heap and the heapallocate function calls are hooked to point to the secondary heap so that secondary heap can be encrypted during implant sleep cycle, what does that look like? These are examples of techniques I am using for the project as an excuse to learn. Therefore, I will incorporate whatever techniques I desire to learn into the framework and will keep the project going that way. In this manner I will no longer have to create individual tools and repos for each new technique but instead incorporate it into a system where they all work together.
