@@ -60,8 +60,6 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     if (f != NULL) {
         ui = (PUNWIND_INFO)((UINT64)kernel32Base + (DWORD) f->UnwindData);
         GetStackFrameSizeIgnoringUwopSetFpreg(kernel32Base, (PVOID)ui, &StackSizeOf);
-        printf("Function BaseThreadInitThunk found. Stack size: 0x%x - Address: 0x%I64x\n", StackSizeOf, pBaseThreadInitThunk);
-
 
         sConfig.BaseThreadInitThunkAddress = (PVOID)pBaseThreadInitThunk;
         sConfig.BaseThreadInitThunkFrameSize = (UINT64)StackSizeOf;
@@ -74,15 +72,10 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     if(f != NULL) {
         ui = (PUNWIND_INFO)((UINT64)ntdllBase + (DWORD)f->UnwindData);
         GetStackFrameSizeIgnoringUwopSetFpreg(ntdllBase, (PVOID)ui, &StackSizeOf);
-        printf("Function RtlUserThreadStart found. Stack size: 0x%x - Address: 0x%I64x\n", StackSizeOf, pRtlUserThreadStart);
 
         sConfig.RtlUserThreadStartAddress = (PVOID)pRtlUserThreadStart;
         sConfig.RtlUserThreadStartFrameSize = (UINT64)StackSizeOf;
     }
-
-    printf("Runtime Function Table Size: %u\n", runtimeFunctionTableSize);
-    printf("Runtime Function Table Last Index: %u\n", rtLastIndex);
-    printf("RT Function Table Range: 0x%I64X - 0x%I64X\n", (UINT64)pRuntimeFunctionTable, (UINT64)pRuntimeFunctionTable + runtimeFunctionTableSize);
 
     sConfig.SpoofFunctionPointer = (PVOID)FunctionPointer;
     sConfig.Nargs = args->Nargs;
@@ -101,17 +94,11 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
 
     sConfig.ReturnAddress = RetAddr;
 
-    printf("Return address: 0x%I64X\n", sConfig.ReturnAddress);
-
-    printf("Address of Function to spoof: 0x%I64X\n", sConfig.SpoofFunctionPointer);
-
     sConfig.FirstFrameRandomOffset = (UINT64)int_rand();
     sConfig.SecondFrameRandomOffset = (UINT64)int_rand();
 
     FindProlog(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_prolog_frame, &rtTargetOffset);
     stackOffsetWhereRbpIsPushed = FindPushRbp(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_pop_rsp_frame, &rtTargetOffset);
-
-    printf("PUSH RBP offset: 0x%X\n", stackOffsetWhereRbpIsPushed);
 
 
     FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_jmp_gadget, 0);
@@ -145,7 +132,6 @@ DWORD FindProlog(_In_ HMODULE moduleBase, _In_ PERF pRuntimeFunctionTable, _In_ 
             }
             *skip = suitableFrames;
 
-            printf("Breaking at: %d\n", i);
 
             *prtSaveIndex = i;
             break;
@@ -156,11 +142,6 @@ DWORD FindProlog(_In_ HMODULE moduleBase, _In_ PERF pRuntimeFunctionTable, _In_ 
     *rtTargetOffset = (DWORD64)((UINT64)moduleBase + (UINT64)pRuntimeFunctionTable[*prtSaveIndex].BeginAddress);
     sConfig.FirstFrameFunctionPointer = (PVOID)*rtTargetOffset;
     sConfig.FirstFrameSize = *stackSize;
-
-    printf("First Frame FP: 0x%I64X\n", *rtTargetOffset);
-    printf("First Frame stack size: 0x%lx\n", *stackSize);
-
-    printf("Return address: 0x%I64X\n", (ULONGLONG)(moduleBase + *stackSize));
 
     return status;
 }
@@ -192,7 +173,6 @@ DWORD FindPushRbp(HMODULE moduleBase, PERF pRuntimeFunctionTable, DWORD rtLastIn
             }
             *skip = suitableFrames;
             *prtSaveIndex = i;
-            printf("Breaking at: %d\n", i);
 
             break;
         }
@@ -202,12 +182,6 @@ DWORD FindPushRbp(HMODULE moduleBase, PERF pRuntimeFunctionTable, DWORD rtLastIn
     sConfig.SecondFrameFunctionPointer = (PVOID)*rtTargetOffset;
     sConfig.SecondFrameSize = *stackSize;
     sConfig.StackOffsetWhereRbpIsPushed = status;
-
-
-    printf("Second Frame FP: 0x%I64X\n", *rtTargetOffset);
-    printf("Second Frame stack size: 0x%lx\n", *stackSize);
-
-    printf("Return address: 0x%I64X\n", (ULONGLONG)(moduleBase + *stackSize));
 
     return status;
 }
@@ -248,18 +222,13 @@ VOID FindGadget(HMODULE moduleBase, PERF pRuntimeFunctionTable, DWORD rtLastInde
                         sConfig.AddRspXGadgetFrameSize = *stackSize;
                         gadgetFound = TRUE;
                         *prtSaveIndex = i;
-                        printf("Breaking at: %d         \n", i);
-                        printf("Gadget Address: 0x%I64X  \n", j);
-                        printf("ADD RSP, X Frame Stack size: 0x%lx \n", *stackSize);
                     }
                     else {
                         sConfig.JmpRbxGadget = (PVOID)j;
                         sConfig.JmpRbxGadgetFrameSize = *stackSize;
                         gadgetFound = TRUE;
                         *prtSaveIndex = i;
-                        printf("Breaking at: %d\n", i);
-                        printf("Gadget Address: 0x%I64X\n", j);
-                        printf("JMP [RBX] Frame Stack size: 0x%lx\n", *stackSize);
+
                     }
                     break;
                 }

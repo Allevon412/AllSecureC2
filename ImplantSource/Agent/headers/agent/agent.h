@@ -1,6 +1,6 @@
 #pragma once
 #include "Common/Common.h"
-#include "evasion/stackspoof/SilentMoonwalk.h"
+#include "evasion/stackspoof/spoof.h"
 
 #define AGENT_MAGIC_VALUE 0x0041153C //allsec in l33t speak.
 //config bytes
