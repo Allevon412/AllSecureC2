@@ -51,6 +51,10 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     PVOID pBaseThreadInitThunk = (PVOID)GetSymbolAddress(kernel32Base, agent->apis->BaseThreadInitThunkHash);
     PVOID pRtlUserThreadStart = (PVOID)GetSymbolAddress(ntdllBase, agent->apis->RtlUserThreadStartHash);
 
+    if (pBaseThreadInitThunk == NULL || pRtlUserThreadStart == NULL) {
+        return FALSE;
+    }
+
     PRUNTIME_FUNCTION f = NULL;
     PUNWIND_INFO ui = NULL;
     DWORD StackSizeOf = 0;
@@ -63,6 +67,8 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
 
         sConfig.BaseThreadInitThunkAddress = (PVOID)pBaseThreadInitThunk;
         sConfig.BaseThreadInitThunkFrameSize = (UINT64)StackSizeOf;
+    } else {
+        return FALSE;
     }
 
     StackSizeOf = 0;
@@ -75,6 +81,12 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
 
         sConfig.RtlUserThreadStartAddress = (PVOID)pRtlUserThreadStart;
         sConfig.RtlUserThreadStartFrameSize = (UINT64)StackSizeOf;
+    } else {
+        return FALSE;
+    }
+
+    if (FunctionPointer == NULL || RetAddr == NULL || args == NULL) {
+        return FALSE;
     }
 
     sConfig.SpoofFunctionPointer = (PVOID)FunctionPointer;
@@ -105,6 +117,8 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_stack_pivot_gadget, 1);
 
     spoof_call(&sConfig);
+
+    return TRUE;
 }
 
 /*
