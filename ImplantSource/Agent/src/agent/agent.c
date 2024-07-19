@@ -31,14 +31,6 @@ void AgentMain(PVOID RetAddr) {
 		printf("[error] attempting to register agent\n");
 	}
 
-	Args arguments = { 0 };
-
-	arguments.Arg01 = NULL;
-	arguments.Arg02 = (PVOID)&"Hello World!";
-	arguments.Arg03 = (PVOID)&"This is a test message!";
-	arguments.Arg04 = MB_OK;
-	arguments.Nargs = 4;
-
 	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
 
 	AgentRoutine();
