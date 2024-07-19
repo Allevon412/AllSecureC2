@@ -1,7 +1,7 @@
 # AllSecure
 
 
-## Explanation
+## Introduction
 This repository is my way of increasing my skills as a developer while at the same time increasing my skills as a red teamer and penetration tester. I have always had a passion for red teaming, and I wanted to really dive deep into the weeds of learning how things work on the backend when you're performing an assessment. Therefore, I have created a C2 server named AllSecure.
 
 ## What is AllSecure?
