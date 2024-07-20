@@ -163,4 +163,6 @@ add_executable(Agent_CLion
         src/http/Http.c
         src/package/package.c
         src/TaskController/TaskController.c
-        )
+        src/agent/evasion/syscalls/syscalls.c
+        headers/agent/evasion/syscalls/syscalls.h
+)
