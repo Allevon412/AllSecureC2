@@ -279,11 +279,11 @@ PVOID GetExceptionDirectoryAddress(HMODULE hModule, DWORD* tSize)
 PVOID GetExportDirectoryAddress(HMODULE hModule)
 {
 	PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)hModule;
-	PIMAGE_NT_HEADERS ntHeader = (PIMAGE_NT_HEADERS)((DWORD64)hModule + dosHeader->e_lfanew);
-	DWORD_PTR exportDirectoryRVA = ntHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
-	DWORD64 imageExportDirectory = (DWORD64)((DWORD_PTR)hModule + exportDirectoryRVA);
+	PIMAGE_NT_HEADERS ntHeader = (PIMAGE_NT_HEADERS)((ULONG_PTR)hModule + dosHeader->e_lfanew);
+	DWORD exportDirectoryRVA = ntHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+	PVOID imageExportDirectory = (ULONG_PTR)hModule + exportDirectoryRVA;
 
-	return (PVOID)imageExportDirectory;
+	return imageExportDirectory;
 }
 
 //modified function from SilentMoonwalk technique to retrieve the symbol from the export table of a given function.

