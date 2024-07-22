@@ -12,7 +12,7 @@ int main()
 {
     HANDLE ThreadHandle = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AgentMain, NULL, 0, NULL);
     WaitForSingleObject(ThreadHandle, INFINITE);
-    AgentMain();
+    //AgentMain();
 
     return 0;
 }

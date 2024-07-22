@@ -35,6 +35,7 @@ BOOL PopulateSyscallList();
 DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash);
 BOOL InitHardwareBreakpointHooking();
 BOOL HaltHardwareBreakpointHooking();
+VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uParam3, ULONG_PTR uParam4, DWORD dwSyscallNumber);
 unsigned long long SetDr7Bits(unsigned long long CurrentDr7Register, int StartingBitPosition, int NmbrOfBitsToModify, unsigned long long NewBitValue);
 BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTargetFuncAddress);
 BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD64 FunctionHash, _In_ ULONG_PTR uParam1, _In_ ULONG_PTR uParam2, _In_ ULONG_PTR uParam3, _In_ ULONG_PTR uParam4);
@@ -62,21 +63,21 @@ typedef NTSTATUS(NTAPI* t_NtDummyApi)(
         * First 4 parameters of "NtQuerySecurityObject" are NULL, these are replaced by the VEH when triggered.
 */
 //TODO provide support for randomly selecting the API to call.
-#define TAMPER_SYSCALL(u32SyscallHash, uParm1, uParm2, uParm3, uParm4, uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB)					\
+#define TAMPER_SYSCALL(d64SyscallHash, uParm1, uParm2, uParm3, uParm4, uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB)					\
     if (1){																																		\
                                                                                                                                                 \
         NTSTATUS					STATUS					= 0x00;																				\
         t_NtDummyApi        		pDummyApi           	= NULL;																				\
                                                                                                                                                 \
         if (!(pDummyApi = (t_NtDummyApi)GetProcAddress(GetModuleHandle(TEXT("NTDLL.DLL")), "NtQuerySecurityObject")))	                        \
-            return -1;																															\
+            return;																															\
                                                                                                                                                 \
-        if (!InitializeTamperedSyscall(pNtQuerySecurityObject, u32SyscallHash, uParm1, uParm2, uParm3, uParm4))									\
-            return -1;																															\
+        if (!InitializeTamperedSyscall(pDummyApi, d64SyscallHash, uParm1, uParm2, uParm3, uParm4))									\
+            return;																															\
                                                                                                                                                 \
-        if ((STATUS = pNtQuerySecurityObject(NULL, NULL, NULL, NULL, uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB)) != 0x00) {		\
-            printf("[!] 0x%0.8X Failed With Error: 0x%0.8X \n", u32SyscallHash, STATUS);														\
-            return -1;																															\
+        if ((STATUS = pDummyApi(NULL, NULL, NULL, NULL, uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB)) != 0x00) {		\
+            printf("[!] 0x%llx Failed With Error: 0x%llx \n", d64SyscallHash, STATUS);														\
+            return;																															\
         }																																		\
 }
 

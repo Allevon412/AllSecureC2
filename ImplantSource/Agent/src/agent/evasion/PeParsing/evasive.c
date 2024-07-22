@@ -187,6 +187,7 @@ WORD GetNumberOfSections(_In_ PVOID ModuleBase)
 }
 
 //TODO finish the putting the hashes into the agent using the config builder. maybe even put it in a custom section?
+//TODO add 32bit hash support.
 void printhashes() {
 
     UINT64 hash = 0;
@@ -256,11 +257,15 @@ void printhashes() {
         "NtQueryVirtualMemory",
     	"BaseThreadInitThunk",
     	"RtlUserThreadStart",
+    	"NtOpenThread",
+    	"ZwAllocateVirtualMemory",
+    	"ZwProtectVirtualMemory",
+    	"ZwCreateThreadEx"
     };
 	printf("ApiNameHashes = {\n");
 	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {
 		hash = Rotr64HashA(apiNames[i]);
-        printf("0x%llX, //%s\n", hash, apiNames[i]);
+        printf("0x%llX, //%s %d\n", hash, apiNames[i], i);
 	}
 	printf("}\n");
 }
