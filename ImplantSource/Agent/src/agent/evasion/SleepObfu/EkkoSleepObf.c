@@ -89,9 +89,6 @@ BOOL EkkoSleepObf(
                         goto END;
                     }
 
-                    //TODO implement stack spoofing for extra obfuscation.
-
-
                     //TODO implement jmp bypassing. for extra obfuscation.
 
                     //start preparing ROP chains.

