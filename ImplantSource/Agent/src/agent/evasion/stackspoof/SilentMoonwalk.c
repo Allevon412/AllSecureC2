@@ -8,7 +8,7 @@
 
 SPOOFER sConfig;
 
-BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
+PVOID SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     PERF                pRuntimeFunctionTable;
     PERF                rtFunction;
     DWORD               runtimeFunctionTableSize;
@@ -99,6 +99,7 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     sConfig.Arg06 = args->Arg06;
     sConfig.Arg07 = args->Arg07;
     sConfig.Arg08 = args->Arg08;
+    sConfig.Arg09 = args->Arg09;
 
     //addRspGadget += ((0x008 * sConfig.Nargs) << 24);
 
@@ -116,9 +117,9 @@ BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_jmp_gadget, 0);
     FindGadget(kernelBase, pRuntimeFunctionTable, rtLastIndex, &stackSize, &rtSaveIndex, &skip_stack_pivot_gadget, 1);
 
-    spoof_call(&sConfig);
+    PVOID ret_value = spoof_call(&sConfig);
 
-    return TRUE;
+    return ret_value;
 }
 
 /*

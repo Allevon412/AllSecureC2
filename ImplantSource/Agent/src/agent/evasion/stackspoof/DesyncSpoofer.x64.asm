@@ -55,6 +55,7 @@ SPOOFER STRUCT
     Arg06                           DQ 1
     Arg07                           DQ 1
     Arg08                           DQ 1
+    Arg09                           DQ 1
 
 SPOOFER ENDS
 
@@ -152,13 +153,15 @@ restore endp
 
 parameter_handler proc
 	mov		r9, rax
-	mov		rax, 8
+	mov		rax, 9
 	mov		r8, [rcx].SPOOFER.Nargs	
 	mul		r8
 ;	pop		rdx
 ;	sub		rsp, rax -- Not necessary
 ;	push	rdx
 	xchg	r9, rax
+	cmp     [rcx].SPOOFER.Nargs, 9
+	je		handle_nine
 	cmp		[rcx].SPOOFER.Nargs, 8
 	je		handle_eight
 	cmp		[rcx].SPOOFER.Nargs, 7
@@ -179,6 +182,13 @@ parameter_handler proc
 	je 		handle_none
 parameter_handler endp
 
+handle_nine proc
+    push	r15
+    mov		r15, [rcx].SPOOFER.Arg09
+    mov		[rsp+50h], r15
+    pop		r15
+    jmp		handle_eight
+handle_nine endp
 handle_eight proc
 	push	r15
 	mov		r15, [rcx].SPOOFER.Arg08
