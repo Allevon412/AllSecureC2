@@ -29,8 +29,7 @@ void AgentMain(PVOID RetAddr) {
 
 	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
 
-	PopulateBenignSyscallList();
-	PopulateSyscallList();
+	PopulateSyscallLists();
 
 	if ((err = RegisterAgent()) != 0) {
 		printf("[error] attempting to register agent\n");

