@@ -149,6 +149,18 @@ DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash) {
     return 0x00;
 }
 
+DWORD FetchSSNFromSyscallEntriesViaAddress(ULONG_PTR pAddress) {
+    if(!PopulateSyscallList())
+        return 0x00;
+
+    for(int i = 0; i< g_SyscallList->u32Count; i++) {
+        if(g_SyscallList->Entries[i].uAddress == pAddress)
+            return i;
+    }
+
+    return 0x00;
+}
+
 VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uParam3, ULONG_PTR uParam4,
     ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA,
     ULONG_PTR uParamB, DWORD dwSyscallNumber, INT Nargs) {
@@ -205,11 +217,6 @@ unsigned long long SetDr7Bits(unsigned long long CurrentDr7Register, int Startin
     return NewDr7Register;
 }
 
-/*
- TODO : Implement this function in a way that uses a list of benign functions chosen at random to hook to avoid detection.
- Once the syscall is used, the hook should be removed
- and then a new syscall should be chosen at random to hook.
-*/
 BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTargetFuncAddress) {
     CONTEXT Context = {.ContextFlags = CONTEXT_DEBUG_REGISTERS};
     HANDLE hThread = NULL;
@@ -339,13 +346,8 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
         printf("[info] RSP+58 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58));
     }
 
-
     //remove breakpoint
     pExceptionInfo->ContextRecord->Dr0 = 0ull;
-
-
-
-
 
     LeaveCriticalSection(&g_CriticalSection);
 

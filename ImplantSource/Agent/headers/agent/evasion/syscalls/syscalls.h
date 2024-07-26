@@ -54,6 +54,7 @@ typedef struct _TAMPERED_SYSCALL {
 
 BOOL PopulateSyscallList();
 DWORD FetchSSNFromSyscallEntries(DWORD64 dw64Hash);
+DWORD FetchSSNFromSyscallEntriesViaAddress(ULONG_PTR pAddress);
 BOOL InitHardwareBreakpointHooking();
 BOOL HaltHardwareBreakpointHooking();
 VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uParam3, ULONG_PTR uParam4, ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA, ULONG_PTR uParamB, DWORD dwSyscallNumber, INT Nargs);
@@ -83,23 +84,5 @@ typedef NTSTATUS(NTAPI* t_NtDummyApi)(
           Therefore the kernel will invoke the function of hash "u32SyscallHash".
         * First 4 parameters of "NtQuerySecurityObject" are NULL, these are replaced by the VEH when triggered.
 */
-#define TAMPER_SYSCALL(d64SyscallHash, Nargs, uParm1, uParm2, uParm3, uParm4, uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB)		    \
-    if (1){																																		\
-                                                                                                                                                \
-        NTSTATUS					STATUS					= 0x00;																				\
-        t_NtDummyApi        		pDummyApi           	= NULL;																				\
-                                                                                                                                                \
-        pDummyApi = (t_NtDummyApi)g_BenignSyscallList->Entries[GenerateRandomNumber() % g_BenignSyscallList->u32Count].uAddress;	            \
-        if (!InitializeTamperedSyscall(pDummyApi, d64SyscallHash, Nargs, uParm1, uParm2, uParm3, uParm4,                                        \
-                                uParm5, uParm6, uParm7, uParm8, uParm9, uParmA, uParmB))									                    \
-            return;																															    \
-                                                                                                                                                \
-        if ((STATUS = pDummyApi(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)) != 0x00) {		                            \
-            printf("[!] 0x%llx Failed With Error: 0x%llx \n", d64SyscallHash, STATUS);														    \
-            return;																															    \
-        }																																		\
-    }
-
-
 
 #endif //SYSCALLS_H

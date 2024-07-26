@@ -265,7 +265,6 @@ typedef DWORD(WINAPI* t_GetAdaptersInfo)(
 	PULONG           pOutBufLen
 	);
 
-
 //ADVAPI APIS
 typedef BOOL(WINAPI* t_GetUserNameA)(
 	LPSTR   lpBuffer,
@@ -275,8 +274,6 @@ typedef NTSTATUS(NTAPI* t_SystemFunction032)(
 	struct USTRING* data,
 	const struct USTRING* key
 	);
-
-
 
 //KERNEL32 APIS
 typedef BOOL(WINAPI* t_GetComputerNameExA)(

