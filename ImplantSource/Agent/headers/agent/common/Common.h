@@ -258,6 +258,41 @@ typedef NTSTATUS(NTAPI* t_NtQueryVirtualMemory)(
 	OUT PSIZE_T							ResultLength OPTIONAL
 	);
 
+typedef NTSTATUS(NTAPI* t_NtOpenThread)(
+	OUT PHANDLE ThreadHandle,
+	IN ACCESS_MASK DesiredAccess,
+	IN POBJECT_ATTRIBUTES ObjectAttributes,
+	IN PCLIENT_ID ClientId
+	);
+
+typedef NTSTATUS(NTAPI* t_NtAllocateVirtualMemory) (
+	IN      HANDLE    ProcessHandle,
+	IN OUT	PVOID     *BaseAddress,
+	IN		ULONG_PTR ZeroBits,
+	IN OUT	PSIZE_T   RegionSize,
+	IN      ULONG     AllocationType,
+	IN      ULONG     Protect
+);
+typedef NTSTATUS(NTAPI* t_NtProtectVirtualMemory) (
+	IN      HANDLE    ProcessHandle,
+	IN OUT	PVOID     *BaseAddress,
+	IN OUT	PSIZE_T   NumberOfBytesToProtect,
+	IN      ULONG     NewAccessProtection,
+	OUT     PULONG    OldAccessProtection
+);
+typedef NTSTATUS(NTAPI* t_NtCreateThreadEx) (
+	OUT PHANDLE hThread,
+	IN ACCESS_MASK DesiredAccess,
+	IN LPVOID ObjectAttributes,
+	IN HANDLE ProcessHandle,
+	IN LPTHREAD_START_ROUTINE lpStartAddress,
+	IN LPVOID lpParameter,
+	IN BOOL CreateSuspended,
+	IN ULONG StackZeroBits,
+	IN ULONG SizeOfStackCommit,
+	IN ULONG SizeOfStackReserve,
+	OUT LPVOID lpBytesBuffer
+);
 
 //IPhlpapi APIS
 typedef DWORD(WINAPI* t_GetAdaptersInfo)(

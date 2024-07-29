@@ -151,7 +151,6 @@ VOID PopulateTamperedSyscall(ULONG_PTR uParam1, ULONG_PTR uParam2, ULONG_PTR uPa
     ULONG_PTR uParamB, DWORD dwSyscallNumber, INT Nargs) {
 
     EnterCriticalSection(&g_CriticalSection);
-    //TODO : add support for handling more than 4 parameters. Since the stack is involved at that point you'll likley need to handle it with ASM function during callback.
     g_TamperedSyscall.uParam1 = uParam1;
     g_TamperedSyscall.uParam2 = uParam2;
     g_TamperedSyscall.uParam3 = uParam3;

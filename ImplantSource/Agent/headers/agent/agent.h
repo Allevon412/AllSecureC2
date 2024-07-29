@@ -106,7 +106,10 @@ typedef struct _Win32 {
 	t_LdrGetProcedureAddress pLdrGetProcedureAddress;
 	t_NtQueryVirtualMemory pNtQueryVirtualMemory;
 	UINT64 RtlUserThreadStartHash;
-
+	t_NtOpenThread pNtOpenThread;
+	t_NtAllocateVirtualMemory pNtAllocateVirtualMemory;
+	t_NtProtectVirtualMemory pNtProtectVirtualMemory;
+	t_NtCreateThreadEx pNtCreateThreadEx;
 
 	//KERNEL32 APIS
 	HMODULE hKernel32;
@@ -167,11 +170,22 @@ typedef struct _MoonWalking {
 	PArgs Arguments;
 } MoonWalking, * pMoonWalking;
 
+typedef struct _PEINFO {
+	//ImageBase Address
+	PVOID ModuleBaseAddr;
+
+	//Image Size
+	DWORD ImageSize;
+
+	//Number of Sections
+	DWORD NumSections;
+} PEINFO, * pPEINFO;
+
 //TODO clean up this structure.
 //I.E. make strcutrues for module hanldes, function pointers, etc. and include them in this parent structure rather than all directly.
 typedef struct _Agent {
 
-
+	//win32 apis
 	pWin32 apis;
 
 	//agent configuration
@@ -186,15 +200,9 @@ typedef struct _Agent {
 	//active threads
 	BOOL ActiveThreads;
 
-	//ImageBase Address
-	PVOID ModuleBaseAddr;
+	pPEINFO PEInfo;
 
-	//Image Size
-	DWORD ImageSize;
-
-	//Number of Sections
-	DWORD NumSections;
-
+	//TEB struct.
 	P_INT_TEB pTeb;
 
 	//crypto info.
@@ -210,10 +218,10 @@ typedef struct _Agent {
 	struct _Package* MetaDataPackage;
 	struct _Package* packages;
 
+	//moonwalking structure.
 	pMoonWalking Walker;
 
 }Agent, * pAgent;
-
 
 extern pAgent agent;
 
@@ -227,7 +235,7 @@ typedef enum  {
 } Agent_Operations;
 
 
-INT init_agent();
+INT init_agent(PVOID RetAddress);
 INT RegisterAgent();
 void AgentMain();
 INT ParseConfig();

@@ -34,7 +34,7 @@ PVOID SpoofStack(
     return SilentMoonwalkMain(pFunction, &args, agent->Walker->RetAddr);
 }
 
-NTSTATUS TamperSyscall(
+NTSTATUS TemperSyscallAndSpoofStack(
     ULONG_PTR uAddress,
     UINT Nargs,
     ULONG_PTR a,
@@ -54,7 +54,7 @@ NTSTATUS TamperSyscall(
     SSN = FetchSSNFromSyscallEntriesViaAddress(uAddress);
     BOOL BENIGN = FALSE;
 
-    NTSTATUS            NtStatus = 0x00;
+    NTSTATUS            NtStatus = -1;
     t_NtDummyApi        pDummyApi = NULL;
 
     for(int i = 0; i < g_BenignSyscallList->u32Count; i++) {
@@ -86,7 +86,7 @@ NTSTATUS TamperSyscall(
         }
     } else { // FUNCTION IS UNHOOKED WHY BOTHER SETING HARDWARE BP & SPOOFING ARGS AT ALL?
        // we should just spoof the stack and call the api. only supported for up to 9 args for now.
-        if(Nargs > 10) {
+        if(Nargs < 10) {
             if ((NtStatus = SpoofStack(uAddress, Nargs, a, b, c, d, e, f, g, h, i)) != 0x00) {
                 printf("[error] 0x%llx attempting to spoof stack for syscall: 0x%llx\n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
                 return NtStatus;

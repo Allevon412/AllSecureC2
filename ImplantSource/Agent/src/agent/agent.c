@@ -23,11 +23,9 @@ void AgentMain(PVOID RetAddr) {
 	Agent Agent = { 0 };
 	agent = &Agent;
 
-	if ((err = init_agent()) != 0) {
+	if ((err = init_agent(GET_ADDRESS_OF_RETURN_ADDRESS())) != 0) {
 		printf("[error] attempting to initialize agent\n");
 	}
-
-	agent->Walker->RetAddr = GET_ADDRESS_OF_RETURN_ADDRESS();
 
 	PopulateSyscallLists();
 
