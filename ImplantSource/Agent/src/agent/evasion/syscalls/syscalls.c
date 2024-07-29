@@ -49,7 +49,7 @@ BOOL PopulateSyscallLists() {
 
         LPSTR pFunctionName = (LPSTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionNameArray[i]);
 
-        if (*(unsigned short*)pFunctionName == 'wZ' && g_SyscallList->u32Count <= MAX_ENTRIES) { // we've found a syscall name.
+        if (*(unsigned short*)pFunctionName == 'tN' && g_SyscallList->u32Count <= MAX_ENTRIES) { // we've found a syscall name.
             ULONG_PTR uAddress = (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]); // obtain address pointer
             DWORD wBytes = *(DWORD*)uAddress; //obtain the first 2 bytes of the func.
             DWORD64 dw64Hash = Rotr64HashA(pFunctionName); //obtain the function hash
