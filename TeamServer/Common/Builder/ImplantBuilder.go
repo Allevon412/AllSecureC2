@@ -425,6 +425,11 @@ func (ab *AgentBuilder) PatchConfig() ([]byte, error) {
 		} else {
 			AgentConfig.AddInt(win32.FALSE)
 		}
+		if ab.ImplantConfig.JmpType {
+			AgentConfig.AddInt(win32.TRUE)
+		} else {
+			AgentConfig.AddInt(win32.FALSE)
+		}
 
 		AgentConfig.AddWString(Config.UserAgent)
 		if len(Config.Headers) == 0 { // if headers is zero

@@ -425,3 +425,7 @@ go.work.sum
 
 # env file
 .env
+
+#public and private key pairs for server / implants
+**/*.pem
+**/*.der

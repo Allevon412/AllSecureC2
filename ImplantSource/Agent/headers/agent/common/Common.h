@@ -1,18 +1,22 @@
 #pragma once
 #include <WinSock2.h>
 
-#include <winternl.h> //we can remove this if we resolve all functions in NT dynamically.
+#include <winternl.h>
 #include <Windows.h>
 
 
 #include <winhttp.h>
 #include <iphlpapi.h>
 
+
 #define AES_BLOCKLEN 16
 #define NTSUCCESS 0
 #define UNLEN 256
 
-
+typedef struct _EXTENDED_PROCESS_INFORMATION {
+	PROCESSINFOCLASS ExtendedProcessInfo;
+	PVOID ExtendedProcessInfoBuffer;
+} EXTENDED_PROCESS_INFORMATION, *PEXTENDED_PROCESS_INFORMATION;
 
 typedef enum INT_EVENT_TYPE
 {
@@ -31,7 +35,10 @@ typedef enum MEMORY_INFORMATION_CLASS {
 
 } MEMORY_INFORMATION_CLASS;
 
-
+typedef struct _INT_CLIENT_ID {
+	HANDLE UniqueProcess;
+	HANDLE UniqueThread;
+} _INT_CLIENT_ID, * P_INT_CLIENT_ID;
 
 //HTTP APIS
 //WINHTTP APIS
@@ -262,7 +269,7 @@ typedef NTSTATUS(NTAPI* t_NtOpenThread)(
 	OUT PHANDLE ThreadHandle,
 	IN ACCESS_MASK DesiredAccess,
 	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN PCLIENT_ID ClientId
+	IN P_INT_CLIENT_ID ClientId
 	);
 
 typedef NTSTATUS(NTAPI* t_NtAllocateVirtualMemory) (
@@ -293,6 +300,15 @@ typedef NTSTATUS(NTAPI* t_NtCreateThreadEx) (
 	IN ULONG SizeOfStackReserve,
 	OUT LPVOID lpBytesBuffer
 );
+
+typedef NTSTATUS(NTAPI* t_NtQueryInformationProcess)(
+IN           HANDLE           ProcessHandle,
+IN           PROCESSINFOCLASS ProcessInformationClass,
+OUT         PVOID            ProcessInformation,
+IN            ULONG            ProcessInformationLength,
+OUT OPTIONAL PULONG           ReturnLength
+	);
+
 
 //IPhlpapi APIS
 typedef DWORD(WINAPI* t_GetAdaptersInfo)(
@@ -798,10 +814,6 @@ typedef struct _PEB32
 } PEB, *PPEB;
 #endif
 
-typedef struct _INT_CLIENT_ID {
-	HANDLE UniqueProcess;
-	HANDLE UniqueThread;
-} _INT_CLIENT_ID, * P_INT_CLIENT_ID;
 
 typedef struct _INT_TEB_ACTIVE_FRAME_CONTEXT {
 	ULONG Flags;

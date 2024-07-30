@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// TODO ensure that the process does not crash if this is unable to connect to remote host
 func CheckForNewEventsFromWS() {
 	for {
 		var NewWSMessage Common.WebSocketMessage

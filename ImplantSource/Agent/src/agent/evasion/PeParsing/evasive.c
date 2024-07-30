@@ -260,7 +260,9 @@ void printhashes() {
     	"NtOpenThread",
     	"ZwAllocateVirtualMemory",
     	"ZwProtectVirtualMemory",
-    	"ZwCreateThreadEx"
+    	"ZwCreateThreadEx",
+    	"NtSetInformationVirtualMemory",
+    	"NtQueryInformationProcess",
     };
 	printf("ApiNameHashes = {\n");
 	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {

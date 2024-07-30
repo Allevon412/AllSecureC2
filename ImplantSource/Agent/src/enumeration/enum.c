@@ -1,11 +1,8 @@
 #include "../../headers/enumeration/enum.h"
 #include "../../headers/enumeration/token.h"
 
-//TODO finish enumeration
-
 BOOL Enumerate()
 {
-	//TODO: this may be an issue since we're not allocating memory manually & copying it into buffer.
 	if(GetOperatingSystemFunc() != 0) {
 		printf("[error] attempting to get operating system information\n");
 		return FALSE;
@@ -27,7 +24,6 @@ BOOL Enumerate()
 	return TRUE;
 }
 
-//TODO replacee all strings with encoded / encrypted content.
 INT GetOperatingSystemFunc() {
 	LPCSTR OS = NULL;
 	RTL_OSVERSIONINFOEXW lpVersionInformation = { 0 };

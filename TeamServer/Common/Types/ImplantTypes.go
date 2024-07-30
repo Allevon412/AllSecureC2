@@ -187,6 +187,8 @@ var ApiNameHashes = []uint64{
 	0x152B6E96EC14D617, //NtAllocateVirtualMemory 51
 	0x38569CF2AE25D62E, //NtProtectVirtualMemory 52
 	0x12C236DB812A6662, //NtCreateThreadEx 53
+	0x2809B7DAA4F109C0, //NtSetInformationVirtualMemory 54
+	0x5104B1D495A6042F, //NtQueryInformationProcess 55
 }
 
 var DllNames = []string{

