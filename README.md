@@ -24,7 +24,7 @@ Where does AllSecure Differ from Havoc or other C2 frameworks? Well, there's a f
 - I would like to implement a custom packer as well.
 - reflective loader capability
 - evasive loader grab main functionality of agent
-- indirect syscalls
+- indirect syscalls - we use hardware breakpoints instead of indirect syscalls.
 - unhooking
 - amsi & etw patching
 - persistence techniques
