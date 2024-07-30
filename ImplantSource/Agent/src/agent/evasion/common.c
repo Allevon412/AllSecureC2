@@ -8,15 +8,15 @@
 PVOID SpoofStackFunc(
     _In_ PVOID pFunction,
     _In_ INT Nargs,
-    _Inout_ PVOID a,
-    _Inout_ PVOID b,
-    _Inout_ PVOID c,
-    _Inout_ PVOID d,
-    _Inout_ PVOID e,
-    _Inout_ PVOID f,
-    _Inout_ PVOID g,
-    _Inout_ PVOID h,
-    _Inout_ PVOID i
+    _Inout_ ULONG_PTR a,
+    _Inout_ ULONG_PTR b,
+    _Inout_ ULONG_PTR c,
+    _Inout_ ULONG_PTR d,
+    _Inout_ ULONG_PTR e,
+    _Inout_ ULONG_PTR f,
+    _Inout_ ULONG_PTR g,
+    _Inout_ ULONG_PTR h,
+    _Inout_ ULONG_PTR i
    )
 {
     Args args = {0};
@@ -72,7 +72,7 @@ NTSTATUS TemperSyscallAndSpoofStack(
         }
 
         pDummyApi = (t_NtDummyApi)g_BenignSyscallList->Entries[GenerateRandomNumber() % g_BenignSyscallList->u32Count].uAddress;
-        if(!InitializeTamperedSyscall(pDummyApi, g_SyscallList->Entries[SSN].dw64Hash, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
+        if(!InitializeTamperedSyscall((ULONG_PTR)pDummyApi, g_SyscallList->Entries[SSN].dw64Hash, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
             return -1;
         }
 
@@ -88,7 +88,7 @@ NTSTATUS TemperSyscallAndSpoofStack(
     } else { // FUNCTION IS UNHOOKED WHY BOTHER SETING HARDWARE BP & SPOOFING ARGS AT ALL?
        // we should just spoof the stack and call the api. only supported for up to 9 args for now.
         if(Nargs < 10) {
-            if ((NtStatus = SpoofStack(uAddress, Nargs, a, b, c, d, e, f, g, h, i)) != 0x00) {
+            if ((NtStatus =(NTSTATUS)SpoofStack(uAddress, Nargs, a, b, c, d, e, f, g, h, i)) != 0x00) {
                 printf("[error] 0x%llx attempting to spoof stack for syscall: 0x%llx\n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
                 return NtStatus;
             }

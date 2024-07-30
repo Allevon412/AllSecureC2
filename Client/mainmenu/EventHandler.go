@@ -3,17 +3,26 @@ package mainmenu
 import (
 	"Client/Common"
 	"encoding/json"
+	"github.com/gorilla/websocket"
 	"log"
 )
 
-// TODO ensure that the process does not crash if this is unable to connect to remote host
 func CheckForNewEventsFromWS() {
+
 	for {
 		var NewWSMessage Common.WebSocketMessage
 		err := g_clientobj.Conn.ReadJSON(&NewWSMessage)
 		if err != nil {
-			log.Println("[error] attempting to read web socket message ", err)
-			continue
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("WebSocket closed unexpectedly: %v", err)
+				break
+			} else if websocket.IsCloseError(err, websocket.CloseNormalClosure, websocket.CloseGoingAway) {
+				log.Printf("WebSocket closed normally: %v", err)
+				break
+			} else {
+				log.Printf("[error] reading WebSocket message: %v", err)
+				break
+			}
 		}
 		switch NewWSMessage.MessageType {
 		case "ChatMessage":
@@ -32,5 +41,10 @@ func CheckForNewEventsFromWS() {
 		default:
 			break
 		}
+	} // our websocket has closed. Attempt to reconnect.
+	err := g_clientobj.Conn.Close() // since we can no longer read messages close our client and try to open a new one.
+	if err != nil {
+		log.Println("[error] attempting to close websocket connection", err)
 	}
+	ObtainWebSocketConn(g_clientobj)
 }

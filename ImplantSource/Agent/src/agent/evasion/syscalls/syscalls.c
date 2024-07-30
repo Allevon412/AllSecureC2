@@ -211,7 +211,7 @@ BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTarget
     ClientID.UniqueThread = (HANDLE)dwThreadID;
 
     //TODO : use indirect syscalls and native functions for this for uber stealth.
-    if((NtStatus = agent->apis->pNtOpenThread(&hThread, THREAD_ALL_ACCESS, NULL, dwThreadID)) != 0x00) {
+    if((NtStatus = agent->apis->pNtOpenThread(&hThread, THREAD_ALL_ACCESS, NULL, &ClientID)) != 0x00) {
         goto _END_OF_FUNC;
     }
 

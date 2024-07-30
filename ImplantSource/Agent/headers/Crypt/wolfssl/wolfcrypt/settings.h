@@ -2952,7 +2952,7 @@ extern void uITRON4_free(void *p) ;
             !defined(WC_NO_RNG))
 
         #ifndef _MSC_VER
-            #warning "For timing resistance / side-channel attack prevention consider using harden options"
+            //#warning "For timing resistance / side-channel attack prevention consider using harden options"
         #else
             #pragma message("Warning: For timing resistance / side-channel attack prevention consider using harden options")
         #endif

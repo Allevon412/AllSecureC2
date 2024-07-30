@@ -4,19 +4,15 @@
 BOOL Enumerate()
 {
 	if(GetOperatingSystemFunc() != 0) {
-		printf("[error] attempting to get operating system information\n");
 		return FALSE;
 	}
 	if (GetUser() != 0) {
-		printf("[error] attempting to get user information\n");
 		return FALSE;
 	}
 	if ( GetCompName() != 0) {
-		printf("[error] attempting to get computer name\n");
 		return FALSE;
 	}
 	if( GetIPAddress() != 0) {
-		printf("[error] attempting to get ip address\n");
 		return FALSE;
 	}
 
@@ -25,13 +21,11 @@ BOOL Enumerate()
 }
 
 INT GetOperatingSystemFunc() {
-	LPCSTR OS = NULL;
 	RTL_OSVERSIONINFOEXW lpVersionInformation = { 0 };
 	lpVersionInformation.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOEXW);
 	NTSTATUS status = 0;
 	status = agent->apis->pRtlGetVersion(&lpVersionInformation);
 	if (status != NTSUCCESS) {
-		printf("[error] attempting to retrieve the operating system versions. [%08X]", status);
 		return -1;
 	}
 	agent->Context->dwMajorVersion = lpVersionInformation.dwMajorVersion;
@@ -48,18 +42,17 @@ INT GetOperatingSystemFunc() {
 
 
 INT GetUser() {
-	PVOID            Data = NULL;
+	LPSTR            UserName = NULL;
 	DWORD            dwLength = UNLEN + 1;
 
-	if (Data = agent->apis->pLocalAlloc(LPTR, dwLength)) {
-		agent->apis->pGetUserNameA(Data, &dwLength);
-		agent->Context->UserName = Data;
+	if ((UserName = (LPSTR)agent->apis->pLocalAlloc(LPTR, dwLength)) != NULL) {
+		agent->apis->pGetUserNameA(UserName, &dwLength);
+		agent->Context->UserName = UserName;
 		return 0;
 	}
 	return -1;
 	
 }
-
 
 //TODO replace this with a function that obtians comptuer name from registry or from env variables.
 INT GetCompName() {

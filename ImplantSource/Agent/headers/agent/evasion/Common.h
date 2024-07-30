@@ -46,15 +46,15 @@
 PVOID SpoofStackFunc(
     _In_ PVOID pFunction,
     _In_ INT Nargs,
-    _Inout_ PVOID a,
-    _Inout_ PVOID b,
-    _Inout_ PVOID c,
-    _Inout_ PVOID d,
-    _Inout_ PVOID e,
-    _Inout_ PVOID f,
-    _Inout_ PVOID g,
-    _Inout_ PVOID h,
-    _Inout_ PVOID i
+    _Inout_ ULONG_PTR a,
+    _Inout_ ULONG_PTR b,
+    _Inout_ ULONG_PTR c,
+    _Inout_ ULONG_PTR d,
+    _Inout_ ULONG_PTR e,
+    _Inout_ ULONG_PTR f,
+    _Inout_ ULONG_PTR g,
+    _Inout_ ULONG_PTR h,
+    _Inout_ ULONG_PTR i
    );
 
 NTSTATUS TemperSyscallAndSpoofStack(

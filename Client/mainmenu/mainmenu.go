@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"sync"
+	"time"
 )
 
 var (
@@ -49,11 +50,7 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 // TODO edit chat form to actually use websockets with server to send and recv messages from all logged in users.
 func CreateChatForm(Username string) (*widget.Form, error) {
 	//create websocket channel for chat.
-	err := ObtainWebSocketConn(g_clientobj)
-	if err != nil {
-		log.Fatalln("[error] attempting to create websocket. panicking")
-		return nil, err
-	}
+	go ObtainWebSocketConn(g_clientobj)
 
 	teamsChatLog = widget.NewMultiLineEntry()
 	teamsChatLog.Disable()
@@ -86,10 +83,16 @@ func ObtainWebSocketConn(clientobj *Common.Client) error {
 	)
 	clientobj.Conn, err = Common.ObtainWebSocket(clientobj)
 	if err != nil {
-		log.Println("[error] attempting to obtain socket connection", err)
-		return err
+		for {
+			time.Sleep(30 * time.Second) // sleep for 30 seconds and try again.
+			clientobj.Conn, err = Common.ObtainWebSocket(clientobj)
+			if err == nil { // if we successfully obtained a websocket connection
+				break
+			}
+		}
 	}
-	go CheckForNewEventsFromWS()
+
+	CheckForNewEventsFromWS()
 	return nil
 }
 
