@@ -73,4 +73,6 @@ NTSTATUS TemperSyscallAndSpoofStack(
     ULONG_PTR k
     );
 
+PVOID FindJmpGadget( IN PVOID LOC, IN SIZE_T Len, IN PVOID Pattern, IN SIZE_T PatLen );
+
 #endif //COMMON_H

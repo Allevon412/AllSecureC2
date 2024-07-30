@@ -68,7 +68,7 @@ typedef struct _AgentConfig {
 	DWORD RSAPubKeySize;
 	LPSTR AgentName;
 	pListenerConfig listenerConfig;
-	BOOL StackSpoof;
+	BOOL JmpRbx;
 
 } AgentConfig, *PAgentConfig;
 

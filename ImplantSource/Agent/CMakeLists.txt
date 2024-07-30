@@ -28,7 +28,6 @@ add_executable(agent
         headers/agent/common/Common.h
         headers/agent/evasion/SleepObfu/EkkoSleepObf.h
         headers/agent/evasion/PeParsing/evasive.h
-        headers/agent/evasion/SleepObfu/RetAddrSpoof.h
         headers/agent/evasion/SleepObfu/SleepObfMain.h
         headers/agent/agent.h
         headers/Crypt/wolfssl/wolfcrypt/aes.h
@@ -103,7 +102,6 @@ add_executable(agent
         headers/agent/evasion/StackSpoof/Spoof.h
         headers/agent/evasion/SleepObfu/EkkoSleepObf.h
         headers/agent/evasion/PeParsing/evasive.h
-        headers/agent/evasion/SleepObfu/RetAddrSpoof.h
         headers/agent/evasion/SleepObfu/SleepObfMain.h
         headers/agent/agent.h
         headers/Crypt/wolfssl/opensssl/compat_types.h
@@ -153,7 +151,6 @@ add_executable(agent
         src/agent/evasion/stackspoof/SilentMoonwalk.c
         src/agent/evasion/SleepObfu/EkkoSleepObf.c
         src/agent/evasion/PeParsing/evasive.c
-        src/agent/evasion/SleepObfu/RetAddrSpoof.c
         src/agent/evasion/SleepObfu/SleepObfMain.c
         src/cstdreplacement/localcstd.c
         src/enumeration/enum.c

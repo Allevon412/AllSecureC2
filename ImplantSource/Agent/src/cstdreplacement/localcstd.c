@@ -77,6 +77,16 @@ void MemoryCopy(void* dest, const void* src, size_t n) {
 		cdest[i] = csrc[i];
 }
 
+INT MemoryCompare(const void* buf1, const void* buf2, size_t count) {
+	const unsigned char* p1 = buf1, * p2 = buf2;
+	while (count--) {
+		if (*p1 != *p2)
+			return *p1 - *p2;
+		p1++, p2++;
+	}
+	return 0;
+}
+
 int GetLPSTRArraySize(LPSTR* array) {
 	int count = 0;
 	while (array[count] != NULL) {
