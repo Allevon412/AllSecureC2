@@ -26,16 +26,16 @@ type ListenerTableData struct {
 }
 
 type ImplantTableData struct {
-	ImplantNum int    `json:"ImplantNum"`
-	ID         string `json:"ID"`
-	InternalIP string `json:"InternalIP"`
-	ExternalIP string `json:"ExternalIP"`
-	User       string `json:"User"`
-	Computer   string `json:"Computer"`
-	OS         string `json:"OS"`
-	PID        int    `json:"PID"`
-	Process    string `json:"Process"`
-	Health     bool   `json:"Health"`
+	ImplantNum  int    `json:"ImplantNum"`
+	ImplantName string `json:"ImplantName"`
+	InternalIP  string `json:"InternalIP"`
+	ExternalIP  string `json:"ExternalIP"`
+	User        string `json:"User"`
+	Computer    string `json:"Computer"`
+	OS          string `json:"OS"`
+	PID         int    `json:"PID"`
+	Process     string `json:"Process"`
+	Health      bool   `json:"Health"`
 }
 
 type NewUser struct {

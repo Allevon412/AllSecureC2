@@ -4,7 +4,6 @@
 #include <winternl.h>
 #include <Windows.h>
 
-
 #include <winhttp.h>
 #include <iphlpapi.h>
 
@@ -34,6 +33,20 @@ typedef enum MEMORY_INFORMATION_CLASS {
 	MemoryBasicInformation
 
 } MEMORY_INFORMATION_CLASS;
+
+typedef enum VIRTUAL_MEMORY_INFORMATION_CLASS {
+
+	VmPrefetchInformation,
+	VmPagePriorityInformation,
+	VmCfgCallTargetInformation
+
+} VIRTUAL_MEMORY_INFORMATION_CLASS;
+
+typedef struct _MEMORY_RANGE_ENTRY
+{
+  	PVOID VirtualAddress;
+  	SIZE_T NumberOfBytes;
+} MEMORY_RANGE_ENTRY, *PMEMORY_RANGE_ENTRY;
 
 typedef struct _INT_CLIENT_ID {
 	HANDLE UniqueProcess;
@@ -301,6 +314,15 @@ typedef NTSTATUS(NTAPI* t_NtCreateThreadEx) (
 	OUT LPVOID lpBytesBuffer
 );
 
+typedef NTSTATUS(NTAPI* t_NtSetInformationVirtualMemory)(
+	IN HANDLE                           ProcessHandle,
+	IN VIRTUAL_MEMORY_INFORMATION_CLASS VmInformationClass,
+	IN ULONG_PTR                        NumberOfEntries,
+	IN PMEMORY_RANGE_ENTRY              VirtualAddresses,
+	IN PVOID                            VmInformation,
+	IN ULONG                            VmInformationLength
+	);
+
 typedef NTSTATUS(NTAPI* t_NtQueryInformationProcess)(
 IN           HANDLE           ProcessHandle,
 IN           PROCESSINFOCLASS ProcessInformationClass,
@@ -308,6 +330,19 @@ OUT         PVOID            ProcessInformation,
 IN            ULONG            ProcessInformationLength,
 OUT OPTIONAL PULONG           ReturnLength
 	);
+typedef NTSTATUS(NTAPI* t_NtOpenProcess)(
+	OUT PHANDLE ProcessHandle,
+	IN ACCESS_MASK DesiredAccess,
+	IN POBJECT_ATTRIBUTES ObjectAttributes,
+	IN PCLIENT_ID ClientId
+	);
+typedef NTSTATUS(NTAPI* t_NtReadVirtualMemory)(
+IN HANDLE               ProcessHandle,
+IN PVOID                BaseAddress,
+OUT PVOID               Buffer,
+IN ULONG                NumberOfBytesToRead,
+OUT PULONG              NumberOfBytesReaded OPTIONAL
+);
 
 
 //IPhlpapi APIS

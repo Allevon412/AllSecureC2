@@ -89,9 +89,11 @@ func CreateImplantFunc(ImplantName, WorkingHours *Common.CustomEntry, KillDate t
 	}
 
 	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
-	if err.Error() == "unauthorized" {
-	} else if err != nil {
-		log.Println("[error] attempting to create new implant", err)
+	if err != nil {
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
+		log.Println("[error] attempting to send implant data", err)
 	}
 
 	return

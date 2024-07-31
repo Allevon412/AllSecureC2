@@ -206,7 +206,7 @@ func GetListenerData(clientobj *Common.Client) ([]byte, error) {
 		if err.Error() == "unauthorized" {
 			clientobj.Authenticated = false
 		}
-		log.Println("[error] attempting to retrieve user data", err)
+		log.Println("[error] attempting to retrieve listener data", err)
 	}
 
 	trimedstr := strings.Trim(string(data), "\"")

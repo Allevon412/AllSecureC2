@@ -67,15 +67,23 @@ func (cce *CustomEntry) TypedKey(key *fyne.KeyEvent) {
 	cce.Entry.TypedKey(key)
 }
 
-func NewCustomUserTableLabel(CustomFunc func(e *fyne.PointEvent)) *CustomUserTableLabel {
-	label := &CustomUserTableLabel{
+func NewCustomTableLabel(CustomFunc func(e *fyne.PointEvent)) *CustomTableLabel {
+	label := &CustomTableLabel{
 		Label:                       widget.Label{},
 		LabelWindowAdditionFunction: CustomFunc,
+		Row:                         0,
+		Col:                         0,
 	}
 	label.ExtendBaseWidget(label)
 	return label
 }
-func (cl *CustomUserTableLabel) TappedSecondary(e *fyne.PointEvent) {
+
+func (cl *CustomTableLabel) TappedSecondary(e *fyne.PointEvent) {
 
 	cl.LabelWindowAdditionFunction(e)
+	SelectedImplant = SelectedCell{
+		Row: cl.Row,
+		Col: cl.Col,
+	}
+
 }

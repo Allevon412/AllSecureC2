@@ -17,7 +17,6 @@ var (
 	g_clientobj       *Common.Client
 	g_prevtext        string
 	lock              sync.Mutex
-	g_AuthWindow      fyne.Window
 )
 
 func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
@@ -40,8 +39,8 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 			fyne.NewMenuItem("Build Payload", func() { ImplantBuilderForm(clientobj, OldWindow) }),
 		),
 		fyne.NewMenu("Help",
-			fyne.NewMenuItem("Github", testfunc),
-			fyne.NewMenuItem("Documentation", testfunc),
+			fyne.NewMenuItem("Github", func() {}),
+			fyne.NewMenuItem("Documentation", func() {}),
 		),
 	)
 	return mainMenu
@@ -92,16 +91,15 @@ func ObtainWebSocketConn(clientobj *Common.Client) error {
 	return nil
 }
 
-func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string, AuthWindow *fyne.Window) {
+func MainMenu(clientobj *Common.Client, FyneApp fyne.App, icon fyne.Resource, ResourcePath string) {
 
 	//Create new window
-	NewWindow := OldWindow.NewWindow("AllSecure")
+	NewWindow := FyneApp.NewWindow("AllSecure")
 
 	g_clientobj = clientobj
 	g_username = clientobj.Username
-	g_AuthWindow = *AuthWindow
 
-	CreateListenerTable(clientobj, NewWindow, OldWindow)
+	CreateListenerTable(clientobj, NewWindow, FyneApp)
 
 	//Create new teams chat
 	TeamsChat, err := CreateChatForm(clientobj.Username)
@@ -119,13 +117,13 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 	tabs := container.NewDocTabs()
 
 	//creating all menu items.
-	mainMenu := CreateMenuItems(clientobj, OldWindow, TeamsChat, tabs)
+	mainMenu := CreateMenuItems(clientobj, FyneApp, TeamsChat, tabs)
 
 	//create initial tab
 	tabs.Append(container.NewTabItemWithIcon("Teams Chat", chaticon, TeamsChat))
 
 	// Create content for table pane
-	Common.ImplantTable = CreateImplantTable()
+	Common.ImplantTable = CreateImplantTable(NewWindow, FyneApp)
 
 	// TODO create logging pane.
 	topRightContent := widget.NewLabel("Logging Pane")

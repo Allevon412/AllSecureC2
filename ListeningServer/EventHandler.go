@@ -47,7 +47,7 @@ func StartEventHandler(token string, teamserver string) error {
 		return err
 	}
 	go RecvEvent()
-	
+
 	return nil
 }
 
@@ -62,6 +62,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 
 		NewMessage.MessageType = "RegisterImplant"
 		NewImplant.ImplantId = ImpCtx.Agent_id
+		NewImplant.ImplantName = ImpCtx.Agent_name
 		NewImplant.Computer = ImpCtx.Host_name
 		NewImplant.InternalIP = ImpCtx.Ip_addr
 		NewImplant.ExternalIP = ImpCtx.Ip_addr

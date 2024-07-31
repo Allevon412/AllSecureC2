@@ -44,7 +44,7 @@ func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomEn
 		if err.Error() == "unauthorized" {
 			clientobj.Authenticated = false
 		}
-		log.Println("[error] attempting to retrieve user data", err)
+		log.Println("[error] attempting to add user", err)
 	}
 
 	//obtain the updated list of users.
@@ -129,7 +129,7 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.C
 		if err.Error() == "unauthorized" {
 			clientobj.Authenticated = false
 		}
-		log.Println("[error] attempting to retrieve user data", err)
+		log.Println("[error] attempting to remove user", err)
 	}
 
 	//obtain the updated list of users.

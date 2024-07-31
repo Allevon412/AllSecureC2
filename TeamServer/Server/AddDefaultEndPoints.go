@@ -268,7 +268,7 @@ func (t *TS) GetActiveImplants(ctx *gin.Context) {
 		if client.Type == Types.ListeningServer {
 			err = EndPoints.GetActiveImplants(client, Message)
 			if err != nil {
-				log.Println("[error] attempting to retrieve user data from sql database", err)
+				log.Println("[error] attempting to retrieve implant data from listening server", err)
 				ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Server error"})
 			}
 		}

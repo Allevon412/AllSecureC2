@@ -2,7 +2,6 @@ package ListeningServer
 
 import (
 	"AllSecure/ListeningServer/Common"
-	"log"
 )
 
 func RegisterAgent(Agent *Common.Implant, data []byte) error {
@@ -11,10 +10,6 @@ func RegisterAgent(Agent *Common.Implant, data []byte) error {
 	)
 
 	Agent.Context.UnmarshalContext(data)
-	if err != nil {
-		log.Println("[error] attempting to unmarshal implant data", err)
-		return err
-	}
 
 	err = SendEvent("RegisterImplant", Agent.Context)
 	if err != nil {
@@ -22,8 +17,4 @@ func RegisterAgent(Agent *Common.Implant, data []byte) error {
 	}
 
 	return nil
-}
-
-func QueueCmd() {
-
 }

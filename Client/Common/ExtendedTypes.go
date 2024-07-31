@@ -17,9 +17,11 @@ type (
 		FormSubmitFunc func()
 	}
 
-	CustomUserTableLabel struct {
+	CustomTableLabel struct {
 		widget.Label
 		LabelWindowAdditionFunction func(e *fyne.PointEvent)
+		Row                         int
+		Col                         int
 	}
 
 	//custom theme for allsecure so we do not have the greyed out team's chat box.

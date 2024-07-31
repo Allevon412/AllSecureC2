@@ -39,6 +39,12 @@ void AgentMain(PVOID RetAddr) {
 
 void AgentRoutine() {
 	while (TRUE) {
+
+		if(ReachedKillDate()) {
+			printf("[info] kill date reached, exiting agent.\n");
+			exit(-1);
+		}
+
 		if (!agent->session->Active)
 		{
 			if ((PackageSendMetaDataPackage(agent->MetaDataPackage, NULL, NULL)) != PACKAGE_SUCCESS) {

@@ -76,7 +76,7 @@ func AuthenticateCredentials() {
 		AuthenticationMenu.ClientObj.Password = "" // unset the password variable b/c it seems unsafe to store it.
 		//go to next screen.
 		mainmenu.MainMenu(&AuthenticationMenu.ClientObj, AuthenticationMenu.MyApp, AuthenticationMenu.Resource,
-			AuthenticationMenu.ResourcePath, &AuthenticationMenu.AuthenticationWindow)
+			AuthenticationMenu.ResourcePath)
 
 		AuthenticationMenu.AuthenticationWindow.Close()
 

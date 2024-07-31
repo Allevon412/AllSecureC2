@@ -11,7 +11,7 @@ type NewWebSocketMessage struct {
 
 type ImplantData struct {
 	ImplantId   uint32 `json:"ImplantNum"`
-	ImplantName string `json:"ImplantID"`
+	ImplantName string `json:"ImplantName"`
 	InternalIP  string `json:"InternalIP"`
 	ExternalIP  string `json:"ExternalIP"`
 	User        string `json:"User"`

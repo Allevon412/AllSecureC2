@@ -91,7 +91,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	t := widget.NewTableWithHeaders(
 		func() (int, int) { return len(UserTableEntries), len(UserHeaders.HeaderNames) },
 		func() fyne.CanvasObject {
-			l := NewCustomUserTableLabel(
+			l := NewCustomTableLabel(
 				func(e *fyne.PointEvent) {
 					PopUpMenu.ShowAtPosition(e.AbsolutePosition)
 					PopUpMenu.Show()
@@ -99,7 +99,7 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			return l
 		},
 		func(id widget.TableCellID, o fyne.CanvasObject) {
-			l := o.(*CustomUserTableLabel)
+			l := o.(*CustomTableLabel)
 			l.Truncation = fyne.TextTruncateEllipsis
 			switch id.Col {
 			case 0:

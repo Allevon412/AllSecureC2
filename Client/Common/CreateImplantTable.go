@@ -16,6 +16,7 @@ type ImplantTableHeaders struct {
 var ImplantData []ImplantTableData
 var ImplantHeaders ImplantTableHeaders
 var ImplantTable *widget.Table
+var SelectedImplant SelectedCell
 
 func ImplantTableInit() {
 	ImplantHeaders.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health"}
@@ -23,35 +24,63 @@ func ImplantTableInit() {
 
 // TODO create logic for when new implant data comes down pipeline
 // Fyne labs dev blog about creating a table https://fynelabs.com/2023/10/05/user-data-sorting-with-a-fyne-table-widget/
-func CreateImplantTable() *widget.Table {
+func CreateImplantTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	ImplantTableInit()
-	t := widget.NewTableWithHeaders(func() (int, int) { return len(ImplantData), len(ImplantHeaders.HeaderNames) },
-		func() fyne.CanvasObject { l := widget.NewLabel(""); return l },
+	t := widget.NewTableWithHeaders(
+		func() (int, int) { return len(ImplantData), len(ImplantHeaders.HeaderNames) },
+		func() fyne.CanvasObject {
+			l := NewCustomTableLabel(
+				func(e *fyne.PointEvent) {
+					PopUpMenu.ShowAtPosition(e.AbsolutePosition)
+					PopUpMenu.Show()
+				})
+			return l
+		},
 		func(id widget.TableCellID, o fyne.CanvasObject) {
-			l := o.(*widget.Label)
+			l := o.(*CustomTableLabel)
 			l.Truncation = fyne.TextTruncateEllipsis
 			switch id.Col {
 			case 0:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(ImplantData[id.Row].ImplantNum))
+				l.Row = id.Row
+				l.Col = id.Col
 			case 1:
 				l.Truncation = fyne.TextTruncateOff
-				l.SetText(ImplantData[id.Row].ID)
+				l.SetText(ImplantData[id.Row].ImplantName)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 2:
 				l.SetText(ImplantData[id.Row].InternalIP)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 3:
 				l.SetText(ImplantData[id.Row].ExternalIP)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 4:
 				l.SetText(ImplantData[id.Row].User)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 5:
 				l.SetText(ImplantData[id.Row].Computer)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 6:
 				l.SetText(ImplantData[id.Row].OS)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 7:
 				l.SetText(strconv.Itoa(ImplantData[id.Row].PID))
+				l.Row = id.Row
+				l.Col = id.Col
 			case 8:
 				l.SetText(ImplantData[id.Row].Process)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 9:
+				l.Row = id.Row
+				l.Col = id.Col
 				if ImplantData[id.Row].Health {
 					l.SetText("Alive")
 				} else {
@@ -60,7 +89,8 @@ func CreateImplantTable() *widget.Table {
 
 			}
 		},
-	)
+	) // widget.NewTableWithHeaders
+
 	t.SetColumnWidth(0, 125)
 	t.SetColumnWidth(1, 125)
 	t.SetColumnWidth(2, 150)
@@ -238,9 +268,9 @@ func ApplySort(col int, t *widget.Table) {
 		switch col {
 		case 1:
 			if order == SortAsc {
-				return strings.Compare(a.ID, b.ID) < 0
+				return strings.Compare(a.ImplantName, b.ImplantName) < 0
 			}
-			return strings.Compare(a.ID, b.ID) > 0
+			return strings.Compare(a.ImplantName, b.ImplantName) > 0
 		case 2:
 			if order == SortAsc {
 				return strings.Compare(a.InternalIP, b.InternalIP) < 0

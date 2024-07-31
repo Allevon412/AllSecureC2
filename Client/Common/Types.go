@@ -65,4 +65,9 @@ type (
 		Resource                                                         fyne.Resource
 		ClientObj                                                        Client
 	}
+
+	SelectedCell struct {
+		Row int
+		Col int
+	}
 )

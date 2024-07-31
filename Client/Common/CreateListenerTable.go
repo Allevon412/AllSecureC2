@@ -101,7 +101,7 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	t := widget.NewTableWithHeaders(
 		func() (int, int) { return len(ListenerTableEntries), len(ListenerHeaders.HeaderNames) },
 		func() fyne.CanvasObject {
-			l := NewCustomUserTableLabel(
+			l := NewCustomTableLabel(
 				func(e *fyne.PointEvent) {
 					PopUpMenu.ShowAtPosition(e.AbsolutePosition)
 					PopUpMenu.Show()
@@ -109,30 +109,44 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			return l
 		},
 		func(id widget.TableCellID, o fyne.CanvasObject) {
-			l := o.(*CustomUserTableLabel)
+			l := o.(*CustomTableLabel)
 			l.Truncation = fyne.TextTruncateEllipsis
 			switch id.Col {
 			case 0:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].ListenerName)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 1:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].Protocol)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 2:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].HOST)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 3:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].PortBind))
+				l.Row = id.Row
+				l.Col = id.Col
 			case 4:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].PortConn)
+				l.Row = id.Row
+				l.Col = id.Col
 			case 5:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].UserID))
+				l.Row = id.Row
+				l.Col = id.Col
 			case 6:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].UserName)
+				l.Row = id.Row
+				l.Col = id.Col
 			}
 		},
 	)
