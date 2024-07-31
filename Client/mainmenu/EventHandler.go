@@ -46,5 +46,5 @@ func CheckForNewEventsFromWS() {
 	if err != nil {
 		log.Println("[error] attempting to close websocket connection", err)
 	}
-	ObtainWebSocketConn(g_clientobj)
+	g_clientobj.Authenticated = false
 }

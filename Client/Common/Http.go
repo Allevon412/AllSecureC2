@@ -23,43 +23,51 @@ func PerformHTTPReq(clientobj *Client, endpoint string, body []byte) ([]byte, er
 		data      []byte
 	)
 
-	//setup the http tls configuration
-	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	client.Transport = &transport
+	if clientobj.Authenticated {
+		//setup the http tls configuration
+		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+		client.Transport = &transport
 
-	//create a new request that our client will perform.
-	req, err = http.NewRequest("POST", endpoint, bytes.NewBuffer(body))
-	if err != nil {
-		log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
-	}
-	//marshal token into it's byte form.
-	token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
-	if err != nil {
-		log.Println("[error] attempting to marshal JWT token")
-	}
-	//set our request authorization header to be our jwt  token.
-	req.Header.Set("Authorization", strings.Trim(string(token), "\""))
+		//create a new request that our client will perform.
+		req, err = http.NewRequest("POST", endpoint, bytes.NewBuffer(body))
+		if err != nil {
+			log.Println("[error] attempting to generate a new HTTP request with the specified parameters", err)
+		}
+		//marshal token into it's byte form.
+		token, err = json.Marshal(clientobj.Cookie.Token.JwtToken)
+		if err != nil {
+			log.Println("[error] attempting to marshal JWT token")
+		}
+		//set our request authorization header to be our jwt  token.
+		req.Header.Set("Authorization", strings.Trim(string(token), "\""))
 
-	//perform the request.
-	resp, err = client.Do(req)
-	if err != nil {
-		log.Println("[error] attempting to perform request", err)
-		return nil, err
-	}
+		//perform the request.
+		resp, err = client.Do(req)
+		if err != nil {
+			log.Println("[error] attempting to perform request", err)
+			return nil, err
+		}
 
-	defer resp.Body.Close()
-	status := resp.StatusCode
-	if status != http.StatusOK {
-		log.Println("[error] in attempting to perform request. status: ", status)
-		return nil, errors.New("invalid status code")
-	}
+		defer resp.Body.Close()
+		status := resp.StatusCode
+		if status == http.StatusUnauthorized {
+			clientobj.Authenticated = false
+			return nil, errors.New("unauthorized")
+		} else if status != http.StatusOK {
+			log.Println("[error] in attempting to perform request. status: ", status)
+			return nil, errors.New("invalid status code")
+		}
 
-	data, err = io.ReadAll(resp.Body)
-	if err != nil {
-		log.Println("[error] attempting to read resp body")
-		return nil, err
+		data, err = io.ReadAll(resp.Body)
+		if err != nil {
+			log.Println("[error] attempting to read resp body")
+			return nil, err
+		}
+		return data, nil
+
+	} else {
+		return nil, errors.New("unauthorized")
 	}
-	return data, nil
 }
 
 func ObtainWebSocket(clientobj *Client) (*websocket.Conn, error) {

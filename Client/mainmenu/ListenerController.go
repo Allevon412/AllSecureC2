@@ -203,8 +203,12 @@ func GetListenerData(clientobj *Common.Client) ([]byte, error) {
 	endpoint := "https://" + clientobj.Server + "/GetActiveListeners"
 	data, err := Common.PerformHTTPReq(clientobj, endpoint, nil)
 	if err != nil {
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
 		log.Println("[error] attempting to retrieve user data", err)
 	}
+
 	trimedstr := strings.Trim(string(data), "\"")
 
 	decoded := Common.Base64Decode(trimedstr)

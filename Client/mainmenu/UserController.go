@@ -41,7 +41,10 @@ func AddUserSubmitFunc(UsernameEntry, PasswordEntry, AdminEntry *Common.CustomEn
 
 	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
 	if err != nil {
-		log.Println("[error] attempting to add user to database", err)
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
+		log.Println("[error] attempting to retrieve user data", err)
 	}
 
 	//obtain the updated list of users.
@@ -123,7 +126,10 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.C
 
 	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
 	if err != nil {
-		log.Println("[error] attempting to remove user from database", err)
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
+		log.Println("[error] attempting to retrieve user data", err)
 	}
 
 	//obtain the updated list of users.
@@ -177,8 +183,12 @@ func GetUserData(clientobj *Common.Client) ([]byte, error) {
 	endpoint := "https://" + clientobj.Server + "/GetUserData"
 	data, err := Common.PerformHTTPReq(clientobj, endpoint, nil)
 	if err != nil {
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
 		log.Println("[error] attempting to retrieve user data", err)
 	}
+
 	trimedstr := strings.Trim(string(data), "\"")
 
 	decoded := Common.Base64Decode(trimedstr)

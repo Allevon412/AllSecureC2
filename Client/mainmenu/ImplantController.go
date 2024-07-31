@@ -37,8 +37,12 @@ func GetActiveImplants(clientobj *Common.Client, Message Common.WebSocketMessage
 
 	data, err := Common.PerformHTTPReq(clientobj, endpoint, JData)
 	if err != nil {
+		if err.Error() == "unauthorized" {
+			clientobj.Authenticated = false
+		}
 		log.Println("[error] attempting to retrieve user data", err)
 	}
+
 	trimedstr := strings.Trim(string(data), "\"")
 
 	decoded := Common.Base64Decode(trimedstr)

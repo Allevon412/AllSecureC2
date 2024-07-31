@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"sync"
-	"time"
 )
 
 var (
@@ -18,6 +17,7 @@ var (
 	g_clientobj       *Common.Client
 	g_prevtext        string
 	lock              sync.Mutex
+	g_AuthWindow      fyne.Window
 )
 
 func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
@@ -83,25 +83,23 @@ func ObtainWebSocketConn(clientobj *Common.Client) error {
 	)
 	clientobj.Conn, err = Common.ObtainWebSocket(clientobj)
 	if err != nil {
-		for {
-			time.Sleep(30 * time.Second) // sleep for 30 seconds and try again.
-			clientobj.Conn, err = Common.ObtainWebSocket(clientobj)
-			if err == nil { // if we successfully obtained a websocket connection
-				break
-			}
-		}
+		clientobj.Authenticated = false
+		log.Println("[error] attempting to obtain web socket connection.")
 	}
 
 	CheckForNewEventsFromWS()
+
 	return nil
 }
 
-func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string) {
+func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, ResourcePath string, AuthWindow *fyne.Window) {
 
 	//Create new window
 	NewWindow := OldWindow.NewWindow("AllSecure")
+
 	g_clientobj = clientobj
 	g_username = clientobj.Username
+	g_AuthWindow = *AuthWindow
 
 	CreateListenerTable(clientobj, NewWindow, OldWindow)
 
@@ -168,4 +166,5 @@ func MainMenu(clientobj *Common.Client, OldWindow fyne.App, icon fyne.Resource, 
 		clientobj.Conn.Close()
 		NewWindow.Close()
 	})
+
 }
