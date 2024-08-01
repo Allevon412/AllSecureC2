@@ -57,7 +57,8 @@ void TaskingRoutine() {
 		    		UINT32 ProcID = 0;
 		    		HANDLE hProc = NULL;
 		    		CLIENT_ID ClientID = {0};
-		    		ClientID.UniqueProcess = ProcID;
+		    		ClientID.UniqueProcess = NtCurrentProcess();
+		    		ClientID.UniqueThread = NtCurrentProcess();
 
 		    		ProcID = ParserReadInt32(&Parser);
 					hProc = agent->apis->pNtOpenProcess(&hProc, PROCESS_ALL_ACCESS, FALSE, &ClientID);

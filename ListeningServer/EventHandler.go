@@ -131,13 +131,14 @@ func RecvEvent() {
 				AgentCmd.RequestID = 69
 				AgentCmd.DataBuffer = DataBuf
 				break
-				
+
 			default:
 				break
 			}
 
 			for _, agent := range agent_arr {
 				if agent.Context.Agent_name == ImplantCmd.ImplantName {
+					log.Println("[info] attempting to send command [%s] to agent [%s]", ImplantCmd.Command, agent.Context.Agent_name)
 					agent.CmdQue.Enqueue(AgentCmd)
 				}
 			}

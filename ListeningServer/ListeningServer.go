@@ -22,6 +22,8 @@ type LS struct {
 }
 
 var (
+	//TODO: add a last seen timestamp to each agent so we can remove them if they haven't been seen in a while
+	//TODO: if there isn't already a sleep team saved in the context, add it so you can check if the last check in time is 1.5x the sleep time
 	agent_arr   []*Common.Implant //EACH AGENT HAS THEIR OWN CMD QUEUE
 	g_clientobj Common.Client
 )

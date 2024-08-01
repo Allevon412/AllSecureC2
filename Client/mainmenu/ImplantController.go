@@ -253,26 +253,39 @@ func ParseImplantCommand(Command string) {
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "dir":
+
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "cd":
 		//change directory on implant.
+		str := fmt.Sprintf("[*] Changing directory to %s on implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "pwd":
 		//print working directory on implant.
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Printing working directory on the implant.\n")
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "ps":
 		//list all running processes on implant.
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all running processes on the implant.\n")
+		SendImplantCommand(cmd, args, ImplantName)
+		break
+	case "proc":
+		//list all running processes on implant.
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all running processes on the implant.\n")
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "kill":
 		//kill a process on the implant.
+		str := fmt.Sprintf("[*] Killing process %d on implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "lm":
 		//list all loaded modules on the implant.
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all loaded modules on the implant.\n")
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "clear":
