@@ -70,4 +70,11 @@ type (
 		Row int
 		Col int
 	}
+
+	ImplantInteractionMenu struct {
+		PreviousText string
+		ImplantLog   *widget.Entry
+		EntryBar     *CustomChatEntry
+		ImplantName  string
+	}
 )
