@@ -38,6 +38,12 @@ type ImplantTableData struct {
 	Health      bool   `json:"Health"`
 }
 
+type ImplantCommandData struct {
+	Command     string   `json:"Command"`
+	ImplantName string   `json:"ImplantName"`
+	Args        []string `json:"Args"`
+}
+
 type NewUser struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`

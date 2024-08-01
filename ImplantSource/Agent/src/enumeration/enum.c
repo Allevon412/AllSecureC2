@@ -118,10 +118,10 @@ INT GetIPAddress() {
 						while (pIpAddressList && IPAddressCount < 5) {
 							if (strcmp(pIpAddressList->IpAddress.String, "0.0.0.0") != 0) {
 								if (IPAddressCount == 1) {
-									agent->Context->IPAddress[AdapterCount][0] = agent->apis->pLocalAlloc(LPTR, StringLengthA(TmpAdapter->Description));
+									agent->Context->IPAddress[AdapterCount][0] = agent->apis->pLocalAlloc(LPTR, StringLengthA(TmpAdapter->Description) + 1);
 									MemoryCopy(agent->Context->IPAddress[AdapterCount][0], TmpAdapter->Description, StringLengthA(TmpAdapter->Description));
 								}
-								agent->Context->IPAddress[AdapterCount][IPAddressCount] = agent->apis->pLocalAlloc(LPTR, StringLengthA(pIpAddressList->IpAddress.String));
+								agent->Context->IPAddress[AdapterCount][IPAddressCount] = agent->apis->pLocalAlloc(LPTR, StringLengthA(pIpAddressList->IpAddress.String) + 1);
 								MemoryCopy(agent->Context->IPAddress[AdapterCount][IPAddressCount], pIpAddressList->IpAddress.String, StringLengthA(pIpAddressList->IpAddress.String));
 
 								IPAddressCount++;

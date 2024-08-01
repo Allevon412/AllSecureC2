@@ -3,6 +3,7 @@ package mainmenu
 import (
 	"Client/Common"
 	"encoding/json"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -60,7 +61,7 @@ func CreateListenerSubmitFunc(ListNameEntry, ListProtocol, ListHost, ListPort *C
 	return
 }
 
-func StopListenerSubmitFunc(ListNameEntry *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func StopListenerSubmitFunc(Listname string, clientobj *Common.Client, NewWindow fyne.Window) {
 	// close the stop listener form window.
 	defer NewWindow.Close()
 
@@ -71,12 +72,8 @@ func StopListenerSubmitFunc(ListNameEntry *Common.CustomEntry, clientobj *Common
 		data         []byte
 	)
 
-	ListenerData.ListenerName = ListNameEntry.Text
+	ListenerData.ListenerName = Listname
 
-	if err != nil {
-		log.Println("[error] attempting to convert listener port to integer format", err)
-		return
-	}
 	Jdata, err = json.Marshal(ListenerData)
 	if err != nil {
 		log.Println("[error] attempting to marshal listener data", err)
@@ -167,35 +164,26 @@ func CreateListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 func StopListenerFunc(clientobj *Common.Client, OldWindow fyne.App) error {
+	Selected := Common.SelectedListener.Row
+	Listener := Common.ListenerTableEntries[Selected].ListenerName
 	NewWindow := OldWindow.NewWindow("Stop Listener Form")
 
 	var (
-		ListNameEntry *Common.CustomEntry
+	//ListNameEntry *Common.CustomEntry
 	)
+	delbutton := widget.NewButton("DELETE", func() { NewWindow.Close(); StopListenerSubmitFunc(Listener, clientobj, NewWindow) })
+	canbutton := widget.NewButton("CANCEL", func() { NewWindow.Close() })
+	promptstring := fmt.Sprintf("# Are you sure you want to delete listener: [%s]\n", Listener)
+	prompttext := widget.NewRichTextFromMarkdown(promptstring)
 
-	ListNameEntry = Common.NewCustomCredentialEntry(func() { StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow) })
-	form := &widget.Form{
-		BaseWidget: widget.BaseWidget{},
-		Items: []*widget.FormItem{
-			{
-				Text:     "Listener Name",
-				Widget:   ListNameEntry,
-				HintText: "HTTPS_LISTENER",
-			},
-		},
-		OnSubmit: func() {
-			StopListenerSubmitFunc(ListNameEntry, clientobj, NewWindow)
-		},
-		OnCancel:   NewWindow.Close,
-		SubmitText: "Stop Listener",
-		CancelText: "Exit",
-	}
+	hsplit := container.NewHSplit(delbutton, canbutton)
+	vsplit := container.NewVSplit(prompttext, hsplit)
 
-	//show our form in the new window.
-	stack := container.NewStack(form)
-	NewWindow.SetContent(stack)
-	NewWindow.Resize(fyne.NewSize(700, 300))
+	border := container.NewBorder(vsplit, nil, nil, nil, nil)
+	NewWindow.SetContent(border)
+	NewWindow.Resize(fyne.NewSize(700, 100))
 	NewWindow.Show()
+
 	return nil
 }
 func GetListenerData(clientobj *Common.Client) ([]byte, error) {

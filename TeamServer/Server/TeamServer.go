@@ -173,6 +173,21 @@ func (t *TS) HandleRequest(ClientID string) {
 			}
 			break // REGISTER IMPLANT
 
+		case "ImplantCommand":
+			t.Server.Clients.Range(func(key, value any) bool { //TODO: fix this so that you only send the command to short term interactive listening servers.
+				client = value.(*Types.Client) // right now if the implant is pinging multiple listeners both listeners will send the cmd in this configuration
+				if client.Type == Types.ListeningServer {
+					err = client.Conn.WriteJSON(NewMessage)
+					if err != nil {
+						log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
+						t.Server.Clients.Delete(ClientID)
+						return false
+					}
+				}
+				return true
+			})
+			break //IMPLANT COMMAND
+
 		default:
 			continue
 		} //SWITCH STATEMENT

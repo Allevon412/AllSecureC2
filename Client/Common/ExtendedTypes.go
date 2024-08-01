@@ -5,7 +5,15 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+const (
+	UserCell CellType = iota
+	ImplantCell
+	ListenerCell
+)
+
 type (
+	CellType int
+
 	// extending the natural entry widget to have the functionality to send text by pressing enter.
 	CustomChatEntry struct {
 		widget.Entry
@@ -22,6 +30,7 @@ type (
 		LabelWindowAdditionFunction func(e *fyne.PointEvent)
 		Row                         int
 		Col                         int
+		LabelType                   CellType
 	}
 
 	//custom theme for allsecure so we do not have the greyed out team's chat box.

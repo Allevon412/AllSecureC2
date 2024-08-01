@@ -26,6 +26,7 @@ var (
 	UserHeaders      UserTableHeaders
 	UserTableEntries []UserTableData
 	UserTable        *widget.Table
+	SelectedUser     SelectedCell
 )
 
 func UserTableInit() {
@@ -105,6 +106,11 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 			case 0:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(UserTableEntries[id.Row].Username)
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = UserCell
+				break
+
 			case 1:
 				var admin string
 				admin = "False"
@@ -113,15 +119,38 @@ func CreateUserTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 					admin = "True"
 				}
 				l.SetText(admin)
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = UserCell
+				break
+
 			case 2:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(UserTableEntries[id.Row].ID))
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = UserCell
+				break
+
 			case 3:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(UserTableEntries[id.Row].ActiveImplants)
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = UserCell
+				break
+
 			case 4:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(UserTableEntries[id.Row].ActiveListeners)
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = UserCell
+				break
+
+			default:
+				break
+
 			}
 		},
 	)

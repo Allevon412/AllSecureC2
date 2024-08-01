@@ -4,6 +4,7 @@ import (
 	"Client/Common"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -108,7 +109,7 @@ func AddUser(clientobj *Common.Client, OldWindow fyne.App) error {
 	return nil
 }
 
-func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.Client, NewWindow fyne.Window) {
+func RemoveUserSubmitFunc(Usernamestr string, clientobj *Common.Client, NewWindow fyne.Window) {
 	var (
 		data  []byte
 		err   error
@@ -121,7 +122,7 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.C
 
 	//marshal the data for http request.
 	Jdata, err = json.Marshal(Common.NewUser{
-		Username: UsernameEntry.Text,
+		Username: Usernamestr,
 	})
 
 	_, err = Common.PerformHTTPReq(clientobj, endpoint, Jdata)
@@ -148,34 +149,24 @@ func RemoveUserSubmitFunc(UsernameEntry *Common.CustomEntry, clientobj *Common.C
 }
 
 func RemoveUser(clientobj *Common.Client, OldWindow fyne.App) error {
+
+	Selected := Common.SelectedUser.Row
+	Username := Common.UserTableEntries[Selected].Username
 	NewWindow := OldWindow.NewWindow("Remove User Form")
 
-	var (
-		UsernameEntry *Common.CustomEntry
-	)
+	delbutton := widget.NewButton("DELETE", func() { NewWindow.Close(); RemoveUserSubmitFunc(Username, clientobj, NewWindow) })
+	canbutton := widget.NewButton("CANCEL", func() { NewWindow.Close() })
+	promptstring := fmt.Sprintf("# Are you sure you want to delete user: [%s]\n", Username)
+	prompttext := widget.NewRichTextFromMarkdown(promptstring)
 
-	UsernameEntry = Common.NewCustomCredentialEntry(func() { RemoveUserSubmitFunc(UsernameEntry, clientobj, NewWindow) })
-	//create a new form.
-	form := &widget.Form{
-		Items: []*widget.FormItem{
-			{
-				Text:     "User to Delete: ",
-				Widget:   UsernameEntry,
-				HintText: "Allevon412",
-			},
-		},
-		OnSubmit: func() { RemoveUserSubmitFunc(UsernameEntry, clientobj, NewWindow) },
+	hsplit := container.NewHSplit(delbutton, canbutton)
+	vsplit := container.NewVSplit(prompttext, hsplit)
 
-		OnCancel:   NewWindow.Close,
-		SubmitText: "Create User",
-		CancelText: "Exit",
-	}
-
-	//show our form in the new window.
-	stack := container.NewStack(form)
-	NewWindow.SetContent(stack)
-	NewWindow.Resize(fyne.NewSize(700, 150))
+	border := container.NewBorder(vsplit, nil, nil, nil, nil)
+	NewWindow.SetContent(border)
+	NewWindow.Resize(fyne.NewSize(700, 100))
 	NewWindow.Show()
+
 	return nil
 }
 

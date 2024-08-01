@@ -36,6 +36,9 @@ func UpdateChat(Message string) {
 	//set teams chat to the previous text + the new message0.
 	lock.Lock()
 	teamsChatLog.SetText(fmt.Sprintf("%s\n%s", g_prevtext, Message))
+	length := len(teamsChatLog.Text)
+	teamsChatLog.CursorRow = length
+	teamsChatLog.Refresh()
 	lock.Unlock()
 
 }

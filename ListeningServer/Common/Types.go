@@ -55,6 +55,7 @@ type (
 		IV      []byte
 		Alive   bool
 		Context ImplantContext
+		CmdQue  Queue
 	}
 
 	Package struct {
@@ -295,10 +296,15 @@ func (q *Queue) Dequeue() (interface{}, error) {
 	return element, nil
 }
 
+func (q *Queue) Len() int {
+	return len(*q)
+}
+
 func (a *AgentCmd) MarshalAgentCmd() []byte {
 	var data = make([]byte, 8)
 	binary.LittleEndian.PutUint32(data[:4], a.CmdID)
 	binary.LittleEndian.PutUint32(data[4:8], a.RequestID)
 	data = append(data, a.DataBuffer...)
+
 	return data
 }

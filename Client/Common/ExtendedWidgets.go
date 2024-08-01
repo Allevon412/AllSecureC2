@@ -81,9 +81,25 @@ func NewCustomTableLabel(CustomFunc func(e *fyne.PointEvent)) *CustomTableLabel 
 func (cl *CustomTableLabel) TappedSecondary(e *fyne.PointEvent) {
 
 	cl.LabelWindowAdditionFunction(e)
-	SelectedImplant = SelectedCell{
-		Row: cl.Row,
-		Col: cl.Col,
+	switch cl.LabelType {
+	case UserCell:
+		SelectedUser = SelectedCell{
+			Row: cl.Row,
+			Col: cl.Col,
+		}
+		break
+	case ImplantCell:
+		SelectedImplant = SelectedCell{
+			Row: cl.Row,
+			Col: cl.Col,
+		}
+		break
+	case ListenerCell:
+		SelectedListener = SelectedCell{
+			Row: cl.Row,
+			Col: cl.Col,
+		}
+		break
 	}
 
 }

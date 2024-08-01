@@ -26,6 +26,7 @@ var (
 	ListenerHeaders      ListenerTableHeaders
 	ListenerTableEntries []ListenerTableData
 	ListenerTable        *widget.Table
+	SelectedListener     SelectedCell
 )
 
 func ListenerTableInit() {
@@ -117,36 +118,60 @@ func CreateListenerTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				l.SetText(ListenerTableEntries[id.Row].ListenerName)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 1:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].Protocol)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 2:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].HOST)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 3:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].PortBind))
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 4:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].PortConn)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 5:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(strconv.Itoa(ListenerTableEntries[id.Row].UserID))
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
 			case 6:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ListenerTableEntries[id.Row].UserName)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ListenerCell
+				break
+
+			default:
+				break
+
 			}
 		},
 	)

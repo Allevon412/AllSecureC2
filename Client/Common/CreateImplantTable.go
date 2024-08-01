@@ -45,47 +45,80 @@ func CreateImplantTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				l.SetText(strconv.Itoa(ImplantData[id.Row].ImplantNum))
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 1:
 				l.Truncation = fyne.TextTruncateOff
 				l.SetText(ImplantData[id.Row].ImplantName)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 2:
 				l.SetText(ImplantData[id.Row].InternalIP)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 3:
 				l.SetText(ImplantData[id.Row].ExternalIP)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 4:
 				l.SetText(ImplantData[id.Row].User)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 5:
 				l.SetText(ImplantData[id.Row].Computer)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 6:
 				l.SetText(ImplantData[id.Row].OS)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 7:
 				l.SetText(strconv.Itoa(ImplantData[id.Row].PID))
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 8:
 				l.SetText(ImplantData[id.Row].Process)
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+				break
+
 			case 9:
 				l.Row = id.Row
 				l.Col = id.Col
+				l.LabelType = ImplantCell
+
 				if ImplantData[id.Row].Health {
 					l.SetText("Alive")
 				} else {
 					l.SetText("Dead")
 				}
+				break
+
+			default:
+				break
 
 			}
 		},

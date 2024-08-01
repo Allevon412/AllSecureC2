@@ -21,3 +21,9 @@ type ImplantData struct {
 	Process     string `json:"Process"`
 	Health      bool   `json:"Health"`
 }
+
+type ImplantCommandData struct {
+	Command     string   `json:"Command"`
+	ImplantName string   `json:"ImplantName"`
+	Args        []string `json:"Args"`
+}
