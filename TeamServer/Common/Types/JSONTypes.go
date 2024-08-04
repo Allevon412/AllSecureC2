@@ -34,16 +34,17 @@ type ListenerData struct {
 }
 
 type ImplantData struct {
-	ImplantNum int    `json:"ImplantNum"`
-	ImplantID  string `json:"ImplantID"`
-	InternalIP string `json:"InternalIP"`
-	ExternalIP string `json:"ExternalIP"`
-	User       string `json:"User"`
-	Computer   string `json:"Computer"`
-	OS         string `json:"OS"`
-	PID        uint32 `json:"PID"`
-	Process    string `json:"Process"`
-	Health     bool   `json:"Health"`
+	ImplantNum  int    `json:"ImplantNum"`
+	ImplantID   string `json:"ImplantID"`
+	InternalIP  string `json:"InternalIP"`
+	ExternalIP  string `json:"ExternalIP"`
+	User        string `json:"User"`
+	Computer    string `json:"Computer"`
+	OS          string `json:"OS"`
+	PID         uint32 `json:"PID"`
+	Process     string `json:"Process"`
+	Health      bool   `json:"Health"`
+	LastCheckIn string `json:"LastCheckIn"`
 }
 
 type ImplantCommandData struct {

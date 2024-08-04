@@ -20,6 +20,7 @@ type ImplantData struct {
 	PID         uint32 `json:"PID"`
 	Process     string `json:"Process"`
 	Health      bool   `json:"Health"`
+	LastCheckIn string `json:"LastCheckIn"`
 }
 
 type ImplantCommandData struct {

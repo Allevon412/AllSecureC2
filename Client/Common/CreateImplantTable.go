@@ -19,7 +19,7 @@ var ImplantTable *widget.Table
 var SelectedImplant SelectedCell
 
 func ImplantTableInit() {
-	ImplantHeaders.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health"}
+	ImplantHeaders.HeaderNames = []string{"Implant Num", "ID", "Internal IP", "External IP", "User", "Computer", "OS", "PID", "Process", "Health", "Last Check In"}
 }
 
 // TODO create logic for when new implant data comes down pipeline
@@ -117,6 +117,12 @@ func CreateImplantTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				}
 				break
 
+			case 10:
+				l.SetText(ImplantData[id.Row].LastCheckIn)
+				l.Row = id.Row
+				l.Col = id.Col
+				l.LabelType = ImplantCell
+
 			default:
 				break
 
@@ -134,6 +140,7 @@ func CreateImplantTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 	t.SetColumnWidth(7, 100)
 	t.SetColumnWidth(8, 125)
 	t.SetColumnWidth(9, 100)
+	t.SetColumnWidth(10, 200)
 
 	t.CreateHeader = func() fyne.CanvasObject {
 		return widget.NewButton("000", func() {})
@@ -247,6 +254,16 @@ func CreateImplantTableObject(PopUpMenu *widget.PopUpMenu) *widget.Table {
 				default:
 					b.Icon = nil
 				}
+			case 10:
+				b.SetText(ImplantHeaders.HeaderNames[id.Col])
+				switch sorts[10] {
+				case SortAsc:
+					b.Icon = theme.MoveUpIcon()
+				case SortDesc:
+					b.Icon = theme.MoveDownIcon()
+				default:
+					b.Icon = nil
+				}
 			}
 
 			b.Importance = widget.MediumImportance
@@ -269,7 +286,7 @@ const (
 	SortDesc
 )
 
-var sorts = [10]Direction{}
+var sorts = [11]Direction{}
 
 func ApplySort(col int, t *widget.Table) {
 	order := sorts[col]
@@ -344,6 +361,11 @@ func ApplySort(col int, t *widget.Table) {
 				return a.Health
 			}
 			return !a.Health
+		case 10:
+			if order == SortAsc {
+				return strings.Compare(a.LastCheckIn, b.LastCheckIn) < 0
+			}
+			return strings.Compare(a.LastCheckIn, b.LastCheckIn) > 0
 		default:
 			if order == SortDesc {
 				return a.ImplantNum > b.ImplantNum

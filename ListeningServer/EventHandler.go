@@ -71,6 +71,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool) error
 		NewImplant.OS = Common.GetWindowsVersion(ImpCtx.Os_info)
 		NewImplant.Process = ImpCtx.Process_name
 		NewImplant.PID = ImpCtx.Process_id
+		NewImplant.LastCheckIn = ImpCtx.LastCheckin.String()
 		TempData, err = json.Marshal(NewImplant)
 		if err != nil {
 			log.Println("[error] attempting to marshal the implant data", err)
@@ -89,6 +90,22 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool) error
 		NewMessage.MessageType = "UpdateHealth"
 		NewImplant.ImplantName = ImpCtx.Agent_name
 		NewImplant.Health = Alive
+		TempData, err = json.Marshal(NewImplant)
+		if err != nil {
+			log.Println("[error] attempting to marshal the implant data", err)
+			return err
+		}
+		NewMessage.Message = string(TempData)
+		err = g_clientobj.Conn.WriteJSON(NewMessage)
+		if err != nil {
+			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+		}
+		break
+
+	case "UpdateCheckin":
+		NewMessage.MessageType = "UpdateCheckin"
+		NewImplant.ImplantName = ImpCtx.Agent_name
+		NewImplant.LastCheckIn = ImpCtx.LastCheckin.String()
 		TempData, err = json.Marshal(NewImplant)
 		if err != nil {
 			log.Println("[error] attempting to marshal the implant data", err)

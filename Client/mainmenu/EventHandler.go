@@ -63,6 +63,16 @@ func CheckForNewEventsFromWS() {
 			UpdateImplantHealth(TempImplantData)
 			break
 
+		case "UpdateCheckin":
+			var TempImplantData Common.ImplantTableData
+			err = json.Unmarshal([]byte(NewWSMessage.Message), &TempImplantData)
+			if err != nil {
+				log.Println("[error] attempting to read implant data from web socket message", err)
+				break
+			}
+			UpdateImplantCheckin(TempImplantData)
+			break
+
 		default:
 			break
 		}

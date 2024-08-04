@@ -232,6 +232,7 @@ typedef enum  {
 	CHECKIN_AGENT,
 	NO_JOB,
 	LIST_LOADED_MODULES,
+	SEND_DATA
 } Agent_Operations;
 
 

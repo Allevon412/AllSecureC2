@@ -16,3 +16,4 @@ UINT32 bswap32(UINT32 x);
 LPSTR generateRandomString(size_t length);
 LPWSTR generateRandomStringW(size_t length);
 UINT64 GetUnixTime();
+SIZE_T WCharToChar(PCHAR Destination, PWCHAR Source, SIZE_T MaximumAllowed);

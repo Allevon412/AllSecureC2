@@ -159,3 +159,12 @@ UINT64 GetUnixTime()
 	
 	return time;
 }
+
+SIZE_T WCharToChar(PCHAR Destination, PWCHAR Source, SIZE_T MaximumAllowed) {
+	INT Length = MaximumAllowed;
+	while (--Length >= 0) {
+		if(!(*Destination++ = (CHAR)*Source++))
+			return MaximumAllowed - Length -1;
+	}
+	return MaximumAllowed - Length;
+}

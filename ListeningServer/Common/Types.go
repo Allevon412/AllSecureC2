@@ -50,15 +50,15 @@ type (
 		Os_info             [5]uint32
 		Os_arch             uint32
 		Sleep_delay         uint32
+		LastCheckin         time.Time
 	}
 
 	Implant struct {
-		AESKey      []byte
-		IV          []byte
-		Alive       bool
-		Context     ImplantContext
-		CmdQue      Queue
-		LastCheckin time.Time
+		AESKey  []byte
+		IV      []byte
+		Alive   bool
+		Context ImplantContext
+		CmdQue  Queue
 	}
 
 	Package struct {
@@ -190,7 +190,6 @@ const (
 	CMD_GET_JOB
 	CMD_CHECKIN
 	CMD_NO_JOB
-	CMD_UPDATE_HEALTH
 	CMD_LIST_MODULES
 )
 
