@@ -423,6 +423,21 @@ func AddImplantToTable(ImplantData Common.ImplantTableData) {
 	Common.ImplantTable.Refresh()
 }
 
+func ReregisterImplant(NewImplantData Common.ImplantTableData, index int) {
+	//get the actual process name. Not the entire included path.
+	split := strings.Split(NewImplantData.Process, "\\")
+	NewImplantData.Process = split[len(split)-1]
+
+	//get the length of the number of current implants.
+	NewImplantData.ImplantNum = index
+
+	//replace the implant data in our implant table.
+	Common.ImplantData[index] = NewImplantData
+
+	Common.ImplantTable.Refresh()
+
+}
+
 func RemoveImplantFromTable() {
 
 }

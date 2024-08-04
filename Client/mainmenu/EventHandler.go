@@ -30,10 +30,23 @@ func CheckForNewEventsFromWS() {
 			break
 		case "RegisterImplant":
 			var TempImplantData Common.ImplantTableData
+			var Reregisted = false
+
 			err = json.Unmarshal([]byte(NewWSMessage.Message), &TempImplantData)
 			if err != nil {
 				log.Println("[error] attempting to read implant data from web socket message", err)
 				continue
+			}
+			for i, implant := range Common.ImplantData {
+				if implant.ImplantName == TempImplantData.ImplantName {
+					ReregisterImplant(TempImplantData, i)
+					Reregisted = true
+					break
+				}
+			}
+
+			if Reregisted {
+				break
 			}
 
 			AddImplantToTable(TempImplantData)

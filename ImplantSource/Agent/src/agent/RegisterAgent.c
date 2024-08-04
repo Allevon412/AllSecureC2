@@ -141,6 +141,7 @@ INT RegisterAgent() {
 		printf("[error] attempting to add computer name to package\n");
 		return -1;
 	}
+
     if ((err = AddInt32ToPackage(pPack, (DWORD)(ULONG_PTR) agent->pTeb->ClientId.UniqueProcess)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add process id to package\n");
         return -1;
@@ -179,6 +180,10 @@ INT RegisterAgent() {
     }
     if ((err = AddInt32ToPackage(pPack, agent->Context->OS_Arch)) != PACKAGE_SUCCESS) {
         printf("[error] attempting to add os arch to package\n");
+        return -1;
+    }
+    if((err = AddInt32ToPackage(pPack, agent->config->SleepTime)) != PACKAGE_SUCCESS) {
+        printf("[error] attempting to add sleeptime to package\n");
         return -1;
     }
 

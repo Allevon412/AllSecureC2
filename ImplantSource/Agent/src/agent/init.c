@@ -371,6 +371,9 @@ INT init_agent(PVOID RetAddress) {
     agent->PEInfo->ImageSize = GetImageSize(agent->PEInfo->ModuleBaseAddr);
     agent->PEInfo->NumSections = GetNumberOfSections(agent->PEInfo->ModuleBaseAddr);
 
+    agent->Context->PID = agent->pTeb->ClientId.UniqueProcess;
+    agent->Context->TID = agent->pTeb->ClientId.UniqueThread;
+
     return 0;
 }
 
