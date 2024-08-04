@@ -462,3 +462,16 @@ func GetActiveImplants(clientobj *Common.Client, Message Common.WebSocketMessage
 	return decoded, nil
 
 }
+
+func UpdateImplantHealth(ImplantData Common.ImplantTableData) {
+	//get the length of the number of current implants.
+	count := len(Common.ImplantData)
+
+	for i := 0; i < count; i++ {
+		if Common.ImplantData[i].ImplantName == ImplantData.ImplantName {
+			Common.ImplantData[i].Health = ImplantData.Health
+			Common.ImplantTable.Refresh()
+			break
+		}
+	}
+}

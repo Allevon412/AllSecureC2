@@ -37,6 +37,7 @@ func CheckForNewEventsFromWS() {
 				log.Println("[error] attempting to read implant data from web socket message", err)
 				continue
 			}
+			//TODO add support for maps instead of slices of our user / implant / listener data structures.
 			for i, implant := range Common.ImplantData {
 				if implant.ImplantName == TempImplantData.ImplantName {
 					ReregisterImplant(TempImplantData, i)
@@ -51,6 +52,17 @@ func CheckForNewEventsFromWS() {
 
 			AddImplantToTable(TempImplantData)
 			break
+
+		case "UpdateHealth":
+			var TempImplantData Common.ImplantTableData
+			err = json.Unmarshal([]byte(NewWSMessage.Message), &TempImplantData)
+			if err != nil {
+				log.Println("[error] attempting to read implant data from web socket message", err)
+				break
+			}
+			UpdateImplantHealth(TempImplantData)
+			break
+
 		default:
 			break
 		}

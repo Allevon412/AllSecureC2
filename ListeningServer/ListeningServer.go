@@ -112,6 +112,7 @@ func ProcessRequest(c *gin.Context) {
 
 		if len(agent_map) == 0 { // we have a nil map yet we're trying to get a job need to register.
 			// we would hit this when the listening server comes up AFTER the implant is running / reaching out already.
+
 			AgentCmd.CmdID = Common.CMD_Register
 			AgentCmd.RequestID = data_package.RequestID + 1
 			AgentCmd.DataBuffer = nil
@@ -210,8 +211,20 @@ func (ls *LS) Start(token string) error {
 				for name, agent := range agent_map {
 					if !Common.CheckIfAgentIsAlive(agent) {
 						//TODO remove agent from agent_map & send event to client.
+						SendEvent("UpdateHealth", agent.Context, agent.Alive)
 						log.Println("[info] removing agent [", name, "] from agent array")
-						delete(agent_map, name)
+
+						// do we even have to send the event to the client? The client should be able to determine if the agent is alive or not.
+						// also if client does not have connectivity, it will not be able to receive the event.
+						/*
+							Cmd := Common.AgentCmd{
+								CmdID:      Common.CMD_UPDATE_HEALTH,
+								RequestID:  0,
+								DataBuffer: nil,
+							}
+
+							agent.CmdQue.Enqueue(Cmd)
+						*/
 					}
 				}
 			}
