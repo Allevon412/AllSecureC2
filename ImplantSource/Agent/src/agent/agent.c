@@ -56,7 +56,6 @@ void AgentRoutine() {
 					SelectHost(HOST_ROTATION_FAIL_OVER);
 				}
 			}
-			agent->config->listenerConfig->CurrentHost->NumFailures = 0;
 		}
 
 		if (agent->session->Active) {

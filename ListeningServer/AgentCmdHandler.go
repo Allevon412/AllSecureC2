@@ -11,7 +11,7 @@ func RegisterAgent(Agent *Common.Implant, data []byte) error {
 
 	Agent.Context.UnmarshalContext(data)
 
-	err = SendEvent("RegisterImplant", Agent.Context)
+	err = SendEvent("RegisterImplant", Agent.Context, Agent.Alive)
 	if err != nil {
 		return err
 	}

