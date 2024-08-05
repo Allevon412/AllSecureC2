@@ -73,6 +73,10 @@ func CheckForNewEventsFromWS() {
 			UpdateImplantCheckin(TempImplantData)
 			break
 
+		case "SendModuleData":
+
+			break
+
 		default:
 			break
 		}

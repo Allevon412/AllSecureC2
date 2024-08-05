@@ -53,12 +53,27 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-	if ((err = AddInt32ToPackage(pack, StringLengthA(agent->config->AgentName))) != PACKAGE_SUCCESS) {
-		printf("[error] attempting to add agent name length to package. %s\n", PackageErrorToString(err));
-		return NULL;
-	}
+
 	if ((err = AddStringToPackage(pack, agent->config->AgentName)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add string to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+
+	return pack;
+}
+
+pPackage CreateDataPackage(UINT32 CommandId, UINT32 DataType) {
+	pPackage pack = CreatePackage(CommandId);
+	int err = 0;
+
+	if ((err = AddInt32ToPackage(pack, 0)) != PACKAGE_SUCCESS) { //Setting the first four bytes of buffer to 0. This will allow us to put the length field in later @ beginning of buffer.
+		//could also probably do this using the last four bytes of the buffer as well.
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
+		return NULL;
+	}
+
+	if((err = AddInt32ToPackage(pack, DataType)) != PACKAGE_SUCCESS) {
+		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
 
@@ -249,10 +264,12 @@ INT AddBytesToPackage(pPackage pack, PBYTE data, SIZE_T size) {
 }
 
 INT AddStringToPackage(pPackage pack, PCHAR data) {
+	AddInt32ToPackage(pack, StringLengthA(data));
 	return AddBytesToPackage(pack, (PBYTE)data, StringLengthA(data));
 }
 
 INT AddWStringToPackage(pPackage pack, PWCHAR data) {
+	AddInt32ToPackage(pack, StringLengthW(data) * 2);
 	return AddBytesToPackage(pack, (PBYTE)data, StringLengthW(data) * 2);
 }
 
@@ -348,6 +365,7 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 	pPackage CurrentPackage = NULL;
 	UINT32 Offset = 0;
 	INT EncryptLength = 0;
+	INT NumPackages = 0;
 
 	pack = CreatePackageWithMetaData(GET_AGENT_JOB);
 	//coalesce all waiting packages into one big pacakge.
@@ -359,6 +377,7 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 		AgentPackList->Sent = TRUE;
 		PrevPackage = AgentPackList;
 		AgentPackList = AgentPackList->Next;
+		NumPackages++;
 	}
 	AddInt32ToBuffer(pack->Buffer, pack->Length - sizeof(UINT32));
 	/*

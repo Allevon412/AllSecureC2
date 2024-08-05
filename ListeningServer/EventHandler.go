@@ -38,20 +38,26 @@ func CreateWebSocketConnection() (*websocket.Conn, error) {
 }
 
 func StartEventHandler(token string, teamserver string) error {
-	var err error
+	var (
+		err  error
+		conn *websocket.Conn
+	)
 	g_clientobj.Cookie.Token.JwtToken = token
 	g_clientobj.Server = teamserver
-	g_clientobj.Conn, err = CreateWebSocketConnection()
+	conn, err = CreateWebSocketConnection()
 	if err != nil {
 		log.Println("[error] attempting to create websocket connection", err)
 		return err
 	}
+
+	g_clientobj.Conn = Common.NewSafeWebSocket(conn)
+
 	go RecvEvent()
 
 	return nil
 }
 
-func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool) error {
+func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data interface{}) error {
 	var NewMessage Common.NewWebSocketMessage
 	var err error
 	var NewImplant Common.ImplantData
@@ -118,6 +124,31 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool) error
 		}
 		break
 
+	case "SendModuleData":
+		//TODO FIX THIS IT DOES NOT WORK.
+		var NewTempData []byte
+		NewMessage.MessageType = "SendModuleData"
+		NewImplant.ImplantName = ImpCtx.Agent_name
+		NewImplant.LastCheckIn = ImpCtx.LastCheckin.String()
+		TempData, err = json.Marshal(NewImplant)
+		if err != nil {
+			log.Println("[error] attempting to marshal the implant data", err)
+			return err
+		}
+		Modules := Data.(map[string][]byte)
+		NewTempData, err = json.Marshal(Modules)
+		if err != nil {
+			log.Println("[error] attempting to marshal the module data", err)
+			return err
+		}
+		TempData = append(TempData, NewTempData...)
+		NewMessage.Message = string(TempData)
+		err = g_clientobj.Conn.WriteJSON(NewMessage)
+		if err != nil {
+			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+		}
+		break
+
 	default:
 		break
 	}
@@ -141,7 +172,7 @@ func RecvEvent() {
 			if len(agent_map) > 0 {
 				for _, agent := range agent_map {
 					//we don't care if the agent is alive or dead. We just want to know which agents are registered until agent is dead by manual killing or kill-date has been reached.
-					err = SendEvent("RegisterImplant", agent.Context, agent.Alive)
+					err = SendEvent("RegisterImplant", agent.Context, agent.Alive, nil)
 					if err != nil {
 						log.Println("[error] attempting to send implant data to the team server web socket connection", err)
 						continue

@@ -218,6 +218,21 @@ func (t *TS) HandleRequest(ClientID string) {
 			})
 			break // UPDATECHECKIN
 
+		case "SendModuleData":
+			t.Server.Clients.Range(func(key, value any) bool {
+				client = value.(*Types.Client)
+				if client.Type == Types.ClientApp {
+					err = client.Conn.WriteJSON(NewMessage)
+					if err != nil {
+						log.Println("[error] attempting to write message back to all associated clients", client.ID, err)
+						t.Server.Clients.Delete(ClientID)
+						return false
+					}
+				}
+				return true
+			})
+			break // SENDMODULEDATA
+
 		default:
 			continue
 		} //SWITCH STATEMENT

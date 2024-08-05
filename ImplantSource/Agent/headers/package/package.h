@@ -80,6 +80,7 @@ typedef struct _Package {
 //create packages
 pPackage CreatePackage(UINT32 CommandID);
 pPackage CreatePackageWithMetaData(UINT32 CommandID);
+pPackage CreateDataPackage(UINT32 CommandId, UINT32 DataType);
 
 //add data to packages
 INT AddInt32ToPackage(pPackage pack, UINT32 data);

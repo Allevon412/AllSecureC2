@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -80,6 +81,14 @@ type (
 		EncryptedDataSize uint32
 	}
 
+	DataPackage struct {
+		CmdID     uint32
+		RequestID uint32
+		DataSize  uint32
+		DataType  uint32
+		Data      []byte
+	}
+
 	HTTPServerConfig struct {
 		Name         string
 		KillDate     int64
@@ -130,11 +139,16 @@ type (
 		UserId int
 	}
 
+	SafeWebSocket struct {
+		Conn *websocket.Conn
+		mu   sync.RWMutex
+	}
+
 	Client struct {
 		Server    string
 		Cookie    CookieStruct
 		ClientObj http.Client
-		Conn      *websocket.Conn
+		Conn      *SafeWebSocket
 	}
 )
 
@@ -309,5 +323,57 @@ func (a *AgentCmd) MarshalAgentCmd() []byte {
 	binary.LittleEndian.PutUint32(data[4:8], a.RequestID)
 	data = append(data, a.DataBuffer...)
 
+	return data
+}
+
+func NewSafeWebSocket(conn *websocket.Conn) *SafeWebSocket {
+	return &SafeWebSocket{
+		Conn: conn,
+	}
+}
+
+func (s *SafeWebSocket) WriteJSON(message interface{}) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.Conn.WriteJSON(message)
+}
+
+func (s *SafeWebSocket) ReadJSON(message interface{}) error {
+	return s.Conn.ReadJSON(message)
+}
+
+func (dp *DataPackage) UnmarshalData(data []byte) error {
+	if len(data) < 16 {
+		return errors.New("insufficient data for package unmarshalling")
+	}
+
+	dp.CmdID = binary.BigEndian.Uint32(data[:4])
+	dp.RequestID = binary.BigEndian.Uint32(data[4:8])
+	dp.DataSize = binary.BigEndian.Uint32(data[8:12])
+	dp.DataType = binary.BigEndian.Uint32(data[12:16])
+	dp.Data = data[16:]
+
+	return nil
+}
+
+func (dp *DataPackage) ReadInt32() uint32 {
+	var data = binary.LittleEndian.Uint32(dp.Data[:4])
+	dp.Data = dp.Data[4:]
+	dp.DataSize -= 4
+	return data
+}
+
+func (dp *DataPackage) ReadString() string {
+	var size = binary.LittleEndian.Uint32(dp.Data[:4])
+	var data = dp.Data[4 : size+4]
+	dp.Data = dp.Data[size+4:]
+	dp.DataSize -= size + 4
+	return string(data)
+}
+
+func (dp *DataPackage) ReadPointer() []byte {
+	var data = dp.Data[:8]
+	dp.Data = dp.Data[8:]
+	dp.DataSize -= 8
 	return data
 }

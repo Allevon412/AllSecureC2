@@ -142,7 +142,8 @@ func ProcessRequest(c *gin.Context) {
 		if agent_map[data_package.AgentName].AESKey != nil && agent_map[data_package.AgentName].IV != nil {
 			//TODO DO SOMETHING WITH DECRYPTED DATA
 			decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent_map[data_package.AgentName].AESKey, agent_map[data_package.AgentName].IV)
-			log.Println("[info] decrypted payload: ", string(decryptedPayload))
+
+			ParseDataPackage(decryptedPayload, data_package.AgentName)
 		}
 
 		agent = agent_map[data_package.AgentName]
@@ -166,7 +167,6 @@ func ProcessRequest(c *gin.Context) {
 			}
 			//TODO if there is multiple commands in the queue, we need to send them all
 			if AgentCmd, ok = value.(Common.AgentCmd); ok {
-				log.Println("[infp] sending command to agent: ", AgentCmd.CmdID, AgentCmd.RequestID, AgentCmd.DataBuffer)
 				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
 			} else {
 				log.Println("[error] attempting to cast value to AgentCmd")
@@ -174,8 +174,8 @@ func ProcessRequest(c *gin.Context) {
 			}
 		}
 
-		SendEvent("UpdateCheckin", agent.Context, agent.Alive) // update our last checkin no matter if we have a job to do or not.
-		break                                                  // CMD_GET_JOB
+		SendEvent("UpdateCheckin", agent.Context, agent.Alive, nil) // update our last checkin no matter if we have a job to do or not.
+		break                                                       // CMD_GET_JOB
 
 	default:
 		break
@@ -213,7 +213,7 @@ func (ls *LS) Start(token string) error {
 				for name, agent := range agent_map {
 					if !Common.CheckIfAgentIsAlive(agent) {
 						//TODO remove agent from agent_map & send event to client.
-						SendEvent("UpdateHealth", agent.Context, agent.Alive)
+						SendEvent("UpdateHealth", agent.Context, agent.Alive, nil)
 						log.Println("[info] removing agent [", name, "] from agent array")
 
 						// do we even have to send the event to the client? The client should be able to determine if the agent is alive or not.
@@ -287,4 +287,35 @@ func (ls *LS) Stop() bool {
 	}
 	return true
 
+}
+
+func ParseDataPackage(decryptedPayload []byte, AgentName string) {
+	var (
+		DataPackage Common.DataPackage
+		err         error
+	)
+
+	err = DataPackage.UnmarshalData(decryptedPayload)
+	if err != nil {
+		log.Println("[error] attempting to unmarshal data package", err)
+	}
+
+	switch DataPackage.DataType {
+	case Common.CMD_LIST_MODULES:
+		Modules := make(map[string][]byte)
+		for DataPackage.DataSize > 0 {
+			Modules[DataPackage.ReadString()] = DataPackage.ReadPointer()
+		}
+		err = SendEvent("SendModuleData", agent_map[AgentName].Context, agent_map[AgentName].Alive, Modules)
+		if err != nil {
+			log.Println("[error] attempting to send module data to client", err)
+		}
+
+		if len(DataPackage.Data) > 0 {
+			ParseDataPackage(DataPackage.Data, AgentName)
+		}
+		break
+	default:
+		break
+	}
 }

