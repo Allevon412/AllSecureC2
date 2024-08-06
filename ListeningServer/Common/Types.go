@@ -342,36 +342,62 @@ func (s *SafeWebSocket) ReadJSON(message interface{}) error {
 	return s.Conn.ReadJSON(message)
 }
 
+func (s *SafeWebSocket) WriteBinary(data []byte) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.Conn.WriteMessage(websocket.BinaryMessage, data)
+}
+
 func (dp *DataPackage) UnmarshalData(data []byte) error {
-	if len(data) < 16 {
+	if len(data) < 8 {
 		return errors.New("insufficient data for package unmarshalling")
 	}
 
-	dp.CmdID = binary.BigEndian.Uint32(data[:4])
-	dp.RequestID = binary.BigEndian.Uint32(data[4:8])
-	dp.DataSize = binary.BigEndian.Uint32(data[8:12])
-	dp.DataType = binary.BigEndian.Uint32(data[12:16])
-	dp.Data = data[16:]
+	dp.DataSize = binary.BigEndian.Uint32(data[:4])
+	dp.DataType = binary.BigEndian.Uint32(data[4:8])
+	dp.DataSize -= 8
+	dp.Data = data[8:]
 
 	return nil
 }
 
 func (dp *DataPackage) ReadInt32() uint32 {
-	var data = binary.LittleEndian.Uint32(dp.Data[:4])
+	if dp.DataSize == 0 {
+		return 0
+	}
+	if len(dp.Data) < 4 {
+		dp.DataSize = uint32(len(dp.Data))
+		return 0
+	}
+	var data = binary.BigEndian.Uint32(dp.Data[:4])
 	dp.Data = dp.Data[4:]
 	dp.DataSize -= 4
 	return data
 }
 
 func (dp *DataPackage) ReadString() string {
-	var size = binary.LittleEndian.Uint32(dp.Data[:4])
-	var data = dp.Data[4 : size+4]
-	dp.Data = dp.Data[size+4:]
-	dp.DataSize -= size + 4
+	if dp.DataSize == 0 {
+		return ""
+	}
+	if len(dp.Data) < 4 {
+		dp.DataSize = uint32(len(dp.Data))
+		return ""
+	}
+	var size = dp.ReadInt32()
+	var data = dp.Data[:size]
+	dp.Data = dp.Data[size:]
+	dp.DataSize -= size
 	return string(data)
 }
 
 func (dp *DataPackage) ReadPointer() []byte {
+	if dp.DataSize == 0 {
+		return nil
+	}
+	if len(dp.Data) < 8 {
+		dp.DataSize = uint32(len(dp.Data))
+		return nil
+	}
 	var data = dp.Data[:8]
 	dp.Data = dp.Data[8:]
 	dp.DataSize -= 8

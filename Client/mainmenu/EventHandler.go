@@ -74,7 +74,9 @@ func CheckForNewEventsFromWS() {
 			break
 
 		case "SendModuleData":
-
+			log.Println("Received module data")
+			log.Println(NewWSMessage.Message)
+			log.Println(string(NewWSMessage.Message))
 			break
 
 		default:

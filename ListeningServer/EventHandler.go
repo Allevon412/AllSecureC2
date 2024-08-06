@@ -125,8 +125,13 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 		break
 
 	case "SendModuleData":
-		//TODO FIX THIS IT DOES NOT WORK.
-		var NewTempData []byte
+		//TODO FIX THIS IT DOES NOT WORK. maybe just send the module data as a byte array and let the client handle it.
+		var (
+			ModuleData       map[string][]byte
+			ModuleBinaryData []byte
+			ok               bool
+		)
+
 		NewMessage.MessageType = "SendModuleData"
 		NewImplant.ImplantName = ImpCtx.Agent_name
 		NewImplant.LastCheckIn = ImpCtx.LastCheckin.String()
@@ -135,15 +140,14 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 			log.Println("[error] attempting to marshal the implant data", err)
 			return err
 		}
-		Modules := Data.(map[string][]byte)
-		NewTempData, err = json.Marshal(Modules)
-		if err != nil {
-			log.Println("[error] attempting to marshal the module data", err)
+		if ModuleData, ok = Data.(map[string][]byte); !ok {
+			log.Println("[error] attempting to cast module data to map[string][]byte")
 			return err
 		}
-		TempData = append(TempData, NewTempData...)
-		NewMessage.Message = string(TempData)
-		err = g_clientobj.Conn.WriteJSON(NewMessage)
+		ModuleBinaryData, err = json.Marshal(ModuleData)
+
+		TempData = append(TempData, ModuleBinaryData...)
+		err = g_clientobj.Conn.WriteBinary(TempData)
 		if err != nil {
 			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
 		}

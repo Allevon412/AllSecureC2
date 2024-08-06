@@ -141,8 +141,8 @@ func ProcessRequest(c *gin.Context) {
 
 		if agent_map[data_package.AgentName].AESKey != nil && agent_map[data_package.AgentName].IV != nil {
 			//TODO DO SOMETHING WITH DECRYPTED DATA
-			decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent_map[data_package.AgentName].AESKey, agent_map[data_package.AgentName].IV)
 
+			decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent_map[data_package.AgentName].AESKey, agent_map[data_package.AgentName].IV)
 			ParseDataPackage(decryptedPayload, data_package.AgentName)
 		}
 
@@ -297,11 +297,18 @@ func ParseDataPackage(decryptedPayload []byte, AgentName string) {
 
 	err = DataPackage.UnmarshalData(decryptedPayload)
 	if err != nil {
+		if err.Error() == "insufficient data for package unmarshalling" {
+			return
+		}
 		log.Println("[error] attempting to unmarshal data package", err)
+		return
 	}
 
 	switch DataPackage.DataType {
 	case Common.CMD_LIST_MODULES:
+		var ProcID uint32
+		ProcID = DataPackage.ReadInt32()
+		log.Println("Received command to list modules from agent", AgentName, "with process ID", ProcID)
 		Modules := make(map[string][]byte)
 		for DataPackage.DataSize > 0 {
 			Modules[DataPackage.ReadString()] = DataPackage.ReadPointer()
