@@ -345,6 +345,7 @@ func ParseImplantCommand(Command string) {
 		break
 	case "clear":
 		menuobj.ImplantLog.SetText("")
+		menuobj.PreviousText = ""
 		break
 
 	default: //no recognized command print the help menu
@@ -352,9 +353,7 @@ func ParseImplantCommand(Command string) {
 		break
 	}
 
-	textlength := len(menuobj.ImplantLog.Text)
-	menuobj.ImplantLog.CursorRow = textlength
-	menuobj.ImplantLog.Refresh()
+	UpdateCursorRow(ImplantName)
 
 }
 
@@ -450,7 +449,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 		CancelText: "Exit",
 	}
 	NewWindow.SetContent(ImplantForm)
-	size := fyne.Size{Height: 1080.0, Width: 1080.0}
+	size := fyne.Size{Height: 700.0, Width: 1080.0}
 	NewWindow.Resize(size)
 	NewWindow.Show()
 }
@@ -544,4 +543,38 @@ func UpdateImplantCheckin(ImplantData Common.ImplantTableData) {
 			break
 		}
 	}
+}
+
+func UpdateCursorRow(ImplantName string) {
+	menuobj := ImplantsInteractionMenus[ImplantName]
+	textlength := len(menuobj.ImplantLog.Text)
+	menuobj.ImplantLog.CursorRow = textlength
+	menuobj.ImplantLog.Refresh()
+}
+
+func SendDataToImplantWindow(ImplantData Common.ImplantTableData, Data interface{}, datatype int) {
+	var (
+		PrevText   = ImplantsInteractionMenus[ImplantData.ImplantName].PreviousText
+		typeofdata string
+		TempData   interface{}
+		menuobj    = ImplantsInteractionMenus[ImplantData.ImplantName]
+	)
+
+	switch datatype {
+	case 1: // MODULE DATA
+		typeofdata = "Module Data"
+		TempData = Data.(map[string][]byte)
+		break
+	default:
+		break
+	}
+	menuobj.ImplantLog.SetText(PrevText + fmt.Sprintf("[*] Received %s from implant: %s\n", ImplantData.ImplantName, typeofdata))
+	menuobj.PreviousText = menuobj.ImplantLog.Text
+	for key, value := range TempData.(map[string][]byte) {
+		module_name := strings.Split(key, "\\")
+		menuobj.ImplantLog.SetText(menuobj.PreviousText + fmt.Sprintf("Module: [%s] Loaded at: [%p]\n", module_name[len(module_name)-1], value))
+		menuobj.PreviousText = menuobj.ImplantLog.Text
+	}
+
+	UpdateCursorRow(ImplantData.ImplantName)
 }

