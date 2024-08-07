@@ -2,6 +2,7 @@ package Common
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -102,4 +103,23 @@ func (cl *CustomTableLabel) TappedSecondary(e *fyne.PointEvent) {
 		break
 	}
 
+}
+
+func NewCustomLabelWidget(DoNothing func(m *desktop.MouseEvent)) *CustomLabelWidget {
+	label := &CustomLabelWidget{
+		Label:     widget.Label{},
+		DoNothing: DoNothing,
+	}
+	label.ExtendBaseWidget(label)
+	return label
+}
+
+func (cl *CustomLabelWidget) MouseIn(m *desktop.MouseEvent) {
+	cl.DoNothing(m)
+}
+func (cl *CustomLabelWidget) MouseOut() {
+	cl.DoNothing(nil)
+}
+func (cl *CustomLabelWidget) MouseMoved(m *desktop.MouseEvent) {
+	cl.DoNothing(m)
 }

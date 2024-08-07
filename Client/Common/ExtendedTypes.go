@@ -2,6 +2,7 @@ package Common
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -31,6 +32,11 @@ type (
 		Row                         int
 		Col                         int
 		LabelType                   CellType
+	}
+
+	CustomLabelWidget struct {
+		widget.Label
+		DoNothing func(event *desktop.MouseEvent)
 	}
 
 	//custom theme for allsecure so we do not have the greyed out team's chat box.

@@ -84,15 +84,13 @@ func CheckForNewEventsFromWS() {
 				ok                    bool
 			)
 			data := map[string]interface{}{"ImplantData": Common.ImplantTableData{}, "ModuleData": map[string][]byte{}}
-			log.Println("Received module data")
-			log.Println(NewWSMessage.Message)
+
 			err = json.Unmarshal([]byte(NewWSMessage.Message), &data)
 			if err != nil {
 				log.Println("[error] attempting to read implant data from web socket message", err)
 				break
 			}
 
-			log.Println(data)
 			TempImplantData, ok = data["ImplantData"].(map[string]interface{})
 			if !ok {
 				log.Println("[error] attempting to cast implant data to map[string]interface{}", err)

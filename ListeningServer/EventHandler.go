@@ -125,7 +125,6 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 		break
 
 	case "SendModuleData":
-		//TODO FIX THIS IT DOES NOT WORK. maybe just send the module data as a byte array and let the client handle it.
 		var (
 			ModuleData map[string][]byte
 			ok         bool
