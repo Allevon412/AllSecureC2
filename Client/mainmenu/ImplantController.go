@@ -395,7 +395,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 	NewWindow := FyneApp.NewWindow("Interact with Implant")
 
 	//Create the form for interacting with the implant.
-	ImplantInteractionMenu.ImplantLog = widget.NewList(func() int {
+	ImplantInteractionMenu.ImplantLog = Common.NewExtendedList(0, func() int {
 		return len(ImplantInteractionMenu.Text)
 	},
 		func() fyne.CanvasObject {

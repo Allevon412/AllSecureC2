@@ -38,5 +38,6 @@ func UpdateChat(Message string) {
 func ClearChatHistory() {
 	lock.Lock()
 	TeamsChatLog.Text = []string{}
+	TeamsChatLog.ImplantLog.Refresh()
 	lock.Unlock()
 }

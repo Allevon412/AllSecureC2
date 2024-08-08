@@ -123,3 +123,19 @@ func (cl *CustomLabelWidget) MouseOut() {
 func (cl *CustomLabelWidget) MouseMoved(m *desktop.MouseEvent) {
 	cl.DoNothing(m)
 }
+
+// NewExtendedList creates a new instance of ExtendedList.
+func NewExtendedList(lines int, length func() int, create func() fyne.CanvasObject, update func(id widget.ListItemID, obj fyne.CanvasObject)) *ExtendedList {
+	list := &ExtendedList{
+		List:  widget.NewList(length, create, update),
+		lines: lines,
+	}
+	list.ExtendBaseWidget(list)
+	return list
+}
+
+// MinSize returns the custom minimum size for the ExtendedList widget.
+func (l *ExtendedList) MinSize() fyne.Size {
+	itemHeight := l.CreateItem().MinSize().Height
+	return fyne.NewSize(l.List.MinSize().Width, itemHeight*float32(l.lines))
+}

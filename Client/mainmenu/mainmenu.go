@@ -18,7 +18,7 @@ var (
 	lock         sync.Mutex
 )
 
-func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *widget.Form, tabs *container.DocTabs) *fyne.MainMenu {
+func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *fyne.Container, tabs *container.DocTabs) *fyne.MainMenu {
 
 	Common.ListenerTable.Refresh()
 	mainMenu := fyne.NewMainMenu(
@@ -46,13 +46,13 @@ func CreateMenuItems(clientobj *Common.Client, OldWindow fyne.App, TeamsChat *wi
 }
 
 // TODO figure out how to make this bigger so it looks like an actual chat window.
-func CreateChatForm(Username string) (*widget.Form, error) {
+func CreateChatForm(Username string) (*fyne.Container, error) {
 	//create websocket channel for chat.
 	go ObtainWebSocketConn(g_clientobj)
 
 	TeamsChatLog = &Common.ImplantInteractionMenu{
 		Text: []string{},
-		ImplantLog: widget.NewList(func() int {
+		ImplantLog: Common.NewExtendedList(10, func() int {
 			return len(TeamsChatLog.Text)
 		},
 			func() fyne.CanvasObject {
@@ -69,11 +69,11 @@ func CreateChatForm(Username string) (*widget.Form, error) {
 		EntryBar:    Common.NewCustomChatEntry(SendChat),
 		ImplantName: Username,
 	}
+
 	TeamsChatLog.ImplantLog.HideSeparators = true
 	//Teams chat entry's combined into one form.
 	TeamsChat := &widget.Form{
 		Items: []*widget.FormItem{
-			{Text: "Teams Chat", Widget: TeamsChatLog.ImplantLog},
 			{Text: Username, Widget: TeamsChatLog.EntryBar},
 		},
 		OnSubmit: func() {
@@ -85,7 +85,10 @@ func CreateChatForm(Username string) (*widget.Form, error) {
 		CancelText: "Clear Chat History",
 	}
 
-	return TeamsChat, nil
+	border := container.NewBorder(
+		TeamsChatLog.ImplantLog, TeamsChat, nil, nil, nil)
+
+	return border, nil
 }
 
 func ObtainWebSocketConn(clientobj *Common.Client) error {
@@ -132,7 +135,6 @@ func MainMenu(clientobj *Common.Client, FyneApp fyne.App, icon fyne.Resource, Re
 
 	//create initial tab
 	tabs.Append(container.NewTabItemWithIcon("Teams Chat", chaticon, TeamsChat))
-
 	// Create content for table pane
 	Common.ImplantTable = CreateImplantTable(NewWindow, FyneApp)
 

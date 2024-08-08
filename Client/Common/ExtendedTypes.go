@@ -51,3 +51,9 @@ type (
 
 // asserting the custom theme
 var _ fyne.Theme = (*AllSecureTheme)(nil)
+
+// ExtendedList is a custom widget that extends the List widget.
+type ExtendedList struct {
+	*widget.List
+	lines int
+}

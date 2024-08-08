@@ -73,7 +73,7 @@ type (
 
 	ImplantInteractionMenu struct {
 		Text        []string
-		ImplantLog  *widget.List
+		ImplantLog  *ExtendedList
 		EntryBar    *CustomChatEntry
 		ImplantName string
 	}
