@@ -160,8 +160,10 @@ typedef struct _Win32 {
 } Win32, * pWin32;
 
 typedef struct _AgentCMD {
+	DWORD MagicValue;
 	UINT CommandID;
 	UINT RequestID;
+	UINT DataSize;
 	BYTE* DATA;
 } AgentCMD, * pAgentCMD;
 
@@ -232,7 +234,8 @@ typedef enum  {
 	CHECKIN_AGENT,
 	NO_JOB,
 	LIST_LOADED_MODULES,
-	SEND_DATA
+	SEND_DATA,
+	EXECUTE_CMD,
 } Agent_Operations;
 
 

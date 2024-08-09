@@ -119,6 +119,7 @@ PBYTE ParserReadBytes(PPARSER parser, PUINT32 size) {
 	if (parser->Length < 4) {
 		return value;
 	}
+
 	MemoryCopy(&Length, parser->Buffer, 4);
 	parser->Buffer += 4;
 
@@ -137,6 +138,30 @@ PBYTE ParserReadBytes(PPARSER parser, PUINT32 size) {
 	if (size != NULL) {
 		*size = Length;
 	}
+
+	return value;
+}
+
+PBYTE ParserReadNBytes(PPARSER parser, UINT32 size) {
+
+	PBYTE value = NULL;
+
+	if (parser == NULL)
+		return value;
+
+	if(parser->Length < size)
+		return value;
+
+	MemoryCopy(&value, parser->Buffer, size);
+	parser->Buffer += size;
+
+	if(parser->Endian)
+		value = bswap32(value);
+
+	if(value == NULL)
+		return NULL;
+
+	parser->Length -= size;
 
 	return value;
 }

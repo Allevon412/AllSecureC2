@@ -20,6 +20,7 @@ INT ParserReadInt32(PPARSER parser);
 INT64 ParserReadInt64(PPARSER parser);
 BOOL ParserReadBool(PPARSER parser);
 PBYTE ParserReadBytes(PPARSER parser, PUINT32 size);
+PBYTE ParserReadNBytes(PPARSER parser, UINT32 size);
 PCHAR ParserReadString(PPARSER parser, PUINT32 size);
 PWCHAR ParserReadWString(PPARSER parser, PUINT32 size);
 VOID ParserFree(PPARSER parser);

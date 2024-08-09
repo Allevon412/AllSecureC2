@@ -37,7 +37,7 @@ func CheckForNewEventsFromWS() {
 				log.Println("[error] attempting to read implant data from web socket message", err)
 				continue
 			}
-			//TODO add support for maps instead of slices of our user / implant / listener data structures.
+
 			for i, implant := range Common.ImplantData {
 				if implant.ImplantName == TempImplantData.ImplantName {
 					ReregisterImplant(TempImplantData, i)
@@ -123,8 +123,44 @@ func CheckForNewEventsFromWS() {
 				break
 			}
 
-			SendDataToImplantWindow(ImplantTableData, ModuleDataMap, 1)
+			SendDataToImplantWindow(ImplantTableData, ModuleDataMap, Common.MODULE_DATA)
 			break
+
+		case "SendExecuteData":
+			var (
+				TempImplantData       map[string]interface{}
+				ImplantTableData      Common.ImplantTableData
+				ProcID                float64
+				implantTableDataBytes []byte
+				ok                    bool
+			)
+			data := map[string]interface{}{"ImplantData": Common.ImplantTableData{}, "ProcID": 0}
+			err = json.Unmarshal([]byte(NewWSMessage.Message), &data)
+			if err != nil {
+				log.Println("[error] attempting to read implant data from web socket message", err)
+				break
+			}
+			TempImplantData, ok = data["ImplantData"].(map[string]interface{})
+			if !ok {
+				log.Println("[error] attempting to cast implant data to map[string]interface{}", err)
+				break
+			}
+			implantTableDataBytes, err = json.Marshal(TempImplantData)
+			if err != nil {
+				log.Println("[error] attempting to marshal the implant data", err)
+				break
+			}
+			err = json.Unmarshal(implantTableDataBytes, &ImplantTableData)
+			if err != nil {
+				log.Println("[error] attempting to unmarshal the implant data", err)
+				break
+			}
+			ProcID, ok = data["ProcID"].(float64)
+			if !ok {
+				log.Println("[error] attempting to cast process ID to int", err)
+				break
+			}
+			SendDataToImplantWindow(ImplantTableData, uint32(ProcID), Common.EXECUTE_DATA)
 
 		default:
 			break

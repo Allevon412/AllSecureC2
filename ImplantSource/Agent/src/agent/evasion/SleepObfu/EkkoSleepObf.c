@@ -17,7 +17,7 @@ BOOL EkkoSleepObf(
     PVOID    ImgBase = { 0 };
     CONTEXT  TimerCtx = { 0 };
     CONTEXT  ThdCtx = { 0 };
-    CONTEXT  Rop[40] = { 0 };
+    CONTEXT  Rop[35] = { 0 };
     DWORD    Value = { 0 };
     DWORD    Delay = { 0 };
     BOOL     Success = { 0 };

@@ -78,3 +78,8 @@ type (
 		ImplantName string
 	}
 )
+
+const (
+	MODULE_DATA int = iota
+	EXECUTE_DATA
+)

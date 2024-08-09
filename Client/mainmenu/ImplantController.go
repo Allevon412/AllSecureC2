@@ -19,32 +19,22 @@ var (
 	ImplantsInteractionMenus map[string]*Common.ImplantInteractionMenu
 )
 
-func ParseImplantCommand(Command string) {
+func ParseImplantCommand(ImplantName, Command string) {
 	//parse the command and send it to the implant.
 
 	var (
-		ImplantName  string
 		cmd          string
 		subcmd       string
 		split_string []string
 		PrevCmdWSub  string
 		PrevCmd      string
-		cmdsplit     []string
 		args         []string
 		menuobj      *Common.ImplantInteractionMenu
 	)
 
-	split_string = strings.Split(Command, "/")
-	ImplantName = split_string[0]
-	CmdAndArgsString := split_string[1]
-
-	if strings.Contains(CmdAndArgsString, " ") {
-		cmdsplit = strings.Split(CmdAndArgsString, " ")
-		cmd = cmdsplit[0]
-		args = cmdsplit[1:]
-	} else {
-		cmd = CmdAndArgsString
-	}
+	split_string = strings.Split(Command, " ")
+	cmd = split_string[0]
+	args = split_string[1:]
 
 	if cmd == "help" && len(args) == 1 {
 		subcmd = args[0]
@@ -63,20 +53,12 @@ func ParseImplantCommand(Command string) {
 	case "help":
 		if subcmd != "" {
 			switch strings.ToLower(subcmd) {
-			case "execute":
+			case "execute", "exec":
 				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
 					"Execute a command on the implant.\n"+
-					"usage: execute <command>\n"+
-					"example: execute whoami\n"+
-					"example: exec \"powershell -c 'whoami'\"\n", "\n")...)
-				break
-
-			case "exec":
-				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
-					"Execute a command on the implant.\n"+
-					"usage: execute <command>\n"+
-					"example: execute whoami\n"+
-					"example: exec \"powershell -c 'whoami'\"\n", "\n")...)
+					"usage: execute -p <program> -a <arguments>\n"+
+					"example: execute -p cmd -a whoami\n"+
+					"example: exec -p powershell \"-c 'whoami'\"\n", "\n")...)
 				break
 
 			case "download":
@@ -124,23 +106,7 @@ func ParseImplantCommand(Command string) {
 					"example: sleep 60\n", "\n")...)
 				break
 
-			case "list":
-				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
-					"List all files in the current directory. The opt: means optional\n"+
-					"usage: list, ls, dir <opt: directory>\n"+
-					"example: list C:\\Users\\user\\Documents\n"+
-					"example: ls\n", "\n")...)
-				break
-
-			case "ls":
-				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
-					"List all files in the current directory. The opt: means optional\n"+
-					"usage: list, ls, dir <opt: directory>\n"+
-					"example: list C:\\Users\\user\\Documents\n"+
-					"example: ls\n", "\n")...)
-				break
-
-			case "dir":
+			case "list", "ls", "dir":
 				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"List Command Help:\n"+
 					"List all files in the current directory. The opt: means optional\n"+
 					"usage: list, ls, dir <opt: directory>\n"+
@@ -162,14 +128,7 @@ func ParseImplantCommand(Command string) {
 					"example: pwd\n", "\n")...)
 				break
 
-			case "ps":
-				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"PS Command Help:\n"+
-					"List all running processes on implant.\n"+
-					"usage: ps, proc\n"+
-					"example: ps\n", "\n")...)
-				break
-
-			case "proc":
+			case "ps", "proc":
 				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"PS Command Help:\n"+
 					"List all running processes on implant.\n"+
 					"usage: ps, proc\n"+
@@ -207,18 +166,31 @@ func ParseImplantCommand(Command string) {
 			break
 		}
 
-	case "execute":
+	case "execute", "exec":
+		var (
+			program   string
+			arguments []string
+		)
 		//execute a command on the implant.
-		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
+		for i := 0; i < len(args); i++ {
+			if args[i] == "-p" {
+				program = args[i+1]
+			}
+			if args[i] == "-a" {
+				arguments = args[i+1:]
+				break
+			}
+		}
+		if program == "" {
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid execute command.\n", "\n")...)
+		}
+
+		args = append([]string{}, program)
+		args = append(args, arguments...)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+program+" "+strings.Join(arguments, " "), "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
-	case "exec":
-		//execute a command on the implant.
-		str := fmt.Sprintf("[*] Executing command %s on implant.\n", strings.Join(args, " "))
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
-		SendImplantCommand(cmd, args, ImplantName)
-		break
+
 	case "download":
 		//download a file from the target pc implant is infecting.
 		if len(args) < 2 {
@@ -275,29 +247,13 @@ func ParseImplantCommand(Command string) {
 		//set new sleep time on implant
 		SendImplantCommand(cmd, args, ImplantName)
 		break
-	case "list":
+	case "list", "ls", "dir":
 		if len(args) == 0 {
 			args = append(args, ".")
 		}
 		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
 		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		//list all files in the current directory.
-		SendImplantCommand(cmd, args, ImplantName)
-		break
-	case "ls":
-		if len(args) == 0 {
-			args = append(args, ".")
-		}
-		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
-		SendImplantCommand(cmd, args, ImplantName)
-		break
-	case "dir":
-		if len(args) == 0 {
-			args = append(args, ".")
-		}
-		str := fmt.Sprintf("[*] Listing all files in the directory %s on the implant.\n", args[0])
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+str, "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 	case "cd":
@@ -315,12 +271,7 @@ func ParseImplantCommand(Command string) {
 		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Printing working directory on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
-	case "ps":
-		//list all running processes on implant.
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Listing all running processes on the implant.\n", "\n")...)
-		SendImplantCommand(cmd, args, ImplantName)
-		break
-	case "proc":
+	case "ps", "proc":
 		//list all running processes on implant.
 		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[*] Listing all running processes on the implant.\n", "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
@@ -436,7 +387,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 
 	//some fucking go wizardry to ensure that we can update our team's chat if we press enter with text in the chat entry field.
 	ImplantInteractionMenu.EntryBar = Common.NewCustomChatEntry(func(text string) {
-		ParseImplantCommand(ImplantName + "/" + text)
+		ParseImplantCommand(ImplantName, text)
 	})
 
 	//Teams chat entry's combined into one form.
@@ -445,7 +396,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 			{Text: ImplantName, Widget: ImplantInteractionMenu.EntryBar},
 		},
 		OnSubmit: func() {
-			ParseImplantCommand(ImplantName + "/" + ImplantInteractionMenu.EntryBar.Text)
+			ParseImplantCommand(ImplantName, ImplantInteractionMenu.EntryBar.Text)
 		},
 		OnCancel:   NewWindow.Close,
 		SubmitText: "",
@@ -566,11 +517,10 @@ func SendDataToImplantWindow(ImplantData Common.ImplantTableData, Data interface
 	)
 
 	switch datatype {
-	case 1: // MODULE DATA
+	case Common.MODULE_DATA: // MODULE DATA
 		typeofdata = "Module Data"
 		TempData = Data.(map[string][]byte)
 		menuobj.Text = append(menuobj.Text, strings.Split(fmt.Sprintf("[*] Received %s from implant: %s\n", typeofdata, ImplantData.ImplantName), "\n")...)
-		menuobj.ImplantLog.Refresh()
 		var strobj string
 		for key, value := range TempData.(map[string][]byte) {
 			module_name := strings.Split(key, "\\")
@@ -584,6 +534,17 @@ func SendDataToImplantWindow(ImplantData Common.ImplantTableData, Data interface
 		menuobj.Text = append(menuobj.Text, strings.Split(strobj, "\n")...)
 		menuobj.ImplantLog.Refresh()
 		break // send module data.
+
+	case Common.EXECUTE_DATA:
+		typeofdata = "Execute Data"
+		menuobj.Text = append(menuobj.Text, strings.Split(fmt.Sprintf("[*] Received %s from implant: %s\n", typeofdata, ImplantData.ImplantName), "\n")...)
+		if Data.(uint32) == 0 {
+			menuobj.Text = append(menuobj.Text, strings.Split(fmt.Sprintf("[*] Process Failed to Create.\n"), "\n")...)
+		} else {
+			menuobj.Text = append(menuobj.Text, strings.Split(fmt.Sprintf("[*] Process Successfully Created with Process ID: [%d]\n", Data.(uint32)), "\n")...)
+		}
+		menuobj.ImplantLog.Refresh()
+		break // send execute data.
 	default:
 		break // default
 	}

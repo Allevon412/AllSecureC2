@@ -1,6 +1,7 @@
 package Common
 
 import (
+	"AllSecure/TeamServer/Crypt"
 	"encoding/binary"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -120,6 +121,8 @@ type (
 	AgentCmd struct {
 		CmdID      uint32 //command to execute
 		RequestID  uint32
+		Size       uint32
+		MagicValue []byte
 		DataBuffer []byte
 	}
 )
@@ -205,6 +208,8 @@ const (
 	CMD_CHECKIN
 	CMD_NO_JOB
 	CMD_LIST_MODULES
+	SEND_DATA
+	CMD_EXECUTE
 )
 
 func (p *Package) UnmarshalHeader(data []byte) error {
@@ -317,11 +322,19 @@ func (q *Queue) Len() int {
 	return len(*q)
 }
 
-func (a *AgentCmd) MarshalAgentCmd() []byte {
-	var data = make([]byte, 8)
-	binary.LittleEndian.PutUint32(data[:4], a.CmdID)
-	binary.LittleEndian.PutUint32(data[4:8], a.RequestID)
-	data = append(data, a.DataBuffer...)
+func (a *AgentCmd) MarshalAgentCmd(agent *Implant) []byte {
+	var data = make([]byte, 16)
+	if a.MagicValue == nil {
+		a.MagicValue = agent.Context.Magic_val
+	}
+
+	copy(data[:4], a.MagicValue)
+	binary.LittleEndian.PutUint32(data[4:8], a.CmdID)
+	binary.LittleEndian.PutUint32(data[8:12], a.RequestID)
+	binary.LittleEndian.PutUint32(data[12:16], a.Size)
+	if a.Size > 0 {
+		data = append(data, Crypt.AES256CTR(a.DataBuffer, agent.AESKey, agent.IV)...)
+	}
 
 	return data
 }

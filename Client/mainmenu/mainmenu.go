@@ -52,7 +52,7 @@ func CreateChatForm(Username string) (*fyne.Container, error) {
 
 	TeamsChatLog = &Common.ImplantInteractionMenu{
 		Text: []string{},
-		ImplantLog: Common.NewExtendedList(10, func() int {
+		ImplantLog: Common.NewExtendedList(12, func() int {
 			return len(TeamsChatLog.Text)
 		},
 			func() fyne.CanvasObject {

