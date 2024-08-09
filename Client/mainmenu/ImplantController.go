@@ -56,9 +56,9 @@ func ParseImplantCommand(ImplantName, Command string) {
 			case "execute", "exec":
 				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
 					"Execute a command on the implant.\n"+
-					"usage: execute -p <program> -a <arguments>\n"+
-					"example: execute -p cmd -a whoami\n"+
-					"example: exec -p powershell \"-c 'whoami'\"\n", "\n")...)
+					"usage: execute -p <program> -a <arguments> -o <piped>\n"+
+					"example: execute -p cmd -a whoami /all -o true/false\n"+
+					"example: exec -p powershell -a whoami /all -o true \n", "\n")...)
 				break
 
 			case "download":
@@ -170,23 +170,33 @@ func ParseImplantCommand(ImplantName, Command string) {
 		var (
 			program   string
 			arguments []string
+			//Piped     *bool
 		)
 		//execute a command on the implant.
+
+		//Piped = flags.BoolP("piped", "o", false, "If the command is piped or not.")
+
 		for i := 0; i < len(args); i++ {
+			if args[i] == "-a" {
+				for j := i + 1; j < len(args); j++ {
+					if args[j] == "-o" {
+						break
+					}
+					if args[j] == "-p" {
+						break
+					}
+					arguments = append(arguments, args[j])
+				}
+			}
+
 			if args[i] == "-p" {
 				program = args[i+1]
 			}
-			if args[i] == "-a" {
-				arguments = args[i+1:]
-				break
-			}
-		}
-		if program == "" {
-			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid execute command.\n", "\n")...)
 		}
 
 		args = append([]string{}, program)
 		args = append(args, arguments...)
+
 		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+program+" "+strings.Join(arguments, " "), "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
