@@ -191,11 +191,11 @@ void TaskingRoutine() {
 										break;
 									}
 								}
-								ProcessParams[StringLengthW(ProcessParams)] = L'\x20'; // we're adding to the string so we dont need to increment the index.
-								ProcessParams[StringLengthW(ProcessParams)] = L'/';
-								ProcessParams[StringLengthW(ProcessParams)] = L'k';
+								//ProcessParams[StringLengthW(ProcessParams)] = L'\x20'; // we're adding to the string so we dont need to increment the index.
+								//ProcessParams[StringLengthW(ProcessParams)] = L'/';
+								//ProcessParams[StringLengthW(ProcessParams)] = L'k';
 								ProcessParams[StringLengthW(ProcessParams)] = L'\x20';
-								Index += Length + 4;
+								Index += Length + 1;
 								break;
 
 							default:

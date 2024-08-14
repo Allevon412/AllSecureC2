@@ -66,7 +66,7 @@ func ParseImplantCommand(ImplantName, Command string) {
 					"powershell.exe -c \"base64 encoded command\" the -c and and the base64 encoded command are placed after the -a switch with a single space between them.\n"+
 					"piped is a boolean value that determines if the command output is piped or not. If the command is piped, the output will be returned to the implant.\n"+
 					"usage: execute -e <program> -a <arguments> (opt) -p <piped> (opt) -s <spoof parent process name> (opt)\n"+
-					"example: execute -e C:\\Windows\\System32\\cmd.exe -a whoami /all -p true/false -s chrome.exe\n"+
+					"example: execute -e C:\\Windows\\System32\\cmd.exe -a /c whoami /all -p true/false -s chrome.exe\n"+
 					"example: exec -e C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -a whoami /all -p True -s chrome.exe \n", "\n")...)
 				break
 
