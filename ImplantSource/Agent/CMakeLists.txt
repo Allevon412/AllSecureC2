@@ -172,4 +172,6 @@ add_executable(agent
         headers/agent/evasion/syscalls/syscalls.h
         headers/agent/evasion/Common.h
         src/agent/evasion/common.c
+        src/helpers/win32.c
+        headers/helpers/win32.h
 )

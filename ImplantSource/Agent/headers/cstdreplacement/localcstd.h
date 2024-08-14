@@ -17,3 +17,7 @@ LPSTR generateRandomString(size_t length);
 LPWSTR generateRandomStringW(size_t length);
 UINT64 GetUnixTime();
 SIZE_T WCharToChar(PCHAR Destination, PWCHAR Source, SIZE_T MaximumAllowed);
+SIZE_T CharToWChar(PWCHAR Destination, PCHAR Source, SIZE_T MaximumAllowed);
+INT StrNCmpW(PWCHAR Str1, PWCHAR Str2, SIZE_T Length);
+INT StrCmpA(PCHAR Str1, PCHAR Str2);
+VOID _RtlInitUnicodeString(OUT P_INT_UNICODE_STRING UsStruct, IN OPTIONAL PCWSTR Buffer);

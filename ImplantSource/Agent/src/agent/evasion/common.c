@@ -72,7 +72,7 @@ NTSTATUS TemperSyscallAndSpoofStack(
         }
 
         pDummyApi = (t_NtDummyApi)g_BenignSyscallList->Entries[GenerateRandomNumber() % g_BenignSyscallList->u32Count].uAddress;
-        if(!InitializeTamperedSyscall((ULONG_PTR)pDummyApi, g_SyscallList->Entries[SSN].dw64Hash, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
+        if(!InitializeTamperedSyscall((ULONG_PTR)pDummyApi, SSN, Nargs, a, b, c, d, e, f, g, h, i, j, k)) {
             return -1;
         }
 
@@ -85,12 +85,21 @@ NTSTATUS TemperSyscallAndSpoofStack(
             printf("[error] attempting to halt hardware breakpoints\n");
             return -1;
         }
+
     } else { // FUNCTION IS UNHOOKED WHY BOTHER SETING HARDWARE BP & SPOOFING ARGS AT ALL?
        // we should just spoof the stack and call the api. only supported for up to 9 args for now.
         if(Nargs < 10) {
             //printf("[info] num args [%d] | a = [%08x] | b = [%08x]\n", Nargs, a, b);
             if ((NtStatus =(NTSTATUS)SpoofStack(uAddress, Nargs, a, b, c, d, e, f, g, h, i)) != 0x00) {
                 printf("[error] 0x%llx attempting to spoof stack for syscall: 0x%llx\n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
+                return NtStatus;
+            }
+        } else { // our function has more than 9 args we cannot spoof stack. TODO implement a way to spoof stack for functions with more than 9 args.
+
+            pDummyApi = (t_NtDummyApi)uAddress;
+            NtStatus = pDummyApi(a, b, c, d, e, f, g, h, i, j, k);
+            if(NtStatus != 0x00) {
+                printf("[error] 0x%llx Failed With Error: 0x%llx \n", g_SyscallList->Entries[SSN].dw64Hash, NtStatus);
                 return NtStatus;
             }
         }

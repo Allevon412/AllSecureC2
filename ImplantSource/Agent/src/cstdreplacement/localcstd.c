@@ -168,3 +168,46 @@ SIZE_T WCharToChar(PCHAR Destination, PWCHAR Source, SIZE_T MaximumAllowed) {
 	}
 	return MaximumAllowed - Length;
 }
+
+SIZE_T CharToWChar(PWCHAR Destination, PCHAR Source, SIZE_T MaximumAllowed) {
+	INT Length = MaximumAllowed;
+	while (--Length >= 0) {
+		if(!(*Destination++ = (WCHAR)*Source++))
+			return MaximumAllowed - Length -1;
+	}
+	return MaximumAllowed - Length;
+}
+
+INT StrNCmpW(PWCHAR Str1, PWCHAR Str2, SIZE_T Length) {
+	while (Length--) {
+		if (*Str1 != *Str2)
+			return *Str1 - *Str2;
+		Str1++, Str2++;
+	}
+	return 0;
+}
+
+INT StrCmpA(PCHAR Str1, PCHAR Str2) {
+	while (*Str1 && *Str2) {
+		if (*Str1 != *Str2)
+			return *Str1 - *Str2;
+		Str1++, Str2++;
+	}
+	return 0;
+}
+
+// Helper Function
+VOID _RtlInitUnicodeString(OUT P_INT_UNICODE_STRING UsStruct, IN OPTIONAL PCWSTR Buffer) {
+
+	if ((UsStruct->Buffer = (PWSTR)Buffer)) {
+
+		unsigned int Length = wcslen(Buffer) * sizeof(WCHAR);
+		if (Length > 0xfffc)
+			Length = 0xfffc;
+
+		UsStruct->Length = Length;
+		UsStruct->MaximumLength = UsStruct->Length + sizeof(WCHAR);
+	}
+
+	else UsStruct->Length = UsStruct->MaximumLength = 0;
+}

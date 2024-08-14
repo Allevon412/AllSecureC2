@@ -7,6 +7,7 @@
 #include <winhttp.h>
 #include <iphlpapi.h>
 
+#include <tlhelp32.h>
 
 #define AES_BLOCKLEN 16
 #define NTSUCCESS 0
@@ -23,10 +24,7 @@ typedef enum INT_EVENT_TYPE
 	SynchronizationEvent
 } INT_EVENT_TYPE;
 
-typedef VOID(NTAPI* RTL_WAITORTIMERCALLBACKFUNC) (
-	PVOID lpParameter,
-	BOOLEAN TimerOrWaitFired
-);
+
 
 typedef enum MEMORY_INFORMATION_CLASS {
 
@@ -52,366 +50,6 @@ typedef struct _INT_CLIENT_ID {
 	HANDLE UniqueProcess;
 	HANDLE UniqueThread;
 } _INT_CLIENT_ID, * P_INT_CLIENT_ID;
-
-//HTTP APIS
-//WINHTTP APIS
-typedef HINTERNET(WINAPI* t_WinHttpOpen)(
-	LPCWSTR pszAgentW,
-	DWORD   dwAccessType,
-	LPCWSTR pszProxyW,
-	LPCWSTR pszProxyBypassW,
-	DWORD   dwFlags
-	);
-
-typedef HINTERNET(WINAPI* t_WinHttpConnect)(
-	HINTERNET     hSession,
-	LPCWSTR       pswzServerName,
-	INTERNET_PORT nServerPort,
-	DWORD         dwReserved
-	);
-
-
-
-typedef HINTERNET(WINAPI* t_WinHttpOpenRequest)(
-	HINTERNET hConnect,
-	LPCWSTR   pwszVerb,
-	LPCWSTR   pwszObjectName,
-	LPCWSTR   pwszVersion,
-	LPCWSTR   pwszReferrer,
-	LPCWSTR* ppwszAcceptTypes,
-	DWORD     dwFlags
-	);
-
-typedef BOOL(WINAPI* t_WinHttpSendRequest)(
-	HINTERNET hRequest,
-	LPCWSTR   pwszHeaders,
-	DWORD     dwHeadersLength,
-	LPVOID    lpOptional,
-	DWORD     dwOptionalLength,
-	DWORD     dwTotalLength,
-	DWORD_PTR  dwContext
-	);
-
-typedef BOOL(WINAPI* t_WinHttpSetOption)(
-	HINTERNET hInternet,
-	DWORD     dwOption,
-	LPVOID    lpBuffer,
-	DWORD     dwBufferLength
-	);
-
-typedef BOOL(WINAPI* t_WinHttpAddRequestHeaders)(
-	HINTERNET hRequest,
-	LPCWSTR   pwszHeaders,
-	DWORD     dwHeadersLength,
-	DWORD     dwModifiers
-	);
-
-typedef BOOL(WINAPI* t_WinHttpReceiveResponse)(
-	HINTERNET hRequest,
-	LPVOID    lpReserved
-	);
-
-typedef BOOL(WINAPI* t_WinHttpQueryHeaders)(
-	HINTERNET hRequest,
-	DWORD     dwInfoLevel,
-	LPCWSTR   pwszName,
-	LPVOID    lpBuffer,
-	LPDWORD   lpdwBufferLength,
-	LPDWORD   lpdwIndex
-	);
-
-typedef BOOL(WINAPI* t_WinHttpReadData)(
-	HINTERNET hRequest,
-	LPVOID    lpBuffer,
-	DWORD     dwNumberOfBytesToRead,
-	LPDWORD   lpdwNumberOfBytesRead
-	);
-typedef BOOL(WINAPI* t_WinHttpCloseHandle)(
-	HINTERNET hInternet
-	);
-
-
-
-// enumeration APIS
-//NTDLL APIS
-typedef NTSTATUS(NTAPI* t_RtlGetVersion)(
-	PRTL_OSVERSIONINFOW lpVersionInformation
-	);
-
-typedef NTSTATUS(NTAPI* t_NtClose)(
-	HANDLE Handle
-	);
-
-#define NtCurrentThread() ((HANDLE)(LONG_PTR)-2)
-#define NtCurrentProcess() ((HANDLE)(LONG_PTR)-1)
-
-typedef NTSTATUS(NTAPI* t_NtOpenProcessToken)(
-	HANDLE ProcessHandle,
-	ACCESS_MASK DesiredAccess,
-	PHANDLE TokenHandle
-);
-
-typedef NTSTATUS(NTAPI* t_NtOpenThreadToken)(
-	HANDLE ThreadHandle,
-	ACCESS_MASK DesiredAccess,
-	BOOLEAN OpenAsSelf,
-	PHANDLE TokenHandle
-);
-
-typedef NTSTATUS(NTAPI* t_NtQueryInformationToken)(
-	HANDLE TokenHandle,
-	TOKEN_INFORMATION_CLASS TokenInformationClass,
-	PVOID TokenInformation,
-	ULONG TokenInformationLength,
-	PULONG ReturnLength
-);
-
-typedef PVOID(NTAPI* t_RtlAllocateHeap) (
-	PVOID  HeapHandle,
-	ULONG  Flags,
-	SIZE_T Size
-);
-typedef NTSTATUS(NTAPI* t_RtlReAllocateHeap) (
-	IN PVOID                HeapHandle,
-	IN ULONG                Flags,
-	IN PVOID                MemoryPointer,
-	IN ULONG                Size
-);
-
-typedef NTSTATUS(NTAPI* t_RtlRandomEx)(
-	PULONG Seed
-);
-
-typedef NTSTATUS(NTAPI* t_NtGetTickCount)(
-	);
-typedef NTSTATUS(NTAPI* t_RtlCreateTimerQueue)(
-	PHANDLE NewTimerQueue
-	);
-typedef NTSTATUS(NTAPI* t_NtCreateEvent) (
-	_Out_ PHANDLE EventHandle,
-	_In_ ACCESS_MASK DesiredAccess,
-	_In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-	_In_ INT_EVENT_TYPE EventType,
-	_In_ BOOLEAN InitialState
-);
-
-typedef VOID(NTAPI* t_RtlCaptureContext)(
-	_Out_ PCONTEXT ContextRecord
-);
-
-typedef NTSTATUS(NTAPI* t_RtlCreateTimer) (
-	HANDLE                      TimerQueue,
-	HANDLE* NewTimer,
-	RTL_WAITORTIMERCALLBACKFUNC Callback,
-	PVOID                       Parameter,
-	DWORD                       DueTime,
-	DWORD                       Period,
-	ULONG                       Flags
-);
-
-typedef NTSTATUS(NTAPI* t_RtlRegisterWait) (
-	HANDLE* out,
-	HANDLE                      handle,
-	RTL_WAITORTIMERCALLBACKFUNC callback,
-	void*						context,
-	ULONG                       milliseconds,
-	ULONG                       flags
-	);
-
-typedef NTSTATUS(NTAPI* t_RtlDeleteTimerQueue) (
-	HANDLE TimerQueueHandle
-	);
-
-typedef NTSTATUS(NTAPI* t_RtlCopyMappedMemory)(
-	void* pDest,
-	const void* pSrc,
-	SIZE_T bytesToCopy
-	);
-typedef NTSTATUS(NTAPI* t_NtWaitForSingleObject) (
-	IN HANDLE               ObjectHandle,
-	IN BOOLEAN              Alertable,
-	IN PLARGE_INTEGER       TimeOut OPTIONAL
-	);
-typedef NTSTATUS(NTAPI* t_NtSignalAndWaitForSingleObject)(
-	IN HANDLE               ObjectToSignal,
-	IN HANDLE               WaitableObject,
-	IN BOOLEAN              Alertable,
-	IN PLARGE_INTEGER       Time OPTIONAL
-	);
-typedef NTSTATUS(NTAPI* t_NtContinue) (
-	PCONTEXT ThreadContext,
-	BOOLEAN  RaiseAlert
-	);
-typedef NTSTATUS(NTAPI* t_NtSetEvent)(
-	HANDLE EventHandle,
-	PLONG  PreviousState OPTIONAL
-	);
-
-typedef NTSTATUS(NTAPI* t_NtSetContextThread)(
-	HANDLE          ThreadHandle,
-	PCONTEXT        ThreadContext
-	);
-
-typedef NTSTATUS(NTAPI* t_NtDuplicateObject)(
-	HANDLE      SourceProcessHandle,
-	HANDLE      SourceHandle,
-	HANDLE      TargetProcessHandle,
-	PHANDLE     TargetHandle,
-	ACCESS_MASK DesiredAccess,
-	ULONG       Attributes,
-	ULONG       Options
-	);
-
-typedef NTSTATUS(NTAPI* t_LdrGetProcedureAddress)(
-	IN HMODULE              ModuleHandle,
-	IN PANSI_STRING         FunctionName OPTIONAL,
-	IN WORD                 Oridinal OPTIONAL,
-	OUT PVOID* FunctionAddress
-	);
-
-typedef NTSTATUS(NTAPI* t_NtQueryVirtualMemory)(
-	IN HANDLE							ProcessHandle,
-	IN PVOID							BaseAddress,
-	IN enum MEMORY_INFORMATION_CLASS	MemoryInformationClass,
-	OUT PVOID							Buffer,
-	IN SIZE_T							Length,
-	OUT PSIZE_T							ResultLength OPTIONAL
-	);
-
-typedef NTSTATUS(NTAPI* t_NtOpenThread)(
-	OUT PHANDLE ThreadHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN P_INT_CLIENT_ID ClientId
-	);
-
-typedef NTSTATUS(NTAPI* t_NtAllocateVirtualMemory) (
-	IN      HANDLE    ProcessHandle,
-	IN OUT	PVOID     *BaseAddress,
-	IN		ULONG_PTR ZeroBits,
-	IN OUT	PSIZE_T   RegionSize,
-	IN      ULONG     AllocationType,
-	IN      ULONG     Protect
-);
-typedef NTSTATUS(NTAPI* t_NtProtectVirtualMemory) (
-	IN      HANDLE    ProcessHandle,
-	IN OUT	PVOID     *BaseAddress,
-	IN OUT	PSIZE_T   NumberOfBytesToProtect,
-	IN      ULONG     NewAccessProtection,
-	OUT     PULONG    OldAccessProtection
-);
-typedef NTSTATUS(NTAPI* t_NtCreateThreadEx) (
-	OUT PHANDLE hThread,
-	IN ACCESS_MASK DesiredAccess,
-	IN LPVOID ObjectAttributes,
-	IN HANDLE ProcessHandle,
-	IN LPTHREAD_START_ROUTINE lpStartAddress,
-	IN LPVOID lpParameter,
-	IN BOOL CreateSuspended,
-	IN ULONG StackZeroBits,
-	IN ULONG SizeOfStackCommit,
-	IN ULONG SizeOfStackReserve,
-	OUT LPVOID lpBytesBuffer
-);
-
-typedef NTSTATUS(NTAPI* t_NtSetInformationVirtualMemory)(
-	IN HANDLE                           ProcessHandle,
-	IN VIRTUAL_MEMORY_INFORMATION_CLASS VmInformationClass,
-	IN ULONG_PTR                        NumberOfEntries,
-	IN PMEMORY_RANGE_ENTRY              VirtualAddresses,
-	IN PVOID                            VmInformation,
-	IN ULONG                            VmInformationLength
-	);
-
-typedef NTSTATUS(NTAPI* t_NtQueryInformationProcess)(
-IN           HANDLE           ProcessHandle,
-IN           PROCESSINFOCLASS ProcessInformationClass,
-OUT         PVOID            ProcessInformation,
-IN            ULONG            ProcessInformationLength,
-OUT OPTIONAL PULONG           ReturnLength
-	);
-typedef NTSTATUS(NTAPI* t_NtOpenProcess)(
-	OUT PHANDLE ProcessHandle,
-	IN ACCESS_MASK DesiredAccess,
-	IN POBJECT_ATTRIBUTES ObjectAttributes,
-	IN PCLIENT_ID ClientId
-	);
-typedef NTSTATUS(NTAPI* t_NtReadVirtualMemory)(
-IN HANDLE               ProcessHandle,
-IN PVOID                BaseAddress,
-OUT PVOID               Buffer,
-IN ULONG                NumberOfBytesToRead,
-OUT PULONG              NumberOfBytesReaded OPTIONAL
-);
-
-
-//IPhlpapi APIS
-typedef DWORD(WINAPI* t_GetAdaptersInfo)(
-	PIP_ADAPTER_INFO pAdapterInfo,
-	PULONG           pOutBufLen
-	);
-
-//ADVAPI APIS
-typedef BOOL(WINAPI* t_GetUserNameA)(
-	LPSTR   lpBuffer,
-	LPDWORD pcbBuffer
-	);
-typedef NTSTATUS(NTAPI* t_SystemFunction032)(
-	struct USTRING* data,
-	const struct USTRING* key
-	);
-
-//KERNEL32 APIS
-typedef BOOL(WINAPI* t_GetComputerNameExA)(
-	COMPUTER_NAME_FORMAT NameType,
-	LPSTR                lpBuffer,
-	LPDWORD              nSize
-	);
-
-typedef LPVOID(WINAPI* t_LocalAlloc)(
-	UINT   uFlags,
-	SIZE_T uBytes
-	);
-typedef LPVOID(WINAPI* t_LocalReAlloc)(
-	LPVOID lpMem,
-	SIZE_T uBytes,
-	UINT   uFlags
-	);
-typedef BOOL(WINAPI* t_LocalFree)(
-	HLOCAL hMem
-	);
-typedef BOOL(WINAPI* t_GetLocalTime)(
-	LPSYSTEMTIME lpSystemTime
-	);
-
-typedef VOID(WINAPI* t_GetSystemTimeAsFileTime)(
-	LPFILETIME lpSystemTimeAsFileTime
-	);
-
-typedef HMODULE(WINAPI* t_LoadLibraryA)(
-	LPCSTR lpLibFileName
-	);
-typedef FARPROC(WINAPI* t_GetProcAddress)(
-	HMODULE hModule,
-	LPCSTR lpProcName
-	);
-
-//USER32 APIS
-typedef int (WINAPI* t_GetSystemMetrics)(
-	int nIndex
-	);
-
-typedef BOOL(WINAPI* t_VirtualProtect)(
-	LPVOID lpAddress,
-	SIZE_T dwSize,
-	DWORD  flNewProtect,
-	PDWORD lpflOldProtect
-	);
-typedef DWORD(WINAPI* t_WaitForSingleObjectEx)(
-	HANDLE hHandle,
-	DWORD  dwMilliseconds,
-	BOOL   bAlertable
-	);
 
 /*--------------------------------------------------------------------
   STRUCTURES
@@ -1055,7 +693,6 @@ typedef struct _INT_INITIAL_TEB {
 	PVOID                StackReserved;
 } _INT_INITIAL_TEB, * P_INT_INITIAL_TEB;
 
-
 #define NtProcessHeap(agent) agent->pTeb->ProcessEnvironmentBlock->ProcessHeap
 
 #define MAX_HOST_FAILURES 10
@@ -1064,4 +701,748 @@ enum HOST_ROTATION {
 	HOST_ROTATION_RANDOM,
 	HOST_ROTATION_FAIL_OVER
 };
+
+#define STATUS_SUCCESS 0x00000000L
+
+
+
+typedef struct _RTL_DRIVE_LETTER_CURDIR
+{
+	USHORT Flags;
+	USHORT Length;
+	ULONG TimeStamp;
+	UNICODE_STRING DosPath;
+
+} RTL_DRIVE_LETTER_CURDIR, * PRTL_DRIVE_LETTER_CURDIR;
+
+typedef struct _CURDIR
+{
+	UNICODE_STRING DosPath;
+	HANDLE Handle;
+
+} CURDIR, * PCURDIR;
+
+
+#define RTL_MAX_DRIVE_LETTERS 32
+
+typedef struct _INT_RTL_USER_PROCESS_PARAMETERS
+{
+	ULONG MaximumLength;
+	ULONG Length;
+
+	ULONG Flags;
+	ULONG DebugFlags;
+
+	HANDLE ConsoleHandle;
+	ULONG ConsoleFlags;
+	HANDLE StandardInput;
+	HANDLE StandardOutput;
+	HANDLE StandardError;
+
+	CURDIR CurrentDirectory;
+	UNICODE_STRING DllPath;
+	UNICODE_STRING ImagePathName;
+	UNICODE_STRING CommandLine;
+	PWCHAR Environment;
+
+	ULONG StartingX;
+	ULONG StartingY;
+	ULONG CountX;
+	ULONG CountY;
+	ULONG CountCharsX;
+	ULONG CountCharsY;
+	ULONG FillAttribute;
+
+	ULONG WindowFlags;
+	ULONG ShowWindowFlags;
+	UNICODE_STRING WindowTitle;
+	UNICODE_STRING DesktopInfo;
+	UNICODE_STRING ShellInfo;
+	UNICODE_STRING RuntimeData;
+	RTL_DRIVE_LETTER_CURDIR CurrentDirectories[RTL_MAX_DRIVE_LETTERS];
+
+	ULONG_PTR EnvironmentSize;
+	ULONG_PTR EnvironmentVersion;
+	PVOID PackageDependencyData;
+	ULONG ProcessGroupId;
+	ULONG LoaderThreads;
+
+} INT_RTL_USER_PROCESS_PARAMETERS, * P_INT_RTL_USER_PROCESS_PARAMETERS;
+
+
+
+
+typedef enum _PS_CREATE_STATE
+{
+	PsCreateInitialState,
+	PsCreateFailOnFileOpen,
+	PsCreateFailOnSectionCreate,
+	PsCreateFailExeFormat,
+	PsCreateFailMachineMismatch,
+	PsCreateFailExeName,
+	PsCreateSuccess,
+	PsCreateMaximumStates
+
+} PS_CREATE_STATE;
+
+typedef struct _PS_CREATE_INFO
+{
+	SIZE_T Size;
+	PS_CREATE_STATE State;
+	union
+	{
+		struct
+		{
+			union
+			{
+				ULONG InitFlags;
+				struct
+				{
+					UCHAR WriteOutputOnExit : 1;
+					UCHAR DetectManifest : 1;
+					UCHAR IFEOSkipDebugger : 1;
+					UCHAR IFEODoNotPropagateKeyState : 1;
+					UCHAR SpareBits1 : 4;
+					UCHAR SpareBits2 : 8;
+					USHORT ProhibitedImageCharacteristics : 16;
+				} s1;
+			} u1;
+			ACCESS_MASK AdditionalFileAccess;
+		} InitState;
+
+		struct
+		{
+			HANDLE FileHandle;
+		} FailSection;
+
+		struct
+		{
+			USHORT DllCharacteristics;
+		} ExeFormat;
+
+		struct
+		{
+			HANDLE IFEOKey;
+		} ExeName;
+
+		struct
+		{
+			union
+			{
+				ULONG OutputFlags;
+				struct
+				{
+					UCHAR ProtectedProcess : 1;
+					UCHAR AddressSpaceOverride : 1;
+					UCHAR DevOverrideEnabled : 1;
+					UCHAR ManifestDetected : 1;
+					UCHAR ProtectedProcessLight : 1;
+					UCHAR SpareBits1 : 3;
+					UCHAR SpareBits2 : 8;
+					USHORT SpareBits3 : 16;
+				} s2;
+			} u2;
+			HANDLE FileHandle;
+			HANDLE SectionHandle;
+			ULONGLONG UserProcessParametersNative;
+			ULONG UserProcessParametersWow64;
+			ULONG CurrentParameterFlags;
+			ULONGLONG PebAddressNative;
+			ULONG PebAddressWow64;
+			ULONGLONG ManifestAddress;
+			ULONG ManifestSize;
+		} SuccessState;
+	};
+
+} PS_CREATE_INFO, * PPS_CREATE_INFO;
+
+
+//\
+https://github.com/winsiderss/systeminformer/blob/master/phnt/include/ntpsapi.h#L2047
+
+typedef struct _PS_ATTRIBUTE
+{
+	ULONG_PTR Attribute;
+	SIZE_T Size;
+	union
+	{
+		ULONG_PTR Value;
+		PVOID ValuePtr;
+	};
+	PSIZE_T ReturnLength;
+
+} PS_ATTRIBUTE, * PPS_ATTRIBUTE;
+
+
+
+typedef struct _PS_ATTRIBUTE_LIST
+{
+	SIZE_T TotalLength;
+	PS_ATTRIBUTE Attributes[2];
+
+} PS_ATTRIBUTE_LIST, * PPS_ATTRIBUTE_LIST;
+
+
+
+#define PS_ATTRIBUTE_NUMBER_MASK    0x0000ffff
+#define PS_ATTRIBUTE_THREAD         0x00010000 // Attribute may be used with thread creation
+#define PS_ATTRIBUTE_INPUT          0x00020000 // Attribute is input only
+#define PS_ATTRIBUTE_ADDITIVE       0x00040000 // Attribute may be "accumulated", e.g. bitmasks, counters, etc.
+
+//\
+https://github.com/winsiderss/systeminformer/blob/master/phnt/include/ntpsapi.h#L1930
+
+typedef enum _PS_ATTRIBUTE_NUM
+{
+	PsAttributeParentProcess,                   // in HANDLE
+	PsAttributeDebugPort,                       // in HANDLE
+	PsAttributeToken,                           // in HANDLE
+	PsAttributeClientId,                        // out PCLIENT_ID
+	PsAttributeTebAddress,                      // out PTEB
+	PsAttributeImageName,                       // in PWSTR
+	PsAttributeImageInfo,                       // out PSECTION_IMAGE_INFORMATION
+	PsAttributeMemoryReserve,                   // in PPS_MEMORY_RESERVE
+	PsAttributePriorityClass,                   // in UCHAR
+	PsAttributeErrorMode,                       // in ULONG
+	PsAttributeStdHandleInfo,                   // in PPS_STD_HANDLE_INFO
+	PsAttributeHandleList,                      // in PHANDLE
+	PsAttributeGroupAffinity,                   // in PGROUP_AFFINITY
+	PsAttributePreferredNode,                   // in PUSHORT
+	PsAttributeIdealProcessor,                  // in PPROCESSOR_NUMBER
+	PsAttributeUmsThread,                       // see MSDN UpdateProceThreadAttributeList (CreateProcessW) - in PUMS_CREATE_THREAD_ATTRIBUTES
+	PsAttributeMitigationOptions,               // in UCHAR
+	PsAttributeProtectionLevel,                 // in ULONG
+	PsAttributeSecureProcess,                   // since THRESHOLD (Virtual Secure Mode, Device Guard)
+	PsAttributeJobList,
+	PsAttributeChildProcessPolicy,              // since THRESHOLD2
+	PsAttributeAllApplicationPackagesPolicy,    // since REDSTONE
+	PsAttributeWin32kFilter,
+	PsAttributeSafeOpenPromptOriginClaim,
+	PsAttributeBnoIsolation,
+	PsAttributeDesktopAppPolicy,
+	PsAttributeMax
+} PS_ATTRIBUTE_NUM;
+
+//\
+https://github.com/winsiderss/systeminformer/blob/master/phnt/include/ntpsapi.h#L1974
+
+#define PsAttributeValue(Number, Thread, Input, Additive)		\
+    (((Number) & PS_ATTRIBUTE_NUMBER_MASK)	|					\
+    ((Thread) ? PS_ATTRIBUTE_THREAD : 0)	|					\
+    ((Input) ? PS_ATTRIBUTE_INPUT : 0)		|					\
+    ((Additive) ? PS_ATTRIBUTE_ADDITIVE : 0))
+
+// Specifies the parent process of the new process
+#define PS_ATTRIBUTE_PARENT_PROCESS \
+    PsAttributeValue(PsAttributeParentProcess, FALSE, TRUE, TRUE)
+// Specifies the debug port to use
+#define PS_ATTRIBUTE_DEBUG_PORT \
+    PsAttributeValue(PsAttributeDebugPort, FALSE, TRUE, TRUE)
+// Specifies the token to assign to the new process
+#define PS_ATTRIBUTE_TOKEN \
+    PsAttributeValue(PsAttributeToken, FALSE, TRUE, TRUE)
+// Specifies the client ID to assign to the new process
+#define PS_ATTRIBUTE_CLIENT_ID \
+    PsAttributeValue(PsAttributeClientId, TRUE, FALSE, FALSE)
+// Specifies the TEB address to use for the new process
+#define PS_ATTRIBUTE_TEB_ADDRESS \
+    PsAttributeValue(PsAttributeTebAddress, TRUE, FALSE, FALSE)
+// Specifies the image name of the new process
+#define PS_ATTRIBUTE_IMAGE_NAME \
+    PsAttributeValue(PsAttributeImageName, FALSE, TRUE, FALSE)
+// Specifies the image information of the new process
+#define PS_ATTRIBUTE_IMAGE_INFO \
+    PsAttributeValue(PsAttributeImageInfo, FALSE, FALSE, FALSE)
+// Specifies the amount of memory to reserve for the new process
+#define PS_ATTRIBUTE_MEMORY_RESERVE \
+    PsAttributeValue(PsAttributeMemoryReserve, FALSE, TRUE, FALSE)
+// Specifies the priority class to use for the new process
+#define PS_ATTRIBUTE_PRIORITY_CLASS \
+    PsAttributeValue(PsAttributePriorityClass, FALSE, TRUE, FALSE)
+// Specifies the error mode to use for the new process
+#define PS_ATTRIBUTE_ERROR_MODE \
+    PsAttributeValue(PsAttributeErrorMode, FALSE, TRUE, FALSE)
+// Specifies the standard handle information to use for the new process
+#define PS_ATTRIBUTE_STD_HANDLE_INFO \
+    PsAttributeValue(PsAttributeStdHandleInfo, FALSE, TRUE, FALSE)
+// Specifies the handle list to use for the new process
+#define PS_ATTRIBUTE_HANDLE_LIST \
+    PsAttributeValue(PsAttributeHandleList, FALSE, TRUE, FALSE)
+// Specifies the group affinity to use for the new process
+#define PS_ATTRIBUTE_GROUP_AFFINITY \
+    PsAttributeValue(PsAttributeGroupAffinity, TRUE, TRUE, FALSE)
+// Specifies the preferred NUMA node to use for the new process
+#define PS_ATTRIBUTE_PREFERRED_NODE \
+    PsAttributeValue(PsAttributePreferredNode, FALSE, TRUE, FALSE)
+// Specifies the ideal processor to use for the new process
+#define PS_ATTRIBUTE_IDEAL_PROCESSOR \
+    PsAttributeValue(PsAttributeIdealProcessor, TRUE, TRUE, FALSE)
+// Specifies the process mitigation options to use for the new process
+#define PS_ATTRIBUTE_MITIGATION_OPTIONS \
+    PsAttributeValue(PsAttributeMitigationOptions, FALSE, TRUE, FALSE)
+// Specifies the protection level to use for the new process
+#define PS_ATTRIBUTE_PROTECTION_LEVEL \
+    PsAttributeValue(PsAttributeProtectionLevel, FALSE, TRUE, FALSE)
+// Specifies the UMS thread to associate with the new process
+#define PS_ATTRIBUTE_UMS_THREAD \
+    PsAttributeValue(PsAttributeUmsThread, TRUE, TRUE, FALSE)
+// Specifies whether the new process is a secure process
+#define PS_ATTRIBUTE_SECURE_PROCESS \
+    PsAttributeValue(PsAttributeSecureProcess, FALSE, TRUE, FALSE)
+// Specifies the job list to associate with the new process
+#define PS_ATTRIBUTE_JOB_LIST \
+    PsAttributeValue(PsAttributeJobList, FALSE, TRUE, FALSE)
+// Specifies the child process policy to use for the new process
+#define PS_ATTRIBUTE_CHILD_PROCESS_POLICY \
+    PsAttributeValue(PsAttributeChildProcessPolicy, FALSE, TRUE, FALSE)
+// Specifies the all application packages policy to use for the new process
+#define PS_ATTRIBUTE_ALL_APPLICATION_PACKAGES_POLICY \
+    PsAttributeValue(PsAttributeAllApplicationPackagesPolicy, FALSE, TRUE, FALSE)
+// Specifies the child process should have access to the Win32k subsystem.
+#define PS_ATTRIBUTE_WIN32K_FILTER	\
+    PsAttributeValue(PsAttributeWin32kFilter, FALSE, TRUE, FALSE)
+// Specifies the child process is allowed to claim a specific origin when making a safe file open prompt
+#define PS_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM	\
+    PsAttributeValue(PsAttributeSafeOpenPromptOriginClaim, FALSE, TRUE, FALSE)
+// Specifies the child process is isolated using the BNO framework
+#define PS_ATTRIBUTE_BNO_ISOLATION	\
+    PsAttributeValue(PsAttributeBnoIsolation, FALSE, TRUE, FALSE)
+// Specifies that the child's process desktop application policy
+#define PS_ATTRIBUTE_DESKTOP_APP_POLICY	\
+    PsAttributeValue(PsAttributeDesktopAppPolicy, FALSE, TRUE, FALSE)
+
+
+//\
+https://github.com/winsiderss/systeminformer/blob/master/phnt/include/ntpsapi.h#L1315
+
+#define PROCESS_CREATE_FLAGS_BREAKAWAY 0x00000001 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_NO_DEBUG_INHERIT 0x00000002 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_INHERIT_HANDLES 0x00000004 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_PROTECTED_PROCESS 0x00000040 // NtCreateUserProcess only
+#define PROCESS_CREATE_FLAGS_CREATE_SESSION 0x00000080 // NtCreateProcessEx & NtCreateUserProcess, requires SeLoadDriver
+#define PROCESS_CREATE_FLAGS_INHERIT_FROM_PARENT 0x00000100 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_SUSPENDED 0x00000200 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_FORCE_BREAKAWAY 0x00000400 // NtCreateProcessEx & NtCreateUserProcess, requires SeTcb
+#define PROCESS_CREATE_FLAGS_RELEASE_SECTION 0x00001000 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_AUXILIARY_PROCESS 0x00008000 // NtCreateProcessEx & NtCreateUserProcess, requires SeTcb
+#define PROCESS_CREATE_FLAGS_CREATE_STORE 0x00020000 // NtCreateProcessEx & NtCreateUserProcess
+#define PROCESS_CREATE_FLAGS_USE_PROTECTED_ENVIRONMENT 0x00040000 // NtCreateProcessEx & NtCreateUserProcess
+
+
+
+//\
+https://github.com/winsiderss/systeminformer/blob/master/phnt/include/ntrtl.h#L2688
+
+
+#define RTL_USER_PROC_PARAMS_NORMALIZED 0x00000001	// indicates that the parameters passed to the process are already in a normalized form
+#define RTL_USER_PROC_PROFILE_USER 0x00000002		// enables user-mode profiling for the process
+#define RTL_USER_PROC_PROFILE_KERNEL 0x00000004		// enables kernel-mode profiling for the process
+#define RTL_USER_PROC_PROFILE_SERVER 0x00000008		// enables server-mode profiling for the process
+#define RTL_USER_PROC_RESERVE_1MB 0x00000020		// reserves 1 megabyte (MB) of virtual address space for the process
+#define RTL_USER_PROC_RESERVE_16MB 0x00000040		// reserves 16 MB of virtual address space for the process
+#define RTL_USER_PROC_CASE_SENSITIVE 0x00000080		// sets the process to be case-sensitive
+#define RTL_USER_PROC_DISABLE_HEAP_DECOMMIT 0x00000100	// disables heap decommitting for the process
+#define RTL_USER_PROC_DLL_REDIRECTION_LOCAL 0x00001000	// enables local DLL redirection for the process
+#define RTL_USER_PROC_APP_MANIFEST_PRESENT 0x00002000	// indicates that an application manifest is present for the process
+#define RTL_USER_PROC_IMAGE_KEY_MISSING 0x00004000	// indicates that the image key is missing for the process
+#define RTL_USER_PROC_OPTIN_PROCESS 0x00020000		// indicates that the process has opted in to some specific behavior or feature
+
+//HTTP APIS
+//WINHTTP APIS
+typedef HINTERNET(WINAPI* t_WinHttpOpen)(
+	LPCWSTR pszAgentW,
+	DWORD   dwAccessType,
+	LPCWSTR pszProxyW,
+	LPCWSTR pszProxyBypassW,
+	DWORD   dwFlags
+	);
+
+typedef HINTERNET(WINAPI* t_WinHttpConnect)(
+	HINTERNET     hSession,
+	LPCWSTR       pswzServerName,
+	INTERNET_PORT nServerPort,
+	DWORD         dwReserved
+	);
+
+
+
+typedef HINTERNET(WINAPI* t_WinHttpOpenRequest)(
+	HINTERNET hConnect,
+	LPCWSTR   pwszVerb,
+	LPCWSTR   pwszObjectName,
+	LPCWSTR   pwszVersion,
+	LPCWSTR   pwszReferrer,
+	LPCWSTR* ppwszAcceptTypes,
+	DWORD     dwFlags
+	);
+
+typedef BOOL(WINAPI* t_WinHttpSendRequest)(
+	HINTERNET hRequest,
+	LPCWSTR   pwszHeaders,
+	DWORD     dwHeadersLength,
+	LPVOID    lpOptional,
+	DWORD     dwOptionalLength,
+	DWORD     dwTotalLength,
+	DWORD_PTR  dwContext
+	);
+
+typedef BOOL(WINAPI* t_WinHttpSetOption)(
+	HINTERNET hInternet,
+	DWORD     dwOption,
+	LPVOID    lpBuffer,
+	DWORD     dwBufferLength
+	);
+
+typedef BOOL(WINAPI* t_WinHttpAddRequestHeaders)(
+	HINTERNET hRequest,
+	LPCWSTR   pwszHeaders,
+	DWORD     dwHeadersLength,
+	DWORD     dwModifiers
+	);
+
+typedef BOOL(WINAPI* t_WinHttpReceiveResponse)(
+	HINTERNET hRequest,
+	LPVOID    lpReserved
+	);
+
+typedef BOOL(WINAPI* t_WinHttpQueryHeaders)(
+	HINTERNET hRequest,
+	DWORD     dwInfoLevel,
+	LPCWSTR   pwszName,
+	LPVOID    lpBuffer,
+	LPDWORD   lpdwBufferLength,
+	LPDWORD   lpdwIndex
+	);
+
+typedef BOOL(WINAPI* t_WinHttpReadData)(
+	HINTERNET hRequest,
+	LPVOID    lpBuffer,
+	DWORD     dwNumberOfBytesToRead,
+	LPDWORD   lpdwNumberOfBytesRead
+	);
+typedef BOOL(WINAPI* t_WinHttpCloseHandle)(
+	HINTERNET hInternet
+	);
+
+
+
+// enumeration APIS
+//NTDLL APIS
+typedef NTSTATUS(NTAPI* t_RtlGetVersion)(
+	PRTL_OSVERSIONINFOW lpVersionInformation
+	);
+
+typedef NTSTATUS(NTAPI* t_NtClose)(
+	HANDLE Handle
+	);
+
+#define NtCurrentThread() ((HANDLE)(LONG_PTR)-2)
+#define NtCurrentProcess() ((HANDLE)(LONG_PTR)-1)
+
+typedef NTSTATUS(NTAPI* t_NtOpenProcessToken)(
+	HANDLE ProcessHandle,
+	ACCESS_MASK DesiredAccess,
+	PHANDLE TokenHandle
+);
+
+typedef NTSTATUS(NTAPI* t_NtOpenThreadToken)(
+	HANDLE ThreadHandle,
+	ACCESS_MASK DesiredAccess,
+	BOOLEAN OpenAsSelf,
+	PHANDLE TokenHandle
+);
+
+typedef NTSTATUS(NTAPI* t_NtQueryInformationToken)(
+	HANDLE TokenHandle,
+	TOKEN_INFORMATION_CLASS TokenInformationClass,
+	PVOID TokenInformation,
+	ULONG TokenInformationLength,
+	PULONG ReturnLength
+);
+
+typedef PVOID(NTAPI* t_RtlAllocateHeap) (
+	PVOID  HeapHandle,
+	ULONG  Flags,
+	SIZE_T Size
+);
+typedef NTSTATUS(NTAPI* t_RtlReAllocateHeap) (
+	IN PVOID                HeapHandle,
+	IN ULONG                Flags,
+	IN PVOID                MemoryPointer,
+	IN ULONG                Size
+);
+
+typedef NTSTATUS(NTAPI* t_RtlRandomEx)(
+	PULONG Seed
+);
+
+typedef NTSTATUS(NTAPI* t_NtGetTickCount)(
+	);
+typedef NTSTATUS(NTAPI* t_RtlCreateTimerQueue)(
+	PHANDLE NewTimerQueue
+	);
+typedef NTSTATUS(NTAPI* t_NtCreateEvent) (
+	_Out_ PHANDLE EventHandle,
+	_In_ ACCESS_MASK DesiredAccess,
+	_In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+	_In_ INT_EVENT_TYPE EventType,
+	_In_ BOOLEAN InitialState
+);
+
+typedef VOID(NTAPI* t_RtlCaptureContext)(
+	_Out_ PCONTEXT ContextRecord
+);
+typedef VOID(NTAPI* RTL_WAITORTIMERCALLBACKFUNC) (
+	PVOID lpParameter,
+	BOOLEAN TimerOrWaitFired
+);
+
+typedef NTSTATUS(NTAPI* t_RtlCreateTimer) (
+	HANDLE                      TimerQueue,
+	HANDLE* NewTimer,
+	RTL_WAITORTIMERCALLBACKFUNC Callback,
+	PVOID                       Parameter,
+	DWORD                       DueTime,
+	DWORD                       Period,
+	ULONG                       Flags
+);
+
+typedef NTSTATUS(NTAPI* t_RtlRegisterWait) (
+	HANDLE* out,
+	HANDLE                      handle,
+	RTL_WAITORTIMERCALLBACKFUNC callback,
+	void*						context,
+	ULONG                       milliseconds,
+	ULONG                       flags
+	);
+
+typedef NTSTATUS(NTAPI* t_RtlDeleteTimerQueue) (
+	HANDLE TimerQueueHandle
+	);
+
+typedef NTSTATUS(NTAPI* t_RtlCopyMappedMemory)(
+	void* pDest,
+	const void* pSrc,
+	SIZE_T bytesToCopy
+	);
+typedef NTSTATUS(NTAPI* t_NtWaitForSingleObject) (
+	IN HANDLE               ObjectHandle,
+	IN BOOLEAN              Alertable,
+	IN PLARGE_INTEGER       TimeOut OPTIONAL
+	);
+typedef NTSTATUS(NTAPI* t_NtSignalAndWaitForSingleObject)(
+	IN HANDLE               ObjectToSignal,
+	IN HANDLE               WaitableObject,
+	IN BOOLEAN              Alertable,
+	IN PLARGE_INTEGER       Time OPTIONAL
+	);
+typedef NTSTATUS(NTAPI* t_NtContinue) (
+	PCONTEXT ThreadContext,
+	BOOLEAN  RaiseAlert
+	);
+typedef NTSTATUS(NTAPI* t_NtSetEvent)(
+	HANDLE EventHandle,
+	PLONG  PreviousState OPTIONAL
+	);
+
+typedef NTSTATUS(NTAPI* t_NtSetContextThread)(
+	HANDLE          ThreadHandle,
+	PCONTEXT        ThreadContext
+	);
+
+typedef NTSTATUS(NTAPI* t_NtDuplicateObject)(
+	HANDLE      SourceProcessHandle,
+	HANDLE      SourceHandle,
+	HANDLE      TargetProcessHandle,
+	PHANDLE     TargetHandle,
+	ACCESS_MASK DesiredAccess,
+	ULONG       Attributes,
+	ULONG       Options
+	);
+
+typedef NTSTATUS(NTAPI* t_LdrGetProcedureAddress)(
+	IN HMODULE              ModuleHandle,
+	IN PANSI_STRING         FunctionName OPTIONAL,
+	IN WORD                 Oridinal OPTIONAL,
+	OUT PVOID* FunctionAddress
+	);
+
+typedef NTSTATUS(NTAPI* t_NtQueryVirtualMemory)(
+	IN HANDLE							ProcessHandle,
+	IN PVOID							BaseAddress,
+	IN enum MEMORY_INFORMATION_CLASS	MemoryInformationClass,
+	OUT PVOID							Buffer,
+	IN SIZE_T							Length,
+	OUT PSIZE_T							ResultLength OPTIONAL
+	);
+
+typedef NTSTATUS(NTAPI* t_NtOpenThread)(
+	OUT PHANDLE ThreadHandle,
+	IN ACCESS_MASK DesiredAccess,
+	IN POBJECT_ATTRIBUTES ObjectAttributes,
+	IN P_INT_CLIENT_ID ClientId
+	);
+
+typedef NTSTATUS(NTAPI* t_NtAllocateVirtualMemory) (
+	IN      HANDLE    ProcessHandle,
+	IN OUT	PVOID     *BaseAddress,
+	IN		ULONG_PTR ZeroBits,
+	IN OUT	PSIZE_T   RegionSize,
+	IN      ULONG     AllocationType,
+	IN      ULONG     Protect
+);
+typedef NTSTATUS(NTAPI* t_NtProtectVirtualMemory) (
+	IN      HANDLE    ProcessHandle,
+	IN OUT	PVOID     *BaseAddress,
+	IN OUT	PSIZE_T   NumberOfBytesToProtect,
+	IN      ULONG     NewAccessProtection,
+	OUT     PULONG    OldAccessProtection
+);
+typedef NTSTATUS(NTAPI* t_NtCreateThreadEx) (
+	OUT PHANDLE hThread,
+	IN ACCESS_MASK DesiredAccess,
+	IN LPVOID ObjectAttributes,
+	IN HANDLE ProcessHandle,
+	IN LPTHREAD_START_ROUTINE lpStartAddress,
+	IN LPVOID lpParameter,
+	IN BOOL CreateSuspended,
+	IN ULONG StackZeroBits,
+	IN ULONG SizeOfStackCommit,
+	IN ULONG SizeOfStackReserve,
+	OUT LPVOID lpBytesBuffer
+);
+
+typedef NTSTATUS(NTAPI* t_NtSetInformationVirtualMemory)(
+	IN HANDLE                           ProcessHandle,
+	IN VIRTUAL_MEMORY_INFORMATION_CLASS VmInformationClass,
+	IN ULONG_PTR                        NumberOfEntries,
+	IN PMEMORY_RANGE_ENTRY              VirtualAddresses,
+	IN PVOID                            VmInformation,
+	IN ULONG                            VmInformationLength
+	);
+
+typedef NTSTATUS(NTAPI* t_NtQueryInformationProcess)(
+	IN           HANDLE           ProcessHandle,
+	IN           PROCESSINFOCLASS ProcessInformationClass,
+	OUT         PVOID            ProcessInformation,
+	IN            ULONG            ProcessInformationLength,
+	OUT OPTIONAL PULONG           ReturnLength
+	);
+typedef NTSTATUS(NTAPI* t_NtOpenProcess)(
+	OUT PHANDLE ProcessHandle,
+	IN ACCESS_MASK DesiredAccess,
+	IN POBJECT_ATTRIBUTES ObjectAttributes,
+	IN PCLIENT_ID ClientId
+	);
+typedef NTSTATUS(NTAPI* t_NtReadVirtualMemory)(
+	IN HANDLE               ProcessHandle,
+	IN PVOID                BaseAddress,
+	OUT PVOID               Buffer,
+	IN ULONG                NumberOfBytesToRead,
+	OUT PULONG              NumberOfBytesReaded OPTIONAL
+);
+
+typedef NTSTATUS(NTAPI* t_NtWriteVirtualMemory)(
+	IN HANDLE               ProcessHandle,
+	IN PVOID                BaseAddress,
+	IN PVOID                Buffer,
+	IN ULONG                NumberOfBytesToWrite,
+	OUT PULONG              NumberOfBytesWritten OPTIONAL
+);
+
+typedef NTSTATUS(NTAPI* t_NtCreateUserProcess)(
+	OUT         PHANDLE ProcessHandle,
+	OUT         PHANDLE ThreadHandle,
+	IN          ACCESS_MASK ProcessDesiredAccess,
+	IN          ACCESS_MASK ThreadDesiredAccess,
+	IN OPTIONAL POBJECT_ATTRIBUTES ProcessObjectAttributes,
+	IN OPTIONAL POBJECT_ATTRIBUTES ThreadObjectAttributes,
+	IN ULONG    ProcessFlags,                                    // PROCESS_CREATE_FLAGS_*
+	IN ULONG    ThreadFlags,                                     // THREAD_CREATE_FLAGS_*
+	IN OPTIONAL PRTL_USER_PROCESS_PARAMETERS ProcessParameters,
+	IN OUT      PPS_CREATE_INFO CreateInfo,
+	IN          PPS_ATTRIBUTE_LIST AttributeList
+);
+
+typedef NTSTATUS(NTAPI* t_RtlCreateProcessParametersEx)(
+	OUT				PRTL_USER_PROCESS_PARAMETERS*	pProcessParameters,
+	IN				PUNICODE_STRING					ImagePathName,
+	IN OPTIONAL		PUNICODE_STRING					DllPath,
+	IN OPTIONAL		PUNICODE_STRING					CurrentDirectory,
+	IN OPTIONAL		PUNICODE_STRING					CommandLine,
+	IN OPTIONAL		PVOID							Environment,
+	IN OPTIONAL		PUNICODE_STRING					WindowTitle,
+	IN OPTIONAL		PUNICODE_STRING					DesktopInfo,
+	IN OPTIONAL		PUNICODE_STRING					ShellInfo,
+	IN OPTIONAL		PUNICODE_STRING					RuntimeData,
+	IN				ULONG							Flags
+	);
+
+//IPhlpapi APIS
+typedef DWORD(WINAPI* t_GetAdaptersInfo)(
+	PIP_ADAPTER_INFO pAdapterInfo,
+	PULONG           pOutBufLen
+	);
+
+//ADVAPI APIS
+typedef BOOL(WINAPI* t_GetUserNameA)(
+	LPSTR   lpBuffer,
+	LPDWORD pcbBuffer
+	);
+typedef NTSTATUS(NTAPI* t_SystemFunction032)(
+	struct USTRING* data,
+	const struct USTRING* key
+	);
+
+//KERNEL32 APIS
+typedef BOOL(WINAPI* t_GetComputerNameExA)(
+	COMPUTER_NAME_FORMAT NameType,
+	LPSTR                lpBuffer,
+	LPDWORD              nSize
+	);
+
+typedef LPVOID(WINAPI* t_LocalAlloc)(
+	UINT   uFlags,
+	SIZE_T uBytes
+	);
+typedef LPVOID(WINAPI* t_LocalReAlloc)(
+	LPVOID lpMem,
+	SIZE_T uBytes,
+	UINT   uFlags
+	);
+typedef BOOL(WINAPI* t_LocalFree)(
+	HLOCAL hMem
+	);
+typedef BOOL(WINAPI* t_GetLocalTime)(
+	LPSYSTEMTIME lpSystemTime
+	);
+
+typedef VOID(WINAPI* t_GetSystemTimeAsFileTime)(
+	LPFILETIME lpSystemTimeAsFileTime
+	);
+
+typedef HMODULE(WINAPI* t_LoadLibraryA)(
+	LPCSTR lpLibFileName
+	);
+typedef FARPROC(WINAPI* t_GetProcAddress)(
+	HMODULE hModule,
+	LPCSTR lpProcName
+	);
+
+//USER32 APIS
+typedef int (WINAPI* t_GetSystemMetrics)(
+	int nIndex
+	);
+
+typedef BOOL(WINAPI* t_VirtualProtect)(
+	LPVOID lpAddress,
+	SIZE_T dwSize,
+	DWORD  flNewProtect,
+	PDWORD lpflOldProtect
+	);
+typedef DWORD(WINAPI* t_WaitForSingleObjectEx)(
+	HANDLE hHandle,
+	DWORD  dwMilliseconds,
+	BOOL   bAlertable
+	);
 

