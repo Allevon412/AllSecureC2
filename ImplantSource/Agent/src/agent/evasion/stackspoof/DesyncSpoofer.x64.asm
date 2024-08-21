@@ -56,6 +56,7 @@ SPOOFER STRUCT
     Arg07                           DQ 1
     Arg08                           DQ 1
     Arg09                           DQ 1
+    Arg10                           DQ 1
 
 SPOOFER ENDS
 
@@ -129,7 +130,7 @@ spoof_call proc
 	push    [rcx].SPOOFER.JmpRbxGadgetRef
 	sub     rsp, [rcx].SPOOFER.AddRspXGadgetFrameSize
 	mov     r10, [rcx].SPOOFER.JmpRbxGadget
-	mov     [rsp+38h], r10
+	mov     [rsp+58h], r10 //can handle up to 11 arguments because i've modified the ADD RSP X gadget.
 ;   ------------------------------------------------------------------------------------
 ;   	2. Stack PIVOT (To restore original Control Flow Stack)
 ;   ------------------------------------------------------------------------------------
@@ -153,13 +154,15 @@ restore endp
 
 parameter_handler proc
 	mov		r9, rax
-	mov		rax, 9
+	mov		rax, 10
 	mov		r8, [rcx].SPOOFER.Nargs	
 	mul		r8
 ;	pop		rdx
 ;	sub		rsp, rax -- Not necessary
 ;	push	rdx
 	xchg	r9, rax
+	cmp     [rcx].SPOOFER.Nargs, 10
+	je      handle_ten
 	cmp     [rcx].SPOOFER.Nargs, 9
 	je		handle_nine
 	cmp		[rcx].SPOOFER.Nargs, 8
@@ -181,7 +184,13 @@ parameter_handler proc
 	cmp		[rcx].SPOOFER.Nargs, 0
 	je 		handle_none
 parameter_handler endp
-
+handle_ten proc
+    push	r15
+    mov		r15, [rcx].SPOOFER.Arg10
+    mov		[rsp+58h], r15
+    pop		r15
+    jmp		handle_nine
+handle_ten endp
 handle_nine proc
     push	r15
     mov		r15, [rcx].SPOOFER.Arg09

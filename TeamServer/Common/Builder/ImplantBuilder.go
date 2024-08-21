@@ -65,7 +65,7 @@ func NewImplantBuilder(ImpConfig *Types.ImplantConfig, path string) *AgentBuilde
 		"headers/agent/evasion/PeParsing",
 		"headers/agent/evasion/SleepObfu",
 		"headers/agent/evasion/StackSpoof",
-		"src/agent/evasion/syscalls",
+		"headers/agent/evasion/syscalls",
 		"headers/Crypt",
 		"headers/Crypt/wolfssl",
 		"headers/Crypt/wolfssl/wolfssl",

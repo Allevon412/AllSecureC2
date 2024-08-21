@@ -151,7 +151,7 @@ var ApiNameHashes = []uint64{
 	0x75A514F31871F04A, //RtlAllocateHeap 15
 	0x75A4A0B9D2C3F04A, //RtlReAllocateHeap 16
 	0xD3B77E4DD8696D61, //RtlRandomEx 17
-	0x7416C5FD78F4D55E, //NtGetTickCount 18 ** THERE IS NO ZW ALTERNATIVE **
+	0x7416C5FD78F4D55E, //NtGetTickCount 18
 	0x5FC99BF0197A7133, //GetAdaptersInfo 19
 	0x61EF0CEE5979D62B, //GetUserNameA 20
 	0xC89E0CCD2E1EF42B, //GetComputerNameExA 21
@@ -194,6 +194,10 @@ var ApiNameHashes = []uint64{
 	0x810CDB16F023A642, //ZwWriteVirtualMemory 58
 	0x3EC66B37CD7D55C3, //ZwCreateUserProcess 59
 	0x41A30E514F409A31, //RtlCreateProcessParametersEx 60
+	0xE1A6865E9872F2EB, //CreatePipe 61
+	0xD9A6364C39690065, //ReadFile 62
+	0x6EFE569DFCA8662B, //CreateProcessA 63
+	0x6EFE569DFCA86641, //CreateProcessW 64
 }
 
 var DllNames = []string{

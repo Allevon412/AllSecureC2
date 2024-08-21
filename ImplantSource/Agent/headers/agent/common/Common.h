@@ -727,17 +727,17 @@ typedef struct _CURDIR
 
 typedef struct _INT_RTL_USER_PROCESS_PARAMETERS
 {
-	ULONG MaximumLength;
-	ULONG Length;
+	ULONG MaximumLength; //0710
+	ULONG Length; //0710
 
-	ULONG Flags;
-	ULONG DebugFlags;
+	ULONG Flags; //01
+	ULONG DebugFlags; //00
 
-	HANDLE ConsoleHandle;
-	ULONG ConsoleFlags;
-	HANDLE StandardInput;
-	HANDLE StandardOutput;
-	HANDLE StandardError;
+	HANDLE ConsoleHandle; //4c
+	ULONG ConsoleFlags; //00
+	HANDLE StandardInput; //
+	HANDLE StandardOutput; //b8
+	HANDLE StandardError; //b8
 
 	CURDIR CurrentDirectory;
 	UNICODE_STRING DllPath;
@@ -1424,9 +1424,51 @@ typedef VOID(WINAPI* t_GetSystemTimeAsFileTime)(
 typedef HMODULE(WINAPI* t_LoadLibraryA)(
 	LPCSTR lpLibFileName
 	);
+
 typedef FARPROC(WINAPI* t_GetProcAddress)(
 	HMODULE hModule,
 	LPCSTR lpProcName
+	);
+
+typedef BOOL(WINAPI* t_CreatePipe)(
+	OUT          PHANDLE               hReadPipe,
+	OUT          PHANDLE               hWritePipe,
+	IN OPTIONAL  LPSECURITY_ATTRIBUTES lpPipeAttributes,
+	IN           DWORD                 nSize
+);
+
+typedef BOOL(WINAPI* t_ReadFile)(
+  IN                HANDLE       hFile,
+  OUT               LPVOID       lpBuffer,
+  IN                DWORD        nNumberOfBytesToRead,
+  OUT OPTIONAL     LPDWORD      lpNumberOfBytesRead,
+  IN OUT OPTIONAL LPOVERLAPPED lpOverlapped
+);
+
+typedef BOOL(WINAPI* t_CreateProcessA)(
+	LPCSTR                lpApplicationName,
+	LPSTR                 lpCommandLine,
+	LPSECURITY_ATTRIBUTES lpProcessAttributes,
+	LPSECURITY_ATTRIBUTES lpThreadAttributes,
+	BOOL                  bInheritHandles,
+	DWORD                 dwCreationFlags,
+	LPVOID                lpEnvironment,
+	LPCSTR                lpCurrentDirectory,
+	LPSTARTUPINFOA        lpStartupInfo,
+	LPPROCESS_INFORMATION lpProcessInformation
+	);
+
+typedef BOOL(WINAPI* t_CreateProcessW)(
+IN OPTIONAL      LPCWSTR               lpApplicationName,
+IN OUT OPTIONAL LPWSTR                lpCommandLine,
+IN OPTIONAL      LPSECURITY_ATTRIBUTES lpProcessAttributes,
+IN OPTIONAL		 LPSECURITY_ATTRIBUTES lpThreadAttributes,
+IN                BOOL                  bInheritHandles,
+IN                DWORD                 dwCreationFlags,
+IN OPTIONAL      LPVOID                lpEnvironment,
+IN OPTIONAL      LPCWSTR               lpCurrentDirectory,
+IN                LPSTARTUPINFOW        lpStartupInfo,
+OUT               LPPROCESS_INFORMATION lpProcessInformation
 	);
 
 //USER32 APIS

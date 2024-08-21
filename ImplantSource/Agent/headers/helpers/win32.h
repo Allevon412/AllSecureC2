@@ -7,8 +7,19 @@
 
 #include "../../headers/agent/agent.h"
 
+
+typedef struct _PIPE {
+
+    HANDLE hReadPipe;
+    HANDLE hWritePipe;
+
+}PIPE, *PPIPE;
+
 HANDLE GetProcessHandleFromPID(DWORD dwPID);
 HANDLE GetProcessHandleFromStr(LPCSTR ProcessName);
-BOOL ProcessCreate(IN PWSTR TargetProcess, IN PWSTR ProcessParameters, IN PWSTR ProcessPath, IN HANDLE hParentProcess, IN BOOL PIPED, OUT PHANDLE hProcess, OUT PHANDLE hThread);
+BOOL NtProcessCreate(IN PWSTR TargetProcess, IN PWSTR ProcessParameters, IN PWSTR ProcessPath, IN HANDLE hParentProcess, IN BOOL PIPED, OUT PHANDLE hProcess, OUT PHANDLE hThread);
+BOOL ProcessCreate(BOOL PIPED, LPWSTR ApplicationName, LPWSTR CommandLine, LPPROCESS_INFORMATION pi, OUT PUCHAR Buffer);
+BOOL PipeCreate(OUT PPIPE pPipe);
+INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer);
 
 #endif //WIN32_H

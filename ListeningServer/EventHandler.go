@@ -222,7 +222,6 @@ func RecvEvent() {
 
 			var (
 				exec    string
-				spoof   string
 				piped   bool
 				args    []string
 				numargs = len(ImplantCmd.Args)
@@ -236,8 +235,6 @@ func RecvEvent() {
 			for _, str := range ImplantCmd.Args {
 				if strings.Contains(str, "exec:") {
 					exec = strings.TrimPrefix(str, "exec:")
-				} else if strings.Contains(str, "spoof:") {
-					spoof = strings.TrimPrefix(str, "spoof:")
 				} else if strings.Contains(str, "piped:") {
 					if strings.Contains(str, "true") {
 						piped = true
@@ -269,14 +266,6 @@ func RecvEvent() {
 				if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(0)); err != nil {
 					log.Println("[error] attempting to write the number of arguments to the data buffer", err)
 				}
-			}
-
-			//write the parent process to spoof to argument if it was specified.
-			if err = binary.Write(&DataBuf, binary.LittleEndian, uint32(len(spoof))); err != nil {
-				log.Println("[error] attempting to write the length of the argument to the data buffer", err)
-			}
-			if err = binary.Write(&DataBuf, binary.LittleEndian, []byte(spoof)); err != nil {
-				log.Println("[error] attempting to write the argument to the data buffer", err)
 			}
 
 			//write the program we want to execute to argument.

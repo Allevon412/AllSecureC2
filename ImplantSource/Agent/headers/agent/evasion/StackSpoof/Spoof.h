@@ -3,6 +3,7 @@
 
 #define JMP_RBX		 9215		// 0xff 0x23 --> reversed 0x23 0xff --> to Integer 9215
 #define ADD_RSP_0x38 952402760  // 4883C438 --> reversed 38C48348 --> to Integer 952402760
+#define ADD_RSP_0x58 1489273672  // 4883C458 --> reversed 58C48348 --> to Integer 1489273672
 #define RET			 0xc3		// One byte, no conversion needed
 
 typedef struct
@@ -52,6 +53,7 @@ typedef struct
 	PVOID Arg07;
 	PVOID Arg08;
 	PVOID Arg09;
+	PVOID Arg10;
 
 } SPOOFER, * PSPOOFER;
 
@@ -71,4 +73,5 @@ typedef struct _Args {
 	PVOID Arg07;
 	PVOID Arg08;
 	PVOID Arg09;
+	PVOID Arg10;
 }Args, * PArgs;

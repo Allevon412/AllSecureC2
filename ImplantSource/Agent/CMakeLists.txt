@@ -5,6 +5,26 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+# Disable GS
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-stack-protector")
+
+# Disable Code Optimization
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+
+# Disable Whole Program Optimization
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-whole-program")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-whole-program")
+
+# Disable size and speed preference
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-optimize-sibling-calls")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-optimize-sibling-calls")
+
+# Enable intrinsic functions
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -finline-functions")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -finline-functions")
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
 
