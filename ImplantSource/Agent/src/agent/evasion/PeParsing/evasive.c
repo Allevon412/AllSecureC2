@@ -385,6 +385,7 @@ void printhashes() {
     	"ReadFile",
     	"CreateProcessA",
     	"CreateProcessW",
+    	"GetExitCodeProcess",
     };
 	printf("ApiNameHashes = {\n");
 	for (int i = 0; i < sizeof(apiNames) / sizeof(apiNames[0]); i++) {

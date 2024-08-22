@@ -5,8 +5,6 @@
 
 #define PACKAGE_HEADER_LENGTH 20
 
-struct Agent;
-
 enum package_return_values {
     PACKAGE_SUCCESS = 0,
     PACKAGE_FALIURE_GENERIC,

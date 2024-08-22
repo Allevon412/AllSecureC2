@@ -198,6 +198,7 @@ var ApiNameHashes = []uint64{
 	0xD9A6364C39690065, //ReadFile 62
 	0x6EFE569DFCA8662B, //CreateProcessA 63
 	0x6EFE569DFCA86641, //CreateProcessW 64
+	0xF73DBE0FCE987352, //GetExitCodeProcess 65
 }
 
 var DllNames = []string{

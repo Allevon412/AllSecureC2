@@ -1471,6 +1471,11 @@ IN                LPSTARTUPINFOW        lpStartupInfo,
 OUT               LPPROCESS_INFORMATION lpProcessInformation
 	);
 
+typedef BOOL(WINAPI* t_GetExitCodeProcess)(
+	HANDLE  hProcess,
+	LPDWORD lpExitCode
+	);
+
 //USER32 APIS
 typedef int (WINAPI* t_GetSystemMetrics)(
 	int nIndex
