@@ -186,11 +186,10 @@ void TaskingRoutine() {
 
 		    		PROCESS_INFORMATION pi = {0};
                 	PPIPE pPipe = NULL;
-		    		Success = ProcessCreate(Piped, ApplicationName, CommandLine, &pi, pPipe);
+		    		Success = ProcessCreate(Piped, ApplicationName, CommandLine, &pi, &pPipe);
 
-                	TaskAdd(AgentCMD.RequestID, agent->TaskList->TaskCount, TASK_TRACK_PROCESS, TASK_STATUS_RUNNING,
+                	TaskAdd(AgentCMD.RequestID, TotalTaskCount, TASK_TRACK_PROCESS, TASK_STATUS_RUNNING,
                 		pPipe, pi.hProcess);
-
 
 		    		if(!Success)
 		    			AddInt32ToPackage(pPackage, 0);
@@ -201,7 +200,7 @@ void TaskingRoutine() {
 		    		END_OF_CMD_EXEC:
 
 					RtlSecureZeroMemory(CommandLine, sizeof(CommandLine));
-
+					RtlSecureZeroMemory(ApplicationName, sizeof(ApplicationName));
 		    		break;
 		    	}// EXEC CMD
 

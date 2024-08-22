@@ -25,9 +25,10 @@ typedef struct _TASK {
     PVOID   pTaskData;
     HANDLE  hTaskHandle;
     struct _TASK* pNext;
-    DWORD   TaskCount;
 
 } TASK, *PTASK;
+
+extern UINT TotalTaskCount;
 
 VOID TaskAdd(DWORD dwRequestID, DWORD dwTaskID, SHORT shTaskType, SHORT shTaskStatus, PVOID pTaskData, HANDLE hTaskHandle);
 VOID CheckTasks();

