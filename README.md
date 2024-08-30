@@ -1,5 +1,8 @@
 # AllSecure
 
+## Release
+I have decided to make this repository public way ahead of schedule. I'd like to expand upon the reasoning as to why I've decided to do this. I've talked alot about the project with other people and have wanted to show them and get their ideas as to how to improve. However, it's been very difficult to keep it a secret and also share the project with others. Even if it's not complete I am deciding to make this project public so, I can reduce the burden from telling people "it's coming, trust me". Therefore, it's being released as is and I will work on it when I feel free to work on it. Rather than work on it because I feel forced to make something as quickly as possible.
+
 
 ## Introduction
 This repository is my way of increasing my skills as a developer while at the same time increasing my skills as a red teamer and penetration tester. I have always had a passion for red teaming, and I wanted to really dive deep into the weeds of learning how things work on the backend when you're performing an assessment. Therefore, I have created a C2 server named AllSecure.
